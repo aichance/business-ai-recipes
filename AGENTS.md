@@ -1,6 +1,13 @@
 # Project Instructions
 
-## Cutroom (new interactive tool)
+## Demo Forge and Cutroom (local tools)
+
+`experiments/demo-forge/` is a local browser-demo generator. Run its README
+command with Python 3.11+, Playwright/Chromium, and FFmpeg; the browser route
+is restricted to the bundled synthetic localhost app. `forge.py` owns the
+declarative steps, final-state checks, recording, and MP4 presentation-tail
+conversion; `server.py` owns the loopback app. The default path does not use
+an external API or logged-in browser profile.
 
 `tools/cutroom/` is a standalone local video editor. Launch with `python3 tools/cutroom/server.py`; verify with `python3 -B -m unittest discover -s tools/cutroom -p 'test_*.py'`. Python 3.11 and FFmpeg/ffprobe are required; no Python packages. `media.py` owns parsing/timelines/rendering, `server.py` owns loopback HTTP/storage, `intelligence.py` owns optional TypeSafe calls, and HTML/CSS/JS owns editing and preview. `demo/` contains authored synthetic media and recorded decisions. Root README features Cutroom; `RECIPES.md` preserves the earlier recipe documentation.
 
@@ -21,8 +28,9 @@ This repository contains small, reproducible business AI recipes. The meeting re
 - `recipes/csv-to-report/`: synthetic CSV inputs and CSV recipe documentation.
 - `recipes/jev-support-triage/`: synthetic pre-labels, recorded Jev response fields, offline classifier, and optional direct-live contract.
 - `recipes/jev-csv-exception-routing/`: 24 synthetic value-free exception explanations, recorded Jev Choice fields, fixed keyword baseline, and offline comparison.
+- `experiments/demo-forge/`: synthetic localhost app, declarative operation, browser recorder, and direct try instructions.
 - `run_demo.py`: disposable end-to-end demonstration.
-- `verify.py`: exact file manifest, trust-boundary, refusal-path, Jev judgment/abstention, CSV edge-case, determinism, and all Jev recipe count checks.
+- `verify.py`: exact file manifest, Demo Forge CLI contract, trust-boundary, refusal-path, Jev judgment/abstention, CSV edge-case, determinism, and all Jev recipe count checks.
 - `.github/workflows/verify.yml`: Python 3.11 and 3.12 verification.
 
 From the repository root, run `python3 -B verify.py`, `python3 -B run_demo.py`, `python3 -B recipes/meeting-line-judgment/recipe.py`, `python3 -B recipes/csv-to-report/report.py --csv recipes/csv-to-report/sales.csv`, `python3 -B recipes/jev-support-triage/triage.py --offline`, and `python3 -B recipes/jev-csv-exception-routing/route.py --offline` before committing. These commands must finish without network access. The meeting demo expects first insert 2, repeat insert 0, total stored 2; the line-judgment recipe expects 1 action candidate and 5 review rows; the CSV report expects 4 source rows, 1 missing amount, and a checked total of 4,500 yen; the support-triage Jev recipe expects 16 recorded cases, 10 correct automatic single-team decisions, 1 `other` review, and 5 review-gated cases; the CSV exception recipe expects 24 cases, baseline false-auto 3, recorded-Jev false-auto 0, and `DO_NOT_RECOMMEND_AUTO_ROUTING`.

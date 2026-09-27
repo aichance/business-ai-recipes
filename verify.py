@@ -42,6 +42,11 @@ EXPECTED_FILES = {
     "recipes/jev-support-triage/triage.py",
     "recipes/meeting-line-judgment/README.md",
     "recipes/meeting-line-judgment/recipe.py",
+    "experiments/demo-forge/README.md",
+    "experiments/demo-forge/app/index.html",
+    "experiments/demo-forge/forge.py",
+    "experiments/demo-forge/operation.json",
+    "experiments/demo-forge/server.py",
     "run_demo.py",
     "tools/cutroom/README.md",
     "tools/cutroom/app.js",
@@ -143,6 +148,36 @@ def _load_line_judgment_recipe(root: Path):
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+
+def _verify_demo_forge(root: Path) -> dict:
+    demo_root = root / "experiments" / "demo-forge"
+    operation = json.loads((demo_root / "operation.json").read_text(encoding="utf-8"))
+    if operation["name"] != "launch-demo" or operation["input"] != {"project_name": "Launch Kit"}:
+        raise AssertionError("Demo Forge operation contract changed")
+    if len(operation["steps"]) != 6 or operation["success"]["text"] != "Launch Kit is ready":
+        raise AssertionError("Demo Forge success contract changed")
+    environment = os.environ.copy()
+    environment.pop("PYTHONPATH", None)
+    environment["PYTHONDONTWRITEBYTECODE"] = "1"
+    help_result = subprocess.run(
+        [sys.executable, "-B", "experiments/demo-forge/forge.py", "--help"],
+        cwd=root,
+        env=environment,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    if help_result.returncode != 0 or "--tail-seconds" not in help_result.stdout:
+        raise AssertionError("Demo Forge CLI help contract failed")
+    return {
+        "operation": operation["name"],
+        "steps": len(operation["steps"]),
+        "success_text": operation["success"]["text"],
+        "network_scope": "127.0.0.1",
+        "external_write": False,
+    }
 
 
 def _verify_meeting_line_judgment(root: Path) -> dict:
@@ -574,6 +609,7 @@ def verify(
     line_judgment_summary = _verify_meeting_line_judgment(root)
     jev_summary = _verify_jev_recipe(root)
     jev_csv_exception_summary = _verify_jev_csv_exception_recipe(root)
+    demo_forge_summary = _verify_demo_forge(root)
 
     supplied_inputs = (
         transcript is not _MISSING,
@@ -592,6 +628,7 @@ def verify(
             "line_judgment": line_judgment_summary,
             "jev_report": jev_summary,
             "jev_csv_exception_report": jev_csv_exception_summary,
+            "demo_forge": demo_forge_summary,
             "external_write": False,
         }
 
@@ -684,6 +721,7 @@ def verify(
         "line_judgment": line_judgment_summary,
         "jev_report": jev_summary,
         "jev_csv_exception_report": jev_csv_exception_summary,
+        "demo_forge": demo_forge_summary,
         "first_inserted": first["inserted"],
         "repeat_inserted": repeat["inserted"],
         "stored": repeat["total_stored"],
@@ -703,6 +741,10 @@ def main() -> int:
     print("PASS: Jev line judgment fixture, abstention, keyless live refusal, and write boundary")
     print("PASS: CSV README command, edge cases, and narrative reconciliation")
     print("PASS: Jev recorded fixture, provisional abstention gate, and offline/live boundary")
+    print(
+        "PASS: Demo Forge CLI, success contract, localhost scope, and no external write; "
+        "steps={steps}".format(**result["demo_forge"])
+    )
     print(
         "PASS: Jev CSV exception comparison; cases={cases}; "
         "baseline_false_auto={baseline_false_auto}; jev_false_auto={jev_false_auto}".format(

@@ -2,6 +2,27 @@
 
 [![Verify](https://github.com/jokv213/business-ai-recipes/actions/workflows/verify.yml/badge.svg)](https://github.com/jokv213/business-ai-recipes/actions/workflows/verify.yml)
 
+## Demo Forge — turn a working app into a demo people can try
+
+Demo Forge turns a short operation definition into a real browser run against
+a self-owned localhost app. It checks the app's final success state and writes
+WebM, MP4, and a cover image. The input is synthetic and the default route
+never uses an external API or a logged-in browser profile.
+
+```bash
+python3 -m pip install playwright
+python3 -m playwright install chromium
+python3 experiments/demo-forge/forge.py \
+  --output .demo-forge-output \
+  --tail-seconds 8
+```
+
+FFmpeg must also be on `PATH`. The command operates only on `127.0.0.1`,
+checks `Ready to share` and `Launch Kit is ready`, and produces a 10-30 second
+share preview by holding the verified final frame in the MP4. It does not claim
+generic browser compatibility or a speedup. [Direct instructions, boundaries,
+and the Japanese introduction →](experiments/demo-forge/README.md)
+
 ## Cutroom — edit video by selecting its transcript
 
 **Keep the useful moments. Export the actual video.**
