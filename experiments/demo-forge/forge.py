@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run one declarative Demo Forge operation and record a real browser video."""
+"""Run one declarative Demo Forge operation and record shareable browser media."""
 
 from __future__ import annotations
 
@@ -127,6 +127,26 @@ def build_ffmpeg_command(
     return command
 
 
+def build_gif_command(
+    ffmpeg_binary: str,
+    mp4_path: Path,
+    gif_path: Path,
+) -> list[str]:
+    """Convert the verified MP4 into a lightweight, looped share preview."""
+    return [
+        ffmpeg_binary,
+        "-y",
+        "-i",
+        str(mp4_path),
+        "-vf",
+        "fps=10,scale=800:-1:flags=lanczos",
+        "-loop",
+        "0",
+        "-an",
+        str(gif_path),
+    ]
+
+
 def run(
     output: Path,
     server_path: Path,
@@ -190,12 +210,19 @@ def run(
 
         webm_path = output / "demo-forge.webm"
         mp4_path = output / "demo-forge.mp4"
+        gif_path = output / "demo-forge.gif"
         ffmpeg_binary = shutil.which("ffmpeg")
         if ffmpeg_binary is None:
             raise RuntimeError("ffmpeg is required and must be available on PATH")
         shutil.copy2(recorded_path, webm_path)
         ffmpeg = subprocess.run(
             build_ffmpeg_command(ffmpeg_binary, webm_path, mp4_path, tail_seconds),
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        gif = subprocess.run(
+            build_gif_command(ffmpeg_binary, mp4_path, gif_path),
             check=True,
             capture_output=True,
             text=True,
@@ -209,8 +236,10 @@ def run(
         result["artifacts"] = {
             "webm": str(webm_path),
             "mp4": str(mp4_path),
+            "gif": str(gif_path),
             "cover": str(output / "cover.png"),
             "ffmpeg_returncode": ffmpeg.returncode,
+            "gif_ffmpeg_returncode": gif.returncode,
         }
     except Exception as exc:  # record failure without claiming success
         result["errors"] = [f"{type(exc).__name__}: {exc}"]

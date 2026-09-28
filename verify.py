@@ -152,6 +152,9 @@ def _load_line_judgment_recipe(root: Path):
 
 def _verify_demo_forge(root: Path) -> dict:
     demo_root = root / "experiments" / "demo-forge"
+    forge_source = (demo_root / "forge.py").read_text(encoding="utf-8")
+    if "build_gif_command" not in forge_source or "demo-forge.gif" not in forge_source:
+        raise AssertionError("Demo Forge GIF artifact contract missing")
     operation = json.loads((demo_root / "operation.json").read_text(encoding="utf-8"))
     if operation["name"] != "launch-demo" or operation["input"] != {"project_name": "Launch Kit"}:
         raise AssertionError("Demo Forge operation contract changed")
@@ -175,6 +178,7 @@ def _verify_demo_forge(root: Path) -> dict:
         "operation": operation["name"],
         "steps": len(operation["steps"]),
         "success_text": operation["success"]["text"],
+        "gif_artifact": "demo-forge.gif",
         "network_scope": "127.0.0.1",
         "external_write": False,
     }
@@ -742,8 +746,9 @@ def main() -> int:
     print("PASS: CSV README command, edge cases, and narrative reconciliation")
     print("PASS: Jev recorded fixture, provisional abstention gate, and offline/live boundary")
     print(
-        "PASS: Demo Forge CLI, success contract, localhost scope, and no external write; "
-        "steps={steps}".format(**result["demo_forge"])
+        "PASS: Demo Forge CLI, GIF artifact, success contract, localhost scope, "
+        "and no external write; "
+        "steps={steps}; gif={gif_artifact}".format(**result["demo_forge"])
     )
     print(
         "PASS: Jev CSV exception comparison; cases={cases}; "

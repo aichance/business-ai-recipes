@@ -2,7 +2,7 @@
 
 ## English
 
-Demo Forge turns a short browser operation into a real, replayable demonstration of a self-owned localhost app. The first slice fills a project name, launches the kit, verifies the app's final state, and produces WebM, MP4, and a cover image. GIF conversion is a separate material-preparation step, not part of the runner's success claim.
+Demo Forge turns a short browser operation into a real, replayable demonstration of a self-owned localhost app. The first slice fills a project name, launches the kit, verifies the app's final state, and produces WebM, MP4, GIF, and a cover image. The GIF is written as `demo-forge.gif` after conversion from the verified MP4 at 10 fps.
 
 Try it with synthetic input:
 
@@ -25,12 +25,12 @@ uses the same command shape and is a portability example, not proof of
 generic browser compatibility.
 
 For a 10-30 second share preview, add `--tail-seconds 8`. This holds the
-verified final browser frame in the converted MP4; it does not add a new
-interaction or claim a live external session.
+verified final browser frame in the converted MP4 and GIF; it does not add a
+new interaction or claim a live external session.
 
 ## 日本語
 
-Demo Forgeは、短いブラウザ操作定義から、自作localhostアプリの実画面を使った再生可能な実演素材を作ります。最初の版では、プロジェクト名を入力して起動し、アプリ自身の成功状態を確認したうえで、WebM・MP4・表紙画像を出力します。GIFは別の素材準備工程で作る成果物です。
+Demo Forgeは、短いブラウザ操作定義から、自作localhostアプリの実画面を使った再生可能な実演素材を作ります。最初の版では、プロジェクト名を入力して起動し、アプリ自身の成功状態を確認したうえで、WebM・MP4・GIF・表紙画像を出力します。GIFは確認済みMP4から10fpsで変換します。
 
 合成入力で試す:
 
@@ -53,7 +53,7 @@ python3 experiments/demo-forge/forge.py \
 これは差し替え経路の確認であり、汎用ブラウザ互換性の証明ではありません。
 
 10〜30秒の共有用プレビューを作る場合は`--tail-seconds 8`を追加します。
-これはブラウザ操作の成功後に実際に確認した最終画面を、変換後のMP4で保持する
+これはブラウザ操作の成功後に実際に確認した最終画面を、変換後のMP4とGIFで保持する
 だけです。新しい操作を追加したり、外部のライブセッションを保証したりしません。
 
 ### Current limits / 現在の制約
