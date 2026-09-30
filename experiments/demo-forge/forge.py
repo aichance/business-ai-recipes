@@ -4,8 +4,10 @@
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import math
+import platform
 import re
 import shutil
 import subprocess
@@ -96,6 +98,70 @@ def nonnegative_seconds(value: str) -> float:
     if not math.isfinite(seconds) or seconds < 0:
         raise argparse.ArgumentTypeError("must be a finite, non-negative number of seconds")
     return seconds
+
+
+def doctor_result() -> dict[str, object]:
+    """Check local prerequisites without starting the app or a browser."""
+    requirements: dict[str, dict[str, object]] = {}
+    python_ready = sys.version_info >= (3, 11)
+    requirements["python"] = {
+        "status": "ok" if python_ready else "missing",
+        "version": platform.python_version(),
+        "required": ">=3.11",
+    }
+
+    playwright_spec = importlib.util.find_spec("playwright")
+    if playwright_spec is None:
+        requirements["playwright"] = {
+            "status": "missing",
+            "detail": "Python package is not installed",
+        }
+        requirements["chromium"] = {
+            "status": "missing",
+            "detail": "Playwright package is unavailable, so its browser path cannot be checked",
+        }
+    else:
+        requirements["playwright"] = {"status": "ok"}
+        try:
+            from playwright.sync_api import sync_playwright
+
+            with sync_playwright() as playwright:
+                executable = Path(playwright.chromium.executable_path)
+            requirements["chromium"] = {
+                "status": "ok" if executable.is_file() else "missing",
+                "path": str(executable),
+            }
+            if not executable.is_file():
+                requirements["chromium"]["detail"] = "Chromium executable is not installed"
+        except Exception as exc:  # report a repairable prerequisite failure
+            requirements["chromium"] = {
+                "status": "missing",
+                "detail": f"Could not inspect Chromium: {type(exc).__name__}: {exc}",
+            }
+
+    ffmpeg = shutil.which("ffmpeg")
+    requirements["ffmpeg"] = {
+        "status": "ok" if ffmpeg else "missing",
+        "path": ffmpeg,
+        "detail": None if ffmpeg else "ffmpeg is not available on PATH",
+    }
+    missing = [name for name, item in requirements.items() if item["status"] != "ok"]
+    next_steps: list[str] = []
+    if requirements["python"]["status"] != "ok":
+        next_steps.append("Use Python 3.11 or newer.")
+    if requirements["playwright"]["status"] != "ok":
+        next_steps.append("python3 -m pip install playwright")
+    if requirements["chromium"]["status"] != "ok":
+        next_steps.append("python3 -m playwright install chromium")
+    if requirements["ffmpeg"]["status"] != "ok":
+        next_steps.append("Install ffmpeg and make it available on PATH.")
+    return {
+        "status": "ready" if not missing else "missing",
+        "scope": "local-only",
+        "requirements": requirements,
+        "missing": missing,
+        "next_steps": next_steps,
+    }
 
 
 def build_ffmpeg_command(
@@ -260,9 +326,14 @@ def run(
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Record one Demo Forge browser operation")
-    parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--output", type=Path)
     parser.add_argument("--server", type=Path, default=DEFAULT_SERVER)
     parser.add_argument("--operation", type=Path, default=DEFAULT_SPEC)
+    parser.add_argument(
+        "--doctor",
+        action="store_true",
+        help="check Python, Playwright, Chromium, and ffmpeg without starting a server",
+    )
     parser.add_argument(
         "--tail-seconds",
         type=nonnegative_seconds,
@@ -270,6 +341,12 @@ def main() -> int:
         help="hold the verified final browser frame in the MP4 for share previews",
     )
     args = parser.parse_args()
+    if args.doctor:
+        result = doctor_result()
+        print(json.dumps(result, ensure_ascii=False, indent=2))
+        return 0 if result["status"] == "ready" else 1
+    if args.output is None:
+        parser.error("--output is required unless --doctor is used")
     result = run(
         args.output.resolve(),
         args.server.resolve(),

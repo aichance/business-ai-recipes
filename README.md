@@ -12,6 +12,7 @@ never uses an external API or a logged-in browser profile.
 ```bash
 python3 -m pip install playwright
 python3 -m playwright install chromium
+python3 experiments/demo-forge/forge.py --doctor
 python3 experiments/demo-forge/forge.py \
   --output .demo-forge-output \
   --tail-seconds 8

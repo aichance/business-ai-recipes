@@ -15,6 +15,16 @@ Run from the repository root with Python 3.11+, the Python Playwright package
 and its Chromium browser installed, plus `ffmpeg` on `PATH`. This repository
 does not install those tools or require an external API key.
 
+Before starting a run, check the local prerequisites without launching the
+server or browser:
+
+```bash
+python3 experiments/demo-forge/forge.py --doctor
+```
+
+If the command reports a missing item, its JSON output includes the exact
+repair step. A `missing` result is a setup diagnostic, not a failed demo run.
+
 The app stays on `127.0.0.1`. The input is `Launch Kit`. Success means the app itself reports `Ready to share`, the result card has `data-state="success"`, and the result says `Launch Kit is ready`.
 
 This is a local demonstration route, not a claim of generic browser automation or a speedup. In a same-machine three-run comparison, Demo Forge had a 2.420s median versus 1.421s for direct Playwright; human setup time remains unmeasured.
@@ -43,6 +53,15 @@ python3 experiments/demo-forge/forge.py \
 パッケージとChromium、PATH上の`ffmpeg`を用意してください。外部APIキーや
 ログイン済みブラウザは不要です。成功後は`run.json`の`status: success`と、
 `Ready to share` / `Launch Kit is ready`を確認します。
+
+実行前に、アプリやブラウザを起動せず前提条件を確認できます。
+
+```bash
+python3 experiments/demo-forge/forge.py --doctor
+```
+
+JSONに不足項目と修復コマンドが表示されます。`missing`は実演失敗ではなく、
+実行前のセットアップ診断です。
 
 操作対象は `127.0.0.1` のみです。入力は `Launch Kit`。成功条件は、アプリの表示が `Ready to share` になり、結果カードの `data-state="success"` と `Launch Kit is ready` を確認できることです。
 

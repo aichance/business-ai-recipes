@@ -174,11 +174,29 @@ def _verify_demo_forge(root: Path) -> dict:
     )
     if help_result.returncode != 0 or "--tail-seconds" not in help_result.stdout:
         raise AssertionError("Demo Forge CLI help contract failed")
+    doctor_result = subprocess.run(
+        [sys.executable, "-B", "experiments/demo-forge/forge.py", "--doctor"],
+        cwd=root,
+        env=environment,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    try:
+        doctor = json.loads(doctor_result.stdout)
+    except json.JSONDecodeError as exc:
+        raise AssertionError("Demo Forge doctor did not return JSON") from exc
+    if doctor_result.returncode not in (0, 1) or doctor.get("scope") != "local-only":
+        raise AssertionError("Demo Forge doctor contract failed")
+    if set(doctor.get("requirements", {})) != {"python", "playwright", "chromium", "ffmpeg"}:
+        raise AssertionError("Demo Forge doctor requirements changed")
     return {
         "operation": operation["name"],
         "steps": len(operation["steps"]),
         "success_text": operation["success"]["text"],
         "gif_artifact": "demo-forge.gif",
+        "doctor": doctor["status"],
         "network_scope": "127.0.0.1",
         "external_write": False,
     }
