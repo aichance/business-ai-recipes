@@ -10,13 +10,17 @@ WebM, MP4, GIF, and a cover image. The input is synthetic and the default route
 never uses an external API or a logged-in browser profile.
 
 ```bash
-python3 -m pip install playwright
-python3 -m playwright install chromium
-python3 experiments/demo-forge/forge.py --doctor
-python3 experiments/demo-forge/forge.py \
+python3 -m venv .demo-forge-venv
+.demo-forge-venv/bin/python -m pip install playwright
+.demo-forge-venv/bin/python -m playwright install chromium
+.demo-forge-venv/bin/python experiments/demo-forge/forge.py --doctor
+.demo-forge-venv/bin/python experiments/demo-forge/forge.py \
   --output .demo-forge-output \
   --tail-seconds 8
 ```
+
+`--doctor` reports `python_environment` and prints the matching repair commands.
+If you already have an active virtual environment, use its Python instead.
 
 FFmpeg must also be on `PATH`. The command operates only on `127.0.0.1`,
 checks `Ready to share` and `Launch Kit is ready`, and produces a 10-30 second

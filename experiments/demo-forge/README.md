@@ -24,6 +24,20 @@ python3 experiments/demo-forge/forge.py --doctor
 
 If the command reports a missing item, its JSON output includes the exact
 repair step. A `missing` result is a setup diagnostic, not a failed demo run.
+When Playwright is missing from a system Python, the repair steps create the
+named `.demo-forge-venv` first so the install does not write into an
+OS-managed interpreter. Use that environment's Python for the run as well:
+
+```bash
+python3 -m venv .demo-forge-venv
+.demo-forge-venv/bin/python -m pip install playwright
+.demo-forge-venv/bin/python -m playwright install chromium
+.demo-forge-venv/bin/python experiments/demo-forge/forge.py \
+  --output .demo-forge-output/demo-forge
+```
+
+The JSON doctor result includes `python_environment: "system"` or
+`"virtualenv"` so the repair path is explicit.
 
 The app stays on `127.0.0.1`. The input is `Launch Kit`. Success means the app itself reports `Ready to share`, the result card has `data-state="success"`, and the result says `Launch Kit is ready`.
 

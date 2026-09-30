@@ -100,6 +100,20 @@ def nonnegative_seconds(value: str) -> float:
     return seconds
 
 
+def playwright_repair_steps() -> list[str]:
+    """Return setup commands that keep installs out of system Python."""
+    if sys.prefix == sys.base_prefix:
+        return [
+            "python3 -m venv .demo-forge-venv",
+            ".demo-forge-venv/bin/python -m pip install playwright",
+            ".demo-forge-venv/bin/python -m playwright install chromium",
+        ]
+    return [
+        "python3 -m pip install playwright",
+        "python3 -m playwright install chromium",
+    ]
+
+
 def doctor_result() -> dict[str, object]:
     """Check local prerequisites without starting the app or a browser."""
     requirements: dict[str, dict[str, object]] = {}
@@ -150,14 +164,15 @@ def doctor_result() -> dict[str, object]:
     if requirements["python"]["status"] != "ok":
         next_steps.append("Use Python 3.11 or newer.")
     if requirements["playwright"]["status"] != "ok":
-        next_steps.append("python3 -m pip install playwright")
-    if requirements["chromium"]["status"] != "ok":
+        next_steps.extend(playwright_repair_steps())
+    elif requirements["chromium"]["status"] != "ok":
         next_steps.append("python3 -m playwright install chromium")
     if requirements["ffmpeg"]["status"] != "ok":
         next_steps.append("Install ffmpeg and make it available on PATH.")
     return {
         "status": "ready" if not missing else "missing",
         "scope": "local-only",
+        "python_environment": "virtualenv" if sys.prefix != sys.base_prefix else "system",
         "requirements": requirements,
         "missing": missing,
         "next_steps": next_steps,
