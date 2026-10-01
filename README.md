@@ -19,6 +19,11 @@ python3 -m venv .demo-forge-venv
   --tail-seconds 8
 ```
 
+`.demo-forge-venv/` and `.demo-forge-output/` are local workspace directories;
+they are intentionally ignored by Git and by the repository verifier. The
+verifier continues to check the trusted recipe files, so it is safe to run
+`python3 -B verify.py` after this setup.
+
 `--doctor` reports `python_environment` and prints the matching repair commands.
 If you already have an active virtual environment, use its Python instead.
 

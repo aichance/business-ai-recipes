@@ -65,12 +65,15 @@ EXPECTED_FILES = {
     "verify.py",
 }
 _MISSING = object()
+_WORKSPACE_DIRS = frozenset({".demo-forge-output", ".demo-forge-venv"})
 
 
 def _files(root: Path) -> set[str]:
     files = set()
     for path in root.rglob("*"):
         if ".git" in path.parts or "__pycache__" in path.parts or path.suffix == ".pyc":
+            continue
+        if any(part in _WORKSPACE_DIRS for part in path.parts):
             continue
         if path.is_symlink():
             raise AssertionError(f"symlink is not allowed: {path.relative_to(root)}")
