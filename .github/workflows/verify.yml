@@ -44,7 +44,21 @@ jobs:
       - name: Verify boundaries and deterministic behavior
         run: python -B verify.py
       - name: Install video tools
-        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+        run: |
+          python - <<'PY'
+          import shutil
+          import subprocess
+          if not all(shutil.which(tool) for tool in ("ffmpeg", "ffprobe")):
+              subprocess.run(["sudo", "apt-get", "-o", "Acquire::Retries=1",
+                              "-o", "Acquire::http::Timeout=30", "-o", "Acquire::https::Timeout=30",
+                              "update"], check=True, timeout=120)
+              subprocess.run(["sudo", "apt-get", "-o", "DPkg::Lock::Timeout=30",
+                              "install", "-y", "ffmpeg"], check=True, timeout=180)
+          for tool in ("ffmpeg", "ffprobe"):
+              subprocess.run([tool, "-version"], check=True, timeout=10,
+                             stdout=subprocess.DEVNULL)
+          print("Video tools ready; existing installation reused when available")
+          PY
       - name: Verify Cutroom media and local HTTP workflow
         run: python3 -B -m unittest discover -s tools/cutroom -p 'test_*.py' -v
       - name: Run the repeat-safe local demonstration

@@ -94,3 +94,10 @@ test("replay preserves the user's evidence decision and recomputes next checks w
   assert.throws(() => replayPack({ ...pack, decisions: { adoption: "auto-approved" } }));
   assert.throws(() => replayPack({ ...pack, decisions: { unknown: "unreviewed" } }), /unknown/);
 });
+test("a claim id named constructor does not inherit a decision from Object.prototype", () => {
+  const input = { title: "Own input", claims: [{ id: "constructor", text: "Needs checking", sourceIds: [] }], sources: [] };
+  const pack = { schemaVersion: 1, kind: "evidence", input, selectedIds: ["constructor"] };
+  assert.equal(replayPack(pack).context.structuredContent.nextChecks[0].decision, "unreviewed");
+  pack.decisions = JSON.parse('{"constructor":"needs-check"}');
+  assert.equal(replayPack(pack).context.structuredContent.nextChecks[0].decision, "needs-check");
+});

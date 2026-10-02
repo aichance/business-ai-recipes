@@ -67,7 +67,7 @@ granted file-resource bridge and selected model-context update. The three
 `analyze_*` tools also open the matching panel; `replay_pack` recomputes a pack.
 HTML resources are bundled with no remote script or font fetches.
 
-**Verified:** build, eleven tests including the official MCP Client, discovery of
+**Verified:** build, twelve tests including the official MCP Client, discovery of
 seven tools and three HTML resources, local browser file import, condition
 changes, selections and replay JSON. **Pending:** installation and a complete
 run in an actual dots account/host, host file permissions and context delivery.

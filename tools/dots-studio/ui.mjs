@@ -15,7 +15,7 @@ const preview = window.parent === window && location.hostname === "127.0.0.1" &&
 const app = new App({ name: `Dots Studio / ${meta[0]}`, version: "0.1.0" });
 const extensions = new OpenAIExtensions(app);
 let input, result, synthetic = true, cursor, ready = false, pendingFileResult = false, inputSequence = 0;
-let selected = new Set(), decisions = {};
+let selected = new Set(), decisions = Object.create(null);
 let replayURL;
 const money = (c) => (c / 100).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 function el(tag, text, className) { const n = document.createElement(tag); if (text != null) n.textContent = text; if (className) n.className = className; return n; }
@@ -25,7 +25,7 @@ function compute() {
 }
 function load(data, isSynthetic = false) {
   const next = kind === "evidence" ? analyzeEvidence(data) : kind === "run" ? analyzeRun(data) : analyzeScenario(data);
-  input = structuredClone(data); result = next; synthetic = isSynthetic; cursor = undefined; selected = new Set(); decisions = {};
+  input = structuredClone(data); result = next; synthetic = isSynthetic; cursor = undefined; selected = new Set(); decisions = Object.create(null);
   $("error").hidden = true; render();
 }
 const nextCheck = (item) => nextCheckFor(kind, item);
@@ -134,7 +134,7 @@ async function importText(raw, isCSV) {
   const data = JSON.parse(raw);
   if (data.schemaVersion === 1) {
     if (data.kind !== kind) throw new Error(`Open this pack in its ${data.kind} view`);
-    replayPack(data); load(data.input, data.synthetic === true); cursor = data.cursor; selected = new Set(data.selectedIds); decisions = data.decisions ?? {}; compute(); render();
+    replayPack(data); load(data.input, data.synthetic === true); cursor = data.cursor; selected = new Set(data.selectedIds); decisions = Object.assign(Object.create(null), data.decisions ?? {}); compute(); render();
   } else load(data);
 }
 $("sample").addEventListener("click", () => load(kind === "scenario" ? { csv, priceDelta: 0, unitsDelta: 0 } : kind === "evidence" ? evidence : run, true));
