@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en" data-view="__KIND__">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Dots Studio</title><style>__STYLE__</style></head>
+<body>
+  <header><a class="brand" href="#">● DOTS STUDIO <span>EXPERIMENT 01</span></a><span id="host" class="badge">Connecting…</span></header>
+  <main>
+    <section class="intro"><p class="eyebrow" id="eyebrow">ONGOING WORK, MADE VISIBLE</p><h1 id="title">Loading…</h1><p id="subtitle"></p></section>
+    <div class="toolbar"><button id="sample">Load synthetic example</button><label class="file-button">Open your file<input type="file" id="file" accept=".json,.csv,.evidence,.dotrun,.scenario"></label><button id="export" class="primary">Export full-input replay</button><button id="context">Share selected context</button></div>
+    <p id="error" role="alert" hidden></p><div id="controls"></div><section class="stats" id="stats"></section><section id="workspace"></section>
+    <section id="replay-output" class="card" hidden><h2>Your full-input replay</h2><a id="replay-file">Save replay file</a><p>If your host blocks file downloads, copy this JSON into a file with the indicated extension.</p><textarea id="replay-text" aria-label="Full-input replay JSON" readonly rows="9"></textarea></section>
+    <section class="handoff"><div><p class="eyebrow">SELECT → INSPECT → REPLAY</p><h2>Carry the work forward.</h2><p>Only checked items are shared as context. The replay download includes all supplied input, assumptions and your selection, so the full result can be recomputed.</p></div><pre id="context-preview">Select at least one item.</pre></section>
+    <footer><span id="limit"></span><p id="provenance">Synthetic example · not a real dot run</p></footer>
+  </main><script type="module">__SCRIPT__</script>
+</body></html>

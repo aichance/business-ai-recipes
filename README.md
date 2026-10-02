@@ -1,6 +1,30 @@
-# Cutroom + Business AI Recipes
+# Dots Studio + Business AI Recipes
 
 [![Verify](https://github.com/jokv213/business-ai-recipes/actions/workflows/verify.yml/badge.svg)](https://github.com/jokv213/business-ai-recipes/actions/workflows/verify.yml)
+
+## Dots Studio — make assumptions, evidence and failed runs inspectable
+
+Three interactive MCP App workbenches: **Scenario Lab**, **Evidence Canvas**,
+and **Run Lens / Repair Pack**. Bring a CSV or JSON, change conditions, select
+what to carry forward, and export a replay you can recompute. No API key.
+
+![Scenario Lab](tools/dots-studio/demo/scenario.jpg)
+
+```bash
+cd tools/dots-studio
+npm ci --ignore-scripts --no-audit --no-fund
+npm run build
+npm test
+npm run preview
+```
+
+Requires Node 22+. Open **http://127.0.0.1:8782/scenario?preview=1**.
+Local UI and official MCP Client are verified; actual installation and use
+inside a dots host are pending. The portable plugin source registers global,
+thread and file entrypoints without claiming account installation.
+
+[Try all three panels, replay your own input, and see the verification limits →](tools/dots-studio/README.md)
+ · [50 ranked extension experiments →](tools/dots-studio/IDEAS.md)
 
 ## Demo Forge — turn a working app into a demo people can try
 

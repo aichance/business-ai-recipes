@@ -1,5 +1,23 @@
 # Project Instructions
 
+## Dots Studio
+
+`tools/dots-studio/` is a portable local MCP plugin with three bundled MCP App
+views. Node22+ is required. In that directory run `npm ci --ignore-scripts`,
+`npm run build`, `npm test`, and `npm run preview`. `core.mjs` owns input
+validation and deterministic calculations; `ui.mjs` owns import, selection,
+replay export and explicit selected-context updates; `server.mjs` registers
+seven tools, three resources and OpenAI extension entrypoints. `mcp.json`
+uses a contained local stdio entrypoint; build before installing into a host.
+No global installation or account publication is performed by the source.
+
+Tracked fixtures and screenshots are synthetic. All-input replay downloads
+include unselected items; selected context is a separate explicit operation.
+Do not fetch source links, execute repair commands, auto-post messages, or
+claim truth/adoption/live dot monitoring. Local preview and MCP protocol tests
+do not prove actual dots host execution. Only the contained node_modules and
+dist build paths are excluded from the exact source manifest verifier.
+
 ## Demo Forge and Cutroom (local tools)
 
 `experiments/demo-forge/` is a local browser-demo generator. Run its README

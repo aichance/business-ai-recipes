@@ -21,6 +21,11 @@ EXPECTED_FILES = {
     "LICENSE",
     "README.md",
     "RECIPES.md",
+    "experiments/demo-forge/README.md",
+    "experiments/demo-forge/app/index.html",
+    "experiments/demo-forge/forge.py",
+    "experiments/demo-forge/operation.json",
+    "experiments/demo-forge/server.py",
     "fixtures/human_review.json",
     "fixtures/meeting_line_judgment.json",
     "fixtures/selected_model_output.json",
@@ -42,11 +47,6 @@ EXPECTED_FILES = {
     "recipes/jev-support-triage/triage.py",
     "recipes/meeting-line-judgment/README.md",
     "recipes/meeting-line-judgment/recipe.py",
-    "experiments/demo-forge/README.md",
-    "experiments/demo-forge/app/index.html",
-    "experiments/demo-forge/forge.py",
-    "experiments/demo-forge/operation.json",
-    "experiments/demo-forge/server.py",
     "run_demo.py",
     "tools/cutroom/README.md",
     "tools/cutroom/app.js",
@@ -62,10 +62,37 @@ EXPECTED_FILES = {
     "tools/cutroom/style.css",
     "tools/cutroom/test_media.py",
     "tools/cutroom/test_server.py",
+    "tools/dots-studio/.gitignore",
+    "tools/dots-studio/IDEAS.md",
+    "tools/dots-studio/README.md",
+    "tools/dots-studio/build.mjs",
+    "tools/dots-studio/core.mjs",
+    "tools/dots-studio/demo/evidence.jpg",
+    "tools/dots-studio/demo/run.jpg",
+    "tools/dots-studio/demo/scenario.jpg",
+    "tools/dots-studio/examples.mjs",
+    "tools/dots-studio/fixtures/own-sales.csv",
+    "tools/dots-studio/fixtures/own-sales.scenario",
+    "tools/dots-studio/fixtures/sample.dotrun",
+    "tools/dots-studio/fixtures/sample.evidence",
+    "tools/dots-studio/mcp.json",
+    "tools/dots-studio/package-lock.json",
+    "tools/dots-studio/package.json",
+    "tools/dots-studio/plugin.json",
+    "tools/dots-studio/preview.mjs",
+    "tools/dots-studio/replay.mjs",
+    "tools/dots-studio/server.mjs",
+    "tools/dots-studio/shell.html",
+    "tools/dots-studio/skills/dots-studio/SKILL.md",
+    "tools/dots-studio/style.css",
+    "tools/dots-studio/test/core.test.mjs",
+    "tools/dots-studio/test/protocol.test.mjs",
+    "tools/dots-studio/ui.mjs",
     "verify.py",
 }
 _MISSING = object()
 _WORKSPACE_DIRS = frozenset({".demo-forge-output", ".demo-forge-venv"})
+_DOTS_WORKSPACE_PATHS = frozenset({"tools/dots-studio/node_modules", "tools/dots-studio/dist"})
 
 
 def _files(root: Path) -> set[str]:
@@ -74,6 +101,11 @@ def _files(root: Path) -> set[str]:
         if ".git" in path.parts or "__pycache__" in path.parts or path.suffix == ".pyc":
             continue
         if any(part in _WORKSPACE_DIRS for part in path.parts):
+            continue
+        relative = path.relative_to(root).as_posix()
+        if any(
+            relative == name or relative.startswith(name + "/") for name in _DOTS_WORKSPACE_PATHS
+        ):
             continue
         if path.is_symlink():
             raise AssertionError(f"symlink is not allowed: {path.relative_to(root)}")

@@ -13,6 +13,21 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  dots-studio:
+    runs-on: ubuntu-latest
+    container: node:22.16.0-bookworm
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Build and test portable extension source
+        working-directory: tools/dots-studio
+        run: |
+          node --version
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm run build
+          npm test
   recipe:
     runs-on: ubuntu-latest
     timeout-minutes: 10

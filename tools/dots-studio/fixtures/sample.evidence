@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "kind": "evidence",
+  "input": {
+    "title": "Launch decision: what do we actually know?",
+    "claims": [
+      {
+        "id": "speed",
+        "text": "Warm-cache setup took 67 seconds in one local run.",
+        "sourceIds": [
+          "local-run"
+        ]
+      },
+      {
+        "id": "adoption",
+        "text": "The tool has ten external users.",
+        "sourceIds": []
+      },
+      {
+        "id": "remote",
+        "text": "The published version matches the reviewed source.",
+        "sourceIds": [
+          "remote-readback"
+        ]
+      },
+      {
+        "id": "missing",
+        "text": "The second environment reproduced the demo.",
+        "sourceIds": [
+          "not-attached"
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "id": "local-run",
+        "title": "Synthetic local measurement",
+        "url": "https://example.com/local-run",
+        "excerpt": "A synthetic example record: 67.224 seconds, warm package cache, six browser steps. Not actual release evidence."
+      },
+      {
+        "id": "remote-readback",
+        "title": "Synthetic publication receipt",
+        "url": "https://example.com/readback",
+        "excerpt": "A synthetic receipt showing the same example SHA in two locations. Not a real remote fetch."
+      }
+    ]
+  },
+  "selectedIds": [
+    "speed",
+    "adoption"
+  ],
+  "synthetic": true,
+  "decisions": {
+    "adoption": "needs-check"
+  },
+  "nextChecks": [
+    {
+      "id": "speed",
+      "check": "Compare the supplied excerpt with the source and record your decision. Link presence alone is not verification.",
+      "decision": "unreviewed"
+    },
+    {
+      "id": "adoption",
+      "check": "Attach a source before accepting this claim.",
+      "decision": "needs-check"
+    }
+  ],
+  "replay": "From the repository root: node tools/dots-studio/replay.mjs PATH_TO_PACK"
+}

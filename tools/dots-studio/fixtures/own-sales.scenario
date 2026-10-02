@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "kind": "scenario",
+  "input": {
+    "csv": "name,unit_price,unit_cost,units\nWorkshop,40.00,15.00,8\nGuide,12.00,2.00,20\n",
+    "priceDelta": 1,
+    "unitsDelta": 0
+  },
+  "selectedIds": [
+    "row-2"
+  ],
+  "synthetic": false,
+  "decisions": {},
+  "nextChecks": [
+    {
+      "id": "row-2",
+      "check": "Test this assumption with observed input; the scenario is not a forecast.",
+      "decision": "unreviewed"
+    }
+  ],
+  "replay": "From the repository root: node tools/dots-studio/replay.mjs PATH_TO_PACK"
+}

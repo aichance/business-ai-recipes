@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "kind": "run",
+  "input": {
+    "title": "A launch run that stops at the missing evidence",
+    "steps": [
+      {
+        "id": "build",
+        "title": "Build the extension",
+        "dependsOn": []
+      },
+      {
+        "id": "test",
+        "title": "Run independent input",
+        "dependsOn": [
+          "build"
+        ]
+      },
+      {
+        "id": "verify",
+        "title": "Verify in the actual host",
+        "dependsOn": [
+          "test"
+        ]
+      },
+      {
+        "id": "publish",
+        "title": "Publish host-tested release",
+        "dependsOn": [
+          "verify"
+        ]
+      }
+    ],
+    "events": [
+      {
+        "step": "build",
+        "at": 0,
+        "type": "start"
+      },
+      {
+        "step": "build",
+        "at": 12,
+        "type": "success",
+        "artifact": "extension-source.zip"
+      },
+      {
+        "step": "test",
+        "at": 13,
+        "type": "start"
+      },
+      {
+        "step": "test",
+        "at": 25,
+        "type": "success",
+        "artifact": "test-results.json"
+      },
+      {
+        "step": "verify",
+        "at": 26,
+        "type": "start"
+      },
+      {
+        "step": "verify",
+        "at": 39,
+        "type": "failure",
+        "note": "No connected host yet. Source works locally; integration remains unverified."
+      }
+    ]
+  },
+  "selectedIds": [
+    "verify",
+    "publish"
+  ],
+  "cursor": 39,
+  "synthetic": true,
+  "decisions": {},
+  "nextChecks": [
+    {
+      "id": "verify",
+      "check": "Inspect the verify inputs and reproduce the failure before continuing its dependents.",
+      "decision": "unreviewed"
+    },
+    {
+      "id": "publish",
+      "check": "Resolve prerequisite(s): verify.",
+      "decision": "unreviewed"
+    }
+  ],
+  "replay": "From the repository root: node tools/dots-studio/replay.mjs PATH_TO_PACK"
+}
