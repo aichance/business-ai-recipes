@@ -28,6 +28,34 @@ jobs:
           npm ci --ignore-scripts --no-audit --no-fund
           npm run build
           npm test
+  app-forge:
+    runs-on: ubuntu-latest
+    container: node:22.16.0-bookworm
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Install archive tools
+        run: |
+          apt-get update -o Acquire::Retries=1 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30
+          apt-get install -y --no-install-recommends zip unzip
+      - name: Generate, build, and test two App Forge routes
+        working-directory: tools/app-forge
+        run: |
+          set -eu
+          output="/tmp/app-forge-support-request"
+          rm -rf "$output" "$output.zip"
+          node forge.mjs --schema fixtures/support-request.schema.json --data fixtures/support-request.data.json --out "$output" --zip "$output.zip"
+          node --check "$output/server.mjs"
+          (cd "$output" && npm ci --ignore-scripts --no-audit --no-fund && npm run build && npm test)
+          unzip -t "$output.zip"
+          output="/tmp/app-forge-release-checklist"
+          rm -rf "$output" "$output.zip"
+          node forge.mjs --schema fixtures/release-checklist.schema.json --data fixtures/release-checklist.data.json --out "$output" --zip "$output.zip"
+          node --check "$output/server.mjs"
+          (cd "$output" && npm ci --ignore-scripts --no-audit --no-fund && npm run build && npm test)
+          unzip -t "$output.zip"
   recipe:
     runs-on: ubuntu-latest
     timeout-minutes: 10

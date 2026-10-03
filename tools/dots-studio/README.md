@@ -1,12 +1,13 @@
 # Dots Studio
 
-**Three interactive workbenches. One input you can inspect and replay.**
+**Four interactive workbenches. One input you can inspect and replay.**
 
 | Workbench | Do something useful | Take it with you |
 | --- | --- | --- |
 | Scenario Lab | Open a CSV and change price/quantity assumptions | Exact cents-based comparison + `.scenario` replay |
 | Evidence Canvas | Select claims, inspect attached excerpts, record your decision | Sources, missing evidence and next checks in `.evidence` |
 | Run Lens | Scrub a supplied event log to its failure and blocked dependents | Selected failure and reproducible `.dotrun` repair pack |
+| Proof Pack Builder | Compare supplied input, before/after values and checks | Selected checks and a `.proof` replay pack |
 
 ![Scenario Lab using a CSV](demo/scenario.jpg)
 
@@ -25,7 +26,8 @@ npm run preview
 
 Open [Scenario Lab](http://127.0.0.1:8782/scenario?preview=1),
 [Evidence Canvas](http://127.0.0.1:8782/evidence?preview=1), or
-[Run Lens](http://127.0.0.1:8782/run?preview=1).
+[Run Lens](http://127.0.0.1:8782/run?preview=1), or
+[Proof Pack Builder](http://127.0.0.1:8782/proof?preview=1).
 Choose **Open your file**, select items, then **Export full-input replay**.
 Save the file or copy its visible JSON if the host blocks file downloads.
 Change one assumption and compare results. Stop the local server with Ctrl-C.
@@ -61,15 +63,16 @@ A host must support local processes, MCP Apps and OpenAI Extensions. Use that
 host's documented local-plugin installation flow with this directory; source
 publication does not install it into an account or provide a remote endpoint.
 
-The three `open_*` tools register sidebar/global, thread-panel and file
-entrypoints (`.csv`/`.scenario`, `.evidence`, `.dotrun`). The UI implements the
-granted file-resource bridge and selected model-context update. The three
-`analyze_*` tools also open the matching panel; `replay_pack` recomputes a pack.
+The four `open_*` tools register sidebar/global, thread-panel and file
+entrypoints (`.csv`/`.scenario`, `.evidence`, `.dotrun`, `.proof`). The UI
+implements the granted file-resource bridge and selected model-context update.
+The four `analyze_*` tools also open the matching panel; `replay_pack`
+recomputes a pack.
 HTML resources are bundled with no remote script or font fetches.
 
-**Verified:** build, twelve tests including the official MCP Client, discovery of
-seven tools and three HTML resources, local browser file import, condition
-changes, selections and replay JSON. **Pending:** installation and a complete
+**Verified:** build, fourteen tests, discovery of nine tools and four HTML
+resources, local preview import, condition changes, selections and replay JSON.
+**Pending:** installation and a complete
 run in an actual dots account/host, host file permissions and context delivery.
 The preview displays `HOST UNVERIFIED` for this reason.
 
@@ -94,6 +97,10 @@ computer. [Official dots guidance](https://learn.chatgpt.com/docs/dots/computers
   `type` is start/success/failure. The whole log is checked before prefix replay;
   dependencies must finish successfully before their dependents start.
   Artifact names are declarations; files are not opened or verified.
+- **Proof JSON:** `title`, `input`, `before`, `after` metric arrays with
+  `{id,title,value}`, and `checks: [{id,title,status,note,metricIds,artifact?}]`.
+  Status is supplied evidence; `unverified` remains unverified and missing
+  before/after values are shown instead of being inferred.
 
 Files are capped at 200 KB. Large selected context is rejected with a smaller
 selection instruction; it is never silently truncated. The tool has no live
@@ -108,9 +115,9 @@ do the same arithmetic, and a text editor can read the same log; this prototype
 adds an inspectable UI, dependency-aware replay and a portable handoff pack.
 It makes no measured time-saving or adoption claim.
 
-[50 ranked extension ideas](IDEAS.md) are the next experiments; only the three
+[50 ranked extension ideas](IDEAS.md) are the next experiments; only the four
 workbenches above are implemented. AI-assisted work by **Naoya / jokv213**.
 
-日本語: CSVの条件を動かす、主張と根拠を選ぶ、失敗したrunを時間順に追う3画面。
+日本語: CSVの条件を動かす、主張と根拠を選ぶ、失敗したrunを時間順に追う、証拠パックを比較する4画面。
 結果だけでなく入力・条件・選択をJSONで持ち帰り、同じ計算を再現できます。
 現版はローカル画面とMCP接続まで検証済みで、実際のdots内の利用は未検証です。

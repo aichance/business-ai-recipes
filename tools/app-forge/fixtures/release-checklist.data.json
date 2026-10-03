@@ -1,0 +1,6 @@
+{
+  "release_name": "October patch",
+  "risk": "low",
+  "rollback_minutes": 15,
+  "approved": false
+}

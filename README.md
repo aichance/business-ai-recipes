@@ -4,8 +4,8 @@
 
 ## Dots Studio — make assumptions, evidence and failed runs inspectable
 
-Three interactive MCP App workbenches: **Scenario Lab**, **Evidence Canvas**,
-and **Run Lens / Repair Pack**. Bring a CSV or JSON, change conditions, select
+Four interactive MCP App workbenches: **Scenario Lab**, **Evidence Canvas**,
+**Run Lens / Repair Pack**, and **Proof Pack Builder**. Bring a CSV or JSON, change conditions, select
 what to carry forward, and export a replay you can recompute. No API key.
 
 ![Scenario Lab](tools/dots-studio/demo/scenario.jpg)
@@ -23,8 +23,34 @@ Local UI and official MCP Client are verified; actual installation and use
 inside a dots host are pending. The portable plugin source registers global,
 thread and file entrypoints without claiming account installation.
 
-[Try all three panels, replay your own input, and see the verification limits →](tools/dots-studio/README.md)
+[Try all four panels, replay your own input, and see the verification limits →](tools/dots-studio/README.md)
  · [50 ranked extension experiments →](tools/dots-studio/IDEAS.md)
+
+## App Forge — make a small extension from your own schema
+
+App Forge turns a constrained `fields[]` or JSON Schema `properties{}` input
+into an editable local MCP plugin source. Build and test it, edit your own
+sample JSON, export the result, and take the source ZIP with you. It is
+deterministic and local: it does not call a model or network service and does
+not claim installation in an actual dots host.
+
+```bash
+cd tools/app-forge
+node forge.mjs \
+  --schema fixtures/support-request.schema.json \
+  --data fixtures/support-request.data.json \
+  --out /tmp/app-forge-support
+cd /tmp/app-forge-support
+npm ci --ignore-scripts --no-audit --no-fund
+npm run build
+npm test
+npm run preview
+```
+
+Edit a field at `http://127.0.0.1:8783/?preview=1`, export the JSON, and keep
+the generated source ZIP. The generated source is a local development artifact;
+host connection, account installation, and external delivery remain separate
+steps. [Full App Forge instructions and limits →](tools/app-forge/README.md)
 
 ## Demo Forge — turn a working app into a demo people can try
 

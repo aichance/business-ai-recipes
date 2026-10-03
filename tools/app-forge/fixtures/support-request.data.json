@@ -1,0 +1,6 @@
+{
+  "summary": "Checkout error",
+  "priority": "high",
+  "retry_count": 0,
+  "customer_visible": false
+}

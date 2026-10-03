@@ -1,7 +1,7 @@
 import { App, applyDocumentTheme, applyHostStyleVariables } from "@modelcontextprotocol/ext-apps";
 import { OpenAIExtensions, OpenAIFileEntrypointInputSchema } from "@openai/mcp-extensions/app";
-import { analyzeEvidence, analyzeRun, analyzeScenario, selectionContext, replayPack, nextCheckFor } from "./core.mjs";
-import { evidence, run, csv } from "./examples.mjs";
+import { analyzeEvidence, analyzeRun, analyzeScenario, analyzeProof, selectionContext, replayPack, nextCheckFor } from "./core.mjs";
+import { evidence, run, csv, proof } from "./examples.mjs";
 
 const kind = document.documentElement.dataset.view;
 const $ = (v) => document.getElementById(v);
@@ -9,6 +9,7 @@ const meta = {
   scenario: ["Scenario Lab", "Change one assumption. Keep a replayable branch.", "WHAT IF, WITH RECEIPTS"],
   evidence: ["Evidence Canvas", "Pick a claim. Follow its sources. Export the next check.", "FROM CLAIM TO NEXT ACTION"],
   run: ["Run Lens", "Scrub a run. Find its first failure. Carry a repair pack forward.", "THE MOMENT WORK STOPPED"],
+  proof: ["Proof Pack Builder", "Compare before and after. Keep the unverified parts visible.", "INPUT → BEFORE → AFTER"],
 }[kind];
 $("title").textContent = meta[0]; $("subtitle").textContent = meta[1]; $("eyebrow").textContent = meta[2];
 const preview = window.parent === window && location.hostname === "127.0.0.1" && new URLSearchParams(location.search).get("preview") === "1";
@@ -21,10 +22,10 @@ const money = (c) => (c / 100).toLocaleString("en-US", { minimumFractionDigits: 
 function el(tag, text, className) { const n = document.createElement(tag); if (text != null) n.textContent = text; if (className) n.className = className; return n; }
 function error(e) { $("error").hidden = false; $("error").textContent = e?.message ?? String(e); }
 function compute() {
-  result = kind === "evidence" ? analyzeEvidence(input) : kind === "run" ? analyzeRun(input, cursor) : analyzeScenario(input);
+  result = kind === "evidence" ? analyzeEvidence(input) : kind === "run" ? analyzeRun(input, cursor) : kind === "proof" ? analyzeProof(input) : analyzeScenario(input);
 }
 function load(data, isSynthetic = false) {
-  const next = kind === "evidence" ? analyzeEvidence(data) : kind === "run" ? analyzeRun(data) : analyzeScenario(data);
+  const next = kind === "evidence" ? analyzeEvidence(data) : kind === "run" ? analyzeRun(data) : kind === "proof" ? analyzeProof(data) : analyzeScenario(data);
   input = structuredClone(data); result = next; synthetic = isSynthetic; cursor = undefined; selected = new Set(); decisions = Object.create(null);
   $("error").hidden = true; render();
 }
@@ -110,8 +111,24 @@ function renderScenarioTable() {
     const pick = el("td"); pick.append(checkbox(r.id, tr)); tr.append(pick, el("td", r.name), el("td", money(r.priceCents), "money"), el("td", String(r.units)), el("td", money((r.priceCents - r.costCents) * r.units), "money")); body.append(tr);
   }); table.append(body); $("workspace").replaceChildren(table);
 }
+function renderProof() {
+  stats([["Checks", result.summary.checks], ["Changed outputs", result.summary.changed], ["Review needed", result.summary.reviewNeeded, true]]);
+  const grid = el("div", null, "grid");
+  result.checks.forEach((check) => {
+    const card = el("article", null, "card" + (selected.has(check.id) ? " selected" : ""));
+    const top = el("div", null, "top"); top.append(el("span", check.status, `pill ${check.status}`), checkbox(check.id, card));
+    card.append(top, el("h3", check.title), el("p", check.note));
+    if (check.artifact) card.append(el("p", `Artifact: ${check.artifact} (declared, not opened)`));
+    if (check.missingMetricIds.length) card.append(el("p", `Missing before/after: ${check.missingMetricIds.join(", ")}`));
+    card.append(el("div", nextCheck(check), "next")); grid.append(card);
+  });
+  const table = el("table"), header = el("tr"); ["Metric", "Before", "After", "State"].forEach((v) => header.append(el("th", v)));
+  const head = el("thead"); head.append(header); table.append(head); const body = el("tbody");
+  result.comparisons.forEach((v) => { const tr = el("tr"); tr.append(el("td", v.title), el("td", v.before ?? "—"), el("td", v.after ?? "—"), el("td", v.status)); body.append(tr); });
+  table.append(body); $("workspace").replaceChildren(grid, table); $("controls").replaceChildren();
+}
 function render() {
-  if (kind === "evidence") renderEvidence(); else if (kind === "run") renderRun(); else renderScenario();
+  if (kind === "evidence") renderEvidence(); else if (kind === "run") renderRun(); else if (kind === "proof") renderProof(); else renderScenario();
   $("limit").textContent = result.limit; $("provenance").textContent = synthetic ? "Synthetic example · not a real dot run" : "User-supplied input · local calculation · sources and artifacts not fetched";
   refreshContext();
 }
@@ -122,7 +139,7 @@ function exportPack() {
   replayPack(pack); // Reject a pack we cannot reproduce ourselves.
   const raw = JSON.stringify(pack, null, 2) + "\n";
   const blob = new Blob([raw], { type: "application/json" });
-  const extension = { scenario: "scenario", evidence: "evidence", run: "dotrun" }[kind];
+  const extension = { scenario: "scenario", evidence: "evidence", run: "dotrun", proof: "proof" }[kind];
   if (replayURL) URL.revokeObjectURL(replayURL);
   replayURL = URL.createObjectURL(blob);
   const link = $("replay-file"); link.href = replayURL; link.download = `${kind}-replay.${extension}`; link.textContent = `Save ${link.download}`;
@@ -137,7 +154,7 @@ async function importText(raw, isCSV) {
     replayPack(data); load(data.input, data.synthetic === true); cursor = data.cursor; selected = new Set(data.selectedIds); decisions = Object.assign(Object.create(null), data.decisions ?? {}); compute(); render();
   } else load(data);
 }
-$("sample").addEventListener("click", () => load(kind === "scenario" ? { csv, priceDelta: 0, unitsDelta: 0 } : kind === "evidence" ? evidence : run, true));
+$("sample").addEventListener("click", () => load(kind === "scenario" ? { csv, priceDelta: 0, unitsDelta: 0 } : kind === "evidence" ? evidence : kind === "run" ? run : proof, true));
 $("file").addEventListener("change", async (event) => {
   const file = event.target.files[0]; if (!file) return;
   try { if (file.size > 200000) throw new Error("File exceeds 200,000 bytes"); await importText(await file.text(), file.name.endsWith(".csv")); }
@@ -171,7 +188,7 @@ app.ontoolinput = async (value) => {
     if (sequence === inputSequence) await importText(raw, kind === "scenario" && !raw.trimStart().startsWith("{"));
   } catch (e) { if (sequence === inputSequence) { pendingFileResult = false; error(e); } }
 };
-load(kind === "scenario" ? { csv, priceDelta: 0, unitsDelta: 0 } : kind === "evidence" ? evidence : run, true);
+load(kind === "scenario" ? { csv, priceDelta: 0, unitsDelta: 0 } : kind === "evidence" ? evidence : kind === "run" ? run : proof, true);
 if (preview) {
   $("host").textContent = "LOCAL PREVIEW · HOST UNVERIFIED";
   $("context").title = "Use a connected host to share context";

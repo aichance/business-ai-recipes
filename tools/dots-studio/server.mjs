@@ -6,8 +6,8 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { registerAppTool, registerAppResource, RESOURCE_MIME_TYPE } from "@modelcontextprotocol/ext-apps/server";
 import { OpenAIExtensions } from "@openai/mcp-extensions/server";
 import { z } from "zod";
-import { analyzeEvidence, analyzeRun, analyzeScenario, EvidenceSchema, RunSchema, ScenarioSchema } from "./core.mjs";
-import { evidence, run, csv } from "./examples.mjs";
+import { analyzeEvidence, analyzeRun, analyzeScenario, analyzeProof, EvidenceSchema, RunSchema, ScenarioSchema, ProofSchema } from "./core.mjs";
+import { evidence, run, csv, proof } from "./examples.mjs";
 
 const root = dirname(fileURLToPath(import.meta.url));
 export function createServer() {
@@ -20,6 +20,8 @@ export function createServer() {
       compute: analyzeEvidence, example: evidence },
     { kind: "run", label: "Run Lens / Repair Pack", extensions: ["dotrun"], schema: RunSchema,
       compute: analyzeRun, example: run },
+    { kind: "proof", label: "Proof Pack Builder", extensions: ["proof"], schema: ProofSchema,
+      compute: analyzeProof, example: proof },
   ];
   for (const view of views) {
     const uri = `ui://dots-studio/${view.kind}`;
@@ -49,7 +51,7 @@ export function createServer() {
   }
   server.registerTool("replay_pack", {
     title: "Validate a replay pack", description: "Recompute exported conditions and selections; never execute commands from the input.",
-    inputSchema: { pack: z.object({ schemaVersion: z.literal(1), kind: z.enum(["scenario", "evidence", "run"]),
+    inputSchema: { pack: z.object({ schemaVersion: z.literal(1), kind: z.enum(["scenario", "evidence", "run", "proof"]),
       input: z.unknown(), selectedIds: z.array(z.string()).min(1).max(1000), cursor: z.number().finite().nonnegative().optional(),
       decisions: z.record(z.string(), z.enum(["unreviewed", "accepted-by-user", "rejected-by-user", "needs-check"])).optional() }) },
     annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false },

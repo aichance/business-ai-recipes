@@ -4,7 +4,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 const root = dirname(fileURLToPath(import.meta.url));
 const port = Number(process.env.DOTS_STUDIO_PORT ?? 8782);
-const files = new Set(["scenario", "evidence", "run"]);
+const files = new Set(["scenario", "evidence", "run", "proof"]);
 createServer(async (req, res) => {
   const url = new URL(req.url, "http://127.0.0.1");
   const kind = url.pathname.replace(/^\//, "") || "scenario";

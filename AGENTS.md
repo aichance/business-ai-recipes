@@ -2,12 +2,12 @@
 
 ## Dots Studio
 
-`tools/dots-studio/` is a portable local MCP plugin with three bundled MCP App
+`tools/dots-studio/` is a portable local MCP plugin with four bundled MCP App
 views. Node22+ is required. In that directory run `npm ci --ignore-scripts`,
 `npm run build`, `npm test`, and `npm run preview`. `core.mjs` owns input
 validation and deterministic calculations; `ui.mjs` owns import, selection,
 replay export and explicit selected-context updates; `server.mjs` registers
-seven tools, three resources and OpenAI extension entrypoints. `mcp.json`
+nine tools, four resources and OpenAI extension entrypoints. `mcp.json`
 uses a contained local stdio entrypoint; build before installing into a host.
 No global installation or account publication is performed by the source.
 

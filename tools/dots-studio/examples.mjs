@@ -29,3 +29,25 @@ export const run = {
   ],
 };
 export const csv = 'name,unit_price,unit_cost,units\nStarter,29.00,8.00,120\nTeam,79.00,24.00,45\nStudio,149.00,45.00,18\n';
+export const proof = {
+  title: "Dots Studio release proof",
+  input: [
+    { id: "route", title: "Input route", value: "synthetic localhost app" },
+    { id: "artifact", title: "Carry-away artifact", value: "proof-pack.json" },
+    { id: "host", title: "Target host", value: "actual dots host" },
+  ],
+  before: [
+    { id: "route", title: "Input route", value: "local preview" },
+    { id: "artifact", title: "Carry-away artifact", value: "none" },
+    { id: "host", title: "Target host", value: "not connected" },
+  ],
+  after: [
+    { id: "route", title: "Input route", value: "local preview" },
+    { id: "artifact", title: "Carry-away artifact", value: "proof-pack.json" },
+    { id: "host", title: "Target host", value: "not connected" },
+  ],
+  checks: [
+    { id: "replay", title: "Same input replays", status: "pass", note: "The supplied values can be recomputed from the exported pack.", metricIds: ["route", "artifact"], artifact: "replay-output.json" },
+    { id: "host", title: "Actual host execution", status: "unverified", note: "No connected dots host is available in this local preview.", metricIds: ["host"] },
+  ],
+};

@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { analyzeEvidence, analyzeRun, analyzeScenario, parseCSV, selectionContext, replayPack } from "../core.mjs";
-import { evidence, run, csv } from "../examples.mjs";
+import { analyzeEvidence, analyzeRun, analyzeScenario, analyzeProof, parseCSV, selectionContext, replayPack } from "../core.mjs";
+import { evidence, run, proof, csv } from "../examples.mjs";
 
 test("scenario preserves exact baseline sums and recomputes changed assumptions", () => {
   const base = analyzeScenario({ csv });
@@ -100,4 +100,19 @@ test("a claim id named constructor does not inherit a decision from Object.proto
   assert.equal(replayPack(pack).context.structuredContent.nextChecks[0].decision, "unreviewed");
   pack.decisions = JSON.parse('{"constructor":"needs-check"}');
   assert.equal(replayPack(pack).context.structuredContent.nextChecks[0].decision, "needs-check");
+});
+test("proof packs compare before and after values without promoting unverified checks", () => {
+  const result = analyzeProof(proof);
+  assert.equal(result.kind, "proof"); assert.equal(result.summary.changed, 1);
+  assert.equal(result.summary.unverified, 1); assert.equal(result.summary.reviewNeeded, 1);
+  const pack = { schemaVersion: 1, kind: "proof", input: proof, selectedIds: ["host"] };
+  const replay = replayPack(pack);
+  assert.equal(replay.context.structuredContent.selected[0].status, "unverified");
+  assert.equal(replay.context.structuredContent.metrics[0].id, "host");
+});
+test("proof packs reject malformed statuses and expose missing metrics", () => {
+  const missing = structuredClone(proof); missing.checks[0].metricIds = ["missing"];
+  assert.equal(analyzeProof(missing).checks[0].missingMetricIds[0], "missing");
+  const bad = structuredClone(proof); bad.checks[0].status = "passed";
+  assert.throws(() => analyzeProof(bad));
 });

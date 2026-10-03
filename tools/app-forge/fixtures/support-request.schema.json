@@ -1,0 +1,10 @@
+{
+  "title": "Support Request",
+  "slug": "support-request",
+  "fields": [
+    {"id": "summary", "label": "Summary", "type": "text", "default": "Checkout error", "required": true},
+    {"id": "priority", "label": "Priority", "type": "select", "options": ["low", "high"], "default": "high", "required": true},
+    {"id": "retry_count", "label": "Retry count", "type": "number", "default": 0, "required": true},
+    {"id": "customer_visible", "label": "Customer visible", "type": "boolean", "default": false, "required": true}
+  ]
+}

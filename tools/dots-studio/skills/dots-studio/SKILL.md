@@ -3,7 +3,7 @@ name: dots-studio
 description: Use for interactive inspection of a supplied CSV scenario, claim/source evidence file, or run event log, with selected context and a reproducible replay pack.
 ---
 
-Choose the relevant workbench: `open_scenario`, `open_evidence`, or `open_run`.
+Choose the relevant workbench: `open_scenario`, `open_evidence`, `open_run`, or `open_proof`.
 The opening data is synthetic. Ask for the user's file or explicitly supplied
 input before drawing conclusions. The `analyze_*` tools accept the documented
 input schemas; they calculate deterministically without fetching sources.
@@ -21,3 +21,8 @@ is not live monitoring, and a scenario is not a forecast.
 
 The actual dots host integration is pending verification in this release.
 Do not describe local browser preview or MCP protocol tests as a live dots run.
+
+Proof Pack Builder compares explicitly supplied input, before, and after values.
+Its checks are user-supplied statuses; `unverified` must remain visible and is
+never promoted to success. Export the full-input `.proof` replay and share only
+selected checks plus their linked metrics.

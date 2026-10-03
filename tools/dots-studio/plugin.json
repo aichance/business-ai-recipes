@@ -2,18 +2,18 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "dots-studio",
   "version": "0.1.0",
-  "description": "Three interactive workbenches: replay CSV assumptions, review supplied evidence, and inspect a failed run with a repair pack.",
+  "description": "Four interactive workbenches: replay assumptions, review evidence, inspect failed runs, and build before/after proof packs.",
   "author": { "name": "Naoya / jokv213" },
   "extensions": {
     "com.openai": {
       "interface": {
         "displayName": "Dots Studio",
         "shortDescription": "Interactive replay workbench",
-        "longDescription": "Use your CSV, evidence, or event file in an interactive panel. Change assumptions, select context, and export a reproducible full-input replay.",
+        "longDescription": "Use a CSV, evidence, event, or proof file in an interactive panel. Compare supplied inputs, select context, and export a reproducible replay.",
         "developerName": "Naoya / jokv213",
         "category": "Productivity",
         "capabilities": ["Interactive"],
-        "defaultPrompt": "Open Scenario Lab, Evidence Canvas, or Run Lens to inspect my supplied input and prepare a replay."
+        "defaultPrompt": "Open Scenario Lab, Evidence Canvas, Run Lens, or Proof Pack Builder to inspect my supplied input and prepare a replay."
       }
     }
   }

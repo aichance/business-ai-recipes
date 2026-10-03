@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Three portable MCP Apps for inspectable ongoing work",
+  "description": "Four portable MCP Apps for inspectable ongoing work",
   "engines": {"node": ">=22"},
   "scripts": {
     "build": "node build.mjs",

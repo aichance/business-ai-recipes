@@ -1,0 +1,12 @@
+{
+  "title": "Release Checklist",
+  "slug": "release-checklist",
+  "type": "object",
+  "properties": {
+    "release_name": {"title": "Release name", "type": "string"},
+    "risk": {"title": "Risk", "type": "string", "enum": ["low", "high"], "default": "low"},
+    "rollback_minutes": {"title": "Rollback minutes", "type": "number", "default": 15},
+    "approved": {"title": "Approved", "type": "boolean", "default": false}
+  },
+  "required": ["release_name", "risk", "rollback_minutes", "approved"]
+}

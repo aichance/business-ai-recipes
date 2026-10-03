@@ -1,0 +1,7 @@
+{
+  "title": "Review \"alpha\"\nline",
+  "slug": "quote-title",
+  "fields": [
+    {"id": "note", "label": "Note", "type": "text", "required": true}
+  ]
+}

@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import { readFile } from "node:fs/promises";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
-import { csv } from "../examples.mjs";
+import { csv, proof } from "../examples.mjs";
 
 test("official MCP Client discovers the extensions, HTML resources, and analyzes own input", async () => {
   const client = new Client({ name: "dots-studio-test", version: "1.0.0" });
@@ -18,8 +18,8 @@ test("official MCP Client discovers the extensions, HTML resources, and analyzes
     args: config.args.map((v) => v.replaceAll("${PLUGIN_ROOT}", root)), cwd: config.cwd.replaceAll("${PLUGIN_ROOT}", root) });
   await client.connect(transport);
   try {
-    const tools = await client.listTools(); assert.equal(tools.tools.length, 7);
-    for (const kind of ["scenario", "evidence", "run"]) {
+    const tools = await client.listTools(); assert.equal(tools.tools.length, 9);
+    for (const kind of ["scenario", "evidence", "run", "proof"]) {
       const opener = tools.tools.find((v) => v.name === `open_${kind}`);
       assert(opener._meta["openai/ui"].entrypoints.some((v) => v.type === "file"));
       assert(opener._meta["openai/ui"].entrypoints.some((v) => v.type === "global"));
@@ -35,5 +35,7 @@ test("official MCP Client discovers the extensions, HTML resources, and analyzes
     assert.equal(bad.isError, true);
     const replay = await client.callTool({ name: "replay_pack", arguments: { pack: { schemaVersion: 1, kind: "scenario", input: { csv, priceDelta: 10 }, selectedIds: ["row-2"] } } });
     assert.equal(replay.isError ?? false, false);
+    const proofResult = await client.callTool({ name: "analyze_proof", arguments: { input: proof } });
+    assert.equal(proofResult.isError ?? false, false); assert.equal(proofResult.structuredContent.result.summary.unverified, 1);
   } finally { await client.close(); }
 });
