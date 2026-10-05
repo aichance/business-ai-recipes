@@ -12,7 +12,7 @@ python3 experiments/demo-forge/forge.py \
 ```
 
 Run from the repository root with Python 3.11+, the Python Playwright package
-and its Chromium browser installed, plus `ffmpeg` on `PATH`. This repository
+1.48+ and its Chromium browser installed, plus `ffmpeg` on `PATH`. This repository
 does not install those tools or require an external API key.
 
 Before starting a run, check the local prerequisites without launching the
@@ -47,6 +47,56 @@ The runner also accepts `--server` and `--operation` for a self-owned app
 with the documented ready-line contract. The checked-in `examples/brief-app`
 uses the same command shape and is a portability example, not proof of
 generic browser compatibility.
+
+### Record your already-running app
+
+Your app can keep its normal startup command. Supply its URL and your own
+operation JSON; URL mode needs no ready-line contract and leaves the app running.
+
+For a complete trial, keep this included app running in terminal one:
+
+```bash
+python3 experiments/demo-forge/examples/brief-app/server.py --port 3000
+```
+
+In terminal two, record it with no startup handling:
+
+```bash
+python3 experiments/demo-forge/forge.py \
+  --url http://127.0.0.1:3000/ \
+  --operation experiments/demo-forge/examples/brief-app/operation.json \
+  --output .demo-forge-output/brief-url
+```
+
+```bash
+python3 experiments/demo-forge/forge.py \
+  --url http://127.0.0.1:3000/ \
+  --operation my-operation.json \
+  --output .demo-forge-output/my-app \
+  --tail-seconds 3
+```
+
+Adapt the selectors and expected text to your own app. This example works with
+the checked-in `examples/brief-app` when it is already running on port 3000:
+
+```json
+{
+  "name": "my-app-demo",
+  "input": {"title": "Release Brief"},
+  "steps": [
+    {"type": "fill", "selector": "#brief-input", "value": "Release Brief"},
+    {"type": "click", "selector": "#save-button"},
+    {"type": "wait_for_selector", "selector": "#result-card[data-state='success']"}
+  ],
+  "success": {"selector": "#result-title", "text": "Release Brief is ready"}
+}
+```
+
+Use an explicit `http://127.0.0.1:PORT/path`. `--operation` is required with
+`--url`; credentials and fragments are rejected. Requests stay on that exact
+port. Redirects, WebSockets, service workers and cross-origin assets are
+unsupported. Use a fresh output directory per run; `run.json` is authoritative.
+URL mode records `managed_by_forge: false` and does not stop the running app.
 
 For a 10-30 second share preview, add `--tail-seconds 8`. This holds the
 verified final browser frame in the converted MP4 and GIF; it does not add a
@@ -85,12 +135,19 @@ JSONに不足項目と修復コマンドが表示されます。`missing`は実�
 差し替えられます。`examples/brief-app`に別の最小アプリ例を保存していますが、
 これは差し替え経路の確認であり、汎用ブラウザ互換性の証明ではありません。
 
+既に起動済みのアプリには`--url http://127.0.0.1:3000/`と、自分の画面に
+合わせた`--operation my-operation.json`を指定できます。専用の起動メッセージや
+サーバー変更は不要で、実行後もアプリを終了させません。操作定義例は上のJSONを
+参照してください。HTTPの同じポート内を対象とし、リダイレクト・WebSocket・
+service worker・別originの素材には対応しません。各回で新しい出力先を使い、
+`run.json`の成功・失敗を確認してください。手作業の準備時間短縮は未測定です。
+
 10〜30秒の共有用プレビューを作る場合は`--tail-seconds 8`を追加します。
 これはブラウザ操作の成功後に実際に確認した最終画面を、変換後のMP4とGIFで保持する
 だけです。新しい操作を追加したり、外部のライブセッションを保証したりしません。
 
 ### Current limits / 現在の制約
 
-- 対応アプリはこの自作Demo Forgeアプリ一つです。
+- 既定アプリ、別アプリ例、合成の起動済みHTTPアプリで検証しています。任意のアプリへの互換性は保証していません。
 - 外部APIキー、顧客データ、ログイン済みサービスは使いません。
 - 失敗した操作を成功素材として出力しません。

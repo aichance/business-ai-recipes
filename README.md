@@ -59,6 +59,24 @@ a self-owned localhost app. It checks the app's final success state and writes
 WebM, MP4, GIF, and a cover image. The input is synthetic and the default route
 never uses an external API or a logged-in browser profile.
 
+**Already running your app? Record it by URL, with no server modifications.**
+![A running local app recorded and checked by Demo Forge](experiments/demo-forge/demo.gif)
+
+Write an operation JSON for your actual selectors and expected outcome, then:
+
+```bash
+python3 experiments/demo-forge/forge.py \
+  --url http://127.0.0.1:3000/ \
+  --operation my-operation.json \
+  --output .demo-forge-output/my-app \
+  --tail-seconds 3
+```
+
+The app keeps running. The runner checks the outcome before converting its real
+browser recording. HTTP assets must stay on the same loopback port; redirects,
+WebSockets and service workers are unsupported. See the operation JSON example
+in the [Demo Forge guide](experiments/demo-forge/README.md).
+
 ```bash
 python3 -m venv .demo-forge-venv
 .demo-forge-venv/bin/python -m pip install playwright

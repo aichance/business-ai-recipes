@@ -1,0 +1,16 @@
+{
+  "name": "save-release-brief",
+  "input": { "brief_title": "Release Brief" },
+  "steps": [
+    { "type": "fill", "selector": "#brief-input", "value": "Release Brief" },
+    { "type": "click", "selector": "#save-button" },
+    { "type": "wait_for_selector", "selector": "#result-card[data-state=\"success\"]" },
+    { "type": "assert_text", "selector": "#status", "contains": "Saved" },
+    { "type": "assert_text", "selector": "#result-title", "contains": "Release Brief is ready" },
+    { "type": "assert_attribute", "selector": "#result-card", "attribute": "data-state", "equals": "success" }
+  ],
+  "success": {
+    "selector": "#result-card[data-state=\"success\"]",
+    "text": "Release Brief is ready"
+  }
+}

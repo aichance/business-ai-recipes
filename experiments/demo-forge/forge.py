@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import importlib.metadata
 import importlib.util
 import json
 import math
@@ -17,6 +18,7 @@ import time
 from datetime import datetime
 from pathlib import Path
 from selectors import EVENT_READ, DefaultSelector
+from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parent
 DEFAULT_SERVER = ROOT / "server.py"
@@ -100,16 +102,65 @@ def nonnegative_seconds(value: str) -> float:
     return seconds
 
 
+def local_app_url(value: str) -> str:
+    """Require one explicit, unauthenticated loopback HTTP application."""
+    try:
+        parts = urlsplit(value)
+        valid = (
+            parts.scheme == "http"
+            and parts.hostname == "127.0.0.1"
+            and parts.port is not None
+            and 1 <= parts.port <= 65535
+            and parts.username is None
+            and parts.password is None
+            and not parts.fragment
+            and not any(c.isspace() for c in value)
+        )
+    except ValueError:
+        valid = False
+    if not valid:
+        raise argparse.ArgumentTypeError(
+            "use http://127.0.0.1:PORT/path for your own running local app"
+        )
+    return value
+
+
+def same_app_request(url: str, app_url: str) -> bool:
+    try:
+        parts, app = urlsplit(url), urlsplit(app_url)
+        return (
+            parts.scheme == app.scheme == "http"
+            and parts.hostname == app.hostname == "127.0.0.1"
+            and parts.port == app.port
+            and parts.username is None
+            and parts.password is None
+        )
+    except ValueError:
+        return False
+
+
+def route_local_request(route, app_url: str) -> None:
+    """Fetch one local response without following redirects outside the guard."""
+    if not same_app_request(route.request.url, app_url):
+        route.abort("blockedbyclient")
+        return
+    response = route.fetch(max_redirects=0)
+    if 300 <= response.status < 400:
+        route.abort("blockedbyclient")
+        return
+    route.fulfill(response=response)
+
+
 def playwright_repair_steps() -> list[str]:
     """Return setup commands that keep installs out of system Python."""
     if sys.prefix == sys.base_prefix:
         return [
             "python3 -m venv .demo-forge-venv",
-            ".demo-forge-venv/bin/python -m pip install playwright",
+            ".demo-forge-venv/bin/python -m pip install 'playwright>=1.48'",
             ".demo-forge-venv/bin/python -m playwright install chromium",
         ]
     return [
-        "python3 -m pip install playwright",
+        "python3 -m pip install 'playwright>=1.48'",
         "python3 -m playwright install chromium",
     ]
 
@@ -135,7 +186,13 @@ def doctor_result() -> dict[str, object]:
             "detail": "Playwright package is unavailable, so its browser path cannot be checked",
         }
     else:
-        requirements["playwright"] = {"status": "ok"}
+        version = importlib.metadata.version("playwright")
+        version_parts = tuple(int(part) for part in version.split(".")[:2])
+        requirements["playwright"] = {
+            "status": "ok" if version_parts >= (1, 48) else "missing",
+            "version": version,
+            "required": ">=1.48",
+        }
         try:
             from playwright.sync_api import sync_playwright
 
@@ -233,7 +290,10 @@ def run(
     server_path: Path,
     spec_path: Path,
     tail_seconds: float = 0.0,
+    app_url: str | None = None,
 ) -> dict[str, object]:
+    if app_url is not None:
+        app_url = local_app_url(app_url)
     output.mkdir(parents=True, exist_ok=True)
     spec = json.loads(spec_path.read_text())
     started = iso_now()
@@ -246,7 +306,10 @@ def run(
         "scope": "experiments/demo-forge",
         "operation": spec["name"],
         "input": spec["input"],
-        "sources": {"server": str(server_path), "operation": str(spec_path)},
+        "sources": {
+            "server": str(server_path) if app_url is None else None,
+            "operation": str(spec_path),
+        },
         "presentation": {
             "tail_seconds": tail_seconds,
             "tail_mode": "clone_final_frame" if tail_seconds > 0 else "none",
@@ -258,9 +321,22 @@ def run(
     }
     temp_dir = Path(tempfile.mkdtemp(prefix="demo-forge-video-", dir=output))
     try:
-        process, server_pid, port, ready_line = start_server(server_path)
-        result["server"] = {"pid": server_pid, "port": port, "ready_line": ready_line}
-        result["browser"] = {**result["browser"], "url": f"http://127.0.0.1:{port}/"}
+        if app_url is None:
+            process, server_pid, port, ready_line = start_server(server_path)
+            app_url = f"http://127.0.0.1:{port}/"
+            result["server"] = {
+                "pid": server_pid,
+                "port": port,
+                "ready_line": ready_line,
+                "managed_by_forge": True,
+            }
+        else:
+            result["server"] = {
+                "pid": None,
+                "port": urlsplit(app_url).port,
+                "managed_by_forge": False,
+            }
+        result["browser"] = {**result["browser"], "url": app_url}
         from playwright.sync_api import sync_playwright
 
         with sync_playwright() as playwright:
@@ -269,9 +345,17 @@ def run(
                 record_video_dir=str(temp_dir),
                 viewport={"width": 1280, "height": 720},
                 device_scale_factor=1,
+                service_workers="block",
             )
+            context.route(
+                "**/*",
+                lambda route: route_local_request(route, app_url),
+            )
+            # Routed sockets are mocked unless connect_to_server() is called.
+            # Closing during the opening callback can hang Chromium on startup.
+            context.route_web_socket("**/*", lambda socket: None)
             page = context.new_page()
-            page.goto(f"http://127.0.0.1:{port}/", wait_until="networkidle")
+            page.goto(app_url, wait_until="networkidle")
             for step in spec["steps"]:
                 perform_step(page, step)
             success = page.locator(spec["success"]["selector"])
@@ -342,8 +426,10 @@ def run(
 def main() -> int:
     parser = argparse.ArgumentParser(description="Record one Demo Forge browser operation")
     parser.add_argument("--output", type=Path)
-    parser.add_argument("--server", type=Path, default=DEFAULT_SERVER)
-    parser.add_argument("--operation", type=Path, default=DEFAULT_SPEC)
+    target = parser.add_mutually_exclusive_group()
+    target.add_argument("--server", type=Path, default=DEFAULT_SERVER)
+    target.add_argument("--url", type=local_app_url, help="record your already-running local app")
+    parser.add_argument("--operation", type=Path)
     parser.add_argument(
         "--doctor",
         action="store_true",
@@ -362,11 +448,14 @@ def main() -> int:
         return 0 if result["status"] == "ready" else 1
     if args.output is None:
         parser.error("--output is required unless --doctor is used")
+    if args.url and args.operation is None:
+        parser.error("--operation is required with --url")
     result = run(
         args.output.resolve(),
         args.server.resolve(),
-        args.operation.resolve(),
+        (args.operation or DEFAULT_SPEC).resolve(),
         args.tail_seconds,
+        args.url,
     )
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0 if result["status"] == "success" else 1
