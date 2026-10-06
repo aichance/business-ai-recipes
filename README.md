@@ -1,56 +1,6 @@
-# Dots Studio + Business AI Recipes
+# Demo Forge + Business AI Recipes
 
-[![Verify](https://github.com/jokv213/business-ai-recipes/actions/workflows/verify.yml/badge.svg)](https://github.com/jokv213/business-ai-recipes/actions/workflows/verify.yml)
-
-## Dots Studio — make assumptions, evidence and failed runs inspectable
-
-Four interactive MCP App workbenches: **Scenario Lab**, **Evidence Canvas**,
-**Run Lens / Repair Pack**, and **Proof Pack Builder**. Bring a CSV or JSON, change conditions, select
-what to carry forward, and export a replay you can recompute. No API key.
-
-![Scenario Lab](tools/dots-studio/demo/scenario.jpg)
-
-```bash
-cd tools/dots-studio
-npm ci --ignore-scripts --no-audit --no-fund
-npm run build
-npm test
-npm run preview
-```
-
-Requires Node 22+. Open **http://127.0.0.1:8782/scenario?preview=1**.
-Local UI and official MCP Client are verified; actual installation and use
-inside a dots host are pending. The portable plugin source registers global,
-thread and file entrypoints without claiming account installation.
-
-[Try all four panels, replay your own input, and see the verification limits →](tools/dots-studio/README.md)
- · [50 ranked extension experiments →](tools/dots-studio/IDEAS.md)
-
-## App Forge — make a small extension from your own schema
-
-App Forge turns a constrained `fields[]` or JSON Schema `properties{}` input
-into an editable local MCP plugin source. Build and test it, edit your own
-sample JSON, export the result, and take the source ZIP with you. It is
-deterministic and local: it does not call a model or network service and does
-not claim installation in an actual dots host.
-
-```bash
-cd tools/app-forge
-node forge.mjs \
-  --schema fixtures/support-request.schema.json \
-  --data fixtures/support-request.data.json \
-  --out /tmp/app-forge-support
-cd /tmp/app-forge-support
-npm ci --ignore-scripts --no-audit --no-fund
-npm run build
-npm test
-npm run preview
-```
-
-Edit a field at `http://127.0.0.1:8783/?preview=1`, export the JSON, and keep
-the generated source ZIP. The generated source is a local development artifact;
-host connection, account installation, and external delivery remain separate
-steps. [Full App Forge instructions and limits →](tools/app-forge/README.md)
+[![Verify](https://github.com/aichance/business-ai-recipes/actions/workflows/verify.yml/badge.svg)](https://github.com/aichance/business-ai-recipes/actions/workflows/verify.yml)
 
 ## Demo Forge — turn a working app into a demo people can try
 
@@ -103,6 +53,56 @@ a shorter preview. It does not claim generic browser compatibility or a speedup.
 [Direct instructions, boundaries,
 and the Japanese introduction →](experiments/demo-forge/README.md)
 
+## Dots Studio — make assumptions, evidence and failed runs inspectable
+
+Four interactive MCP App workbenches: **Scenario Lab**, **Evidence Canvas**,
+**Run Lens / Repair Pack**, and **Proof Pack Builder**. Bring a CSV or JSON, change conditions, select
+what to carry forward, and export a replay you can recompute. No API key.
+
+![Scenario Lab](tools/dots-studio/demo/scenario.jpg)
+
+```bash
+cd tools/dots-studio
+npm ci --ignore-scripts --no-audit --no-fund
+npm run build
+npm test
+npm run preview
+```
+
+Requires Node 22+. Open **http://127.0.0.1:8782/scenario?preview=1**.
+Local UI and official MCP Client are verified; actual installation and use
+inside a dots host are pending. The portable plugin source registers global,
+thread and file entrypoints without claiming account installation.
+
+[Try all four panels, replay your own input, and see the verification limits →](tools/dots-studio/README.md)
+ · [50 ranked extension experiments →](tools/dots-studio/IDEAS.md)
+
+## App Forge — make a small extension from your own schema
+
+App Forge turns a constrained `fields[]` or JSON Schema `properties{}` input
+into an editable local MCP plugin source. Build and test it, edit your own
+sample JSON, export the result, and take the source ZIP with you. It is
+deterministic and local: it does not call a model or network service and does
+not claim installation in an actual dots host.
+
+```bash
+cd tools/app-forge
+node forge.mjs \
+  --schema fixtures/support-request.schema.json \
+  --data fixtures/support-request.data.json \
+  --out /tmp/app-forge-support
+cd /tmp/app-forge-support
+npm ci --ignore-scripts --no-audit --no-fund
+npm run build
+npm test
+npm run preview
+```
+
+Edit a field at `http://127.0.0.1:8783/?preview=1`, export the JSON, and keep
+the generated source ZIP. The generated source is a local development artifact;
+host connection, account installation, and external delivery remain separate
+steps. [Full App Forge instructions and limits →](tools/app-forge/README.md)
+
 ## Cutroom — edit video by selecting its transcript
 
 **Keep the useful moments. Export the actual video.**
@@ -112,7 +112,7 @@ A local video editor with a clickable transcript, selected-only preview, and MP4
 ![Cutroom editing a narrated sample](tools/cutroom/demo/screenshot.png)
 
 ```bash
-git clone https://github.com/jokv213/business-ai-recipes.git
+git clone https://github.com/aichance/business-ai-recipes.git
 cd business-ai-recipes
 python3 tools/cutroom/server.py
 ```
@@ -149,4 +149,4 @@ python3 -B recipes/meeting-line-judgment/recipe.py
 python3 -B -m unittest discover -s tools/cutroom -p 'test_*.py'
 ```
 
-Created by **Naoya / jokv213**, with AI-assisted implementation and verification. [Report a reproducible problem or suggest a workflow](https://github.com/jokv213/business-ai-recipes/issues). No adoption, star, or time-saving claims are inferred from the synthetic demonstrations.
+Created by **Naoya / jokv213**, with AI-assisted implementation and verification. Maintained here by [aichance](https://github.com/aichance). [Report a reproducible problem or suggest a workflow](https://github.com/aichance/business-ai-recipes/issues). No adoption, star, or time-saving claims are inferred from the synthetic demonstrations.
