@@ -73,7 +73,7 @@ python3 experiments/demo-forge/forge.py \
   --url http://127.0.0.1:3000/ \
   --operation my-operation.json \
   --output .demo-forge-output/my-app \
-  --tail-seconds 3
+  --tail-seconds 8
 ```
 
 Adapt the selectors and expected text to your own app. This example works with
@@ -98,9 +98,10 @@ port. Redirects, WebSockets, service workers and cross-origin assets are
 unsupported. Use a fresh output directory per run; `run.json` is authoritative.
 URL mode records `managed_by_forge: false` and does not stop the running app.
 
-For a 10-30 second share preview, add `--tail-seconds 8`. This holds the
-verified final browser frame in the converted MP4 and GIF; it does not add a
-new interaction or claim a live external session.
+For a 10-30 second share preview, use `--tail-seconds 8`. This holds the
+verified final browser frame in the converted MP4 and GIF; a shorter tail is
+useful for a smoke check but produces a shorter preview. It does not add a new
+interaction or claim a live external session.
 
 ## 日本語
 

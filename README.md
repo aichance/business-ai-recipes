@@ -69,7 +69,7 @@ python3 experiments/demo-forge/forge.py \
   --url http://127.0.0.1:3000/ \
   --operation my-operation.json \
   --output .demo-forge-output/my-app \
-  --tail-seconds 3
+  --tail-seconds 8
 ```
 
 The app keeps running. The runner checks the outcome before converting its real
@@ -97,8 +97,10 @@ If you already have an active virtual environment, use its Python instead.
 
 FFmpeg must also be on `PATH`. The command operates only on `127.0.0.1`,
 checks `Ready to share` and `Launch Kit is ready`, and produces a 10-30 second
-share preview by holding the verified final frame in the MP4 and GIF. It does not claim
-generic browser compatibility or a speedup. [Direct instructions, boundaries,
+share preview when `--tail-seconds 8` is used, by holding the verified final
+frame in the MP4 and GIF. A shorter tail is useful for a smoke check but makes
+a shorter preview. It does not claim generic browser compatibility or a speedup.
+[Direct instructions, boundaries,
 and the Japanese introduction →](experiments/demo-forge/README.md)
 
 ## Cutroom — edit video by selecting its transcript
