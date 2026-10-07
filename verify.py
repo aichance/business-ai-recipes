@@ -21,6 +21,7 @@ EXPECTED_FILES = {
     "LICENSE",
     "README.md",
     "RECIPES.md",
+    "docs/index.html",
     "experiments/demo-forge/README.md",
     "experiments/demo-forge/app/index.html",
     "experiments/demo-forge/demo.gif",
