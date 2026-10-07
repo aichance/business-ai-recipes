@@ -1,0 +1,32 @@
+{
+  "name": "narrated-launch",
+  "input": { "project_name": "Launch Kit" },
+  "steps": [
+    {
+      "type": "fill",
+      "selector": "#project-input",
+      "value": "Launch Kit",
+      "chapter": "1. Name the project"
+    },
+    {
+      "type": "click",
+      "selector": "#launch-button",
+      "chapter": "2. Launch and wait for the app"
+    },
+    {
+      "type": "wait_for_selector",
+      "selector": "#result-card[data-state=\"success\"]",
+      "timeout_ms": 15000
+    },
+    {
+      "type": "assert_text",
+      "selector": "#result-title",
+      "contains": "Launch Kit is ready",
+      "chapter": "3. Check the completed result"
+    }
+  ],
+  "success": {
+    "selector": "#result-card[data-state=\"success\"]",
+    "text": "Launch Kit is ready"
+  }
+}

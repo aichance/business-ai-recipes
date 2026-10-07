@@ -25,6 +25,7 @@ DEFAULT_SERVER = ROOT / "server.py"
 DEFAULT_SPEC = ROOT / "operation.json"
 READY_RE = re.compile(r"DEMO_FORGE_READY pid=(\d+) port=(\d+)")
 MEDIA_NAMES = ("demo-forge.webm", "demo-forge.mp4", "demo-forge.gif", "cover.png")
+CHAPTER_DURATION_MS = 2000
 
 
 def iso_now() -> str:
@@ -99,6 +100,18 @@ def perform_step(page, step: dict[str, object]) -> None:
     page.wait_for_timeout(180)
 
 
+def validate_chapters(spec: dict) -> None:
+    """Require bounded author-written chapters for the opt-in native recording."""
+    steps = spec.get("steps")
+    if not isinstance(steps, list):
+        raise ValueError("operation.steps must be a list")
+    chapters = [step["chapter"] for step in steps if isinstance(step, dict) and "chapter" in step]
+    if not 1 <= len(chapters) <= 8:
+        raise ValueError("--narrate requires 1–8 chapter texts on operation steps")
+    if any(not isinstance(text, str) or not 1 <= len(text.strip()) <= 90 for text in chapters):
+        raise ValueError("each chapter must contain 1–90 characters")
+
+
 def nonnegative_seconds(value: str) -> float:
     try:
         seconds = float(value)
@@ -158,23 +171,24 @@ def route_local_request(route, app_url: str) -> None:
     route.fulfill(response=response)
 
 
-def playwright_repair_steps() -> list[str]:
+def playwright_repair_steps(minimum: str = "1.48") -> list[str]:
     """Return setup commands that keep installs out of system Python."""
     if sys.prefix == sys.base_prefix:
         return [
             "python3 -m venv .demo-forge-venv",
-            ".demo-forge-venv/bin/python -m pip install 'playwright>=1.48'",
+            f".demo-forge-venv/bin/python -m pip install 'playwright>={minimum}'",
             ".demo-forge-venv/bin/python -m playwright install chromium",
         ]
     return [
-        "python3 -m pip install 'playwright>=1.48'",
+        f"python3 -m pip install 'playwright>={minimum}'",
         "python3 -m playwright install chromium",
     ]
 
 
-def doctor_result() -> dict[str, object]:
+def doctor_result(narrate: bool = False) -> dict[str, object]:
     """Check local prerequisites without starting the app or a browser."""
     requirements: dict[str, dict[str, object]] = {}
+    minimum = "1.59" if narrate else "1.48"
     python_ready = sys.version_info >= (3, 11)
     requirements["python"] = {
         "status": "ok" if python_ready else "missing",
@@ -196,9 +210,9 @@ def doctor_result() -> dict[str, object]:
         version = importlib.metadata.version("playwright")
         version_parts = tuple(int(part) for part in version.split(".")[:2])
         requirements["playwright"] = {
-            "status": "ok" if version_parts >= (1, 48) else "missing",
+            "status": "ok" if version_parts >= tuple(map(int, minimum.split("."))) else "missing",
             "version": version,
-            "required": ">=1.48",
+            "required": f">={minimum}",
         }
         try:
             from playwright.sync_api import sync_playwright
@@ -228,7 +242,7 @@ def doctor_result() -> dict[str, object]:
     if requirements["python"]["status"] != "ok":
         next_steps.append("Use Python 3.11 or newer.")
     if requirements["playwright"]["status"] != "ok":
-        next_steps.extend(playwright_repair_steps())
+        next_steps.extend(playwright_repair_steps(minimum))
     elif requirements["chromium"]["status"] != "ok":
         next_steps.append("python3 -m playwright install chromium")
     if requirements["ffmpeg"]["status"] != "ok":
@@ -331,6 +345,7 @@ def run(
     spec_path: Path,
     tail_seconds: float = 0.0,
     app_url: str | None = None,
+    narrate: bool = False,
 ) -> dict[str, object]:
     if app_url is not None:
         app_url = local_app_url(app_url)
@@ -353,6 +368,11 @@ def run(
             "tail_seconds": tail_seconds,
             "tail_mode": "clone_final_frame" if tail_seconds > 0 else "none",
         },
+        "narration": {
+            "mode": "step_chapters" if narrate else "none",
+            "chapter_duration_ms": CHAPTER_DURATION_MS if narrate else None,
+            "chapters": [],
+        },
         "server": {},
         "browser": {"engine": "chromium", "headless": True, "viewport": "1280x720"},
         "artifacts": {},
@@ -371,6 +391,8 @@ def run(
     published: list[Path] = []
     try:
         spec = json.loads(spec_path.read_text())
+        if narrate:
+            validate_chapters(spec)
         result["operation"] = spec["name"]
         result["input"] = spec["input"]
         temp_dir = Path(tempfile.mkdtemp(prefix="demo-forge-video-", dir=output))
@@ -394,8 +416,9 @@ def run(
 
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(headless=True)
+            recording_options = {} if narrate else {"record_video_dir": str(temp_dir)}
             context = browser.new_context(
-                record_video_dir=str(temp_dir),
+                **recording_options,
                 viewport={"width": 1280, "height": 720},
                 device_scale_factor=1,
                 service_workers="block",
@@ -408,8 +431,28 @@ def run(
             # Closing during the opening callback can hang Chromium on startup.
             context.route_web_socket("**/*", lambda socket: None)
             page = context.new_page()
+            if narrate and not hasattr(page, "screencast"):
+                raise RuntimeError("--narrate needs Playwright>=1.59; run --doctor --narrate")
             page.goto(app_url, wait_until="networkidle")
-            for step in spec["steps"]:
+            if narrate:
+                recorded_path = temp_dir / "capture.webm"
+                page.screencast.start(path=str(recorded_path), size={"width": 1280, "height": 720})
+                page.screencast.show_actions(position="bottom-right")
+            capture_started = time.monotonic()
+            for index, step in enumerate(spec["steps"]):
+                if narrate and "chapter" in step:
+                    result["narration"]["chapters"].append(
+                        {
+                            "before_step": index + 1,
+                            "text": step["chapter"].strip(),
+                            # Diagnostic wall time, not a frame-exact media timestamp.
+                            "elapsed_seconds": round(time.monotonic() - capture_started, 3),
+                        }
+                    )
+                    page.screencast.show_chapter(
+                        step["chapter"].strip(), duration=CHAPTER_DURATION_MS
+                    )
+                    # Native show_chapter waits through its display and fade-out.
                 perform_step(page, step)
             success = page.locator(spec["success"]["selector"])
             if success.count() != 1:
@@ -421,11 +464,16 @@ def run(
             cover_path = temp_dir / "cover.png"
             # A full-page screenshot can resize a tall page while video is recording.
             page.screenshot(path=str(cover_path), full_page=False)
-            video = page.video
+            if narrate:
+                page.screencast.stop()
+                video = None
+            else:
+                video = page.video
             context.close()
             browser.close()
-            assert video is not None
-            recorded_path = Path(video.path())
+            if not narrate:
+                assert video is not None
+                recorded_path = Path(video.path())
 
         webm_path = temp_dir / "demo-forge.webm"
         mp4_path = temp_dir / "demo-forge.mp4"
@@ -493,6 +541,11 @@ def main() -> int:
     target.add_argument("--url", type=local_app_url, help="record your already-running local app")
     parser.add_argument("--operation", type=Path)
     parser.add_argument(
+        "--narrate",
+        action="store_true",
+        help="record step-linked chapter cards and action hints (Playwright>=1.59)",
+    )
+    parser.add_argument(
         "--doctor",
         action="store_true",
         help="check Python, Playwright, Chromium, and ffmpeg without starting a server",
@@ -505,7 +558,7 @@ def main() -> int:
     )
     args = parser.parse_args()
     if args.doctor:
-        result = doctor_result()
+        result = doctor_result(args.narrate)
         print(json.dumps(result, ensure_ascii=False, indent=2))
         return 0 if result["status"] == "ready" else 1
     if args.output is None:
@@ -518,6 +571,7 @@ def main() -> int:
         (args.operation or DEFAULT_SPEC).resolve(),
         args.tail_seconds,
         args.url,
+        args.narrate,
     )
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0 if result["status"] == "success" else 1
