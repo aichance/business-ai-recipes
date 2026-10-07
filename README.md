@@ -4,7 +4,9 @@
 
 **Record a local app, check the expected UI state, and export MP4/GIF with its run report.**
 
-[Watch the recorded Demo Forge walkthrough](https://aichance.github.io/business-ai-recipes/) · [Try the included app](https://aichance.github.io/business-ai-recipes/#try)
+[Try with your own recording — no install](https://aichance.github.io/business-ai-recipes/studio.html) · [Watch the walkthrough](https://aichance.github.io/business-ai-recipes/) · [Record the included app with the CLI](https://aichance.github.io/business-ai-recipes/#try)
+
+**Browser Studio:** choose a local video or the 9-second sample, add timed explanations, and export a silent video plus reusable story JSON. No signup, API key, or video upload. Tested in Chromium; the available format is shown before export. Explanation timing is manual, and imported videos do not have the CLI's UI-state checks.
 
 ## Start with one working path
 
