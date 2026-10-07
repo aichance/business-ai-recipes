@@ -14,6 +14,16 @@ python3 experiments/demo-forge/forge.py --narrate \
   --tail-seconds 2 --output .demo-forge-output/narrated
 ```
 
+**Try the new chapters without installing anything locally:** fork this repo,
+open **Actions → Verify → Run workflow** on `main`, and download the
+**demo-forge-chapters** artifact after its job succeeds. It runs this exact
+narrated operation on Ubuntu 24.04 with Playwright 1.63.0. Play
+`demo-forge.mp4` to inspect the result; the ZIP also contains the GIF, WebM,
+cover and three JSON reports. Artifacts expire after one day. This requires
+a GitHub account and Actions-enabled fork, and uses the included Launch Kit
+app, not the 3-second-delay fixture. The separate **demo-forge-first-run**
+artifact still demonstrates the ordinary Playwright 1.58 recording path.
+
 The sample runs the included app. For your own running app, add
 `--url http://127.0.0.1:PORT/` and use its selectors. Provide 1–8 short chapter
 texts, up to 90 characters each. Each title appears for two seconds plus the
