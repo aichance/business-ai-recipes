@@ -1,6 +1,6 @@
 # Dots Studio + Business AI Recipes
 
-[![Verify](https://github.com/jokv213/business-ai-recipes/actions/workflows/verify.yml/badge.svg)](https://github.com/jokv213/business-ai-recipes/actions/workflows/verify.yml)
+[![Verify](https://github.com/aichance/business-ai-recipes/actions/workflows/verify.yml/badge.svg)](https://github.com/aichance/business-ai-recipes/actions/workflows/verify.yml)
 
 ## Start with one working path
 
@@ -143,7 +143,7 @@ A local video editor with a clickable transcript, selected-only preview, and MP4
 ![Cutroom editing a narrated sample](tools/cutroom/demo/screenshot.png)
 
 ```bash
-git clone https://github.com/jokv213/business-ai-recipes.git
+git clone https://github.com/aichance/business-ai-recipes.git
 cd business-ai-recipes
 python3 tools/cutroom/server.py
 ```
@@ -180,4 +180,4 @@ python3 -B recipes/meeting-line-judgment/recipe.py
 python3 -B -m unittest discover -s tools/cutroom -p 'test_*.py'
 ```
 
-Created by **Naoya / jokv213**, with AI-assisted implementation and verification. [Report a reproducible problem or suggest a workflow](https://github.com/jokv213/business-ai-recipes/issues). No adoption, star, or time-saving claims are inferred from the synthetic demonstrations.
+Created by **Naoya / jokv213**, with AI-assisted implementation and verification. [Report a reproducible problem or suggest a workflow](https://github.com/aichance/business-ai-recipes/issues). No adoption, star, or time-saving claims are inferred from the synthetic demonstrations.
