@@ -1,5 +1,42 @@
 # Demo Forge: Turn a working app into a demo people can try
 
+## Keep explanations attached to the operation
+
+With Playwright 1.59+, `--narrate` uses its native Screencast API to show a
+chapter before selected steps. Add `"chapter": "Save the brief"` to a step,
+instead of choosing a video timestamp. Put a result chapter **after** a
+`wait_for_selector` step so it follows the app's actual completion.
+
+```bash
+python3 experiments/demo-forge/forge.py --doctor --narrate
+python3 experiments/demo-forge/forge.py --narrate \
+  --operation experiments/demo-forge/operation.narrated.json \
+  --tail-seconds 2 --output .demo-forge-output/narrated
+```
+
+The sample runs the included app. For your own running app, add
+`--url http://127.0.0.1:PORT/` and use its selectors. Provide 1–8 short chapter
+texts, up to 90 characters each. Each title appears for two seconds plus the
+native fade; actions also receive native visual hints. Long app waits remain
+in the video. This does not generate text or voice, trim waiting time, or
+upgrade a UI assertion into proof of a backend write.
+
+Chapter cards are burned into the recording: change the text and rerun to
+edit them. The separate `present.py` workflow below is still useful for
+editing explanations after recording, with manually chosen times. The
+ordinary recorder still supports Playwright 1.48+; only `--narrate` needs
+1.59+. Update Playwright and its Chromium in your project virtual environment
+if the narration doctor reports a missing capability. Native behavior was
+tested with Playwright 1.63.0 / Chromium on macOS.
+
+`run.json` records the chapter text, step number and diagnostic elapsed wall
+time; those times are not frame-exact media cue points. A failed operation or
+final check exports no new successful media. Chapter order still depends on
+the operation you authored; review the actual video before sharing it.
+
+The recording and chapter rendering are provided by
+[Playwright Screencast](https://playwright.dev/python/docs/api/class-screencast).
+
 ## Add an explanation to the real recording
 
 `present.py` turns a successful Demo Forge run plus your caption JSON into a
