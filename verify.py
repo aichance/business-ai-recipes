@@ -35,6 +35,7 @@ EXPECTED_FILES = {
     "experiments/demo-forge/present.py",
     "experiments/demo-forge/story.example.json",
     "experiments/demo-forge/operation.json",
+    "experiments/demo-forge/operation.narrated.json",
     "experiments/demo-forge/server.py",
     "fixtures/human_review.json",
     "fixtures/meeting_line_judgment.json",
