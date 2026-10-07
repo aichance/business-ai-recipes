@@ -95,7 +95,8 @@ the checked-in `examples/brief-app` when it is already running on port 3000:
 Use an explicit `http://127.0.0.1:PORT/path`. `--operation` is required with
 `--url`; credentials and fragments are rejected. Requests stay on that exact
 port. Redirects, WebSockets, service workers and cross-origin assets are
-unsupported. Use a fresh output directory per run; `run.json` is authoritative.
+unsupported. `run.json` describes the latest attempt; only a successful attempt
+exports media at the top level.
 URL mode records `managed_by_forge: false` and does not stop the running app.
 
 For a 10-30 second share preview, use `--tail-seconds 8`. This holds the
@@ -140,12 +141,31 @@ JSONに不足項目と修復コマンドが表示されます。`missing`は実�
 合わせた`--operation my-operation.json`を指定できます。専用の起動メッセージや
 サーバー変更は不要で、実行後もアプリを終了させません。操作定義例は上のJSONを
 参照してください。HTTPの同じポート内を対象とし、リダイレクト・WebSocket・
-service worker・別originの素材には対応しません。各回で新しい出力先を使い、
-`run.json`の成功・失敗を確認してください。手作業の準備時間短縮は未測定です。
+service worker・別originの素材には対応しません。最新の`run.json`の成功・失敗を確認してください。手作業の準備時間短縮は未測定です。
 
 10〜30秒の共有用プレビューを作る場合は`--tail-seconds 8`を追加します。
 これはブラウザ操作の成功後に実際に確認した最終画面を、変換後のMP4とGIFで保持する
 だけです。新しい操作を追加したり、外部のライブセッションを保証したりしません。
+
+### Repeat a recording / 同じ出力先で再実行
+
+You can reuse `--output`. Before a new attempt, previous Demo Forge media and
+its original report move into `previous-runs/run-*/`. `previous_run_dir` in the
+new report identifies that folder. Archived reports preserve their original
+paths; archived media is beside the report under the same filenames.
+
+The current MP4/GIF/WebM/cover appear only after the UI checks and both
+conversions pass. A failed attempt leaves a failed `run.json`, not an older
+successful clip at the current media paths. Other files such as your notes stay
+untouched. Unrecognized files occupying the artifact names are preserved and
+the command asks for a different output directory. Use a separate output
+directory for each concurrent process; simultaneous writers are unsupported.
+
+同じ`--output`で再実行できます。前回の動画・表紙・元のreportは
+`previous-runs/run-*/`へ保存し、新しいreportの`previous_run_dir`で場所を示します。
+今回の操作確認と動画/GIF変換が全部成功してから、直下へ新しい素材を出力します。
+失敗時に古い成功動画を今回の成果と取り違えないための動作です。
+メモなど他のファイルはそのまま残します。同じ出力先への同時実行は未対応です。
 
 ### Current limits / 現在の制約
 

@@ -24,6 +24,7 @@ ROOT = Path(__file__).resolve().parent
 DEFAULT_SERVER = ROOT / "server.py"
 DEFAULT_SPEC = ROOT / "operation.json"
 READY_RE = re.compile(r"DEMO_FORGE_READY pid=(\d+) port=(\d+)")
+MEDIA_NAMES = ("demo-forge.webm", "demo-forge.mp4", "demo-forge.gif", "cover.png")
 
 
 def iso_now() -> str:
@@ -285,6 +286,39 @@ def build_gif_command(
     ]
 
 
+def archive_previous_run(output: Path) -> str | None:
+    """Retain our previous run without leaving its media at the current paths."""
+    paths = [output / name for name in (*MEDIA_NAMES, "run.json")]
+    existing = [path for path in paths if path.exists() or path.is_symlink()]
+    if not existing:
+        return None
+    if any(path.is_symlink() or not path.is_file() for path in existing):
+        raise ValueError("output contains a symlink or non-file at a Demo Forge artifact path")
+    report = output / "run.json"
+    try:
+        previous = json.loads(report.read_text())
+    except (OSError, ValueError) as exc:
+        raise ValueError("output has unrecognized files; choose another output directory") from exc
+    if not isinstance(previous, dict) or previous.get("scope") != "experiments/demo-forge":
+        raise ValueError("output has no Demo Forge report; choose another output directory")
+    history = output / "previous-runs"
+    if history.is_symlink():
+        raise ValueError("previous-runs must not be a symlink")
+    history.mkdir(exist_ok=True)
+    archive = Path(tempfile.mkdtemp(prefix="run-", dir=history))
+    moved: list[Path] = []
+    try:
+        for path in existing:
+            path.rename(archive / path.name)
+            moved.append(path)
+    except OSError:
+        for path in reversed(moved):
+            (archive / path.name).rename(path)
+        archive.rmdir()
+        raise
+    return str(archive)
+
+
 def run(
     output: Path,
     server_path: Path,
@@ -295,7 +329,6 @@ def run(
     if app_url is not None:
         app_url = local_app_url(app_url)
     output.mkdir(parents=True, exist_ok=True)
-    spec = json.loads(spec_path.read_text())
     started = iso_now()
     started_monotonic = time.monotonic()
     process: subprocess.Popen[str] | None = None
@@ -304,8 +337,8 @@ def run(
         "started_at": started,
         "ended_at": None,
         "scope": "experiments/demo-forge",
-        "operation": spec["name"],
-        "input": spec["input"],
+        "operation": None,
+        "input": None,
         "sources": {
             "server": str(server_path) if app_url is None else None,
             "operation": str(spec_path),
@@ -319,8 +352,22 @@ def run(
         "artifacts": {},
         "errors": [],
     }
-    temp_dir = Path(tempfile.mkdtemp(prefix="demo-forge-video-", dir=output))
     try:
+        result["previous_run_dir"] = archive_previous_run(output)
+    except (OSError, ValueError) as exc:
+        result["errors"] = [f"{type(exc).__name__}: {exc}"]
+        result["ended_at"] = iso_now()
+        result["report_saved"] = False
+        return result
+    result["status"] = "running"
+    (output / "run.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n")
+    temp_dir: Path | None = None
+    published: list[Path] = []
+    try:
+        spec = json.loads(spec_path.read_text())
+        result["operation"] = spec["name"]
+        result["input"] = spec["input"]
+        temp_dir = Path(tempfile.mkdtemp(prefix="demo-forge-video-", dir=output))
         if app_url is None:
             process, server_pid, port, ready_line = start_server(server_path)
             app_url = f"http://127.0.0.1:{port}/"
@@ -365,7 +412,7 @@ def run(
             expected_text = spec["success"]["text"]
             if expected_text not in actual_text:
                 raise AssertionError(f"success text missing: {actual_text!r}")
-            cover_path = output / "cover.png"
+            cover_path = temp_dir / "cover.png"
             page.screenshot(path=str(cover_path), full_page=True)
             video = page.video
             context.close()
@@ -373,9 +420,9 @@ def run(
             assert video is not None
             recorded_path = Path(video.path())
 
-        webm_path = output / "demo-forge.webm"
-        mp4_path = output / "demo-forge.mp4"
-        gif_path = output / "demo-forge.gif"
+        webm_path = temp_dir / "demo-forge.webm"
+        mp4_path = temp_dir / "demo-forge.mp4"
+        gif_path = temp_dir / "demo-forge.gif"
         ffmpeg_binary = shutil.which("ffmpeg")
         if ffmpeg_binary is None:
             raise RuntimeError("ffmpeg is required and must be available on PATH")
@@ -392,22 +439,29 @@ def run(
             capture_output=True,
             text=True,
         )
-        result["status"] = "success"
         result["verified"] = {
             "success_selector": spec["success"]["selector"],
             "success_text": actual_text,
             "operation_steps": len(spec["steps"]),
         }
+        for name in MEDIA_NAMES:
+            destination = output / name
+            (temp_dir / name).rename(destination)
+            published.append(destination)
         result["artifacts"] = {
-            "webm": str(webm_path),
-            "mp4": str(mp4_path),
-            "gif": str(gif_path),
+            "webm": str(output / "demo-forge.webm"),
+            "mp4": str(output / "demo-forge.mp4"),
+            "gif": str(output / "demo-forge.gif"),
             "cover": str(output / "cover.png"),
             "ffmpeg_returncode": ffmpeg.returncode,
             "gif_ffmpeg_returncode": gif.returncode,
         }
+        result["status"] = "success"
     except Exception as exc:  # record failure without claiming success
+        result["status"] = "failed"
         result["errors"] = [f"{type(exc).__name__}: {exc}"]
+        for path in published:
+            path.unlink(missing_ok=True)
     finally:
         if process is not None and process.poll() is None:
             process.terminate()
@@ -416,7 +470,8 @@ def run(
             except subprocess.TimeoutExpired:
                 process.kill()
                 process.wait(timeout=3)
-        shutil.rmtree(temp_dir, ignore_errors=True)
+        if temp_dir is not None:
+            shutil.rmtree(temp_dir, ignore_errors=True)
         result["ended_at"] = iso_now()
         result["duration_seconds"] = round(time.monotonic() - started_monotonic, 3)
         (output / "run.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n")
