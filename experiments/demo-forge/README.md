@@ -4,6 +4,28 @@
 
 Demo Forge turns a short browser operation into a real, replayable demonstration of a self-owned localhost app. The first slice fills a project name, launches the kit, verifies the app's final state, and produces WebM, MP4, GIF, and a cover image. The GIF is written as `demo-forge.gif` after conversion from the verified MP4 at 10 fps.
 
+### Try the included app in GitHub Actions
+
+Generate a sample recording without installing Python, Chromium, or FFmpeg on
+your computer:
+
+1. Fork this repository into your own GitHub account.
+2. In your fork, open **Actions** and enable workflows if GitHub prompts you.
+3. Select **Verify**, choose **Run workflow** on `main`, and start the run.
+4. Open the completed run. After `demo-forge-first-run` succeeds, download the
+   **demo-forge-first-run** artifact from the run's summary. Artifacts expire
+   after one day.
+
+The ZIP contains an MP4, GIF, WebM, cover image, `run.json`, `doctor.json`, and
+`verification.json`. The verification report includes the actual MP4 duration,
+file sizes, and hashes. This workflow installs the recording dependencies on
+Ubuntu 24.04, operates the included synthetic Brief app, and checks all six UI
+steps before exporting the media. A GitHub account and an Actions-enabled fork
+are required. To record your own app, follow the local instructions below.
+
+
+### Run locally
+
 Try it with synthetic input:
 
 ```bash
@@ -107,6 +129,25 @@ interaction or claim a live external session.
 ## 日本語
 
 Demo Forgeは、短いブラウザ操作定義から、自作localhostアプリの実画面を使った再生可能な実演素材を作ります。最初の版では、プロジェクト名を入力して起動し、アプリ自身の成功状態を確認したうえで、WebM・MP4・GIF・表紙画像を出力します。GIFは確認済みMP4から10fpsで変換します。
+
+### GitHub Actionsでサンプルを試す
+
+ローカルへPython・Chromium・FFmpegを導入する前に、付属アプリの録画を
+GitHub上で生成できます。
+
+1. このリポジトリを自分のGitHubアカウントへForkします。
+2. Fork先の **Actions** を開き、表示された場合はワークフローを有効にします。
+3. **Verify → Run workflow → main** で実行します。
+4. `demo-forge-first-run` の成功後、実行結果のSummaryから同名のArtifactを
+   ダウンロードします。保存期間は1日です。
+
+ZIPにはMP4・GIF・WebM・表紙と3つのJSONレポートが入ります。
+`verification.json`で実際の動画尺・ファイルサイズ・hashを確認できます。
+Ubuntu 24.04に依存関係を導入し、合成データを使う付属Briefアプリの6操作を
+確認する試用経路です。GitHubアカウントとActionsを有効にしたForkが必要です。
+自分のアプリを録画する場合は、下記のローカル実行手順を使ってください。
+
+### ローカルで実行する
 
 合成入力で試す:
 
