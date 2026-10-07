@@ -29,6 +29,8 @@ EXPECTED_FILES = {
     "experiments/demo-forge/examples/brief-app/index.html",
     "experiments/demo-forge/examples/brief-app/operation.json",
     "experiments/demo-forge/forge.py",
+    "experiments/demo-forge/present.py",
+    "experiments/demo-forge/story.example.json",
     "experiments/demo-forge/operation.json",
     "experiments/demo-forge/server.py",
     "fixtures/human_review.json",
@@ -201,6 +203,15 @@ def _load_line_judgment_recipe(root: Path):
 
 def _verify_demo_forge(root: Path) -> dict:
     demo_root = root / "experiments" / "demo-forge"
+    presentation_spec = importlib.util.spec_from_file_location(
+        "public_demo_presentation", demo_root / "present.py"
+    )
+    presentation = importlib.util.module_from_spec(presentation_spec)
+    presentation_spec.loader.exec_module(presentation)
+    story = json.loads((demo_root / "story.example.json").read_text())
+    if len(presentation.validate_story(story, 12)) != 3:
+        raise AssertionError("presentation example must contain three valid cues")
+    _must_refuse(lambda: presentation.validate_story(story, 2))
     forge_source = (demo_root / "forge.py").read_text(encoding="utf-8")
     if "build_gif_command" not in forge_source or "demo-forge.gif" not in forge_source:
         raise AssertionError("Demo Forge GIF artifact contract missing")
@@ -280,6 +291,7 @@ def _verify_demo_forge(root: Path) -> dict:
         "steps": len(operation["steps"]),
         "success_text": operation["success"]["text"],
         "gif_artifact": "demo-forge.gif",
+        "presentation": "author-written captions, no automatic timing or truth check",
         "doctor": doctor["status"],
         "failed_rerun_keeps_only_historical_media": True,
         "network_scope": "127.0.0.1",
