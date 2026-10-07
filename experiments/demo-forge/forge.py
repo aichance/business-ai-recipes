@@ -73,9 +73,15 @@ def perform_step(page, step: dict[str, object]) -> None:
     elif kind == "click":
         assert locator is not None
         locator.click()
+    elif kind == "scroll_into_view":
+        assert locator is not None
+        locator.scroll_into_view_if_needed()
     elif kind == "wait_for_selector":
         assert locator is not None
-        locator.wait_for(state="visible", timeout=5000)
+        timeout_ms = step.get("timeout_ms", 5000)
+        if type(timeout_ms) is not int or not 1 <= timeout_ms <= 60000:
+            raise ValueError("timeout_ms must be an integer from 1 to 60000")
+        locator.wait_for(state="visible", timeout=timeout_ms)
     elif kind == "assert_text":
         assert locator is not None
         actual = locator.inner_text()
@@ -413,7 +419,8 @@ def run(
             if expected_text not in actual_text:
                 raise AssertionError(f"success text missing: {actual_text!r}")
             cover_path = temp_dir / "cover.png"
-            page.screenshot(path=str(cover_path), full_page=True)
+            # A full-page screenshot can resize a tall page while video is recording.
+            page.screenshot(path=str(cover_path), full_page=False)
             video = page.video
             context.close()
             browser.close()

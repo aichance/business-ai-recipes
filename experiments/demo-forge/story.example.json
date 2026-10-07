@@ -1,0 +1,8 @@
+{
+  "label": "DEMO FORGE / SYNTHETIC LOCAL APP",
+  "cues": [
+    {"at": 0, "text": "Run the workflow in a real browser."},
+    {"at": 3, "text": "Show the result the app actually returned."},
+    {"at": 7, "text": "Turn a verified recording into a short explained demo."}
+  ]
+}

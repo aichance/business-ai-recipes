@@ -1,5 +1,59 @@
 # Demo Forge: Turn a working app into a demo people can try
 
+## Add an explanation to the real recording
+
+`present.py` turns a successful Demo Forge run plus your caption JSON into a
+1280×720 H.264 explainer. It keeps the original video unmodified, fits the whole
+frame below a separate explanation area, and writes to a **new** directory.
+No API key, TTS, external fonts, or FFmpeg `drawtext` build is required.
+Playwright/Chromium, FFmpeg **and ffprobe** must be installed.
+
+```bash
+python3 experiments/demo-forge/forge.py --tail-seconds 8 \
+  --output .demo-forge-output/recording
+python3 experiments/demo-forge/present.py \
+  --run-dir .demo-forge-output/recording \
+  --story experiments/demo-forge/story.example.json \
+  --output .demo-forge-output/explainer
+```
+
+Open `explainer.mp4`. `presentation.json` records the input video hash, actual
+output duration, and the captions. Edit `label` and `cues` in the JSON: each cue
+has an `at` time in seconds and `text`. The first starts at zero. Use 1–8 cues,
+up to 90 characters each, within a recording of at most 120 seconds. Times are
+rounded to a 25 fps frame boundary. Overlong captions and failed source runs
+are rejected; an existing output directory is never reused.
+
+**Captions are authored explanations, not facts checked by the UI assertions.**
+Review every new recording: app speed can change, so the caption times are
+manual, not automatically synchronized. The presentation is silent and does
+not change playback speed or crop the app. A tiny original recording remains
+low resolution when enlarged. Rendering speed and setup savings are unmeasured.
+
+For an app that exports media, a wait can explicitly allow up to 60 seconds:
+
+```json
+{"type": "wait_for_selector", "selector": "#output-panel", "timeout_ms": 45000}
+```
+
+Then bring its result into the recording with:
+
+```json
+{"type": "scroll_into_view", "selector": "#output-panel"}
+```
+
+### 日本語
+
+実録画に、作者が書いた説明を重ねるローカル後処理です。上の2コマンドで
+録画→説明付きMP4を生成できます。`story.example.json`の秒数と本文を自分の
+用途に合わせ、再録画するたびに説明と映像を確認してください。説明の内容を
+自動検証・自動同期する機能ではありません。元動画は変更せず、画面の切抜きや
+速度変更は行いません。音声は付きません。FFmpeg同梱のffprobeも必要です。
+
+検証では付属Briefアプリに加え、Cutroomの合成動画49.36秒から1つの字幕を
+キーワードで選び、8.1秒の動画と字幕を書き出す操作を録画しました。
+実利用・第三者採用や速度向上の証明ではありません。
+
 ## English
 
 Demo Forge turns a short browser operation into a real, replayable demonstration of a self-owned localhost app. The first slice fills a project name, launches the kit, verifies the app's final state, and produces WebM, MP4, GIF, and a cover image. The GIF is written as `demo-forge.gif` after conversion from the verified MP4 at 10 fps.
