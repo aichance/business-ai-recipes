@@ -239,12 +239,48 @@ def _verify_demo_forge(root: Path) -> dict:
         raise AssertionError("Demo Forge doctor contract failed")
     if set(doctor.get("requirements", {})) != {"python", "playwright", "chromium", "ffmpeg"}:
         raise AssertionError("Demo Forge doctor requirements changed")
+    with TemporaryDirectory() as directory:
+        output = Path(directory) / "out"
+        output.mkdir()
+        (output / "run.json").write_text(json.dumps({"scope": "experiments/demo-forge"}))
+        (output / "demo-forge.mp4").write_bytes(b"synthetic previous clip")
+        (output / "notes.txt").write_text("keep notes")
+        invalid_operation = Path(directory) / "invalid.json"
+        invalid_operation.write_text("not JSON")
+        failed_run = subprocess.run(
+            [
+                sys.executable,
+                "-B",
+                str(demo_root / "forge.py"),
+                "--operation",
+                str(invalid_operation),
+                "--output",
+                str(output),
+            ],
+            env=environment,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        failed = json.loads(failed_run.stdout)
+        archived = Path(failed["previous_run_dir"])
+        if (
+            failed_run.returncode != 1
+            or failed["status"] != "failed"
+            or failed["artifacts"]
+            or (output / "demo-forge.mp4").exists()
+            or (archived / "demo-forge.mp4").read_bytes() != b"synthetic previous clip"
+            or (output / "notes.txt").read_text() != "keep notes"
+            or json.loads((output / "run.json").read_text()) != failed
+        ):
+            raise AssertionError("Demo Forge failed rerun must preserve history, not stale exports")
     return {
         "operation": operation["name"],
         "steps": len(operation["steps"]),
         "success_text": operation["success"]["text"],
         "gif_artifact": "demo-forge.gif",
         "doctor": doctor["status"],
+        "failed_rerun_keeps_only_historical_media": True,
         "network_scope": "127.0.0.1",
         "external_write": False,
     }
