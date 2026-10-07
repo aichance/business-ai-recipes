@@ -1,6 +1,10 @@
-# Dots Studio + Business AI Recipes
+# Demo Forge + Business AI Recipes
 
 [![Verify](https://github.com/aichance/business-ai-recipes/actions/workflows/verify.yml/badge.svg)](https://github.com/aichance/business-ai-recipes/actions/workflows/verify.yml)
+
+**Record a local app, check the expected UI state, and export MP4/GIF with its run report.**
+
+[Watch the recorded Demo Forge walkthrough](https://aichance.github.io/business-ai-recipes/) · [Try the included app](https://aichance.github.io/business-ai-recipes/#try)
 
 ## Start with one working path
 
