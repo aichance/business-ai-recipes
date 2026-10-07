@@ -1,20 +1,132 @@
-# Demo Forge + Business AI Recipes
+# Demo Forge
 
 [![Verify](https://github.com/aichance/business-ai-recipes/actions/workflows/verify.yml/badge.svg)](https://github.com/aichance/business-ai-recipes/actions/workflows/verify.yml)
 
-**Record a local app, check the expected UI state, and export MP4/GIF with its run report.**
+**Turn a localhost app and a JSON workflow into a checked MP4, GIF and cover.**
+Keep the workflow in your repo and rerun it when the UI changes. No recording API or API key.
 
-[Try with your own recording — no install](https://aichance.github.io/business-ai-recipes/studio.html) · [Watch the walkthrough](https://aichance.github.io/business-ai-recipes/) · [Record the included app with the CLI](https://aichance.github.io/business-ai-recipes/#try)
+[Try in your browser — no install](https://aichance.github.io/business-ai-recipes/studio.html) · [Watch a real walkthrough](https://aichance.github.io/business-ai-recipes/) · [CLI guide / 日本語](experiments/demo-forge/README.md)
 
-**Browser Studio:** choose a local video or the 9-second sample, add timed explanations, and export a silent video plus reusable story JSON. No signup, API key, or video upload. Tested in Chromium; the available format is shown before export. Explanation timing is manual, and imported videos do not have the CLI's UI-state checks.
+![A running local app recorded and checked by Demo Forge](experiments/demo-forge/demo.gif)
 
-## Start with one working path
+The clip above is a recorded synthetic app, not an adoption or speed benchmark.
+The other experiments in this repository are documented below Demo Forge.
 
-Choose the shortest route for what you want to try:
+## Try before installing
 
-- **Make a shareable demo from a running localhost app:** [Demo Forge guide](experiments/demo-forge/README.md) — bring a URL and operation JSON, then export a checked MP4/GIF/cover.
-- **Inspect evidence and replay your own input:** [Dots Studio guide](tools/dots-studio/README.md).
-- **Turn your own schema into editable plugin source:** [App Forge guide](tools/app-forge/README.md).
+**Have a recording already?** Open [Browser Studio](https://aichance.github.io/business-ai-recipes/studio.html),
+choose the 9-second sample or your own video, edit the explanations and times,
+and export the silent video plus reusable story JSON. No signup or video upload.
+Chromium MP4 export is verified; the browser shows its supported format before
+export. Timing is manual. Imported videos do not receive the CLI's UI checks.
+
+**Want to see the CLI record a real app?** Fork this repo, open
+**Actions → Verify → Run workflow** on `main`, and download
+**demo-forge-chapters** after its job succeeds. It records the included Launch Kit
+with four operations and three chapter cards. This needs a GitHub account and
+Actions enabled on the fork, but no local installation. Artifacts expire after
+one day. [Verified example run](https://github.com/aichance/business-ai-recipes/actions/runs/37627353530).
+
+## Demo Forge — turn a working app into a demo people can try
+
+### Install, then record the included app
+
+The commands below are for macOS/Linux. First install **Python 3.11+** and
+**FFmpeg/ffprobe**, with all three available on `PATH`. These commands create an
+isolated Python environment and install the pinned browser dependency. Run them
+from a directory where you want a new checkout.
+Linux may also need Playwright's [system dependencies](https://playwright.dev/python/docs/browsers#install-system-dependencies).
+
+```bash
+git clone https://github.com/aichance/business-ai-recipes.git
+cd business-ai-recipes
+python3 -m venv .demo-forge-venv
+.demo-forge-venv/bin/python -m pip install playwright==1.63.0
+.demo-forge-venv/bin/python -m playwright install chromium
+.demo-forge-venv/bin/python experiments/demo-forge/forge.py --doctor --narrate
+```
+
+Resolve any missing dependency reported by `--doctor` before continuing.
+It reports `python_environment` and matching repair commands. Then record the
+included app, using its operation-linked chapter text:
+
+```bash
+.demo-forge-venv/bin/python experiments/demo-forge/forge.py \
+  --narrate \
+  --operation experiments/demo-forge/operation.narrated.json \
+  --tail-seconds 8 \
+  --output .demo-forge-output/first-run
+```
+
+Open `.demo-forge-output/first-run/run.json` and confirm `"status": "success"`.
+Then play `demo-forge.mp4`; the same directory also contains `demo-forge.gif`,
+`demo-forge.webm` and `cover.png`. The demo runs only on `127.0.0.1`, checks the
+included app's `Launch Kit is ready` result, and closes its own sample server.
+The eight-second tail holds the checked final frame in MP4/GIF.
+
+`.demo-forge-venv/` and `.demo-forge-output/` are ignored local workspace
+folders. `python3 -B verify.py` still checks the trusted source files after setup.
+For the operation format, failure handling and input limits, see the [full guide](experiments/demo-forge/README.md).
+
+### Use your own running app
+
+Keep your app running in another terminal. Write `my-operation.json` with its
+selectors, actions and expected final UI text; the
+[operation example and commands](experiments/demo-forge/README.md) show the format.
+Then replace the port below with your app's loopback port:
+
+```bash
+.demo-forge-venv/bin/python experiments/demo-forge/forge.py \
+  --url http://127.0.0.1:3000/ \
+  --operation my-operation.json \
+  --tail-seconds 8 \
+  --output .demo-forge-output/my-app
+```
+
+This leaves your app running. The recorder checks the expected UI state before
+exporting new successful media. A UI assertion is not proof of a backend write.
+
+- **Explanations during recording:** add `chapter` text to selected operations
+  and pass `--narrate`. It uses Playwright's native Screencast API. Put completion
+  chapters after the operation that waits for completion. Cards are baked in;
+  changing them requires another recording. Long application waits remain.
+- **Explanations after recording:** use `present.py` with manually timed story
+  JSON, or use Browser Studio. Neither automatically retimes arbitrary text.
+- **Local scope:** HTTP assets must stay on the same loopback port. Redirects,
+  WebSockets, service workers and logged-in browser profiles are unsupported.
+  No generic browser compatibility, time savings or third-party adoption is claimed.
+
+[Input schema, failure handling, examples and 日本語 →](experiments/demo-forge/README.md)
+
+---
+
+Other local experiments remain available below. They have separate requirements
+and do not need to be installed to use Demo Forge.
+
+## Cutroom — edit video by selecting its transcript
+
+**Keep the useful moments. Export the actual video.**
+
+A local video editor with a clickable transcript, selected-only preview, and MP4 + subtitle export. Bring your own video and SRT/VTT. No Python packages or API key needed. Optional Jev suggestions help find moments by meaning.
+
+![Cutroom editing a narrated sample](tools/cutroom/demo/screenshot.png)
+
+```bash
+git clone https://github.com/aichance/business-ai-recipes.git
+cd business-ai-recipes
+python3 tools/cutroom/server.py
+```
+
+Requires Python 3.11+ and FFmpeg/ffprobe. Open **http://127.0.0.1:8771/** → **Try the sample** → **Jev suggestion** → **Export selected moments**.
+
+- **Your material:** import MP4/MOV/WebM/MKV and SRT/VTT. Select or remove transcript lines.
+- **Instant cut preview:** jump over omitted sections before rendering. Adjust padding and undo selections.
+- **Actual deliverables:** H.264/AAC MP4, retimed SRT/VTT, source timeline, and a complete ZIP.
+- **Jev is optional:** replay the recorded synthetic demo without a key. Live subtitle suggestions require your own key, explicit launch flag, and consent. Video stays local.
+
+[Quickstart, live setup, measured results, and limits →](tools/cutroom/README.md)
+
+The sample is an authored, narrated simulation. Jev selected the expected 2 of 6 subtitles in a small pre-labelled example; this is not a general performance claim. Cutroom needs existing subtitles and does not transcribe your recording.
 
 ## Dots Studio — make assumptions, evidence and failed runs inspectable
 
@@ -65,105 +177,6 @@ Edit a field at `http://127.0.0.1:8783/?preview=1`, export the JSON, and keep
 the generated source ZIP. The generated source is a local development artifact;
 host connection, account installation, and external delivery remain separate
 steps. [Full App Forge instructions and limits →](tools/app-forge/README.md)
-
-## Demo Forge — turn a working app into a demo people can try
-
-Demo Forge turns a short operation definition into a real browser run against
-a self-owned localhost app. It checks the app's final success state and writes
-WebM, MP4, GIF, and a cover image. The input is synthetic and the default route
-never uses an external API or a logged-in browser profile.
-
-**Copy-paste trial with the included app (two terminals).** This is the shortest
-way to verify the complete path before adapting it to your own localhost app.
-
-Terminal 1:
-
-```bash
-python3 experiments/demo-forge/examples/brief-app/server.py --port 3000
-```
-
-Terminal 2:
-
-```bash
-python3 experiments/demo-forge/forge.py \
-  --url http://127.0.0.1:3000/ \
-  --operation experiments/demo-forge/examples/brief-app/operation.json \
-  --output .demo-forge-output/brief-url \
-  --tail-seconds 8
-```
-
-The resulting `run.json` reports `"status": "success"` and the output folder
-contains the checked WebM, MP4, GIF, and cover image. Stop the sample server
-with `Ctrl-C` when the trial is complete.
-
-**Already running your app? Record it by URL, with no server modifications.**
-![A running local app recorded and checked by Demo Forge](experiments/demo-forge/demo.gif)
-
-Write an operation JSON for your actual selectors and expected outcome, then:
-
-```bash
-python3 experiments/demo-forge/forge.py \
-  --url http://127.0.0.1:3000/ \
-  --operation my-operation.json \
-  --output .demo-forge-output/my-app \
-  --tail-seconds 8
-```
-
-The app keeps running. The runner checks the outcome before converting its real
-browser recording. HTTP assets must stay on the same loopback port; redirects,
-WebSockets and service workers are unsupported. See the operation JSON example
-in the [Demo Forge guide](experiments/demo-forge/README.md).
-
-```bash
-python3 -m venv .demo-forge-venv
-.demo-forge-venv/bin/python -m pip install playwright
-.demo-forge-venv/bin/python -m playwright install chromium
-.demo-forge-venv/bin/python experiments/demo-forge/forge.py --doctor
-.demo-forge-venv/bin/python experiments/demo-forge/forge.py \
-  --output .demo-forge-output \
-  --tail-seconds 8
-```
-
-`.demo-forge-venv/` and `.demo-forge-output/` are local workspace directories;
-they are intentionally ignored by Git and by the repository verifier. The
-verifier continues to check the trusted recipe files, so it is safe to run
-`python3 -B verify.py` after this setup.
-
-`--doctor` reports `python_environment` and prints the matching repair commands.
-If you already have an active virtual environment, use its Python instead.
-
-FFmpeg must also be on `PATH`. The command operates only on `127.0.0.1`,
-checks `Ready to share` and `Launch Kit is ready`, and produces a 10-30 second
-share preview when `--tail-seconds 8` is used, by holding the verified final
-frame in the MP4 and GIF. A shorter tail is useful for a smoke check but makes
-a shorter preview. It does not claim generic browser compatibility or a speedup.
-[Direct instructions, boundaries,
-and the Japanese introduction →](experiments/demo-forge/README.md)
-
-## Cutroom — edit video by selecting its transcript
-
-**Keep the useful moments. Export the actual video.**
-
-A local video editor with a clickable transcript, selected-only preview, and MP4 + subtitle export. Bring your own video and SRT/VTT. No Python packages or API key needed. Optional Jev suggestions help find moments by meaning.
-
-![Cutroom editing a narrated sample](tools/cutroom/demo/screenshot.png)
-
-```bash
-git clone https://github.com/aichance/business-ai-recipes.git
-cd business-ai-recipes
-python3 tools/cutroom/server.py
-```
-
-Requires Python 3.11+ and FFmpeg/ffprobe. Open **http://127.0.0.1:8771/** → **Try the sample** → **Jev suggestion** → **Export selected moments**.
-
-- **Your material:** import MP4/MOV/WebM/MKV and SRT/VTT. Select or remove transcript lines.
-- **Instant cut preview:** jump over omitted sections before rendering. Adjust padding and undo selections.
-- **Actual deliverables:** H.264/AAC MP4, retimed SRT/VTT, source timeline, and a complete ZIP.
-- **Jev is optional:** replay the recorded synthetic demo without a key. Live subtitle suggestions require your own key, explicit launch flag, and consent. Video stays local.
-
-[Quickstart, live setup, measured results, and limits →](tools/cutroom/README.md)
-
-The sample is an authored, narrated simulation. Jev selected the expected 2 of 6 subtitles in a small pre-labelled example; this is not a general performance claim. Cutroom needs existing subtitles and does not transcribe your recording.
 
 ## Smaller reproducible recipes
 
