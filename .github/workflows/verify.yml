@@ -17,8 +17,6 @@ jobs:
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
-    env:
-      DEMO_FORGE_CI_OUTPUT: ${{ runner.temp }}/demo-forge-ci
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -36,6 +34,8 @@ jobs:
           fi
       - name: Record the published URL quickstart
         shell: bash
+        env:
+          DEMO_FORGE_CI_OUTPUT: ${{ runner.temp }}/demo-forge-ci
         run: |
           set -euo pipefail
           mkdir -p "$DEMO_FORGE_CI_OUTPUT"
