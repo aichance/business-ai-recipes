@@ -121,6 +121,106 @@ jobs:
             ${{ runner.temp }}/demo-forge-ci/run.json
             ${{ runner.temp }}/demo-forge-ci/doctor.json
             ${{ runner.temp }}/demo-forge-ci/verification.json
+  demo-forge-chapters:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+      - name: Install native chapter recording dependencies
+        run: |
+          python -m pip install 'playwright==1.63.0'
+          python -m playwright install --with-deps chromium
+          if ! command -v ffmpeg >/dev/null || ! command -v ffprobe >/dev/null; then
+            sudo apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=30 update
+            sudo apt-get -o DPkg::Lock::Timeout=30 install -y ffmpeg
+          fi
+      - name: Record and check the narrated sample
+        shell: bash
+        env:
+          DEMO_FORGE_CHAPTER_OUTPUT: ${{ runner.temp }}/demo-forge-chapters
+        run: |
+          set -euo pipefail
+          mkdir -p "$DEMO_FORGE_CHAPTER_OUTPUT"
+          python experiments/demo-forge/forge.py --doctor --narrate \
+            > "$DEMO_FORGE_CHAPTER_OUTPUT/doctor.json"
+          python experiments/demo-forge/forge.py --narrate \
+            --operation experiments/demo-forge/operation.narrated.json \
+            --tail-seconds 2 --output "$DEMO_FORGE_CHAPTER_OUTPUT"
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          import subprocess
+          from pathlib import Path
+
+          output = Path(os.environ["DEMO_FORGE_CHAPTER_OUTPUT"])
+          report = json.loads((output / "run.json").read_text())
+          doctor = json.loads((output / "doctor.json").read_text())
+          operation = json.loads(Path("experiments/demo-forge/operation.narrated.json").read_text())
+          assert doctor["status"] == "ready", doctor
+          assert report["status"] == "success", report
+          assert report["verified"]["operation_steps"] == 4
+          assert "Launch Kit is ready" in report["verified"]["success_text"]
+          assert report["server"]["managed_by_forge"] is True
+          assert report["narration"]["mode"] == "step_chapters"
+          expected = [(i + 1, step["chapter"]) for i, step in enumerate(operation["steps"])
+                      if "chapter" in step]
+          actual = [(chapter["before_step"], chapter["text"])
+                    for chapter in report["narration"]["chapters"]]
+          assert actual == expected and len(actual) == 3, actual
+          names = ["demo-forge.webm", "demo-forge.mp4", "demo-forge.gif", "cover.png"]
+          media = {}
+          for name in names:
+              data = (output / name).read_bytes()
+              assert data, name
+              media[name] = {"bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()}
+          assert sum(item["bytes"] for item in media.values()) < 20_000_000
+          probe = json.loads(subprocess.check_output([
+              "ffprobe", "-v", "error", "-show_entries",
+              "format=duration:stream=codec_type,codec_name,width,height",
+              "-of", "json", str(output / "demo-forge.mp4")
+          ], text=True))
+          duration = float(probe["format"]["duration"])
+          assert 8 <= duration <= 45, duration
+          streams = probe["streams"]
+          assert len(streams) == 1 and streams[0] == {
+              "codec_name": "h264", "codec_type": "video", "width": 1280, "height": 720
+          }, streams
+          result = {"status": "success", "operation_steps": 4, "chapters": actual,
+                    "mp4_seconds": duration, "media": media,
+                    "input": "included synthetic Launch Kit app",
+                    "scope": "native chapters on fresh Ubuntu CI; not independent adoption"}
+          (output / "verification.json").write_text(json.dumps(result, indent=2) + "\n")
+          print(json.dumps(result, indent=2))
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as summary:
+              summary.write("## Try step-linked chapters\n\n")
+              summary.write(f"Four UI steps and three chapters checked; MP4: {duration:.2f}s.\n\n")
+              summary.write("Download **demo-forge-chapters** below and play demo-forge.mp4. "
+                            "The ZIP also includes GIF, WebM, cover, doctor, run and verification.\n\n")
+              summary.write("Input: synthetic Launch Kit app. Chapter text is burned into the "
+                            "silent video; edit operation.narrated.json and rerun to change it. "
+                            "This is not the 3-second-delay fixture or evidence of user adoption.\n")
+          PY
+      - name: Save the checked chapter recording
+        uses: actions/upload-artifact@v5
+        with:
+          name: demo-forge-chapters
+          retention-days: 1
+          if-no-files-found: error
+          path: |
+            ${{ runner.temp }}/demo-forge-chapters/demo-forge.webm
+            ${{ runner.temp }}/demo-forge-chapters/demo-forge.mp4
+            ${{ runner.temp }}/demo-forge-chapters/demo-forge.gif
+            ${{ runner.temp }}/demo-forge-chapters/cover.png
+            ${{ runner.temp }}/demo-forge-chapters/run.json
+            ${{ runner.temp }}/demo-forge-chapters/doctor.json
+            ${{ runner.temp }}/demo-forge-chapters/verification.json
   dots-studio:
     runs-on: ubuntu-latest
     container: node:22.16.0-bookworm
