@@ -1,57 +1,14 @@
-# Demo Forge + Business AI Recipes
+# Dots Studio + Business AI Recipes
 
-[![Verify](https://github.com/aichance/business-ai-recipes/actions/workflows/verify.yml/badge.svg)](https://github.com/aichance/business-ai-recipes/actions/workflows/verify.yml)
+[![Verify](https://github.com/jokv213/business-ai-recipes/actions/workflows/verify.yml/badge.svg)](https://github.com/jokv213/business-ai-recipes/actions/workflows/verify.yml)
 
-## Demo Forge — turn a working app into a demo people can try
+## Start with one working path
 
-Demo Forge turns a short operation definition into a real browser run against
-a self-owned localhost app. It checks the app's final success state and writes
-WebM, MP4, GIF, and a cover image. The input is synthetic and the default route
-never uses an external API or a logged-in browser profile.
+Choose the shortest route for what you want to try:
 
-**Already running your app? Record it by URL, with no server modifications.**
-![A running local app recorded and checked by Demo Forge](experiments/demo-forge/demo.gif)
-
-Write an operation JSON for your actual selectors and expected outcome, then:
-
-```bash
-python3 experiments/demo-forge/forge.py \
-  --url http://127.0.0.1:3000/ \
-  --operation my-operation.json \
-  --output .demo-forge-output/my-app \
-  --tail-seconds 8
-```
-
-The app keeps running. The runner checks the outcome before converting its real
-browser recording. HTTP assets must stay on the same loopback port; redirects,
-WebSockets and service workers are unsupported. See the operation JSON example
-in the [Demo Forge guide](experiments/demo-forge/README.md).
-
-```bash
-python3 -m venv .demo-forge-venv
-.demo-forge-venv/bin/python -m pip install playwright
-.demo-forge-venv/bin/python -m playwright install chromium
-.demo-forge-venv/bin/python experiments/demo-forge/forge.py --doctor
-.demo-forge-venv/bin/python experiments/demo-forge/forge.py \
-  --output .demo-forge-output \
-  --tail-seconds 8
-```
-
-`.demo-forge-venv/` and `.demo-forge-output/` are local workspace directories;
-they are intentionally ignored by Git and by the repository verifier. The
-verifier continues to check the trusted recipe files, so it is safe to run
-`python3 -B verify.py` after this setup.
-
-`--doctor` reports `python_environment` and prints the matching repair commands.
-If you already have an active virtual environment, use its Python instead.
-
-FFmpeg must also be on `PATH`. The command operates only on `127.0.0.1`,
-checks `Ready to share` and `Launch Kit is ready`, and produces a 10-30 second
-share preview when `--tail-seconds 8` is used, by holding the verified final
-frame in the MP4 and GIF. A shorter tail is useful for a smoke check but makes
-a shorter preview. It does not claim generic browser compatibility or a speedup.
-[Direct instructions, boundaries,
-and the Japanese introduction →](experiments/demo-forge/README.md)
+- **Make a shareable demo from a running localhost app:** [Demo Forge guide](experiments/demo-forge/README.md) — bring a URL and operation JSON, then export a checked MP4/GIF/cover.
+- **Inspect evidence and replay your own input:** [Dots Studio guide](tools/dots-studio/README.md).
+- **Turn your own schema into editable plugin source:** [App Forge guide](tools/app-forge/README.md).
 
 ## Dots Studio — make assumptions, evidence and failed runs inspectable
 
@@ -103,6 +60,80 @@ the generated source ZIP. The generated source is a local development artifact;
 host connection, account installation, and external delivery remain separate
 steps. [Full App Forge instructions and limits →](tools/app-forge/README.md)
 
+## Demo Forge — turn a working app into a demo people can try
+
+Demo Forge turns a short operation definition into a real browser run against
+a self-owned localhost app. It checks the app's final success state and writes
+WebM, MP4, GIF, and a cover image. The input is synthetic and the default route
+never uses an external API or a logged-in browser profile.
+
+**Copy-paste trial with the included app (two terminals).** This is the shortest
+way to verify the complete path before adapting it to your own localhost app.
+
+Terminal 1:
+
+```bash
+python3 experiments/demo-forge/examples/brief-app/server.py --port 3000
+```
+
+Terminal 2:
+
+```bash
+python3 experiments/demo-forge/forge.py \
+  --url http://127.0.0.1:3000/ \
+  --operation experiments/demo-forge/examples/brief-app/operation.json \
+  --output .demo-forge-output/brief-url \
+  --tail-seconds 8
+```
+
+The resulting `run.json` reports `"status": "success"` and the output folder
+contains the checked WebM, MP4, GIF, and cover image. Stop the sample server
+with `Ctrl-C` when the trial is complete.
+
+**Already running your app? Record it by URL, with no server modifications.**
+![A running local app recorded and checked by Demo Forge](experiments/demo-forge/demo.gif)
+
+Write an operation JSON for your actual selectors and expected outcome, then:
+
+```bash
+python3 experiments/demo-forge/forge.py \
+  --url http://127.0.0.1:3000/ \
+  --operation my-operation.json \
+  --output .demo-forge-output/my-app \
+  --tail-seconds 8
+```
+
+The app keeps running. The runner checks the outcome before converting its real
+browser recording. HTTP assets must stay on the same loopback port; redirects,
+WebSockets and service workers are unsupported. See the operation JSON example
+in the [Demo Forge guide](experiments/demo-forge/README.md).
+
+```bash
+python3 -m venv .demo-forge-venv
+.demo-forge-venv/bin/python -m pip install playwright
+.demo-forge-venv/bin/python -m playwright install chromium
+.demo-forge-venv/bin/python experiments/demo-forge/forge.py --doctor
+.demo-forge-venv/bin/python experiments/demo-forge/forge.py \
+  --output .demo-forge-output \
+  --tail-seconds 8
+```
+
+`.demo-forge-venv/` and `.demo-forge-output/` are local workspace directories;
+they are intentionally ignored by Git and by the repository verifier. The
+verifier continues to check the trusted recipe files, so it is safe to run
+`python3 -B verify.py` after this setup.
+
+`--doctor` reports `python_environment` and prints the matching repair commands.
+If you already have an active virtual environment, use its Python instead.
+
+FFmpeg must also be on `PATH`. The command operates only on `127.0.0.1`,
+checks `Ready to share` and `Launch Kit is ready`, and produces a 10-30 second
+share preview when `--tail-seconds 8` is used, by holding the verified final
+frame in the MP4 and GIF. A shorter tail is useful for a smoke check but makes
+a shorter preview. It does not claim generic browser compatibility or a speedup.
+[Direct instructions, boundaries,
+and the Japanese introduction →](experiments/demo-forge/README.md)
+
 ## Cutroom — edit video by selecting its transcript
 
 **Keep the useful moments. Export the actual video.**
@@ -112,7 +143,7 @@ A local video editor with a clickable transcript, selected-only preview, and MP4
 ![Cutroom editing a narrated sample](tools/cutroom/demo/screenshot.png)
 
 ```bash
-git clone https://github.com/aichance/business-ai-recipes.git
+git clone https://github.com/jokv213/business-ai-recipes.git
 cd business-ai-recipes
 python3 tools/cutroom/server.py
 ```
@@ -149,4 +180,4 @@ python3 -B recipes/meeting-line-judgment/recipe.py
 python3 -B -m unittest discover -s tools/cutroom -p 'test_*.py'
 ```
 
-Created by **Naoya / jokv213**, with AI-assisted implementation and verification. Maintained here by [aichance](https://github.com/aichance). [Report a reproducible problem or suggest a workflow](https://github.com/aichance/business-ai-recipes/issues). No adoption, star, or time-saving claims are inferred from the synthetic demonstrations.
+Created by **Naoya / jokv213**, with AI-assisted implementation and verification. [Report a reproducible problem or suggest a workflow](https://github.com/jokv213/business-ai-recipes/issues). No adoption, star, or time-saving claims are inferred from the synthetic demonstrations.
