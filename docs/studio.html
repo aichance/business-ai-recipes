@@ -62,7 +62,7 @@
 import {validateStory, cueAt, fitFrame} from './studio-core.mjs';
 const $ = id => document.getElementById(id);
 const video = $('source'), canvas = $('preview'), ctx = canvas.getContext('2d');
-const sampleStory = {label:'CUTROOM / SYNTHETIC EXAMPLE',cues:[{at:0,text:'Select the recovery step from a 49-second video transcript.'},{at:3,text:'Export the selected scene locally. No upload or API key.'},{at:5.88,text:'An 8.1-second clip with subtitles is ready.'}]};
+const sampleStory = {label:'CUTROOM / SYNTHETIC EXAMPLE',cues:[{at:0,text:'Select the recovery step from a 49-second video transcript.'},{at:2.88,text:'Export the selected scene locally. No upload or API key.'},{at:5.76,text:'An 8.1-second clip with subtitles is ready.'}]};
 let ready=false, loading=false, exporting=false, story=null, inputUrl=null, outputUrl=null, recorder=null, abortExport=null;
 const mime = typeof MediaRecorder !== 'undefined' ? ['video/mp4;codecs=avc1.42E01E','video/mp4','video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'].find(t=>MediaRecorder.isTypeSupported(t)) : null;
 const format = mime?.startsWith('video/mp4') ? 'MP4' : 'WebM';
