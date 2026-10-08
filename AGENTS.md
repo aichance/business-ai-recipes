@@ -36,6 +36,11 @@ For a requested repeatable README demo, the repo-local
 `.agents/skills/demo-forge/SKILL.md` explains how to derive the operation JSON
 from the actual local app. Use the existing recorder; do not change its scope
 or alter the app to make an unsupported workflow appear successful.
+The skill includes byte-identical copies of the recorder, sample server,
+operations and app under `scripts/`, plus the root MIT license. Keep these
+copies aligned when updating `experiments/demo-forge/`; `verify.py` checks
+them. Resolve skill execution paths relative to SKILL.md, so an installation
+in another app project does not depend on this full checkout.
 
 The narrower restrictions below refer to the earlier recipes and remain unchanged for them. Never expand their live scope while editing Cutroom. `.cutroom/` is ignored workspace output; never commit imported files. Tracked assets must remain authored synthetic content. Public verification includes the exact file manifest and an independent fresh-checkout test.
 

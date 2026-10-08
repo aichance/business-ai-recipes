@@ -1,0 +1,16 @@
+{
+  "name": "launch-demo",
+  "input": { "project_name": "Launch Kit" },
+  "steps": [
+    { "type": "fill", "selector": "#project-input", "value": "Launch Kit" },
+    { "type": "click", "selector": "#launch-button" },
+    { "type": "wait_for_selector", "selector": "#result-card[data-state=\"success\"]" },
+    { "type": "assert_text", "selector": "#status", "contains": "Ready to share" },
+    { "type": "assert_text", "selector": "#result-title", "contains": "Launch Kit is ready" },
+    { "type": "assert_attribute", "selector": "#result-card", "attribute": "data-state", "equals": "success" }
+  ],
+  "success": {
+    "selector": "#result-card[data-state=\"success\"]",
+    "text": "Launch Kit is ready"
+  }
+}
