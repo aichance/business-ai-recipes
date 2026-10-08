@@ -2,40 +2,41 @@
 
 [![Verify](https://github.com/aichance/business-ai-recipes/actions/workflows/verify.yml/badge.svg)](https://github.com/aichance/business-ai-recipes/actions/workflows/verify.yml)
 
-**Turn a localhost app and a JSON workflow into a checked MP4, GIF and cover.**
-Keep the workflow in your repo and rerun it when the UI changes. No recording API or API key.
+**Make your app's workflow easy to see — and easy to record again.**
+Add explanations to a recording in your browser, or save a local app's steps and rerun them with the recorder. Keep the MP4, GIF and editable inputs.
 
-[Try in your browser — no install](https://aichance.github.io/business-ai-recipes/studio.html) · [Watch a real walkthrough](https://aichance.github.io/business-ai-recipes/) · [CLI guide / 日本語](experiments/demo-forge/README.md)
+[**Try the browser editor**](https://aichance.github.io/business-ai-recipes/studio.html) · [**Watch & download this example**](https://aichance.github.io/business-ai-recipes/silentstars.html) · [**Recorder guide / 日本語**](experiments/demo-forge/README.md)
 
-![A running local app recorded and checked by Demo Forge](experiments/demo-forge/demo.gif)
+[![13-second SilentStars walkthrough: search markdown, filter help wanted, then open project details](docs/silentstars-demo.gif)](https://aichance.github.io/business-ai-recipes/silentstars.html)
 
-The clip above is a recorded synthetic app, not an adoption or speed benchmark.
-The other experiments in this repository are documented below Demo Forge.
+*Real-app example: [SilentStars by capuz](https://github.com/capuz/silentstars), recorded from an unchanged local build. Capture: shot-scraper. Explanations and MP4/GIF export: Demo Forge Browser Studio. [Raw recording, editable captions and replay steps →](https://aichance.github.io/business-ai-recipes/silentstars.html)*
 
-**Real-app case:** [SilentStars — a demo you can replay](https://aichance.github.io/business-ai-recipes/silentstars.html).
-Download the MP4/GIF, raw recording and editable story. This case uses
-shot-scraper for capture and Browser Studio for explanations; the page records
-why the CLI's localhost-only capture was a poorer fit for this app's assets.
+## Choose your starting point
 
-## Try before installing
+| What you have | What you can make | Start here |
+| --- | --- | --- |
+| A screen recording | MP4 or short GIF with timed explanations; reusable story JSON | [Open Browser Studio — no install](https://aichance.github.io/business-ai-recipes/studio.html) |
+| A local web app | Repeatable recording that checks the expected UI before export | [Codex skill + recorder setup](#record-with-codex-or-the-cli) |
 
-**Have a recording already?** Open [Browser Studio](https://aichance.github.io/business-ai-recipes/studio.html),
-choose the 9-second sample or your own video, edit the explanations and times,
-and export the video plus reusable story JSON. No signup or video upload.
-Choose **Keep original audio** to retain an existing voiceover, or leave it
-unchecked for a silent video. Only audio already in your file is used; no
-microphone permission is needed. Audio is re-encoded, not copied losslessly.
-The editing preview is silent; review audio in the encoded result after export.
-Chromium MP4 export with and without audio is verified; the browser shows its
-supported format before export. Timing is manual. Imported videos do not
-receive the CLI's UI checks.
+### Try the editor with the included sample
 
-**Want to see the CLI record a real app?** Fork this repo, open
-**Actions → Verify → Run workflow** on `main`, and download
-**demo-forge-chapters** after its job succeeds. It records the included Launch Kit
-with four operations and three chapter cards. This needs a GitHub account and
-Actions enabled on the fork, but no local installation. Artifacts expire after
-one day. [Verified example run](https://github.com/aichance/business-ai-recipes/actions/runs/37627353530).
+1. Open **Browser Studio** and choose the 9-second sample.
+2. Edit an explanation and its start time.
+3. Export MP4 or a silent GIF, then save the story JSON to edit later.
+
+No signup, API key or video upload. Caption text and timing are manual.
+Chromium MP4 export is verified; the editor displays the format your browser supports.
+For existing voiceover, enable **Keep original audio** and review the encoded result
+(the editing preview is silent; audio is re-encoded).
+
+## Record with Codex or the CLI
+
+The recorder needs **Python 3.11+, Playwright/Chromium and FFmpeg**. It operates
+on one localhost origin and verifies your expected UI text before exporting.
+Use Browser Studio for an existing recording; imported videos are edited without UI checks.
+
+<details>
+<summary><strong>Open setup, Codex prompt and recording commands</strong></summary>
 
 ## Ask Codex to make the operation file
 
@@ -144,7 +145,12 @@ exporting new successful media. A UI assertion is not proof of a backend write.
 
 [Input schema, failure handling, examples and 日本語 →](experiments/demo-forge/README.md)
 
----
+</details>
+
+## More experiments
+
+<details>
+<summary>Cutroom, Dots Studio, App Forge and earlier recipes</summary>
 
 Other local experiments remain available below. They have separate requirements
 and do not need to be installed to use Demo Forge.
@@ -245,4 +251,6 @@ python3 -B recipes/meeting-line-judgment/recipe.py
 python3 -B -m unittest discover -s tools/cutroom -p 'test_*.py'
 ```
 
-Created by **Naoya / jokv213**, with AI-assisted implementation and verification. [Report a reproducible problem or suggest a workflow](https://github.com/aichance/business-ai-recipes/issues). No adoption, star, or time-saving claims are inferred from the synthetic demonstrations.
+</details>
+
+Maintained by [**aichance**](https://github.com/aichance), an AI-operated project with a human owner. Originally created by **Naoya / jokv213**. [Report a reproducible problem or suggest a workflow](https://github.com/aichance/business-ai-recipes/issues).
