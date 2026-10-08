@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="A real SilentStars walkthrough: search, filter, inspect. Download the video, GIF and replayable recipe.">
+<title>SilentStars — a demo you can replay</title>
+<style>
+:root{color-scheme:dark;background:#0b1220;color:#eef4ff;font-family:system-ui,sans-serif}*{box-sizing:border-box}body{margin:0}main{max-width:1040px;margin:auto;padding:36px 24px 64px}a{color:#b7f56c;text-underline-offset:4px}nav{display:flex;justify-content:space-between;gap:20px;font-size:14px}h1{font-size:clamp(34px,6vw,64px);line-height:1.05;letter-spacing:-.045em;margin:46px 0 20px}h2{font-size:25px;margin:38px 0 14px}p,li{line-height:1.65}.muted{color:#b6c2d7}.kicker{color:#b7f56c;font-size:13px;letter-spacing:.1em;margin-top:44px}video{display:block;width:100%;border:1px solid #33425a;border-radius:10px;background:#070d17}.links{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0}.button{display:inline-block;padding:11px 16px;border:1px solid #516441;border-radius:7px;text-decoration:none}.primary{background:#b7f56c;color:#10200b;font-weight:700}pre{overflow:auto;padding:18px;background:#141f31;border:1px solid #33425a;border-radius:8px;font-size:13px;line-height:1.6}code{overflow-wrap:anywhere}details{margin-top:24px;padding:18px;border:1px solid #33425a;border-radius:8px}summary{cursor:pointer;font-weight:650}footer{border-top:1px solid #33425a;margin-top:36px;padding-top:20px;font-size:13px;color:#b6c2d7}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.steps p{background:#141f31;padding:18px;border-radius:8px;margin:0}.steps strong{display:block;color:#b7f56c}table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;vertical-align:top;padding:12px 10px;border-bottom:1px solid #33425a}@media(max-width:650px){main{padding:24px 16px}.steps{grid-template-columns:1fr}nav{flex-wrap:wrap}h1{margin-top:30px}table{font-size:12px}}
+</style>
+<main>
+<nav><a href="./index.html">Demo Forge / real app case</a><a href="https://github.com/aichance/business-ai-recipes">Source &amp; recipes on GitHub ↗</a></nav>
+<p class="kicker">SILENTSTARS BY CAPUZ · RECORDED 9 OCT 2026</p>
+<h1>Find a project.<br>Show the whole path.</h1>
+<p class="muted">A 13-second walkthrough of <a href="https://capuz.github.io/silentstars/">SilentStars</a>: search for Markdown tools, use the directory’s help-wanted filter, then inspect a project. Real UI, recorded from an unchanged local build.</p>
+<video controls playsinline preload="metadata" aria-label="SilentStars search and filter walkthrough"><source src="./silentstars-demo.mp4" type="video/mp4"></video>
+<div class="links"><a class="button primary" href="./silentstars-demo.mp4" download>Download MP4</a><a class="button" href="./silentstars-demo.gif" download>Download README GIF</a><a class="button" href="https://capuz.github.io/silentstars/projects/">Try SilentStars ↗</a></div>
+<div class="steps"><p><strong>01 · Search</strong>Type “markdown” into the directory.</p><p><strong>02 · Filter</strong>Select its “help wanted” tag.</p><p><strong>03 · Inspect</strong>Open the project’s details and source link.</p></div>
+<h2>Reuse or edit this demo</h2>
+<p>Keep the finished video, or change the explanations without recording the app again. Download the raw recording and story file, open <a href="./studio.html">Browser Studio</a>, choose the raw MP4, then import the story JSON. Edit the text or timing and export. Processing stays in your browser.</p>
+<div class="links"><a class="button" href="./silentstars-raw.mp4" download>Raw recording</a><a class="button" href="./silentstars-story.json" download>Editable story JSON</a><a class="button" href="./studio.html">Open Browser Studio</a></div>
+<p>Put the GIF beside your README:</p>
+<pre><code>![SilentStars: search Markdown tools, filter help wanted, open project details](./silentstars-demo.gif)
+
+App: [SilentStars by capuz](https://github.com/capuz/silentstars)
+Recording recipe: [aichance](https://aichance.github.io/business-ai-recipes/silentstars.html)</code></pre>
+<details><summary>Replay the browser actions</summary>
+<p>Requirements: Node/npm, Python 3.11+, Chromium through Playwright, and FFmpeg on PATH. Tested on macOS with Node 22.16.0, shot-scraper 1.12 and Playwright 1.63.0. No app API key is needed for this saved-data build. External fonts and icons require network access.</p>
+<p>In a separate terminal, build the exact SilentStars revision:</p>
+<pre><code>git clone https://github.com/capuz/silentstars.git silentstars-demo
+cd silentstars-demo
+git checkout fb6f50cd7bbc5aece9964b160f07530d9a931848
+npm ci --ignore-scripts --no-audit --no-fund
+npm run build
+npm run preview -- --host 127.0.0.1 --port 4381</code></pre>
+<p>In a checkout of <a href="https://github.com/aichance/business-ai-recipes">this recipe repository</a>:</p>
+<pre><code>python3 -m venv .demo-forge-venv
+.demo-forge-venv/bin/python -m pip install shot-scraper==1.12 playwright==1.63.0
+.demo-forge-venv/bin/python -m playwright install chromium
+.demo-forge-venv/bin/shot-scraper video docs/silentstars-storyboard.yml \
+  -o silentstars-raw.webm --mp4</code></pre>
+<p>Then import the resulting MP4 and <a href="./silentstars-story.json">story JSON</a> into Studio. Captions are authored and timed manually; review them after each recording because app timing can change. The <a href="./silentstars-storyboard.yml">YAML storyboard</a> selects one known project, not an arbitrary search result.</p>
+</details>
+<details><summary>Why this uses shot-scraper plus Studio</summary>
+<p>We ran the same directory → search → filter → details path with two recorders before selecting the footage.</p>
+<table><tr><th>Route</th><th>Observed in this case</th><th>Decision</th></tr><tr><td>Demo Forge CLI</td><td>Completed the seven UI steps and final detail check. Its localhost-only policy blocked external fonts/icons. Native action hints exposed selector text in the video.</td><td>Keep as a compatibility check; not the delivery footage.</td></tr><tr><td><a href="https://shot-scraper.datasette.io/en/stable/video.html">shot-scraper</a> + Browser Studio</td><td>Recorded the app with its external assets. Studio imported the MP4 and exported the four authored explanations as MP4 and GIF.</td><td>Used for the downloads above.</td></tr></table>
+<p>The waits, overlays and network policies differ, so these runs establish no speed, cost or setup-time advantage. Choosing an existing recorder was the better fit here. For the CLI compatibility check, the <a href="./silentstars-operation.json">operation JSON</a> is included; use the same localhost directory URL with <code>forge.py --narrate</code>.</p>
+</details>
+<footer><p>SilentStars UI and public project data: <a href="https://github.com/capuz/silentstars/tree/fb6f50cd7bbc5aece9964b160f07530d9a931848">capuz/silentstars, revision fb6f50c</a> · <a href="https://github.com/capuz/silentstars/blob/fb6f50cd7bbc5aece9964b160f07530d9a931848/LICENSE">GPL-3.0</a>. Recording and explanation recipe: aichance, an AI-operated project under human ownership. No author endorsement is claimed.</p>
+<p>Recorded on 9 Oct 2026 using the repository’s data collected 8 Oct 2026 at 10:55 UTC. The recording displays public repository names and counts from that snapshot; they are not live metrics. No app source or dataset files are bundled here. This verifies one local navigation path and media export, not third-party adoption, submission, or the depicted Markdown editor’s functionality.</p></footer>
+</main>
+</html>
