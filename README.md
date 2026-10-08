@@ -34,8 +34,22 @@ one day. [Verified example run](https://github.com/aichance/business-ai-recipes/
 
 ## Ask Codex to make the operation file
 
-Open this checkout as a Codex project and use the included
-[demo-forge skill](.agents/skills/demo-forge/SKILL.md). Describe the local app,
+Use the included [demo-forge skill](.agents/skills/demo-forge/SKILL.md) in this
+checkout or copy the **whole** `.agents/skills/demo-forge` folder into your
+app project's `.agents/skills/`. The folder includes the recorder and sample
+app, so it works without a sibling Demo Forge checkout. Do not copy only
+SKILL.md, or overwrite an existing skill of the same name.
+
+If your GitHub CLI includes `gh skill`, you can also install from a downloaded
+checkout. Run this **inside your app project**, replacing the source path:
+
+```bash
+gh skill install /path/to/business-ai-recipes demo-forge \
+  --from-local --allow-hidden-dirs --dir .agents/skills
+```
+
+This is a local copy; it does not change your GitHub account or global skills.
+Open the app project in Codex and explicitly use the skill. Describe the local app,
 the steps and the result you want to show; Codex inspects the app and writes
 the selectors and operation JSON for you.
 
@@ -49,7 +63,10 @@ Return the MP4, GIF and operation JSON so I can rerun it after UI changes.
 Use your own app's URL and workflow. The skill uses the existing recorder:
 Python, Playwright/Chromium and FFmpeg are still required. It checks setup,
 keeps inputs local, and reports an unsupported step instead of inventing it.
-It does not publish the result or install itself globally.
+It does not publish the result or install itself globally. The bundled runtime
+is byte-checked against the repository's recorder; installation still requires
+the recording dependencies below. Automatic skill selection is not part of
+the verified trial.
 
 ## Demo Forge — turn a working app into a demo people can try
 

@@ -16,6 +16,13 @@ from recipe import Refused, apply_local, approve, prepare, read_json, validate_p
 
 EXPECTED_FILES = {
     ".agents/skills/demo-forge/SKILL.md",
+    ".agents/skills/demo-forge/LICENSE",
+    ".agents/skills/demo-forge/references/setup.md",
+    ".agents/skills/demo-forge/scripts/forge.py",
+    ".agents/skills/demo-forge/scripts/server.py",
+    ".agents/skills/demo-forge/scripts/operation.json",
+    ".agents/skills/demo-forge/scripts/operation.narrated.json",
+    ".agents/skills/demo-forge/scripts/app/index.html",
     ".github/workflows/verify.yml",
     ".gitignore",
     "AGENTS.md",
@@ -208,6 +215,20 @@ def _load_line_judgment_recipe(root: Path):
 
 def _verify_demo_forge(root: Path) -> dict:
     demo_root = root / "experiments" / "demo-forge"
+    skill_root = root / ".agents" / "skills" / "demo-forge"
+    for relative in (
+        "forge.py",
+        "server.py",
+        "operation.json",
+        "operation.narrated.json",
+        "app/index.html",
+    ):
+        if (skill_root / "scripts" / relative).read_bytes() != (demo_root / relative).read_bytes():
+            raise AssertionError(
+                f"bundled Demo Forge skill differs from recorder source: {relative}"
+            )
+    if (skill_root / "LICENSE").read_bytes() != (root / "LICENSE").read_bytes():
+        raise AssertionError("bundled Demo Forge skill must include the root license")
     presentation_spec = importlib.util.spec_from_file_location(
         "public_demo_presentation", demo_root / "present.py"
     )
