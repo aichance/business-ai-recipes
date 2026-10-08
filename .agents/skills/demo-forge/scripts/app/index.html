@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Demo Forge</title>
+    <style>
+      :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+      * { box-sizing: border-box; }
+      body { margin: 0; min-height: 100vh; background: #0b1020; color: #e8ecf8; }
+      main { width: 100%; min-height: 100vh; padding: 68px 92px; background: radial-gradient(circle at 82% 14%, #1f3769 0, transparent 32%), #0b1020; }
+      .eyebrow { color: #82aaff; letter-spacing: .18em; text-transform: uppercase; font-size: 13px; font-weight: 700; }
+      h1 { margin: 14px 0 12px; font-size: 54px; line-height: 1; }
+      .lead { max-width: 670px; color: #aeb9d4; font-size: 19px; line-height: 1.5; }
+      .panel { margin-top: 42px; max-width: 920px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+      .card { border: 1px solid #2f416d; border-radius: 20px; padding: 28px; background: rgba(19, 29, 55, .86); box-shadow: 0 22px 60px rgba(0,0,0,.22); }
+      label { display: block; margin-bottom: 10px; color: #9aa9c8; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+      input { width: 100%; border: 1px solid #516899; border-radius: 11px; padding: 15px 16px; background: #111a31; color: #f4f7ff; font-size: 18px; outline: none; }
+      input:focus { border-color: #83a7ff; box-shadow: 0 0 0 3px rgba(131,167,255,.18); }
+      button { margin-top: 17px; width: 100%; border: 0; border-radius: 11px; padding: 16px; background: #82aaff; color: #0b1020; font-weight: 800; font-size: 16px; cursor: pointer; }
+      button:hover { background: #a6c1ff; }
+      .status-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+      .status-label { color: #91a2c7; font-size: 13px; text-transform: uppercase; letter-spacing: .08em; }
+      .status-value { color: #ffd580; font-weight: 800; }
+      #result-card { transition: border-color .2s ease, transform .2s ease; }
+      #result-card[data-state="success"] { border-color: #46d5a4; transform: translateY(-2px); }
+      .badge { display: inline-flex; padding: 7px 10px; border-radius: 999px; background: #26365b; color: #b9c9f0; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
+      [data-state="success"] .badge { background: rgba(70,213,164,.16); color: #70efc3; }
+      h2 { margin: 25px 0 10px; font-size: 26px; }
+      .result-text { color: #acb8d1; line-height: 1.5; }
+      .share-url { margin-top: 22px; border-radius: 10px; padding: 12px; background: #101a32; color: #8fb0ff; font-family: ui-monospace, SFMono-Regular, monospace; font-size: 13px; word-break: break-all; }
+      .run-count { margin-top: 22px; color: #8e9cba; font-size: 13px; }
+      .run-count strong { color: #f3f6ff; }
+      @media (max-width: 800px) { main { padding: 40px 24px; } .panel { grid-template-columns: 1fr; } h1 { font-size: 42px; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="eyebrow">Demo Forge / local run</div>
+      <h1>Turn an intent into a launch.</h1>
+      <p class="lead">A small, observable browser route: provide a project name, launch the kit, and verify the final state from the app itself.</p>
+      <section class="panel" aria-label="Demo Forge workflow">
+        <div class="card">
+          <label for="project-input">Project name</label>
+          <input id="project-input" value="Launch Kit" autocomplete="off" />
+          <button id="launch-button" type="button">Launch demo</button>
+          <div class="status-row" style="margin-top: 28px">
+            <span class="status-label">Current state</span>
+            <span id="status" class="status-value">Ready to launch</span>
+          </div>
+        </div>
+        <div id="result-card" class="card" data-state="idle">
+          <span id="result-badge" class="badge">Waiting</span>
+          <h2 id="result-title">No launch yet</h2>
+          <p id="result-summary" class="result-text">The verified result will appear here after the browser route completes.</p>
+          <div id="share-url" class="share-url">http://localhost/demo/pending</div>
+          <div class="run-count">Completed runs: <strong id="run-count">0</strong></div>
+        </div>
+      </section>
+    </main>
+    <script>
+      const input = document.querySelector('#project-input');
+      const button = document.querySelector('#launch-button');
+      const status = document.querySelector('#status');
+      const card = document.querySelector('#result-card');
+      const badge = document.querySelector('#result-badge');
+      const title = document.querySelector('#result-title');
+      const summary = document.querySelector('#result-summary');
+      const url = document.querySelector('#share-url');
+      const runCount = document.querySelector('#run-count');
+
+      async function refresh() {
+        const response = await fetch('/api/state');
+        const state = await response.json();
+        status.textContent = state.status;
+        runCount.textContent = state.runs;
+      }
+
+      button.addEventListener('click', async () => {
+        button.disabled = true;
+        button.textContent = 'Launching…';
+        const response = await fetch('/api/launch', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: input.value })
+        });
+        const result = await response.json();
+        if (!response.ok) {
+          status.textContent = result.error || 'Launch failed';
+          button.disabled = false;
+          button.textContent = 'Launch demo';
+          return;
+        }
+        status.textContent = 'Ready to share';
+        badge.textContent = 'Verified';
+        card.dataset.state = 'success';
+        title.textContent = `${result.name} is ready`;
+        summary.textContent = result.summary;
+        url.textContent = result.share_url;
+        await refresh();
+        button.disabled = false;
+        button.textContent = 'Launch again';
+      });
+
+      refresh();
+    </script>
+  </body>
+</html>
