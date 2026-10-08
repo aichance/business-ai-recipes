@@ -16,9 +16,14 @@ The other experiments in this repository are documented below Demo Forge.
 
 **Have a recording already?** Open [Browser Studio](https://aichance.github.io/business-ai-recipes/studio.html),
 choose the 9-second sample or your own video, edit the explanations and times,
-and export the silent video plus reusable story JSON. No signup or video upload.
-Chromium MP4 export is verified; the browser shows its supported format before
-export. Timing is manual. Imported videos do not receive the CLI's UI checks.
+and export the video plus reusable story JSON. No signup or video upload.
+Choose **Keep original audio** to retain an existing voiceover, or leave it
+unchecked for a silent video. Only audio already in your file is used; no
+microphone permission is needed. Audio is re-encoded, not copied losslessly.
+The editing preview is silent; review audio in the encoded result after export.
+Chromium MP4 export with and without audio is verified; the browser shows its
+supported format before export. Timing is manual. Imported videos do not
+receive the CLI's UI checks.
 
 **Want to see the CLI record a real app?** Fork this repo, open
 **Actions → Verify → Run workflow** on `main`, and download
