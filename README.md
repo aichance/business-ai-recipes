@@ -12,6 +12,11 @@ Keep the workflow in your repo and rerun it when the UI changes. No recording AP
 The clip above is a recorded synthetic app, not an adoption or speed benchmark.
 The other experiments in this repository are documented below Demo Forge.
 
+**Real-app case:** [SilentStars — a demo you can replay](https://aichance.github.io/business-ai-recipes/silentstars.html).
+Download the MP4/GIF, raw recording and editable story. This case uses
+shot-scraper for capture and Browser Studio for explanations; the page records
+why the CLI's localhost-only capture was a poorer fit for this app's assets.
+
 ## Try before installing
 
 **Have a recording already?** Open [Browser Studio](https://aichance.github.io/business-ai-recipes/studio.html),
