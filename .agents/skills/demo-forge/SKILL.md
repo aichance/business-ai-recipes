@@ -1,6 +1,6 @@
 ---
 name: demo-forge
-description: Record a requested workflow in a local web app as a checked MP4 and GIF using this repository's Demo Forge. Use when the user wants a repeatable README demo; derive the operation JSON from the real app.
+description: Record a requested workflow in a local web app as a checked MP4 and GIF with the bundled Demo Forge recorder. Use when the user wants a repeatable README demo; derive the operation JSON from the real app.
 ---
 
 # Demo Forge
@@ -9,7 +9,7 @@ Turn the user's described workflow into an operation file, run the existing reco
 
 ## Find the app and recorder
 
-The recorder is at `experiments/demo-forge/forge.py` in this repository. Resolve the repository from this skill's location, not from an unrelated current directory. Read [the CLI guide](../../../experiments/demo-forge/README.md) for setup and the operation format; [the narrated example](../../../experiments/demo-forge/operation.narrated.json) is a starting shape, not a source of selectors for another app.
+The recorder is [scripts/forge.py](scripts/forge.py), inside this skill folder. Resolve it from the location of this SKILL.md, not from the user's current directory. The skill includes its recorder and synthetic demo; no sibling Demo Forge checkout is needed. Read [setup and command paths](references/setup.md) when preparing the environment. [The narrated example](scripts/operation.narrated.json) is a starting shape, not a source of selectors for another app.
 
 Use the user's running `http://127.0.0.1:PORT/path`, desired steps, sample values, and visible success condition. Ask only for missing inputs that prevent a correct recording. If no app is specified and the user wants to try the tool, use the bundled demo and identify it as synthetic.
 
@@ -37,12 +37,16 @@ Use synthetic or explicitly authorized values. Operation files and recordings ma
 
 ## Run and verify
 
-Run `--doctor` (plus `--narrate` if selected) using the intended Python environment. Follow its environment-specific repair commands within the user's permission scope. Use an isolated virtual environment; do not change global packages or settings. Python 3.11+, Playwright/Chromium and FFmpeg/ffprobe are required. The CLI guide has the tested installation commands.
+Run `--doctor` (plus `--narrate` if selected) using the intended Python environment. Follow its environment-specific repair commands within the user's permission scope. Use an isolated virtual environment; do not change global packages or settings. Python 3.11+, Playwright/Chromium and FFmpeg are required for recording. Also check `ffprobe -version` separately: the doctor does not check ffprobe, which is used to inspect the resulting media. The setup reference has the tested command shape.
 
-Resolve the interpreter, recorder, operation, and media paths to absolute paths before executing. An environment in another checkout must not be reinterpreted relative to the recorder repository. The following shows the command shape from the recorder repository:
+Resolve the interpreter, recorder, operation, and media paths to absolute paths before executing. An environment in another checkout must not be reinterpreted relative to the skill folder. The following shows the command shape from an app project with the skill installed in `.agents/skills`:
 
 ```bash
-python experiments/demo-forge/forge.py   --url http://127.0.0.1:3000/   --operation .demo-forge-output/my-demo/operation.json   --tail-seconds 3   --output .demo-forge-output/my-demo/media
+python .agents/skills/demo-forge/scripts/forge.py \
+  --url http://127.0.0.1:3000/ \
+  --operation .demo-forge-output/my-demo/operation.json \
+  --tail-seconds 3 \
+  --output .demo-forge-output/my-demo/media
 ```
 
 Replace the sample URL and paths with the verified inputs; add `--narrate` only when the operation has chapters and the environment supports it. Keep the user's app running. Do not overwrite an unrelated output directory.
