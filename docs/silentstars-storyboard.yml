@@ -1,0 +1,26 @@
+url: http://127.0.0.1:4381/silentstars/projects/
+viewport:
+  width: 1280
+  height: 720
+cursor: true
+wait_for: "#search"
+scenes:
+  - name: Browse the directory
+    do:
+      - pause: 3
+  - name: Search a topic
+    do:
+      - fill:
+          into: "#search"
+          text: "markdown"
+      - pause: 3
+  - name: Help wanted
+    do:
+      - click: "button[data-filter-tag='needs_contributors']"
+      - wait_for: ".card-name[href='/silentstars/projects/petertzy--markdown-reader/']"
+      - pause: 3
+  - name: Read the project details
+    do:
+      - click: ".card-name[href='/silentstars/projects/petertzy--markdown-reader/']"
+      - wait_for: 'a[href="https://github.com/petertzy/markdown-reader"]:has-text("View on GitHub")'
+      - pause: 4

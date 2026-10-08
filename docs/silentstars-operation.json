@@ -1,0 +1,48 @@
+{
+  "name": "SilentStars: find a Markdown project welcoming contributions",
+  "steps": [
+    {
+      "type": "wait_for_selector",
+      "selector": "#search",
+      "chapter": "SilentStars: discover active open source beyond star rankings"
+    },
+    {
+      "type": "fill",
+      "selector": "#search",
+      "value": "markdown",
+      "chapter": "Search for a tool or topic"
+    },
+    {
+      "type": "click",
+      "selector": "button[data-filter-tag='needs_contributors']",
+      "chapter": "Keep projects tagged help wanted"
+    },
+    {
+      "type": "wait_for_selector",
+      "selector": ".card-name[href='/silentstars/projects/petertzy--markdown-reader/']"
+    },
+    {
+      "type": "click",
+      "selector": ".card-name[href='/silentstars/projects/petertzy--markdown-reader/']",
+      "chapter": "Open the project details before visiting its source"
+    },
+    {
+      "type": "wait_for_selector",
+      "selector": "a:has-text('View on GitHub')"
+    },
+    {
+      "type": "assert_attribute",
+      "selector": "a:has-text('View on GitHub')",
+      "attribute": "href",
+      "equals": "https://github.com/petertzy/markdown-reader"
+    }
+  ],
+  "success": {
+    "selector": "main article:has(a[href=\"https://github.com/petertzy/markdown-reader\"])",
+    "text": "petertzy/markdown-reader"
+  },
+  "input": {
+    "search": "markdown",
+    "tag": "needs_contributors"
+  }
+}
