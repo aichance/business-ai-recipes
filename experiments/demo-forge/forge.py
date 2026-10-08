@@ -433,7 +433,8 @@ def run(
             page = context.new_page()
             if narrate and not hasattr(page, "screencast"):
                 raise RuntimeError("--narrate needs Playwright>=1.59; run --doctor --narrate")
-            page.goto(app_url, wait_until="networkidle")
+            # A usable app may keep polling. Steps must gate its actual ready state.
+            page.goto(app_url, wait_until="domcontentloaded", timeout=30000)
             if narrate:
                 recorded_path = temp_dir / "capture.webm"
                 page.screencast.start(path=str(recorded_path), size={"width": 1280, "height": 720})

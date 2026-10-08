@@ -222,6 +222,18 @@ unsupported. `run.json` describes the latest attempt; only a successful attempt
 exports media at the top level.
 URL mode records `managed_by_forge: false` and does not stop the running app.
 
+Navigation waits for `DOMContentLoaded` with a 30-second limit, not for network
+silence. A ready app can keep an HTTP polling request open. This does **not**
+declare the app ready: put a bounded `wait_for_selector` step before the first
+action or chapter when your app loads asynchronously. For example:
+
+```json
+{"type": "wait_for_selector", "selector": "[data-demo-ready='true']", "timeout_ms": 10000}
+```
+
+Choose a selector that represents your app's actual usable state. A readiness
+timeout or failed final-state check leaves a failed report without current media.
+
 For a 10-30 second share preview, use `--tail-seconds 8`. This holds the
 verified final browser frame in the converted MP4 and GIF; a shorter tail is
 useful for a smoke check but produces a shorter preview. It does not add a new
