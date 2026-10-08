@@ -32,6 +32,25 @@ with four operations and three chapter cards. This needs a GitHub account and
 Actions enabled on the fork, but no local installation. Artifacts expire after
 one day. [Verified example run](https://github.com/aichance/business-ai-recipes/actions/runs/37627353530).
 
+## Ask Codex to make the operation file
+
+Open this checkout as a Codex project and use the included
+[demo-forge skill](.agents/skills/demo-forge/SKILL.md). Describe the local app,
+the steps and the result you want to show; Codex inspects the app and writes
+the selectors and operation JSON for you.
+
+```text
+Use the demo-forge skill. My app is running at http://127.0.0.1:3000/.
+Record adding a reading note: title Dune, note Remember desert ecology.
+Show the saved title and note at the end, with short explanation cards.
+Return the MP4, GIF and operation JSON so I can rerun it after UI changes.
+```
+
+Use your own app's URL and workflow. The skill uses the existing recorder:
+Python, Playwright/Chromium and FFmpeg are still required. It checks setup,
+keeps inputs local, and reports an unsupported step instead of inventing it.
+It does not publish the result or install itself globally.
+
 ## Demo Forge — turn a working app into a demo people can try
 
 ### Install, then record the included app

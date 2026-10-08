@@ -22,7 +22,8 @@ dist build paths are excluded from the exact source manifest verifier.
 
 `experiments/demo-forge/` is a local browser-demo generator. Run its README
 command with Python 3.11+, Playwright/Chromium, and FFmpeg; the browser route
-is restricted to the bundled synthetic localhost app. `forge.py` owns the
+is restricted to the bundled synthetic app or a user-requested app on one
+explicit `http://127.0.0.1:PORT` origin. `forge.py` owns the
 declarative steps, final-state checks, recording, and MP4 presentation-tail
 conversion; `server.py` owns the loopback app. The default path does not use
 an external API or logged-in browser profile.
@@ -30,6 +31,11 @@ an external API or logged-in browser profile.
 `tools/cutroom/` is a standalone local video editor. Launch with `python3 tools/cutroom/server.py`; verify with `python3 -B -m unittest discover -s tools/cutroom -p 'test_*.py'`. Python 3.11 and FFmpeg/ffprobe are required; no Python packages. `media.py` owns parsing/timelines/rendering, `server.py` owns loopback HTTP/storage, `intelligence.py` owns optional TypeSafe calls, and HTML/CSS/JS owns editing and preview. `demo/` contains authored synthetic media and recorded decisions. Root README features Cutroom; `RECIPES.md` preserves the earlier recipe documentation.
 
 User-selected video and subtitle files may be processed locally. Default startup is offline; recorded answers are labelled recorded. Only a user-provided `TYPESAFE_API_KEY` together with `--enable-jev` and in-app consent enables subtitle/goal transmission to the fixed TypeSafe endpoint. Never transmit video, read Keychain from this public tool, retry unknown API requests, log keys/provider bodies, or send without consent. Cap new requests to 30 per launch and preserve editable suggestions. Agent verification uses synthetic inputs only. Preserve Host/Origin checks, container/protocol restrictions, and filesystem scope. There is no external business-write path.
+
+For a requested repeatable README demo, the repo-local
+`.agents/skills/demo-forge/SKILL.md` explains how to derive the operation JSON
+from the actual local app. Use the existing recorder; do not change its scope
+or alter the app to make an unsupported workflow appear successful.
 
 The narrower restrictions below refer to the earlier recipes and remain unchanged for them. Never expand their live scope while editing Cutroom. `.cutroom/` is ignored workspace output; never commit imported files. Tracked assets must remain authored synthetic content. Public verification includes the exact file manifest and an independent fresh-checkout test.
 

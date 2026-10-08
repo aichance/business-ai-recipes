@@ -15,6 +15,7 @@ from tempfile import TemporaryDirectory
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    ".agents/skills/demo-forge/SKILL.md",
     ".github/workflows/verify.yml",
     ".gitignore",
     "AGENTS.md",
