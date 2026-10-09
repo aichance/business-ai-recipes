@@ -2,7 +2,7 @@
 
 An independent, small Codex trial of [Glypha by Kunihisa Matsuda](https://github.com/kuny/glypha). This page contains the synthetic input and HTTP checks from our [public test report](https://qiita.com/atelier-kame/items/b0c6262a46be8ef416e1#comment-ec0fabed6fddbaa9673c), so someone else can repeat it. Glypha itself was not modified.
 
-**Tested on 2026-10-09:** commit `05183171e567ad285d718f08b6ff64620fb9c0c2`, macOS arm64, Go 1.26.5, Node 24.19.0, Python 3.12.14, and the Codex in-app browser. The example requires Python 3.11+ and drives the HTTP checks without calling an AI API. aichance is operated with AI under human oversight.
+**Original HTTP/browser trial on 2026-10-09:** commit `05183171e567ad285d718f08b6ff64620fb9c0c2`, macOS arm64, Go 1.26.5, Node 24.19.0, Python 3.12.14, and the Codex in-app browser. The HTTP example requires Python 3.11+ and runs without calling an AI API. The later recording kit's environment is listed in its section below. aichance is operated with AI under human oversight.
 
 ## What this checks
 
@@ -147,6 +147,16 @@ corrected: 200, new generation and ETag, room B / 14:30
 The three publication steps run quickly, so a browser may only display the final scene. To repeat the original visual check, run the Python sections interactively and pause after the `accepted` and `rejected` messages. Compare the display before sending the correction. Do not infer pixel identity from the HTTP script alone.
 
 Stop the foreground server with **Ctrl+C** when finished. A second execution against the same database intentionally refuses to run; use a fresh temporary database for another trial.
+
+## Record the same workflow
+
+[Download the replay kit](https://github.com/aichance/business-ai-recipes/releases/tag/glypha-replay-2026-10-09) · [Watch/download the 27-second MP4](https://github.com/aichance/business-ai-recipes/releases/download/glypha-replay-2026-10-09/glypha-replay.mp4)
+
+![Actual Glypha responses: room A, rejected update retaining room A, then room B](https://github.com/aichance/business-ai-recipes/releases/download/glypha-replay-2026-10-09/glypha-replay.gif)
+
+The release's **`glypha-replay-kit.zip`** contains a local recording panel, all three synthetic inputs, `operation.json`, setup/replay instructions and MIT license. Build Glypha as above, start it with a fresh empty database, then follow the kit README **instead of running the HTTP input script**. The kit's buttons send the actual HTTP requests, and Demo Forge can operate those buttons and check the final UI while recording. Python 3.11+ is required for the panel; automatic recording also needs Playwright/Chromium and FFmpeg/ffprobe. Dependencies are not bundled.
+
+The replay was verified from a separate extracted directory on macOS, using an unchanged Glypha build and the recorder at `ca0cc84d7b5e07adc25bc439bf902ce9bb2e9805`, with panel Python 3.12.4, recorder Python 3.11.15 and Playwright 1.63.0/Chromium. The final video is 1280×720 / 27.32 seconds; the GIF is a 3 fps derivative. Four-second holds are for readability, not timing measurements. HTTP evidence and in-page canvas measurements are saved separately; browser measurements are self-reports, not independent attestation. The kit README explains how to stop and repeat safely with fresh state after any failure.
 
 ## Original browser evidence
 
