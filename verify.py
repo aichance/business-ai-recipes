@@ -43,6 +43,7 @@ EXPECTED_FILES = {
     "docs/silentstars-storyboard.yml",
     "docs/silentstars-story.json",
     "docs/silentstars-operation.json",
+    "docs/glypha-codex-roundtrip.md",
     "experiments/demo-forge/README.md",
     "experiments/demo-forge/app/index.html",
     "experiments/demo-forge/demo.gif",
