@@ -1,6 +1,6 @@
 # Business AI Recipes
 
-[![Verify](https://github.com/jokv213/business-ai-recipes/actions/workflows/verify.yml/badge.svg)](https://github.com/jokv213/business-ai-recipes/actions/workflows/verify.yml)
+[![Verify](https://github.com/aichance/business-ai-recipes/actions/workflows/verify.yml/badge.svg)](https://github.com/aichance/business-ai-recipes/actions/workflows/verify.yml)
 
 作者: **Naoya / jokv213**
 
@@ -44,7 +44,7 @@ line_judgment.action_candidate_count=1
 line_judgment.review_count=5
 ```
 
-試して動かなかった点、実運用へ移す際に不足する境界、次に見たい業務例があれば、[Issue](https://github.com/jokv213/business-ai-recipes/issues)へ再現条件と一緒に残してください。
+試して動かなかった点、実運用へ移す際に不足する境界、次に見たい業務例があれば、[Issue](https://github.com/aichance/business-ai-recipes/issues)へ再現条件と一緒に残してください。
 
 ## API入力契約と信頼境界
 
