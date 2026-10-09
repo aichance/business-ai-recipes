@@ -23,7 +23,7 @@
       <div class="panel" id="recording-panel" tabindex="-1">
         <h2>1. Choose a recording</h2>
         <button id="sample" class="primary">Try the 9-second sample</button>
-        <p class="small">A real Cutroom workflow using synthetic data.</p>
+        <p id="sample-description" class="small">A real Cutroom workflow using synthetic data.</p>
         <label for="video-file">Or choose your own MP4 / WebM (up to 100 MB, 120 seconds)</label>
         <input id="video-file" type="file" accept="video/*">
         <p id="load-status" class="small"></p>
@@ -81,6 +81,15 @@ import {gifPlan, encodeGif} from './studio-gif.mjs';
 const $ = id => document.getElementById(id);
 const video = $('source'), canvas = $('preview'), ctx = canvas.getContext('2d');
 const sampleStory = {label:'CUTROOM / SYNTHETIC EXAMPLE',cues:[{at:0,text:'Select the recovery step from a 49-second video transcript.'},{at:2.88,text:'Export the selected scene locally. No upload or API key.'},{at:5.76,text:'An 8.1-second clip with subtitles is ready.'}]};
+const silentStarsExample = new URLSearchParams(location.search).get('example') === 'silentstars';
+const silentStarsStory = {"label":"SilentStars / capuz · snapshot 2026-10-09","cues":[{"at":0,"text":"Find maintained open source beyond star rankings."},{"at":3.2,"text":"Search for a topic: markdown."},{"at":6.32,"text":"Use help wanted to find a project welcoming contributions."},{"at":9.4,"text":"Read the project details, activity and source link."}]};
+const sample = silentStarsExample
+  ? {src:'./silentstars-raw.mp4',name:'SilentStars / capuz',story:silentStarsStory}
+  : {src:'./studio-sample.mp4',name:'Cutroom / synthetic sample',story:sampleStory};
+if(silentStarsExample){
+  $('sample').textContent='Reload the SilentStars demo';
+  $('sample-description').textContent='SilentStars by capuz · recorded 9 Oct 2026. Raw video and four editable explanations.';
+}
 let ready=false, loading=false, exporting=false, story=null, inputUrl=null, outputUrl=null, recorder=null, abortExport=null;
 function exportMime(withAudio){
   if(typeof MediaRecorder==='undefined')return null;
@@ -111,7 +120,7 @@ if(video.requestVideoFrameCallback){const frame=()=>{draw();video.requestVideoFr
 video.addEventListener('seeked',draw);video.addEventListener('loadeddata',draw);video.addEventListener('pause',()=>{$('play').textContent='Play preview';draw();});video.addEventListener('play',()=>{$('play').textContent='Pause preview';});
 function waitForMedia(event,action,timeout=15000,signal){return new Promise((resolve,reject)=>{const timer=setTimeout(()=>finish(new Error('Video loading timed out. Try another MP4 or WebM.')),timeout);const done=()=>finish();const aborted=()=>finish(new DOMException('GIF export canceled. No new GIF was saved.','AbortError'));const fail=()=>finish(new Error('This browser could not decode the video. Try an H.264 MP4 or WebM.'));function finish(error){clearTimeout(timer);signal?.removeEventListener('abort',aborted);video.removeEventListener(event,done);video.removeEventListener('error',fail);error?reject(error):resolve();}video.addEventListener(event,done,{once:true});video.addEventListener('error',fail,{once:true});signal?.addEventListener('abort',aborted,{once:true});if(signal?.aborted){aborted();return;}try{action();}catch(e){finish(e);}});}
 async function seekTo(time,signal){if(Math.abs(video.currentTime-time)<.001&&video.readyState>=2)return;await waitForMedia('seeked',()=>{video.currentTime=time;},15000,signal);if(Math.abs(video.currentTime-time)>.01)throw new Error('This recording could not seek to the requested frame. Choose a local MP4 or WebM file and try again.');}
-async function loadVideo(file){if(loading||exporting)return;loading=true;ready=false;story=null;video.pause();discardOutput();controls();loadStatus('Loading recording…');if(inputUrl){URL.revokeObjectURL(inputUrl);inputUrl=null;}try{if(file&&file.size>100*1024*1024)throw new Error('Choose a recording smaller than 100 MB.');inputUrl=file?URL.createObjectURL(file):null;await waitForMedia('loadeddata',()=>{video.src=inputUrl||'./studio-sample.mp4';video.load();});if(!Number.isFinite(video.duration)||video.duration<=0||video.duration>120)throw new Error('Choose a video between 0 and 120 seconds.');if(video.videoWidth*video.videoHeight>16777216)throw new Error('Choose a video smaller than 16 megapixels per frame.');ready=true;const value=file?{label:'MY APP / WORKFLOW',cues:[{at:0,text:'Write the first thing your viewer should understand.'}]}:sampleStory;story=validateStory(value,video.duration);$('gif-start').value=0;$('gif-end').value=Math.floor(Math.min(video.duration,15)*100)/100;$('gif-start').max=video.duration;$('gif-end').max=video.duration;makeRows(story);$('seek').max=video.duration;const name=file?file.name:'Cutroom / synthetic sample';$('source-info').textContent=`${name} · ${video.videoWidth}×${video.videoHeight} · ${video.duration.toFixed(2)} seconds`;loadStatus('Recording loaded. Write your explanations or play the preview.');}catch(e){ready=false;story=null;loadStatus(e.message,true);$('source-info').textContent='No valid recording loaded.';}finally{loading=false;controls();draw();if(ready)revealPreview();}}
+async function loadVideo(file){if(loading||exporting)return;loading=true;ready=false;story=null;video.pause();discardOutput();controls();loadStatus('Loading recording…');if(inputUrl){URL.revokeObjectURL(inputUrl);inputUrl=null;}try{if(file&&file.size>100*1024*1024)throw new Error('Choose a recording smaller than 100 MB.');inputUrl=file?URL.createObjectURL(file):null;await waitForMedia('loadeddata',()=>{video.src=inputUrl||sample.src;video.load();});if(!Number.isFinite(video.duration)||video.duration<=0||video.duration>120)throw new Error('Choose a video between 0 and 120 seconds.');if(video.videoWidth*video.videoHeight>16777216)throw new Error('Choose a video smaller than 16 megapixels per frame.');ready=true;const value=file?{label:'MY APP / WORKFLOW',cues:[{at:0,text:'Write the first thing your viewer should understand.'}]}:sample.story;story=validateStory(value,video.duration);$('gif-start').value=0;$('gif-end').value=Math.floor(Math.min(video.duration,15)*100)/100;$('gif-start').max=video.duration;$('gif-end').max=video.duration;makeRows(story);$('seek').max=video.duration;const name=file?file.name:sample.name;$('source-info').textContent=`${name} · ${video.videoWidth}×${video.videoHeight} · ${video.duration.toFixed(2)} seconds`;loadStatus('Recording loaded. Write your explanations or play the preview.');}catch(e){ready=false;story=null;loadStatus(e.message,true);$('source-info').textContent='No valid recording loaded.';}finally{loading=false;controls();draw();if(ready)revealPreview();}}
 $('sample').addEventListener('click',()=>loadVideo(null));$('video-file').addEventListener('change',e=>{const file=e.target.files[0];if(file)loadVideo(file);e.target.value='';});$('label').addEventListener('input',changed);
 $('keep-audio').addEventListener('change',()=>{discardOutput();audioSettings();controls();status('Audio choice updated. Export again to save this version.');});
 $('play').addEventListener('click',async()=>{if(!ready||exporting)return;try{if(video.paused){if(video.ended)await seekTo(0);await video.play();}else video.pause();}catch(e){status(`Could not play: ${e.message}`,true);}});
@@ -160,6 +169,7 @@ $('export-gif').addEventListener('click',async()=>{
 });
 $('cancel').addEventListener('click',()=>abortExport?.());
 draw();controls();
+if(silentStarsExample)loadVideo(null);
 </script>
 </body>
 </html>
