@@ -16,7 +16,7 @@
 Node **22 or newer** is required. No API key is needed.
 
 ```bash
-git clone https://github.com/jokv213/business-ai-recipes.git
+git clone https://github.com/aichance/business-ai-recipes.git
 cd business-ai-recipes/tools/dots-studio
 npm ci --ignore-scripts --no-audit --no-fund
 npm run build
