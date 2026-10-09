@@ -40,8 +40,13 @@ Use Browser Studio for an existing recording; imported videos are edited without
 
 ## Ask Codex to make the operation file
 
-Use the included [demo-forge skill](.agents/skills/demo-forge/SKILL.md) in this
-checkout or copy the **whole** `.agents/skills/demo-forge` folder into your
+Download the [portable v0.3.0 skill ZIP](https://github.com/aichance/business-ai-recipes/releases/download/demo-forge-v0.3.0/demo-forge-codex-skill-v0.3.0.zip)
+and review the [release and checksums](https://github.com/aichance/business-ai-recipes/releases/tag/demo-forge-v0.3.0).
+Extract its **whole** `demo-forge` folder into your app project's `.agents/skills/`
+directory, keeping `scripts/`, `references/` and `SKILL.md` together.
+
+You can also use the included [demo-forge skill](.agents/skills/demo-forge/SKILL.md)
+in this checkout or copy the **whole** `.agents/skills/demo-forge` folder into your
 app project's `.agents/skills/`. The folder includes the recorder and sample
 app, so it works without a sibling Demo Forge checkout. Do not copy only
 SKILL.md, or overwrite an existing skill of the same name.
