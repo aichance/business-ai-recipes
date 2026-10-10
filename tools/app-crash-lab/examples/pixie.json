@@ -1,0 +1,158 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "PIXIE / rejected draft import retains five text fields",
+  "baseURL": "http://127.0.0.1:49731",
+  "path": "/",
+  "timeoutMs": 10000,
+  "stabilityMs": 250,
+  "checks": [
+    "rejected-update"
+  ],
+  "reset": [],
+  "setup": [
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Prepare this work"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "#work-title"
+      },
+      "value": "Synthetic PIXIE retention check"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "#work-link"
+      },
+      "value": "https://example.com/synthetic-piece"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "#caption"
+      },
+      "value": "Synthetic caption. Keep me after a rejected draft."
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "#credits"
+      },
+      "value": "Synthetic test data by aichance. No media attached."
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "#description"
+      },
+      "value": "Synthetic accessibility text for a draft check."
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Download draft"
+      },
+      "save": true
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": "#workspace-status"
+      },
+      "value": "Download requested. Verify it in Files before closing this tab."
+    }
+  ],
+  "observe": {
+    "title": {
+      "source": "value",
+      "target": {
+        "css": "#work-title"
+      }
+    },
+    "link": {
+      "source": "value",
+      "target": {
+        "css": "#work-link"
+      }
+    },
+    "caption": {
+      "source": "value",
+      "target": {
+        "css": "#caption"
+      }
+    },
+    "credits": {
+      "source": "value",
+      "target": {
+        "css": "#credits"
+      }
+    },
+    "accessibility": {
+      "source": "value",
+      "target": {
+        "css": "#description"
+      }
+    }
+  },
+  "expected": {
+    "title": "Synthetic PIXIE retention check",
+    "link": "https://example.com/synthetic-piece",
+    "caption": "Synthetic caption. Keep me after a rejected draft.",
+    "credits": "Synthetic test data by aichance. No media attached.",
+    "accessibility": "Synthetic accessibility text for a draft check."
+  },
+  "rejectedUpdate": {
+    "steps": [
+      {
+        "action": "click",
+        "target": {
+          "role": "button",
+          "name": "My work"
+        }
+      },
+      {
+        "action": "setFile",
+        "target": {
+          "css": "#draft-file"
+        },
+        "file": {
+          "name": "unsupported-pixie.json",
+          "mimeType": "application/json",
+          "text": "{\"schema\":\"unsupported-pixie-draft\"}"
+        }
+      },
+      {
+        "action": "expectText",
+        "target": {
+          "css": "#workspace-status"
+        },
+        "value": "Import rejected: Unsupported PIXIE draft. Current work retained."
+      },
+      {
+        "action": "click",
+        "target": {
+          "role": "button",
+          "name": "Prepare"
+        }
+      }
+    ],
+    "observe": {
+      "message": {
+        "source": "text",
+        "target": {
+          "css": "#workspace-status"
+        }
+      }
+    },
+    "expected": {
+      "message": "Import rejected: Unsupported PIXIE draft. Current work retained."
+    }
+  }
+}
