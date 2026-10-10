@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "Sethera v0.4.0 — reload and malformed import preserve saved pieces",
+  "baseURL": "http://127.0.0.1:54189",
+  "path": "/sethera-piece/",
+  "timeoutMs": 8000,
+  "stabilityMs": 500,
+  "checks": [
+    "reload",
+    "rejected-update"
+  ],
+  "reset": [],
+  "setup": [
+    {
+      "action": "setFile",
+      "target": {
+        "css": "input[type=\"file\"]"
+      },
+      "file": {
+        "name": "crash-lab-synthetic.sethera.json",
+        "mimeType": "application/json",
+        "text": "{\"app\":\"sethera\",\"version\":1,\"nodes\":[{\"id\":\"crash-lab-note\",\"type\":\"vobject\",\"position\":{\"x\":360,\"y\":240},\"width\":240,\"height\":84,\"data\":{\"kind\":\"sticky\",\"label\":\"Crash Lab synthetic\",\"value\":123,\"color\":\"yellow\"}}],\"edges\":[]}"
+      },
+      "save": true
+    }
+  ],
+  "observe": {
+    "savedNodes": {
+      "source": "localStorage",
+      "key": "sethera-doc",
+      "parse": "json",
+      "jsonPath": [
+        "nodes"
+      ]
+    },
+    "savedData": {
+      "source": "localStorage",
+      "key": "sethera-doc",
+      "parse": "json",
+      "jsonPath": [
+        "nodes",
+        0,
+        "data"
+      ]
+    },
+    "savedEdges": {
+      "source": "localStorage",
+      "key": "sethera-doc",
+      "parse": "json",
+      "jsonPath": [
+        "edges"
+      ]
+    },
+    "savedPaper": {
+      "source": "localStorage",
+      "key": "sethera-doc",
+      "parse": "json",
+      "jsonPath": [
+        "paper"
+      ]
+    },
+    "renderedLabel": {
+      "source": "text",
+      "target": {
+        "css": ".vobject-label"
+      }
+    },
+    "renderedValue": {
+      "source": "text",
+      "target": {
+        "css": ".vobject-value"
+      }
+    },
+    "renderedPieces": {
+      "source": "count",
+      "target": {
+        "css": ".react-flow__node-vobject"
+      }
+    }
+  },
+  "expected": {
+    "savedData": {
+      "kind": "sticky",
+      "label": "Crash Lab synthetic",
+      "value": 123,
+      "color": "yellow"
+    },
+    "savedEdges": [],
+    "renderedLabel": "Crash Lab synthetic",
+    "renderedValue": "123",
+    "renderedPieces": 1
+  },
+  "rejectedUpdate": {
+    "steps": [
+      {
+        "action": "setFile",
+        "target": {
+          "css": "input[type=\"file\"]"
+        },
+        "file": {
+          "name": "invalid.sethera.json",
+          "mimeType": "application/json",
+          "text": "{\"nodes\":["
+        }
+      }
+    ],
+    "dialog": {
+      "type": "alert",
+      "message": "Sethera の JSON ファイルとして読み込めませんでした"
+    }
+  }
+}

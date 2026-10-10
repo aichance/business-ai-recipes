@@ -142,8 +142,45 @@ async function waitForState(page, contract, probes, expected) {
   return { state, matched: false };
 }
 
+function captureDialogs(page) {
+  const capture = { events: [], pending: new Set(), error: null };
+  capture.listener = dialog => {
+    capture.events.push({ type: dialog.type(), message: dialog.message() });
+    // Handling is required: an unhandled modal would stall the triggering action.
+    const pending = dialog.dismiss().catch(error => { capture.error = error; });
+    capture.pending.add(pending);
+    pending.finally(() => capture.pending.delete(pending));
+  };
+  page.on('dialog', capture.listener);
+  return capture;
+}
+
+function assertSupportedDialogs(capture) {
+  if (capture.error) throw new Error(`Could not dismiss native dialog: ${capture.error.message}`);
+  if (capture.events.some(event => event.type !== 'alert')) throw new Error('Native confirm/prompt/beforeunload dialogs are unsupported; no rejection verdict');
+}
+
+async function waitForDialog(capture, start, timeoutMs) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    assertSupportedDialogs(capture);
+    if (capture.events.length > start && capture.pending.size === 0) break;
+    await new Promise(resolve => setTimeout(resolve, 25));
+  }
+  await Promise.all(capture.pending);
+  assertSupportedDialogs(capture);
+}
+
+function dialogRejection(capture, start, expected) {
+  const actual = capture.events.slice(start);
+  return { expected, actual, confirmed: actual.length === 1 && isDeepStrictEqual(actual[0], expected) };
+}
+
 export async function executeCheck(page, contract, check) {
   const result = { check, status: 'inconclusive', phase: 'reset', before: null, after: null, differences: [], events: [] };
+  const dialogs = check === 'rejected-update' && contract.rejectedUpdate.dialog ? captureDialogs(page) : null;
+  let dialogStart;
+  if (dialogs) result.dialogs = dialogs.events;
   page.setDefaultTimeout(contract.timeoutMs);
   page.setDefaultNavigationTimeout(contract.timeoutMs);
   try {
@@ -167,13 +204,24 @@ export async function executeCheck(page, contract, check) {
         const previous = await readState(page, contract, invalid.observe);
         if (isDeepStrictEqual(selected(previous, invalid.expected), invalid.expected)) throw new Error('Rejection condition was already true before the invalid update');
       }
+      if (dialogs) {
+        await Promise.all(dialogs.pending);
+        assertSupportedDialogs(dialogs);
+        if (dialogs.events.some(event => isDeepStrictEqual(event, invalid.dialog))) throw new Error('Rejection alert was already shown before the invalid update');
+        dialogStart = dialogs.events.length;
+      }
       result.phase = 'invalid-update';
       await applySteps(page, contract, invalid.steps, 'invalid-update', result.events);
-      if (invalid.observe) {
+      if (invalid.observe || dialogs) {
         result.phase = 'confirm-rejection';
-        const rejection = await waitForState(page, contract, invalid.observe, invalid.expected);
-        result.rejection = { expected: invalid.expected, actual: rejection.state, confirmed: rejection.matched };
-        if (!rejection.matched) {
+        if (dialogs) {
+          await waitForDialog(dialogs, dialogStart, contract.timeoutMs);
+          result.rejection = dialogRejection(dialogs, dialogStart, invalid.dialog);
+        } else {
+          const rejection = await waitForState(page, contract, invalid.observe, invalid.expected);
+          result.rejection = { expected: invalid.expected, actual: rejection.state, confirmed: rejection.matched };
+        }
+        if (!result.rejection.confirmed) {
           result.status = 'fail';
           result.error = 'Configured rejection was not observed';
           result.after = await readState(page, contract, contract.observe);
@@ -196,6 +244,12 @@ export async function executeCheck(page, contract, check) {
     result.differences = differences(result.before, result.after);
     result.status = final.matched ? 'pass' : 'fail';
     if (!final.matched) result.error = 'Selected saved state changed';
+    if (dialogs) {
+      await Promise.all(dialogs.pending);
+      assertSupportedDialogs(dialogs);
+      result.rejection = dialogRejection(dialogs, dialogStart, contract.rejectedUpdate.dialog);
+      if (!result.rejection.confirmed) { result.status = 'fail'; result.error = 'Expected exactly one matching rejection alert'; }
+    }
     return result;
   } catch (error) {
     result.status = error.violation ? 'fail' : 'inconclusive';
@@ -205,5 +259,10 @@ export async function executeCheck(page, contract, check) {
       try { result.after = await readState(page, contract, contract.observe); result.differences = differences(result.before, result.after); } catch { /* retain original diagnostic */ }
     }
     return result;
+  } finally {
+    if (dialogs) {
+      page.off('dialog', dialogs.listener);
+      await Promise.all(dialogs.pending);
+    }
   }
 }
