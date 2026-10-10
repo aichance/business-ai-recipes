@@ -22,7 +22,24 @@ the broken and fixed versions.
 
 ## Try it
 
-You need **Node 22+** and npm. From this directory in the source checkout or source ZIP:
+You need **Node 22+** and npm. In an empty folder, run these two commands.
+The second downloads the pinned 0.3.0 package from this project's GitHub release;
+you do not need to clone or extract the repository:
+
+```sh
+npx --yes --package=@playwright/test@1.64.0 playwright install chromium
+npx --yes --package=https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.3.0/aichance-app-crash-lab-0.3.0.tgz app-crash-lab demo
+```
+
+Open the **absolute `index.html` path printed by the command**. Reports are
+written under `.crash-lab/` in your current folder, not inside npm's cache.
+The first run downloads dependencies and Chromium. On Linux, browser system
+libraries may also be required; replace the first command with
+`npx --yes --package=@playwright/test@1.64.0 playwright install --with-deps chromium`.
+Installing system libraries may require administrator access on your machine.
+
+Prefer a source checkout? From this directory in the checkout or
+[0.3.0 source ZIP](https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.3.0/app-crash-lab-0.3.0.zip):
 
 ```sh
 npm ci --ignore-scripts --no-audit --no-fund
@@ -30,23 +47,24 @@ npx playwright install chromium
 npm run demo
 ```
 
-Open the printed `index.html`. The demo starts its own disposable server,
-runs both checks against three versions, writes the actual reports, and
-stops the server. The first browser download needs internet and disk space;
-Linux may also need `npx playwright install --with-deps chromium`.
+Both routes start a disposable demo server, run both checks against three
+versions, write the actual reports, and stop the server. These are synthetic
+fixtures; running the demo does not test your own app.
 
 ## Check your app
 
 1. Start a **disposable local development instance** of your app.
-2. Copy [`examples/notes.json`](examples/notes.json) to `my-app.json`.
+2. Save [`examples/notes.json`](examples/notes.json) as `my-app.json` in your working folder (use **Raw → Save As** on GitHub, or copy it from the source ZIP).
 3. Set both `baseURL` (the local origin) and `path` (your app's route). The copied `/?mode=fixed` path belongs only to the demo. Set save steps (`save: true` on the save trigger), saved values and invalid input/rejection signal.
 4. Run:
 
 ```sh
-node cli.mjs run my-app.json --out .crash-lab/my-first-run
+npx --yes --package=https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.3.0/aichance-app-crash-lab-0.3.0.tgz app-crash-lab run my-app.json
 ```
 
-Each run needs a new output directory. Nothing is uploaded. Test actions
+From a source checkout, `node cli.mjs run my-app.json` also works. Each run
+prints its report path and creates a new output directory by default. If
+you set `--out`, choose a new directory for each run. Nothing is uploaded. Test actions
 write to your app: use synthetic records, not an app containing real work.
 The browser starts with a fresh context for each check; server-side records
 need an explicit reset or a setup flow that replaces the complete fixture.
@@ -126,6 +144,15 @@ With the target app still running, from this package directory:
 ```sh
 npx playwright test --config .crash-lab/my-first-run/playwright.config.mjs
 npx playwright show-trace .crash-lab/my-first-run/reload.trace.zip
+```
+
+If you used the no-clone route, change into the **printed report directory**,
+then install the test runner there before rerunning. Use the directory name
+from your run, not the illustrative `.crash-lab/my-first-run` above:
+
+```sh
+npm install --no-save --package-lock=false --ignore-scripts @playwright/test@1.64.0
+npx playwright test --config playwright.config.mjs
 ```
 
 The generated spec embeds the exact contract. If your app moves to a new
