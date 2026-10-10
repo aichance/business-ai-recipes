@@ -30,11 +30,16 @@ function target(value, where) {
 }
 
 function probe(value, where) {
-  keys(value, ['source', 'target', 'attribute', 'key', 'parse', 'url', 'field', 'header', 'jsonPath'], where);
+  keys(value, ['source', 'target', 'attribute', 'key', 'keyFrom', 'keyPrefix', 'parse', 'url', 'field', 'header', 'jsonPath'], where);
   requireThat(['text', 'value', 'attribute', 'count', 'localStorage', 'sessionStorage', 'response'].includes(value.source), `${where}: unsupported source`);
   if (['text', 'value', 'attribute', 'count'].includes(value.source)) target(value.target, `${where}.target`);
   if (value.source === 'attribute') requireThat(text(value.attribute), `${where}.attribute required`);
-  if (value.source.endsWith('Storage')) requireThat(text(value.key), `${where}.key required`);
+  if (value.source.endsWith('Storage')) {
+    requireThat(own(value, 'key') !== own(value, 'keyFrom'), `${where} needs exactly one key or keyFrom`);
+    if (own(value, 'key')) requireThat(text(value.key), `${where}.key required`);
+    else requireThat(text(value.keyFrom), `${where}.keyFrom must name a pointer in the same storage`);
+    requireThat(value.keyPrefix === undefined || (own(value, 'keyFrom') && typeof value.keyPrefix === 'string'), `${where}.keyPrefix requires keyFrom`);
+  } else requireThat(value.keyFrom === undefined && value.keyPrefix === undefined, `${where}: keyFrom/keyPrefix only apply to Web Storage`);
   if (value.source === 'response') {
     path(value.url, `${where}.url`);
     requireThat(['json', 'text', 'status', 'header'].includes(value.field), `${where}.field required (json/text/status/header)`);
@@ -56,11 +61,17 @@ function steps(value, where, nonempty = false) {
   requireThat(Array.isArray(value) && (!nonempty || value.length > 0) && value.length <= 100, `${where} must be an array of up to 100 steps`);
   for (const [i, step] of value.entries()) {
     const at = `${where}[${i}]`;
-    keys(step, ['action', 'target', 'value', 'path', 'method', 'data', 'expectStatus', 'headers', 'save'], at);
-    requireThat(['click', 'fill', 'press', 'select', 'check', 'uncheck', 'expectText', 'expectValue', 'expectVisible', 'goto', 'request'].includes(step.action), `${at}: unsupported action`);
+    keys(step, ['action', 'target', 'value', 'file', 'path', 'method', 'data', 'expectStatus', 'headers', 'save'], at);
+    requireThat(['click', 'fill', 'press', 'select', 'check', 'uncheck', 'setFile', 'expectText', 'expectValue', 'expectVisible', 'goto', 'request'].includes(step.action), `${at}: unsupported action`);
     if (['goto', 'request'].includes(step.action)) path(step.path, `${at}.path`);
     else target(step.target, `${at}.target`);
     if (['fill', 'press', 'select', 'expectText', 'expectValue'].includes(step.action)) requireThat(typeof step.value === 'string', `${at}.value must be a string`);
+    if (step.action === 'setFile') {
+      keys(step.file, ['name', 'mimeType', 'text'], `${at}.file`);
+      requireThat(text(step.file.name) && step.file.name.length <= 128 && !/[\\/\x00-\x1f\x7f]/.test(step.file.name) && !['.', '..'].includes(step.file.name), `${at}.file.name must be a filename, not a path`);
+      requireThat(typeof step.file.mimeType === 'string' && /^[a-zA-Z0-9.+-]+\/[a-zA-Z0-9.+-]+$/.test(step.file.mimeType), `${at}.file.mimeType required`);
+      requireThat(typeof step.file.text === 'string' && Buffer.byteLength(step.file.text, 'utf8') <= 65536, `${at}.file.text must be UTF-8 text of at most 65536 bytes`);
+    } else requireThat(step.file === undefined, `${at}.file only applies to setFile`);
     if (step.action === 'request') {
       requireThat(['GET', 'POST', 'PUT', 'PATCH', 'DELETE'].includes(step.method), `${at}.method required`);
       requireThat(Number.isInteger(step.expectStatus) && step.expectStatus >= 100 && step.expectStatus <= 599, `${at}.expectStatus required`);
@@ -68,7 +79,7 @@ function steps(value, where, nonempty = false) {
     }
     if (step.save !== undefined) {
       requireThat(step.save === true, `${at}.save must be true when present`);
-      const mutation = ['click', 'fill', 'press', 'select', 'check', 'uncheck'].includes(step.action) || (step.action === 'request' && step.method !== 'GET' && step.expectStatus >= 200 && step.expectStatus < 300);
+      const mutation = ['click', 'fill', 'press', 'select', 'check', 'uncheck', 'setFile'].includes(step.action) || (step.action === 'request' && step.method !== 'GET' && step.expectStatus >= 200 && step.expectStatus < 300);
       requireThat(mutation, `${at}.save must mark an actual save-triggering action or successful HTTP mutation`);
     }
   }
@@ -94,7 +105,7 @@ export function validateContract(input) {
   if (input.rejectedUpdate !== undefined) {
     keys(input.rejectedUpdate, ['steps', 'observe', 'expected'], 'rejectedUpdate');
     steps(input.rejectedUpdate.steps, 'rejectedUpdate.steps', true);
-    requireThat(input.rejectedUpdate.steps.some(s => ['click', 'fill', 'press', 'select', 'check', 'uncheck'].includes(s.action) || (s.action === 'request' && s.method !== 'GET')), 'rejectedUpdate must perform a mutation');
+    requireThat(input.rejectedUpdate.steps.some(s => ['click', 'fill', 'press', 'select', 'check', 'uncheck', 'setFile'].includes(s.action) || (s.action === 'request' && s.method !== 'GET')), 'rejectedUpdate must perform a mutation');
     requireThat(!input.rejectedUpdate.steps.some(s => s.action === 'request' && s.expectStatus >= 500), 'server errors are inconclusive, not an expected rejection');
     const requestReject = input.rejectedUpdate.steps.some(s => s.action === 'request' && s.method !== 'GET' && s.expectStatus >= 400 && s.expectStatus < 500);
     if (input.rejectedUpdate.observe !== undefined) {

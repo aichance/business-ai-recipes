@@ -63,6 +63,7 @@ async function applySteps(page, contract, steps, phase, events) {
       else if (step.action === 'select') await locator.selectOption(step.value);
       else if (step.action === 'check') await locator.check();
       else if (step.action === 'uncheck') await locator.uncheck();
+      else if (step.action === 'setFile') await locator.setInputFiles({ name: step.file.name, mimeType: step.file.mimeType, buffer: Buffer.from(step.file.text, 'utf8') });
       else if (step.action === 'expectText') await expect(locator).toHaveText(step.value, { timeout: contract.timeoutMs });
       else if (step.action === 'expectValue') await expect(locator).toHaveValue(step.value, { timeout: contract.timeoutMs });
       else if (step.action === 'expectVisible') await expect(locator).toBeVisible({ timeout: contract.timeoutMs });
@@ -86,7 +87,12 @@ async function readState(page, contract, probes) {
         else value = await locator.getAttribute(probe.attribute);
       }
     } else if (probe.source.endsWith('Storage')) {
-      value = await page.evaluate(({ source, key }) => window[source].getItem(key), probe);
+      value = await page.evaluate(({ source, key, keyFrom, keyPrefix = '' }) => {
+        const storage = window[source];
+        const suffix = keyFrom === undefined ? null : storage.getItem(keyFrom);
+        if (keyFrom !== undefined && suffix === null) return null;
+        return storage.getItem(keyFrom === undefined ? key : keyPrefix + suffix);
+      }, probe);
     } else {
       const response = await page.context().request.get(scopedURL(contract.baseURL, probe.url), { maxRedirects: 0, timeout: contract.timeoutMs });
       try {
@@ -101,7 +107,11 @@ async function readState(page, contract, probes) {
     }
     if (probe.parse === 'json' && value !== null) value = JSON.parse(value);
     for (const key of probe.jsonPath ?? []) {
-      if (value === null || typeof value !== 'object' || !Object.hasOwn(value, key)) throw new Error(`Observation ${name}: JSON path ${JSON.stringify(probe.jsonPath)} is missing`);
+      if (value === null || typeof value !== 'object' || !Object.hasOwn(value, key)) {
+        const error = new Error(`Observation ${name}: JSON path ${JSON.stringify(probe.jsonPath)} is missing`);
+        error.observationPending = true;
+        throw error;
+      }
       value = value[key];
     }
     if (value === undefined) throw new Error(`Observation ${name} is undefined`);
@@ -114,12 +124,19 @@ function selected(state, expected) { return Object.fromEntries(Object.keys(expec
 
 async function waitForState(page, contract, probes, expected) {
   const deadline = Date.now() + contract.timeoutMs;
-  let state;
+  let state, pending;
   do {
-    state = await readState(page, contract, probes);
-    if (isDeepStrictEqual(selected(state, expected), expected)) return { state, matched: true };
+    try {
+      state = await readState(page, contract, probes);
+      pending = null;
+      if (isDeepStrictEqual(selected(state, expected), expected)) return { state, matched: true };
+    } catch (error) {
+      if (!error.observationPending) throw error;
+      pending = error;
+    }
     await new Promise(resolve => setTimeout(resolve, 75));
   } while (Date.now() < deadline);
+  if (pending) throw pending;
   return { state, matched: false };
 }
 
