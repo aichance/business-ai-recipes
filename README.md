@@ -30,6 +30,8 @@ Node 22+. Local test runs need no account, LLM or API key. The demo contains del
 
 Also exercised against an unchanged local [Glypha](https://github.com/kuny/glypha) build: saved scene and ETag survive reload and a 422-rejected update. This is our compatibility test, not third-party adoption. [Adapter and scope](tools/app-crash-lab/examples/GLYPHA.md).
 
+Already have a Playwright suite? [Compare the two routes on the same app](tools/app-crash-lab/examples/direct-playwright/README.md), including a runnable direct test and the tradeoffs.
+
 Have you run it on **your own app**? [Share a sanitized result or setup problem](https://github.com/aichance/business-ai-recipes/issues). Help shape the next check pack; starring is optional.
 
 ---
