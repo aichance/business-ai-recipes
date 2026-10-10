@@ -1,0 +1,35 @@
+{
+  "name": "@aichance/app-crash-lab",
+  "version": "0.1.0",
+  "description": "Check that saved data survives reloads and rejected updates. Keep the diff and a Playwright reproduction.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "bin": {
+    "app-crash-lab": "cli.mjs"
+  },
+  "exports": {
+    ".": "./lib/runner.mjs"
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "demo": "node cli.mjs demo",
+    "demo:serve": "node demo/server.mjs",
+    "check": "node cli.mjs run examples/notes.json"
+  },
+  "files": [
+    "cli.mjs",
+    "lib",
+    "demo",
+    "examples",
+    "README.md",
+    "CONTRACT.md",
+    "LICENSE",
+    "tests"
+  ],
+  "dependencies": {
+    "@playwright/test": "1.64.0"
+  }
+}
