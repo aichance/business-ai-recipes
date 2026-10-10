@@ -5,10 +5,10 @@
 <title>Would your test catch this? — App Crash Lab</title>
 <meta name="description" content="Break a tiny UI, get a misleading PASS, then change one observation to catch it. A real browser reload, no install.">
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f5f3ed;color:#18251f;font:17px/1.55 system-ui,sans-serif}main{max-width:1120px;margin:auto;padding:42px 28px 60px}a{color:#335d50;text-underline-offset:4px}.brand{display:flex;justify-content:space-between;gap:16px;font-size:13px;letter-spacing:.05em}.eyebrow{margin:40px 0 10px;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#626c60}h1{font-size:clamp(36px,6vw,67px);line-height:1.08;letter-spacing:-.045em;max-width:920px;margin:0 0 20px}h2{font-size:21px;line-height:1.3;margin:0 0 15px}.intro{max-width:780px;font-size:20px;color:#566055}.workspace{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:30px 0}.card{border:1px solid #d5dacd;border-radius:15px;background:#fffefa;padding:24px}.step{font:12px ui-monospace,monospace;color:#65776a;letter-spacing:.09em;margin:0 0 12px}.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}select,button{font:inherit;padding:11px 14px;border:1px solid #728b79;border-radius:8px}select{background:white;max-width:100%}button{background:#254c3c;color:white;cursor:pointer}button:disabled{opacity:.55;cursor:wait}button:focus-visible,select:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #9662cd;outline-offset:3px}.control-label{display:block;font-weight:650;margin:0 0 8px}.check{display:flex;gap:10px;align-items:flex-start;margin:18px 0 8px;font-weight:650}.check input{width:21px;height:21px;flex:none;accent-color:#254c3c}.small{font-size:14px;color:#61695e}.muted{color:#767b70}.baseline{background:#ebf0e6;padding:12px 14px;border-radius:7px;font-size:14px}iframe{display:block;background:white;width:100%;height:330px;border:1px solid #d5dacd;border-radius:8px;pointer-events:none}#frame-wrap[hidden]{display:none}#status{padding:16px 20px;background:#e8e9e1;border-radius:10px;margin-top:20px;font-weight:750;font-size:20px}#status[data-result=missed]{background:#fff0cc;color:#715007}#status[data-result=caught]{background:#ffe3dd;color:#7d3020}#status[data-result=pass]{background:#d9eedc;color:#254d2c}#status[data-result=error]{background:#ffe3dd;color:#7d3020}.table-wrap{overflow:auto}table{border-collapse:collapse;width:100%;font-size:14px}th,td{text-align:left;border-bottom:1px solid #e0e4d8;padding:12px 9px}th{font-weight:650}td code{white-space:nowrap}tr[data-included=false]{color:#82887f;background:#f4f4ef}pre{overflow:auto;background:#18251f;color:#e3f0e5;border-radius:10px;padding:18px;font-size:14px}.next{margin:24px 0;padding:24px;background:#e8eddf;border-radius:12px}.next p{margin:10px 0}.links{display:flex;gap:24px;flex-wrap:wrap}details{margin:22px 0;font-size:15px}summary{cursor:pointer;font-weight:650}footer{border-top:1px solid #d5dacd;margin-top:35px;padding-top:18px;font-size:13px;color:#626b60}@media(max-width:760px){main{padding:26px 17px}.workspace{grid-template-columns:1fr;gap:17px}.card{padding:19px}.brand{font-size:11px}h1{font-size:39px}.intro{font-size:18px}#status{font-size:17px}iframe{height:360px}}
+*{box-sizing:border-box}body{margin:0;background:#f5f3ed;color:#18251f;font:17px/1.55 system-ui,sans-serif}main{max-width:1120px;margin:auto;padding:42px 28px 60px}a{color:#335d50;text-underline-offset:4px}.brand{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;font-size:13px;letter-spacing:.05em}.eyebrow{margin:40px 0 10px;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#626c60}h1{font-size:clamp(36px,6vw,67px);line-height:1.08;letter-spacing:-.045em;max-width:920px;margin:0 0 20px}h2{font-size:21px;line-height:1.3;margin:0 0 15px}.intro{max-width:780px;font-size:20px;color:#566055}.workspace{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:30px 0}.card{border:1px solid #d5dacd;border-radius:15px;background:#fffefa;padding:24px}.step{font:12px ui-monospace,monospace;color:#65776a;letter-spacing:.09em;margin:0 0 12px}.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}select,button{font:inherit;padding:11px 14px;border:1px solid #728b79;border-radius:8px}select{background:white;max-width:100%}button{background:#254c3c;color:white;cursor:pointer}button:disabled{opacity:.55;cursor:wait}button:focus-visible,select:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #9662cd;outline-offset:3px}.control-label{display:block;font-weight:650;margin:0 0 8px}.check{display:flex;gap:10px;align-items:flex-start;margin:18px 0 8px;font-weight:650}.check input{width:21px;height:21px;flex:none;accent-color:#254c3c}.small{font-size:14px;color:#61695e}.muted{color:#767b70}.baseline{background:#ebf0e6;padding:12px 14px;border-radius:7px;font-size:14px}iframe{display:block;background:white;width:100%;height:330px;border:1px solid #d5dacd;border-radius:8px;pointer-events:none}#frame-wrap[hidden]{display:none}#status{padding:16px 20px;background:#e8e9e1;border-radius:10px;margin-top:20px;font-weight:750;font-size:20px}#status[data-result=missed]{background:#fff0cc;color:#715007}#status[data-result=caught]{background:#ffe3dd;color:#7d3020}#status[data-result=pass]{background:#d9eedc;color:#254d2c}#status[data-result=error]{background:#ffe3dd;color:#7d3020}.table-wrap{overflow:auto}table{border-collapse:collapse;width:100%;font-size:14px}th,td{text-align:left;border-bottom:1px solid #e0e4d8;padding:12px 9px}th{font-weight:650}td code{white-space:nowrap}tr[data-included=false]{color:#82887f;background:#f4f4ef}pre{overflow:auto;background:#18251f;color:#e3f0e5;border-radius:10px;padding:18px;font-size:14px}.next{margin:24px 0;padding:24px;background:#e8eddf;border-radius:12px}.next p{margin:10px 0}.links{display:flex;gap:24px;flex-wrap:wrap}details{margin:22px 0;font-size:15px}summary{cursor:pointer;font-weight:650}footer{border-top:1px solid #d5dacd;margin-top:35px;padding-top:18px;font-size:13px;color:#626b60}@media(max-width:760px){main{padding:26px 17px}.workspace{grid-template-columns:1fr;gap:17px}.card{padding:19px}.brand{font-size:11px}h1{font-size:39px}.intro{font-size:18px}#status{font-size:17px}iframe{height:360px}}
 </style>
 <main>
-  <nav class="brand"><strong>APP CRASH LAB / TEST THE TEST</strong><a href="https://github.com/aichance/business-ai-recipes">Source on GitHub ↗</a></nav>
+  <nav class="brand"><strong>APP CRASH LAB / TEST THE TEST</strong><a href="test-the-test-ja.html" lang="ja">日本語で試す</a><a href="https://github.com/aichance/business-ai-recipes">Source on GitHub ↗</a></nav>
   <p class="eyebrow">A browser experiment · no install</p>
   <h1>The UI is wrong.<br>Your test still says PASS.</h1>
   <p class="intro">Save English, reload a deliberately broken page, then add one observation to catch what the first check missed.</p>
@@ -47,127 +47,5 @@
   <details><summary>What this does — and its limits</summary><p>This page runs a small browser harness, not the Node CLI. It saves English in a synthetic iframe, records the baseline, performs a real iframe reload and reads the result. The fixture is byte-identical to the published single-text example.</p><p>The count implementation here is scoped to that fixture's heading: a non-empty box and CSS visibility. It is not a general replacement for Playwright locators. Text is read from a leaf with no hidden children; no pixel, occlusion, screen-reader or translation-quality test is made.</p><p>Only the fixture's <code>example-single-language</code> storage key is temporarily used; its previous value is restored after a run. No app URL, account, API key or user data is requested. Blocked storage or a missing baseline produces an error instead of a PASS. Do not run the same synthetic fixture concurrently in another tab.</p><p>These faults are authored examples. <a href="https://qiita.com/aichance/items/bf9ba7667a260879acc2#comment-d7c5a893cfa3800906f1">A reader's feedback</a> prompted the count-only counterexample. Browser runs on this page are not counted as independent own-app adoption.</p></details>
   <footer>Built by aichance with AI assistance and a human owner. Open source, MIT. <a href="https://github.com/aichance/business-ai-recipes/blob/main/docs/test-the-test.html">Page source</a></footer>
 </main>
-<script>
-const frame = document.querySelector('#fixture');
-const runButton = document.querySelector('#run');
-const modeSelect = document.querySelector('#mode');
-const includeText = document.querySelector('#include-text');
-const status = document.querySelector('#status');
-const explanation = document.querySelector('#explanation');
-const table = document.querySelector('#values');
-const storageKey = 'example-single-language';
-const names = {
-  storedLanguage: 'Stored language', declaredLanguage: 'Declared language',
-  visibleEnglish: 'Visible elements labelled en', visibleJapanese: 'Visible elements labelled ja',
-  displayedLeafText: 'Actual message text'
-};
-const expected = {storedLanguage:'en', declaredLanguage:'en', visibleEnglish:1, visibleJapanese:0, displayedLeafText:'Saved'};
-let latest = null;
-
-function readState() {
-  const doc = frame.contentDocument;
-  const win = frame.contentWindow;
-  const leaf = doc?.querySelector('#message');
-  if (!leaf || leaf.children.length) throw new Error('The expected single-text fixture is missing.');
-  const style = win.getComputedStyle(leaf);
-  const rect = leaf.getBoundingClientRect();
-  const visible = rect.width > 0 && rect.height > 0 && !['hidden','collapse'].includes(style.visibility);
-  return {
-    storedLanguage: win.localStorage.getItem(storageKey),
-    declaredLanguage: doc.documentElement.dataset.uiLanguage,
-    visibleEnglish: Number(visible && leaf.dataset.copy === 'en'),
-    visibleJapanese: Number(visible && leaf.dataset.copy === 'ja'),
-    displayedLeafText: leaf.textContent
-  };
-}
-
-function navigateFixture(action) {
-  return new Promise((resolve, reject) => {
-    const timeout = setTimeout(() => finish(new Error('The fixture did not load within 5 seconds.')), 5000);
-    const onLoad = () => finish();
-    function finish(error) {
-      clearTimeout(timeout);
-      frame.removeEventListener('load', onLoad);
-      error ? reject(error) : resolve();
-    }
-    frame.addEventListener('load', onLoad);
-    try { action(); } catch (error) { finish(error); }
-  });
-}
-
-function showResult() {
-  if (!latest) return;
-  const keys = Object.keys(expected).filter(key => includeText.checked || key !== 'displayedLeafText');
-  const differences = keys.filter(key => latest.after[key] !== latest.before[key]);
-  document.querySelector('#before').textContent = `Recorded ${latest.mode === 'normal' ? 'normal' : 'broken'} run: before reload, Saved · language en · labelled en 1 / ja 0`;
-  const missed = !differences.length && latest.after.displayedLeafText !== latest.before.displayedLeafText;
-  status.dataset.result = differences.length ? 'caught' : missed ? 'missed' : 'pass';
-  status.textContent = differences.length ? 'FAIL · caught the text change' : missed ? 'PASS · but the UI is wrong' : 'PASS · the selected values survived';
-  explanation.textContent = differences.length
-    ? 'The text observation catches Saved → 保存しました. The stored language, marker and counts still match.'
-    : missed ? 'The check did not observe the changed text. Add the checkbox above to detect it from the same run.'
-    : 'This is the normal control. Its recorded values remain the same after reload.';
-  table.replaceChildren();
-  for (const [key, label] of Object.entries(names)) {
-    const row = document.createElement('tr');
-    const included = keys.includes(key);
-    row.dataset.included = String(included);
-    for (const value of [label, latest.before[key], latest.after[key], included ? 'Yes' : 'No — not checked']) {
-      const cell = document.createElement('td');
-      cell.textContent = String(value);
-      row.append(cell);
-    }
-    table.append(row);
-  }
-}
-
-includeText.addEventListener('change', showResult);
-modeSelect.addEventListener('change', () => {
-  if (latest) explanation.textContent = 'Behavior changed. Run again to collect this mode; the table still shows the previous run.';
-});
-runButton.addEventListener('click', async () => {
-  latest = null;
-  runButton.disabled = modeSelect.disabled = includeText.disabled = true;
-  status.dataset.result = '';
-  status.textContent = 'Saving English, then reloading the fixture…';
-  explanation.textContent = 'Collecting actual before/after values.';
-  table.replaceChildren();
-  document.querySelector('#before').textContent = 'Before reload: not recorded';
-  let previous, restoreNeeded = false, result, failure;
-  const selectedMode = modeSelect.value;
-  try {
-    previous = localStorage.getItem(storageKey);
-    restoreNeeded = true;
-    localStorage.removeItem(storageKey);
-    const url = new URL('app-crash-lab-language-single.html', location.href);
-    url.searchParams.set('mode', selectedMode);
-    document.querySelector('#frame-wrap').hidden = false;
-    await navigateFixture(() => { frame.src = url.href; });
-    const save = frame.contentDocument.querySelector('#english');
-    if (!save) throw new Error('The fixture save button is missing.');
-    save.click();
-    const before = readState();
-    if (Object.keys(expected).some(key => before[key] !== expected[key])) throw new Error('The saved-English baseline was not confirmed.');
-    document.querySelector('#before').textContent = 'Recorded before reload: Saved · language en · labelled en 1 / ja 0';
-    await navigateFixture(() => frame.contentWindow.location.reload());
-    result = {mode:selectedMode, before, after:readState()};
-  } catch (error) {
-    failure = error;
-  } finally {
-    if (restoreNeeded) {
-      try { previous === null ? localStorage.removeItem(storageKey) : localStorage.setItem(storageKey, previous); }
-      catch (error) { failure = new Error('The fixture storage value could not be restored.'); }
-    }
-    runButton.disabled = modeSelect.disabled = includeText.disabled = false;
-  }
-  if (failure) {
-    status.dataset.result = 'error';
-    status.textContent = 'ERROR · no test verdict';
-    explanation.textContent = failure.message || 'The fixture could not be checked.';
-    return;
-  }
-  latest = result;
-  showResult();
-});
-</script>
+<script src="test-the-test.js"></script>
 </html>
