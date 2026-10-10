@@ -32,7 +32,8 @@ and unsupported patterns are rejected before starting a browser.
 
 Use exactly one of `{"testId":"saved"}`, `{"label":"Note"}`,
 `{"role":"button","name":"Save"}`, or `{"css":"#note"}`.
-Label and role name matching are exact. A locator must resolve unambiguously.
+Label and role name matching are exact. Actions and single-element observations
+must resolve unambiguously; a `count` observation counts all matches.
 
 | Action | Other fields |
 | --- | --- |
@@ -76,6 +77,16 @@ selects a nested value. A missing JSON path is retried during an expected-state
 wait, then inconclusive if still missing at the deadline. A missing storage
 key/attribute is explicitly `null`, so deletion can appear in a diff.
 
+For an API returning a JSON object, use `field: "json"` and omit `parse`:
+
+```json
+{ "source": "response", "url": "/api/notes", "field": "json", "jsonPath": ["title"] }
+```
+
+`field: "json"` already decodes the response. `parse: "json"` is for an
+observed **string containing JSON**, such as a localStorage record, not an
+already decoded object. Trying to parse the object again is inconclusive.
+
 For dynamically named records, runner 0.2+ can read a pointer from the **same**
 storage. For example, `{"source":"localStorage","keyFrom":"currentId",
 "keyPrefix":"doc.","parse":"json"}` reads `currentId`, then parses the value
@@ -110,8 +121,39 @@ An empty expected object cannot accidentally pass.
 ```
 
 The rejection observation must already be readable after the successful save,
-and must not already equal the rejection value. A persistent status container
-is useful. A missing element/JSON path is inconclusive, never a pass.
+and must not already equal the rejection value. For a `text` observation, a
+persistent status container is useful. Missing elements for `text`, `value`
+or `attribute`, and missing JSON paths, are inconclusive, never a pass.
+
+### Error elements that appear only after invalid input
+
+If the app adds an error element only after rejection, use `count` with a
+selector that identifies the specific rejection message. No match is a readable
+`0`; the expected rejection below is one visible, exact-text match:
+
+```json
+{
+  "observe": {
+    "message": {
+      "source": "count",
+      "target": { "css": "[role=\"alert\"]:visible:text-is(\"Note required\")" }
+    }
+  },
+  "expected": { "message": 1 }
+}
+```
+
+Use this fragment for `rejectedUpdate.observe` and `rejectedUpdate.expected`,
+keeping the invalid `steps` and saved-data observations. Replace the selector
+and message with the app's actual validation signal. The successful save must
+leave zero matches; an already matching error is inconclusive. If the expected
+message never appears after the invalid operation, the check fails. A matching
+rejection followed by changed saved data also fails. A generic count of all
+alerts is not enough to identify the intended rejection.
+
+The selector uses [Playwright's CSS text and visibility matching](https://playwright.dev/docs/other-locators#css-matching-by-text).
+`:text-is()` is case-sensitive and normalizes whitespace; `source: text`
+instead reads exact `textContent` without trimming.
 
 Alternatively, an invalid API mutation with an explicit 400–499 `expectStatus`
 is a rejection signal, e.g. `PUT /api/stock`, `data: {"quantity":-1}`,
