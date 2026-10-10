@@ -219,6 +219,8 @@ For a synthetic example of a misleading PASS, [compare saved language with visib
 
 The [Creator Frame Studio check](examples/CREATOR-FRAME.md) tests one wrong-schema project import against 11 unchanged editor values. It selects rejection only; file save/reopen is outside its automated coverage. A runnable JSON and standalone-test instructions are included.
 
+The [CereusDB check](examples/CEREUSDB.md) creates one synthetic OPFS row, reloads the page, explicitly attaches the database and compares a fresh SQL result. It includes setup with the official 0.4.0 package and a reload-only contract; machine-crash durability is outside coverage.
+
 ## Contribute a real use case
 
 If you tried it on **your own app**, an issue with the app/framework, which
