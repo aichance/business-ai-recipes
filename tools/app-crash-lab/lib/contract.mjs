@@ -103,12 +103,16 @@ export function validateContract(input) {
   const checks = input.checks ?? CHECKS;
   requireThat(Array.isArray(checks) && checks.length > 0 && checks.every(c => CHECKS.includes(c)) && new Set(checks).size === checks.length, 'checks must contain unique known patterns');
   if (input.rejectedUpdate !== undefined) {
-    keys(input.rejectedUpdate, ['steps', 'observe', 'expected'], 'rejectedUpdate');
+    keys(input.rejectedUpdate, ['steps', 'observe', 'expected', 'dialog'], 'rejectedUpdate');
     steps(input.rejectedUpdate.steps, 'rejectedUpdate.steps', true);
     requireThat(input.rejectedUpdate.steps.some(s => ['click', 'fill', 'press', 'select', 'check', 'uncheck', 'setFile'].includes(s.action) || (s.action === 'request' && s.method !== 'GET')), 'rejectedUpdate must perform a mutation');
     requireThat(!input.rejectedUpdate.steps.some(s => s.action === 'request' && s.expectStatus >= 500), 'server errors are inconclusive, not an expected rejection');
     const requestReject = input.rejectedUpdate.steps.some(s => s.action === 'request' && s.method !== 'GET' && s.expectStatus >= 400 && s.expectStatus < 500);
-    if (input.rejectedUpdate.observe !== undefined) {
+    if (input.rejectedUpdate.dialog !== undefined) {
+      keys(input.rejectedUpdate.dialog, ['type', 'message'], 'rejectedUpdate.dialog');
+      requireThat(input.rejectedUpdate.dialog.type === 'alert' && text(input.rejectedUpdate.dialog.message), 'rejectedUpdate.dialog requires type=alert and an exact nonempty message');
+      requireThat(input.rejectedUpdate.observe === undefined && input.rejectedUpdate.expected === undefined && !requestReject, 'dialog rejection cannot be combined with other rejection signals');
+    } else if (input.rejectedUpdate.observe !== undefined) {
       probes(input.rejectedUpdate.observe, 'rejectedUpdate.observe');
       requireThat(object(input.rejectedUpdate.expected) && Object.keys(input.rejectedUpdate.expected).length > 0 && Object.keys(input.rejectedUpdate.expected).every(k => own(input.rejectedUpdate.observe, k)), 'rejectedUpdate.expected must name rejection observations');
     } else requireThat(requestReject && input.rejectedUpdate.expected === undefined, 'rejectedUpdate needs rejection observations or a failing HTTP status');
