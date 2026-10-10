@@ -6,13 +6,13 @@ import { validateContract, PACK } from './contract.mjs';
 import { executeCheck, confineContext } from './protocol.mjs';
 import { renderReport } from './report.mjs';
 
-export const VERSION = '0.1.0';
+export const VERSION = '0.2.0';
 
 export async function reproductionSpec(contract, hash) {
   const runtime = (await readFile(new URL('./protocol.mjs', import.meta.url), 'utf8'))
     .replace("import { expect } from '@playwright/test';", "import { test, expect } from '@playwright/test';")
     .replace(/^export /gm, '');
-  return `// App Crash Lab ${VERSION}; ${PACK}; contract SHA-256 ${hash}\n// Standalone: requires @playwright/test, not App Crash Lab. Start the app first.\n${runtime}\nconst contract = ${JSON.stringify(contract, null, 2)};\n// Each check gets a fresh context. Run with the included workers=1 config.\ntest.describe.configure({ mode: 'default' });\nfor (const check of contract.checks) {\n  test(contract.name + ' / ' + check, async ({ browser }, testInfo) => {\n    test.setTimeout(Math.max(60000, contract.timeoutMs * (contract.setup.length + contract.reset.length + (contract.rejectedUpdate?.steps.length ?? 0) + 12)));\n    const context = await browser.newContext({ serviceWorkers: 'block', viewport: { width: 1120, height: 760 } });\n    try {\n      await confineContext(context, contract.baseURL);\n      const page = await context.newPage();\n      const result = await executeCheck(page, contract, check);\n      await testInfo.attach('state-diff', { body: JSON.stringify(result, null, 2), contentType: 'application/json' });\n      expect(result.status, JSON.stringify(result, null, 2)).toBe('pass');\n    } finally { await context.close(); }\n  });\n}\n`;
+  return `// App Crash Lab ${VERSION}; ${PACK}; contract SHA-256 ${hash}\n// Standalone: requires @playwright/test, not App Crash Lab. Start the app first.\n${runtime}\nconst contract = ${JSON.stringify(contract, null, 2)};\n// Each check gets a fresh context. Run with the included workers=1 config.\ntest.describe.configure({ mode: 'default' });\nfor (const check of contract.checks) {\n  test(contract.name + ' / ' + check, async ({ browser }, testInfo) => {\n    test.setTimeout(Math.max(60000, contract.timeoutMs * (contract.setup.length + contract.reset.length + (contract.afterReload?.length ?? 0) + (contract.rejectedUpdate?.steps.length ?? 0) + 12) + contract.stabilityMs));\n    const context = await browser.newContext({ serviceWorkers: 'block', viewport: { width: 1120, height: 760 } });\n    try {\n      await confineContext(context, contract.baseURL);\n      const page = await context.newPage();\n      const result = await executeCheck(page, contract, check);\n      await testInfo.attach('state-diff', { body: JSON.stringify(result, null, 2), contentType: 'application/json' });\n      expect(result.status, JSON.stringify(result, null, 2)).toBe('pass');\n    } finally { await context.close(); }\n  });\n}\n`;
 }
 
 export async function runContract(input, options = {}) {

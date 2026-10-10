@@ -38,6 +38,7 @@ Label and role name matching are exact. A locator must resolve unambiguously.
 | --- | --- |
 | `fill`, `press`, `select` | `target`, string `value` |
 | `click`, `check`, `uncheck`, `expectVisible` | `target` |
+| `setFile` (runner 0.2+) | `target`, `file: {"name":"synthetic.json","mimeType":"application/json","text":"{}"}` |
 | `expectText`, `expectValue` | `target`, exact string `value` |
 | `goto` | Origin-relative `path` |
 | `request` | `method`, `path`, `expectStatus`, optional `data`, `headers` |
@@ -46,6 +47,14 @@ Requests use Playwright's API context. Supported methods: GET/POST/PUT/PATCH/DEL
 Objects in `data` send JSON; a string sends the raw body. Set its content type
 explicitly for raw form/multipart data. Paths cannot change origin. Redirects
 are not followed by API requests. Do not put credentials in shareable contracts.
+
+`setFile` supplies one file to an HTML file input, including a hidden input.
+Its contents are literal UTF-8 `text` (at most 65,536 bytes), not a local path.
+`name` is a filename of 1–128 characters without slashes or control characters;
+`mimeType` uses a type/subtype pair. Binary files, multiple files, directories
+and reading files from disk are not supported. Use synthetic contents; the
+contract and reproduction spec retain that text. Mark it `save: true` if
+importing triggers persistence in your app.
 
 ## Observations
 
@@ -57,14 +66,25 @@ Every entry under `observe` has one source:
 | `value` | `target` | Form input value |
 | `attribute` | `target`, `attribute` | Attribute string, or `null` if absent |
 | `count` | `target` | Number of matching elements |
-| `localStorage`, `sessionStorage` | `key` | String or `null` |
+| `localStorage`, `sessionStorage` | Exactly one of `key` or `keyFrom`; optional `keyPrefix` with `keyFrom` | String or `null` |
 | `response` | `url`, `field` | Same-origin GET result |
 
 Response fields are `json`, `text`, `status`, or `header` (add `header`).
 Except for `status`, a non-2xx response makes the observation inconclusive.
 `parse: "json"` parses a string value; `jsonPath: ["items", 0, "title"]`
-selects a nested value. A missing JSON path is inconclusive. A missing storage
+selects a nested value. A missing JSON path is retried during an expected-state
+wait, then inconclusive if still missing at the deadline. A missing storage
 key/attribute is explicitly `null`, so deletion can appear in a diff.
+
+For dynamically named records, runner 0.2+ can read a pointer from the **same**
+storage. For example, `{"source":"localStorage","keyFrom":"currentId",
+"keyPrefix":"doc.","parse":"json"}` reads `currentId`, then parses the value
+at `doc.` plus that ID. The pointer is resolved on every observation. A missing
+pointer or record returns `null`; there is no cached last value. Observe
+`{"source":"localStorage","key":"currentId"}` separately when changing the
+selected record must also count as a failure, even if its contents are equal.
+Adding a `jsonPath` to a missing record makes it an unavailable observation
+(inconclusive), rather than a `null` value diff.
 
 Object key order is ignored; value types, array ordering, IDs and timestamps
 are retained. To ignore an irrelevant field, select the actual invariant

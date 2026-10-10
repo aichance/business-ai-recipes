@@ -30,6 +30,8 @@ Node 22+. Local test runs need no account, LLM or API key. The demo contains del
 
 Also exercised against an unchanged local [Glypha](https://github.com/kuny/glypha) build: saved scene and ETag survive reload and a 422-rejected update. This is our compatibility test, not third-party adoption. [Adapter and scope](tools/app-crash-lab/examples/GLYPHA.md).
 
+Browser-only JSON importer? The [Tunoron example](tools/app-crash-lab/examples/TUNORON.md) imports a synthetic song and checks the complete saved record after reload and malformed JSON rejection. Requires App Crash Lab 0.2+.
+
 Already have a Playwright suite? [Compare the two routes on the same app](tools/app-crash-lab/examples/direct-playwright/README.md), including a runnable direct test and the tradeoffs.
 
 Have you run it on **your own app**? [Share a sanitized result or setup problem](https://github.com/aichance/business-ai-recipes/issues). Help shape the next check pack; starring is optional.

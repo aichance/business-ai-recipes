@@ -72,6 +72,10 @@ Use [`CONTRACT.md`](CONTRACT.md) for the complete format and supported actions.
 HTTP 422 and server JSON. [`examples/glypha.json`](examples/glypha.json) is a
 real-app adapter for [Glypha](https://github.com/kuny/glypha), with setup
 instructions in [`examples/GLYPHA.md`](examples/GLYPHA.md).
+For a browser-only JSON importer, [`examples/tunoron.json`](examples/tunoron.json)
+uploads a synthetic song and observes its saved record through a dynamic
+localStorage key. See [`examples/TUNORON.md`](examples/TUNORON.md) for the two
+checks, local setup and verification limits. Requires runner 0.2 or later.
 
 ### Ask your coding agent to configure it
 
