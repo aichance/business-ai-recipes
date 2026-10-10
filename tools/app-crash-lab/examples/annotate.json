@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "annotate.js 1.5.1 — imported comment survives reload and invalid JSON",
+  "baseURL": "http://127.0.0.1:54191",
+  "path": "/",
+  "timeoutMs": 5000,
+  "stabilityMs": 500,
+  "reset": [],
+  "setup": [
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Comments"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Import comments from a JSON file"
+      }
+    },
+    {
+      "action": "setFile",
+      "target": {
+        "css": "#__an_host input[type=\"file\"]"
+      },
+      "file": {
+        "name": "synthetic-comments.json",
+        "mimeType": "application/json",
+        "text": "{\"comments\":[{\"id\":\"crash-lab-note\",\"type\":\"note\",\"author\":\"Synthetic reviewer\",\"text\":\"Keep this comment after reload\",\"color\":\"#ffcc00\",\"anchor\":null,\"geom\":null,\"replies\":[],\"createdAt\":\"2026-10-01T00:00:00.000Z\",\"updatedAt\":\"2026-10-01T00:00:00.000Z\",\"resolved\":false}]}"
+      },
+      "save": true
+    }
+  ],
+  "observe": {
+    "savedProject": {
+      "source": "localStorage",
+      "key": "annotate:crash-lab-synthetic",
+      "parse": "json"
+    },
+    "savedId": {
+      "source": "localStorage",
+      "key": "annotate:crash-lab-synthetic",
+      "parse": "json",
+      "jsonPath": [
+        "comments",
+        0,
+        "id"
+      ]
+    },
+    "savedText": {
+      "source": "localStorage",
+      "key": "annotate:crash-lab-synthetic",
+      "parse": "json",
+      "jsonPath": [
+        "comments",
+        0,
+        "text"
+      ]
+    },
+    "renderedComments": {
+      "source": "count",
+      "target": {
+        "css": ".an-card"
+      }
+    },
+    "renderedText": {
+      "source": "text",
+      "target": {
+        "css": ".an-card[data-id=\"crash-lab-note\"] .an-body"
+      }
+    }
+  },
+  "expected": {
+    "savedId": "crash-lab-note",
+    "savedText": "Keep this comment after reload",
+    "renderedComments": 1,
+    "renderedText": "Keep this comment after reload"
+  },
+  "rejectedUpdate": {
+    "steps": [
+      {
+        "action": "click",
+        "target": {
+          "role": "button",
+          "name": "Import comments from a JSON file"
+        }
+      },
+      {
+        "action": "setFile",
+        "target": {
+          "css": "#__an_host input[type=\"file\"]"
+        },
+        "file": {
+          "name": "broken-comments.json",
+          "mimeType": "application/json",
+          "text": "{\"comments\":["
+        }
+      }
+    ],
+    "observe": {
+      "invalidJsonMessage": {
+        "source": "count",
+        "target": {
+          "css": "#__an_toasts .an-error:visible > span:text-is(\"That file isn’t valid JSON\")"
+        }
+      }
+    },
+    "expected": {
+      "invalidJsonMessage": 1
+    }
+  },
+  "afterReload": [
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Comments"
+      }
+    }
+  ]
+}
