@@ -13,6 +13,21 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  app-crash-lab:
+    runs-on: ubuntu-24.04
+    container: node:22.16.0-bookworm
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: tools/app-crash-lab
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - run: npm test
+      - run: npm run demo
   demo-forge-first-run:
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
