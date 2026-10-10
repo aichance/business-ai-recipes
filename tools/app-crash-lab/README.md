@@ -68,6 +68,8 @@ For rejected updates, separately describe how rejection is acknowledged.
 An error message can change while the saved note must stay unchanged.
 
 Use [`CONTRACT.md`](CONTRACT.md) for the complete format and supported actions.
+If an error message appears only after invalid input, use the
+[conditional-message example](CONTRACT.md#error-elements-that-appear-only-after-invalid-input).
 [`examples/inventory.json`](examples/inventory.json) combines UI actions,
 HTTP 422 and server JSON. [`examples/glypha.json`](examples/glypha.json) is a
 real-app adapter for [Glypha](https://github.com/kuny/glypha), with setup
