@@ -1,0 +1,110 @@
+{
+  "valid": {
+    "format": 1,
+    "canvas": {
+      "width": 1920,
+      "height": 1080
+    },
+    "schedule": {
+      "utcOffset": "+09:00",
+      "defaultScene": "event",
+      "daily": []
+    },
+    "scenes": {
+      "event": {
+        "background": {
+          "color": "#183848"
+        },
+        "elements": [
+          {
+            "type": "text",
+            "x": 120,
+            "y": 100,
+            "width": 1680,
+            "height": 180,
+            "text": "AI活用ハンズオン",
+            "fontSize": 96,
+            "color": "#FFFFFF",
+            "align": "left"
+          },
+          {
+            "type": "text",
+            "x": 120,
+            "y": 380,
+            "width": 1680,
+            "height": 180,
+            "text": "会場 A / 14:00 開始",
+            "fontSize": 80,
+            "color": "#FFFFFF",
+            "align": "left"
+          },
+          {
+            "type": "text",
+            "x": 120,
+            "y": 700,
+            "width": 1680,
+            "height": 180,
+            "text": "これは合成データを使った検証画面です。",
+            "fontSize": 48,
+            "color": "#FFFFFF",
+            "align": "left"
+          }
+        ]
+      }
+    }
+  },
+  "invalid": {
+    "format": 1,
+    "canvas": {
+      "width": 1920,
+      "height": 1080
+    },
+    "schedule": {
+      "utcOffset": "+09:00",
+      "defaultScene": "event",
+      "daily": []
+    },
+    "scenes": {
+      "event": {
+        "background": {
+          "color": "#183848"
+        },
+        "elements": [
+          {
+            "type": "text",
+            "x": 1900,
+            "y": 100,
+            "width": 1680,
+            "height": 180,
+            "text": "AI活用ハンズオン",
+            "fontSize": 96,
+            "color": "#FFFFFF",
+            "align": "left"
+          },
+          {
+            "type": "text",
+            "x": 120,
+            "y": 380,
+            "width": 1680,
+            "height": 180,
+            "text": "会場 A / 14:00 開始",
+            "fontSize": 80,
+            "color": "#FFFFFF",
+            "align": "left"
+          },
+          {
+            "type": "text",
+            "x": 120,
+            "y": 700,
+            "width": 1680,
+            "height": 180,
+            "text": "これは合成データを使った検証画面です。",
+            "fontSize": 48,
+            "color": "#FFFFFF",
+            "align": "left"
+          }
+        ]
+      }
+    }
+  }
+}
