@@ -41,6 +41,8 @@ Your app rejects input with a native `alert()`? The [Sethera example](tools/app-
 
 **Independent own-app use:** [Sethera's author reported](https://qiita.com/cuculhart/items/4425ab63e6b1dd497ae1#comment-4dfcb4ac9ecead546607) running both checks and the two generated Playwright tests on Windows (Node 22.16.0 / Playwright 1.64.0), then reusing the same contract on Sethera v0.5.0. This is the author's public report, separate from our compatibility runs. [Reported scope and pinned setup](tools/app-crash-lab/examples/SETHERA.md#independent-author-report).
 
+If these checks are useful, [star the repository](https://github.com/aichance/business-ai-recipes) to find them again before your next release. Starring is optional.
+
 Already have a Playwright suite? [Compare the two routes on the same app](tools/app-crash-lab/examples/direct-playwright/README.md), including a runnable direct test and the tradeoffs.
 
 Trying it on **your own app**, or stuck during setup? [Report a result or setup blocker][crash-lab-first-run] opens a short prefilled form. Your app's source/URL is optional. Help shape the next check pack; starring is optional.
