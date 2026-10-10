@@ -8,9 +8,12 @@ normal control here; do not describe its correct rejection as a discovered bug.
 1. Build a disposable Glypha checkout following its README. The version used
    for our fixture is `05183171e567ad285d718f08b6ff64620fb9c0c2`, with Node 24
    and Go 1.26+. These are Glypha's build requirements, not this runner's.
-2. Start the new server from its source directory with a **fresh temporary DB**:
+2. After building the renderer, run these commands from Glypha's repository
+   root. The first command creates the executable used below; start it with a
+   **fresh temporary DB**:
 
 ```sh
+go build -o ./glypha-trial ./cmd/glypha
 glypha_trial_dir=$(mktemp -d)
 GLYPHA_ADDR=127.0.0.1:4394 GLYPHA_DB_PATH="$glypha_trial_dir/glypha.db" ./glypha-trial
 ```
