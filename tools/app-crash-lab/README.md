@@ -83,6 +83,10 @@ The two essential questions in your contract are:
 This is a fragment, not a complete contract. `observe` selects what must
 survive; `expected` proves the normal save reached a known-good result.
 For rejected updates, separately describe how rejection is acknowledged.
+Why wait for that signal? The [failure-boundary example](examples/failure-boundary/README.md)
+holds a synthetic failed response and shows how an input assertion passes
+before the failure handler erases it. Waiting for the exact failure first
+catches the broken version and passes the fixed control.
 An error message can change while the saved note must stay unchanged.
 
 Use [`CONTRACT.md`](CONTRACT.md) for the complete format and supported actions.
