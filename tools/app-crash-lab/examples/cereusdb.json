@@ -6,74 +6,114 @@
   "path": "/",
   "timeoutMs": 30000,
   "stabilityMs": 250,
-  "checks": ["reload"],
+  "checks": [
+    "reload"
+  ],
   "reset": [],
   "setup": [
     {
       "action": "fill",
-      "target": {"css": "textarea"},
+      "target": {
+        "css": "textarea"
+      },
       "value": "CREATE DATABASE 'opfs://crash_lab_trial'"
     },
     {
       "action": "click",
-      "target": {"role": "button", "name": "Run query"}
+      "target": {
+        "role": "button",
+        "name": "Run query"
+      }
     },
     {
       "action": "fill",
-      "target": {"css": "textarea"},
+      "target": {
+        "css": "textarea"
+      },
       "value": "CREATE TABLE crash_lab_trial.public.notes AS SELECT 1 AS id, 'Saved English' AS note"
     },
     {
       "action": "click",
-      "target": {"role": "button", "name": "Run query"},
+      "target": {
+        "role": "button",
+        "name": "Run query"
+      },
       "save": true
     },
     {
       "action": "fill",
-      "target": {"css": "textarea"},
+      "target": {
+        "css": "textarea"
+      },
       "value": "SELECT id, note FROM crash_lab_trial.public.notes ORDER BY id"
     },
     {
       "action": "click",
-      "target": {"role": "button", "name": "Run query"}
+      "target": {
+        "role": "button",
+        "name": "Run query"
+      }
     },
     {
       "action": "click",
-      "target": {"role": "tab", "name": "JSON"}
+      "target": {
+        "role": "tab",
+        "name": "JSON"
+      }
     }
   ],
   "afterReload": [
     {
       "action": "fill",
-      "target": {"css": "textarea"},
+      "target": {
+        "css": "textarea"
+      },
       "value": "ATTACH 'opfs://crash_lab_trial'"
     },
     {
       "action": "click",
-      "target": {"role": "button", "name": "Run query"}
+      "target": {
+        "role": "button",
+        "name": "Run query"
+      }
     },
     {
       "action": "fill",
-      "target": {"css": "textarea"},
+      "target": {
+        "css": "textarea"
+      },
       "value": "SELECT id, note FROM crash_lab_trial.public.notes ORDER BY id"
     },
     {
       "action": "click",
-      "target": {"role": "button", "name": "Run query"}
+      "target": {
+        "role": "button",
+        "name": "Run query"
+      }
     },
     {
       "action": "click",
-      "target": {"role": "tab", "name": "JSON"}
+      "target": {
+        "role": "tab",
+        "name": "JSON"
+      }
     }
   ],
   "observe": {
     "rows": {
       "source": "text",
-      "target": {"css": "[role=tabpanel] pre"},
+      "target": {
+        "css": "[role=tabpanel] pre"
+      },
       "parse": "json"
     }
   },
   "expected": {
-    "rows": [{"id": 1, "note": "Saved English"}]
+    "rows": [
+      {
+        "id": 1,
+        "note": "Saved English"
+      }
+    ]
   }
 }

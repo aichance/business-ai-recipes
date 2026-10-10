@@ -101,3 +101,7 @@ integer-column INSERT containing `not_an_integer`; a subsequent SELECT still
 returned the original row. That rejection is **not automated by this contract**.
 The error clears the displayed result, and a fresh query clears the error, so
 the current contract does not pretend to observe both simultaneously.
+
+If this check is useful for your next release, you can
+[star App Crash Lab on GitHub](https://github.com/aichance/business-ai-recipes)
+to keep the reusable checks close at hand.
