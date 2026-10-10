@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "Tunoron — imported song survives reload and rejected JSON",
+  "baseURL": "http://127.0.0.1:4398",
+  "path": "/",
+  "timeoutMs": 8000,
+  "stabilityMs": 500,
+  "reset": [],
+  "setup": [
+    { "action": "click", "target": { "css": "#btnSettings" } },
+    { "action": "click", "target": { "css": "#setBody button[lang=en]" } },
+    { "action": "click", "target": { "css": "#dlgSettings [data-close]" } },
+    {
+      "action": "setFile",
+      "target": { "css": "#fileIn" },
+      "file": {
+        "name": "crash-lab-synthetic.tunoron.json",
+        "mimeType": "application/json",
+        "text": "{\"v\":3,\"name\":\"Crash Lab synthetic melody\",\"bpm\":145,\"key\":{\"tonic\":0,\"mode\":\"major\"},\"notes\":[{\"s\":0,\"l\":4,\"m\":60},{\"s\":4,\"l\":4,\"m\":64}],\"bass\":[],\"hits\":[],\"clips\":[],\"instr\":\"piano\"}"
+      },
+      "save": true
+    }
+  ],
+  "observe": {
+    "currentSong": { "source": "localStorage", "key": "fushi.cur" },
+    "savedSong": { "source": "localStorage", "keyFrom": "fushi.cur", "keyPrefix": "fushi.p.", "parse": "json" },
+    "savedName": { "source": "localStorage", "keyFrom": "fushi.cur", "keyPrefix": "fushi.p.", "parse": "json", "jsonPath": ["name"] },
+    "savedTempo": { "source": "localStorage", "keyFrom": "fushi.cur", "keyPrefix": "fushi.p.", "parse": "json", "jsonPath": ["bpm"] },
+    "savedNotes": { "source": "localStorage", "keyFrom": "fushi.cur", "keyPrefix": "fushi.p.", "parse": "json", "jsonPath": ["notes"] }
+  },
+  "expected": {
+    "savedName": "Crash Lab synthetic melody",
+    "savedTempo": 145,
+    "savedNotes": [{ "s": 0, "l": 4, "m": 60 }, { "s": 4, "l": 4, "m": 64 }]
+  },
+  "rejectedUpdate": {
+    "steps": [{
+      "action": "setFile",
+      "target": { "css": "#fileIn" },
+      "file": { "name": "broken.tunoron.json", "mimeType": "application/json", "text": "{\"notes\": [" }
+    }],
+    "observe": { "message": { "source": "text", "target": { "css": "#status" } } },
+    "expected": { "message": "Could not read that file." }
+  }
+}
