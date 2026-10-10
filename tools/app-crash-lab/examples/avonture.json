@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "Avonture SSH generator / saved inputs and generated config survive reload",
+  "baseURL": "http://127.0.0.1:49681",
+  "path": "/blog/ssh-config-tips/",
+  "timeoutMs": 10000,
+  "stabilityMs": 250,
+  "checks": [
+    "reload"
+  ],
+  "reset": [],
+  "setup": [
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[id^=\"vars-\"][id$=\"-vmUser\"]"
+      },
+      "value": "crashlab-demo"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[id^=\"vars-\"][id$=\"-vmIp\"]"
+      },
+      "value": "bastion.example.test",
+      "save": true
+    }
+  ],
+  "observe": {
+    "username": {
+      "source": "value",
+      "target": {
+        "css": "input[id^=\"vars-\"][id$=\"-vmUser\"]"
+      }
+    },
+    "hostname": {
+      "source": "value",
+      "target": {
+        "css": "input[id^=\"vars-\"][id$=\"-vmIp\"]"
+      }
+    },
+    "savedUsername": {
+      "source": "localStorage",
+      "key": "docusaurus:vars:/blog/ssh-config-tips/",
+      "parse": "json",
+      "jsonPath": [
+        "vmUser"
+      ]
+    },
+    "savedHostname": {
+      "source": "localStorage",
+      "key": "docusaurus:vars:/blog/ssh-config-tips/",
+      "parse": "json",
+      "jsonPath": [
+        "vmIp"
+      ]
+    },
+    "generatorUsername": {
+      "source": "localStorage",
+      "key": "cfg:ssh-config",
+      "parse": "json",
+      "jsonPath": [
+        "globals",
+        "vmUser"
+      ]
+    },
+    "generatorHostname": {
+      "source": "localStorage",
+      "key": "cfg:ssh-config",
+      "parse": "json",
+      "jsonPath": [
+        "globals",
+        "vmIp"
+      ]
+    },
+    "generatedConfig": {
+      "source": "text",
+      "target": {
+        "css": "pre[class*=\"outputPre_\"] > code"
+      }
+    },
+    "syntheticProxyJumpCount": {
+      "source": "count",
+      "target": {
+        "css": "pre[class*=\"outputPre_\"] > code:has-text(\"ProxyJump crashlab-demo@bastion.example.test\")"
+      }
+    }
+  },
+  "expected": {
+    "username": "crashlab-demo",
+    "hostname": "bastion.example.test",
+    "savedUsername": "crashlab-demo",
+    "savedHostname": "bastion.example.test",
+    "generatorUsername": "crashlab-demo",
+    "generatorHostname": "bastion.example.test",
+    "syntheticProxyJumpCount": 1
+  }
+}
