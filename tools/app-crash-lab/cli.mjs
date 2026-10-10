@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { parseArgs } from 'node:util';
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
-import { resolve, join } from 'node:path';
+import { resolve, join, dirname } from 'node:path';
 import { runContract, VERSION } from './lib/runner.mjs';
 import { startDemo } from './demo/server.mjs';
 
@@ -32,6 +32,8 @@ try {
     process.exitCode = report.exitCode;
   } else if (command === 'demo' && !file) {
     const root = resolve(args.values.out ?? `.crash-lab/demo-${Date.now()}`);
+    await mkdir(dirname(root), { recursive: true });
+    await mkdir(root);
     const app = await startDemo();
     const manifest = [];
     try {
@@ -45,7 +47,6 @@ try {
         console.log(`${matched ? 'DEMO OK' : 'DEMO ERROR'}  ${mode}: ${actual.join(', ')}`);
         if (!matched) process.exitCode = 2;
       }
-      await mkdir(root, { recursive: true });
       await writeFile(join(root, 'demo.json'), JSON.stringify(manifest, null, 2) + '\n');
       await writeFile(join(root, 'index.html'), `<!doctype html><meta charset="utf-8"><title>App Crash Lab demo</title><style>body{font:18px/1.7 system-ui;max-width:800px;margin:50px auto;padding:20px;background:#10131b;color:#edf0fa}a{color:#a5bcff}li{margin:24px 0}</style><h1>App Crash Lab</h1><p>Real test runs against deliberately broken synthetic fixtures. Same saved workflow. Two extra checks.</p><ul>${manifest.map(r => `<li><a href="${r.report}">${r.mode}</a> — reload: ${r.actual[0]}, rejected update: ${r.actual[1]}</li>`).join('')}</ul><p>The temporary demo server has stopped. To rerun the generated tests, start <code>npm run demo:serve</code> and update the embedded contract's baseURL to that server.</p>`);
       console.log(`Open: ${join(root, 'index.html')}`);
