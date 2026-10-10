@@ -103,6 +103,11 @@ synthetic review comment and its malformed-import toast.
 
 ### Ask your coding agent to configure it
 
+[Copy a self-contained setup prompt](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#agent)
+from the project page. It includes pinned format/example links and the current
+no-clone commands. Paste it inside your disposable app project in your existing
+coding agent. Review the generated contract and actual results.
+
 ```text
 Use App Crash Lab against my disposable local app. Read CONTRACT.md and the
 notes.json example. Inspect my app's real save flow, selectors and validation.
