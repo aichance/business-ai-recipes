@@ -211,6 +211,10 @@ Playwright can implement these checks directly. This package supplies the
 two patterns, a reusable contract and consistent debugging output. It does
 not claim a new testing technique or better bug detection than every other tool.
 
+## More real-app examples
+
+The [Creator Frame Studio check](examples/CREATOR-FRAME.md) tests one wrong-schema project import against 11 unchanged editor values. It selects rejection only; file save/reopen is outside its automated coverage. A runnable JSON and standalone-test instructions are included.
+
 ## Contribute a real use case
 
 If you tried it on **your own app**, an issue with the app/framework, which
