@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "Creator Frame Studio / rejected project import preserves editor values",
+  "baseURL": "http://127.0.0.1:49684",
+  "path": "/",
+  "timeoutMs": 10000,
+  "stabilityMs": 250,
+  "checks": [
+    "rejected-update"
+  ],
+  "reset": [],
+  "setup": [
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "EN"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Story 1080 × 1920 · 9:16"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "tab",
+        "name": "Text"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "#textValue"
+      },
+      "value": "REOPEN TEST 2026"
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "#projectSave"
+      },
+      "save": true
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": "#toast"
+      },
+      "value": "Project file prepared; it also contains images."
+    }
+  ],
+  "observe": {
+    "text": {
+      "source": "value",
+      "target": {
+        "css": "#textValue"
+      }
+    },
+    "width": {
+      "source": "value",
+      "target": {
+        "css": "#customW"
+      }
+    },
+    "height": {
+      "source": "value",
+      "target": {
+        "css": "#customH"
+      }
+    },
+    "textX": {
+      "source": "value",
+      "target": {
+        "css": "#textX"
+      }
+    },
+    "textY": {
+      "source": "value",
+      "target": {
+        "css": "#textY"
+      }
+    },
+    "textSize": {
+      "source": "value",
+      "target": {
+        "css": "#textSize"
+      }
+    },
+    "textWeight": {
+      "source": "value",
+      "target": {
+        "css": "#textWeight"
+      }
+    },
+    "textColor": {
+      "source": "value",
+      "target": {
+        "css": "#textColor"
+      }
+    },
+    "canvasSize": {
+      "source": "text",
+      "target": {
+        "css": "#canvasSize"
+      }
+    },
+    "pageCount": {
+      "source": "text",
+      "target": {
+        "css": "#pageCount"
+      }
+    },
+    "layerLabels": {
+      "source": "text",
+      "target": {
+        "css": "#layerList"
+      }
+    }
+  },
+  "expected": {
+    "text": "REOPEN TEST 2026",
+    "width": "1080",
+    "height": "1920"
+  },
+  "rejectedUpdate": {
+    "steps": [
+      {
+        "action": "setFile",
+        "target": {
+          "css": "#projectInput"
+        },
+        "file": {
+          "name": "invalid.frame.json",
+          "mimeType": "application/json",
+          "text": "{\"schema\":\"not-creator-frame-studio\",\"schemaVersion\":2}"
+        }
+      }
+    ],
+    "observe": {
+      "message": {
+        "source": "text",
+        "target": {
+          "css": "#toast"
+        }
+      }
+    },
+    "expected": {
+      "message": "This is not a supported Frame Studio project."
+    }
+  }
+}
