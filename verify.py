@@ -15,6 +15,8 @@ from tempfile import TemporaryDirectory
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "docs/test-the-test.html",
+    "docs/app-crash-lab-language-single.html",
     "docs/app-crash-lab.html",
     "docs/app-crash-lab.png",
     "tools/app-crash-lab/.gitignore",
@@ -219,6 +221,10 @@ def _files(root: Path) -> set[str]:
 
 
 def _assert_candidate_boundary(root: Path) -> None:
+    if (root / "docs/app-crash-lab-language-single.html").read_bytes() != (
+        root / "tools/app-crash-lab/examples/language-single.html"
+    ).read_bytes():
+        raise AssertionError("browser comparison fixture differs from the CLI example")
     if _files(root) != EXPECTED_FILES:
         raise AssertionError(f"candidate file set differs: {_files(root)}")
     forbidden = (
