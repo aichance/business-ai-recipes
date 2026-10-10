@@ -165,6 +165,10 @@ port, update its `baseURL`; record that change when comparing results. To
 use the spec in another project, install `@playwright/test@1.64.0` and its
 Chromium browser there. Run with one worker so server resets do not race.
 
+Using Playwright directly and missing a trace after a failed local run?
+[Reproduce the first-attempt / first-retry difference](examples/FIRST-FAILURE-TRACE.md)
+with one deliberately failing test and a `--trace on` comparison.
+
 ### Rerun a generated test from the demo
 
 `npm run demo` stops its temporary server when finished. To try the complete

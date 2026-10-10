@@ -31,6 +31,7 @@ EXPECTED_FILES = {
     "tools/app-crash-lab/examples/AVONTURE.md",
     "tools/app-crash-lab/examples/CEREUSDB.md",
     "tools/app-crash-lab/examples/CREATOR-FRAME.md",
+    "tools/app-crash-lab/examples/FIRST-FAILURE-TRACE.md",
     "tools/app-crash-lab/examples/GLYPHA.md",
     "tools/app-crash-lab/examples/PIXIE.md",
     "tools/app-crash-lab/examples/TUNORON.md",
