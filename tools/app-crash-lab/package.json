@@ -1,6 +1,6 @@
 {
   "name": "@aichance/app-crash-lab",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Check that saved data survives reloads and rejected updates. Keep the diff and a Playwright reproduction.",
   "type": "module",
   "license": "MIT",

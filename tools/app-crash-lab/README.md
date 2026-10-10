@@ -78,6 +78,10 @@ For a browser-only JSON importer, [`examples/tunoron.json`](examples/tunoron.jso
 uploads a synthetic song and observes its saved record through a dynamic
 localStorage key. See [`examples/TUNORON.md`](examples/TUNORON.md) for the two
 checks, local setup and verification limits. Requires runner 0.2 or later.
+For native `alert()` rejection, the [Sethera example](examples/SETHERA.md)
+checks a synthetic piece across reload and malformed JSON import. Requires
+runner 0.3 or later. The [annotate.js example](examples/ANNOTATE.md) checks a
+synthetic review comment and its malformed-import toast.
 
 ### Ask your coding agent to configure it
 

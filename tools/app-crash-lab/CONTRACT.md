@@ -165,6 +165,43 @@ after the successful save to matching after the invalid update.
 After rejection, the original saved values must still match. The editable
 input and error display are normally excluded from the preserved state.
 
+### Native alert rejection (runner 0.3+)
+
+For an app that uses `alert()` instead of a DOM error, declare its exact message:
+
+```json
+{
+  "rejectedUpdate": {
+    "steps": [{
+      "action": "setFile",
+      "target": { "css": "input[type=\"file\"]" },
+      "file": { "name": "invalid.json", "mimeType": "application/json", "text": "{" }
+    }],
+    "dialog": { "type": "alert", "message": "Could not import JSON" }
+  }
+}
+```
+
+`dialog` is an alternative to rejection `observe`/`expected` or HTTP 4xx;
+do not combine these signals. Matching is exact, including whitespace and
+case. The runner listens before setup and dismisses alerts so execution can
+continue. It does not replace `window.alert` or change your application.
+
+An identical alert during setup is inconclusive. After invalid steps, the first
+alert must appear within `timeoutMs` and match exactly. No alert or a different
+alert fails. Additional alerts observed through the saved-state comparison and
+stability window also fail. `timeoutMs` is a maximum wait for the first alert,
+not a full-duration monitor. Alerts after that comparison window are outside
+coverage; `stabilityMs: 0` adds no extra monitoring time. Native `confirm`, `prompt`
+and `beforeunload` are not supported rejection signals and make this check
+inconclusive. The runner dismisses them; it never supplies confirmation or input.
+
+Even after a correct alert, changed saved data fails. `report.json` includes
+the observed dialog type/text, and the generated standalone test uses the same
+checks. As with DOM signals, this is bounded observation, not proof that an
+unrelated delayed event could never produce the same message. See the
+[unchanged Sethera example](examples/SETHERA.md).
+
 ## Isolation and timing
 
 Each pattern has a fresh, nonpersistent browser context. First navigate to
