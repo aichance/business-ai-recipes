@@ -6,7 +6,7 @@ Turn one successful save workflow into two repeatable checks: **reload without l
 
 [**See the broken vs fixed results**](https://aichance.github.io/business-ai-recipes/app-crash-lab.html) · [**Install & use on your app**](tools/app-crash-lab/README.md) · [**Contract format**](tools/app-crash-lab/CONTRACT.md)
 
-[**Download App Crash Lab 0.2.1 only — source ZIP & setup**](https://github.com/aichance/business-ai-recipes/releases/tag/app-crash-lab-v0.2.1). Unzip, open the extracted directory, and follow its README; no need to clone the other tools in this repository.
+[**Download App Crash Lab 0.3.0 only — source ZIP & setup**](https://github.com/aichance/business-ai-recipes/releases/tag/app-crash-lab-v0.3.0). Unzip, open the extracted directory, and follow its README; no need to clone the other tools in this repository.
 
 [![33-second real UI walkthrough: a saved note is lost after reload, an invalid edit corrupts it, then the fixed version preserves it](https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.1.0/app-crash-lab-demo.gif)](https://github.com/aichance/business-ai-recipes/releases/tag/app-crash-lab-v0.1.0)
 
@@ -33,6 +33,8 @@ Node 22+. Local test runs need no account, LLM or API key. The demo contains del
 Also exercised against an unchanged local [Glypha](https://github.com/kuny/glypha) build: saved scene and ETag survive reload and a 422-rejected update. This is our compatibility test, not third-party adoption. [Adapter and scope](tools/app-crash-lab/examples/GLYPHA.md).
 
 Browser-only JSON importer? The [Tunoron example](tools/app-crash-lab/examples/TUNORON.md) imports a synthetic song and checks the complete saved record after reload and malformed JSON rejection. Requires App Crash Lab 0.2+.
+
+Your app rejects input with a native `alert()`? The [Sethera example](tools/app-crash-lab/examples/SETHERA.md) checks both reload and saved-state preservation after a malformed JSON import. Exact alert text and state are checked separately. Requires App Crash Lab 0.3+.
 
 Already have a Playwright suite? [Compare the two routes on the same app](tools/app-crash-lab/examples/direct-playwright/README.md), including a runnable direct test and the tradeoffs.
 
