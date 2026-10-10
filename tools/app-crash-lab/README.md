@@ -89,6 +89,18 @@ If a required observation or rejection signal is unavailable, explain it.
 Using an agent to author the config is optional and uses your existing
 agent account. The runner itself does not call a model.
 
+### Already use Playwright?
+
+You can add these checks directly to an existing suite. Choose App Crash Lab
+when you want the same contract-driven checks, phase/status, saved-state
+differences and generated reproduction together. Playwright also provides
+reports, traces, screenshots and assertion diffs.
+
+[Run the direct-Playwright comparison and choose your route](https://github.com/aichance/business-ai-recipes/tree/main/tools/app-crash-lab/examples/direct-playwright).
+Both paths passed the same two normal-case Glypha checks. This does not prove
+faster setup or better bug detection. The comparison is available in the
+current checkout; the original v0.1.0 source ZIP predates these extra examples.
+
 ## Keep the evidence; rerun the test
 
 Every run writes:
