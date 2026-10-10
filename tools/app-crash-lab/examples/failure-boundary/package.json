@@ -1,0 +1,16 @@
+{
+  "name": "app-crash-lab-failure-boundary-example",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "playwright test --config=playwright.config.mjs"
+  },
+  "dependencies": {
+    "@playwright/test": "1.64.0"
+  }
+}
