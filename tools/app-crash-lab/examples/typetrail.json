@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "TypeTrail / completed chapter survives reload",
+  "baseURL": "http://127.0.0.1:49720",
+  "path": "/",
+  "timeoutMs": 10000,
+  "stabilityMs": 250,
+  "checks": [
+    "reload"
+  ],
+  "reset": [],
+  "setup": [
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "01 から歩きはじめる →"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "1 :"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "4 string"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "次のステップへ Enter"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "1 :"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "3 number"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "1 :"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "3 number"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "次のステップへ Enter"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "1 :"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "3 string"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "1 :"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "4 \"hello\""
+      },
+      "save": true
+    }
+  ],
+  "observe": {
+    "progress": {
+      "source": "text",
+      "target": {
+        "css": ".pct"
+      }
+    },
+    "completedChapter": {
+      "source": "count",
+      "target": {
+        "role": "button",
+        "name": "✓ 型注釈と型推論 クリア済み・見なおし中"
+      }
+    },
+    "savedProgress": {
+      "source": "localStorage",
+      "key": "typetrail:done",
+      "parse": "json"
+    }
+  },
+  "expected": {
+    "progress": "7%",
+    "completedChapter": 1,
+    "savedProgress": {
+      "ts": {
+        "0": true
+      },
+      "js": {}
+    }
+  }
+}
