@@ -15,6 +15,27 @@ from tempfile import TemporaryDirectory
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "docs/app-crash-lab.html",
+    "docs/app-crash-lab.png",
+    "tools/app-crash-lab/.gitignore",
+    "tools/app-crash-lab/CONTRACT.md",
+    "tools/app-crash-lab/LICENSE",
+    "tools/app-crash-lab/README.md",
+    "tools/app-crash-lab/cli.mjs",
+    "tools/app-crash-lab/demo/index.html",
+    "tools/app-crash-lab/demo/server.mjs",
+    "tools/app-crash-lab/examples/GLYPHA.md",
+    "tools/app-crash-lab/examples/glypha.json",
+    "tools/app-crash-lab/examples/inventory.json",
+    "tools/app-crash-lab/examples/notes.json",
+    "tools/app-crash-lab/lib/contract.mjs",
+    "tools/app-crash-lab/lib/protocol.mjs",
+    "tools/app-crash-lab/lib/report.mjs",
+    "tools/app-crash-lab/lib/runner.mjs",
+    "tools/app-crash-lab/package-lock.json",
+    "tools/app-crash-lab/package.json",
+    "tools/app-crash-lab/tests/acceptance.test.mjs",
+    "tools/app-crash-lab/tests/contract.test.mjs",
     ".agents/skills/demo-forge/SKILL.md",
     ".agents/skills/demo-forge/LICENSE",
     ".agents/skills/demo-forge/references/setup.md",
@@ -131,7 +152,16 @@ EXPECTED_FILES = {
 }
 _MISSING = object()
 _WORKSPACE_DIRS = frozenset({".demo-forge-output", ".demo-forge-venv"})
-_DOTS_WORKSPACE_PATHS = frozenset({"tools/dots-studio/node_modules", "tools/dots-studio/dist"})
+_DOTS_WORKSPACE_PATHS = frozenset(
+    {
+        "tools/dots-studio/node_modules",
+        "tools/dots-studio/dist",
+        "tools/app-crash-lab/node_modules",
+        "tools/app-crash-lab/.crash-lab",
+        "tools/app-crash-lab/test-results",
+        "tools/app-crash-lab/playwright-report",
+    }
+)
 
 
 def _files(root: Path) -> set[str]:

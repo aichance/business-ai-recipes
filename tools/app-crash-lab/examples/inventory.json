@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "Inventory — HTTP rejection preserves the stored record",
+  "baseURL": "http://127.0.0.1:4173",
+  "path": "/inventory",
+  "reset": [{ "action": "request", "method": "POST", "path": "/api/reset", "expectStatus": 200 }],
+  "setup": [
+    { "action": "expectText", "target": { "testId": "quantity" }, "value": "7" },
+    { "action": "fill", "target": { "label": "Quantity" }, "value": "12" },
+    { "action": "click", "target": { "role": "button", "name": "Update stock" }, "save": true },
+    { "action": "expectText", "target": { "testId": "inventory-status" }, "value": "Saved" },
+    { "action": "expectText", "target": { "testId": "quantity" }, "value": "12" }
+  ],
+  "observe": {
+    "record": { "source": "response", "url": "/api/stock", "field": "json" },
+    "quantity": { "source": "text", "target": { "testId": "quantity" } }
+  },
+  "expected": { "record": { "sku": "COFFEE", "quantity": 12, "revision": 2 }, "quantity": "12" },
+  "rejectedUpdate": {
+    "steps": [{ "action": "request", "method": "PUT", "path": "/api/stock", "data": { "quantity": -1 }, "expectStatus": 422 }]
+  }
+}

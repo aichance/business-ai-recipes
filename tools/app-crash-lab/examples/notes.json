@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "Notes — save survives reload and rejection",
+  "baseURL": "http://127.0.0.1:4173",
+  "path": "/?mode=fixed",
+  "reset": [],
+  "setup": [
+    { "action": "fill", "target": { "label": "Note" }, "value": "Buy coffee" },
+    { "action": "click", "target": { "role": "button", "name": "Save" }, "save": true },
+    { "action": "expectText", "target": { "testId": "status" }, "value": "Saved" }
+  ],
+  "observe": { "savedNote": { "source": "text", "target": { "testId": "saved" } } },
+  "expected": { "savedNote": "Buy coffee" },
+  "rejectedUpdate": {
+    "steps": [
+      { "action": "fill", "target": { "label": "Note" }, "value": "" },
+      { "action": "click", "target": { "role": "button", "name": "Save" } }
+    ],
+    "observe": { "message": { "source": "text", "target": { "testId": "status" } } },
+    "expected": { "message": "Rejected: note is empty" }
+  }
+}

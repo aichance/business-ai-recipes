@@ -1,0 +1,36 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Notes · App Crash Lab fixture</title>
+<style>*{box-sizing:border-box}body{background:#f0eee8;color:#172033;font:17px/1.5 system-ui,sans-serif;margin:0}main{max-width:820px;margin:70px auto;padding:30px}header{color:#667286;font-size:13px;letter-spacing:.09em}h1{font-size:54px;line-height:1.05;letter-spacing:-.05em;margin:24px 0}p{color:#526078}section{background:white;border:1px solid #d7d9df;border-radius:16px;padding:26px;margin:25px 0}label{display:block;font-weight:600}textarea,input{width:100%;font:inherit;padding:14px;margin:12px 0;border:1px solid #9dabc0;border-radius:8px}button,a.button{font:inherit;background:#254bf0;color:white;border:0;border-radius:8px;padding:11px 22px;cursor:pointer}output{display:block;white-space:pre-wrap;min-height:45px;font-size:27px;overflow-wrap:anywhere}.chip{font-size:13px;border-radius:15px;background:#ffdbb2;color:#643802;padding:6px 12px}small{display:block;color:#617088;margin-top:10px}.links a{color:#254bf0;margin-right:18px}#status{min-height:28px}</style>
+<main><header>APP CRASH LAB / SYNTHETIC FIXTURE</header><h1>It says “Saved.”<br>Did it survive?</h1><span class="chip" id="mode"></span><p>Deliberately broken and fixed versions of the same tiny app. This is a test fixture, not a discovered production incident.</p>
+<section id="notes"><label for="note">Note</label><textarea id="note" rows="3" placeholder="Something worth keeping"></textarea><button id="save">Save</button><p id="status" data-testid="status">Ready</p><small>Saved note</small><output data-testid="saved" id="saved"></output></section>
+<section id="inventory" hidden><label for="quantity">Quantity</label><input id="quantity" type="number"><button id="update">Update stock</button><p data-testid="inventory-status" id="inventory-status">Ready</p><small>Stored quantity (server)</small><output data-testid="quantity" id="stored-quantity"></output></section>
+<div class="links"><a href="/?mode=broken-reload">Forget on reload</a><a href="/?mode=broken-reject">Corrupt on rejection</a><a href="/?mode=fixed">Fixed</a><a href="/inventory">Inventory API</a></div><small>All data is synthetic. Notes use localStorage; inventory uses this disposable server's memory.</small></main>
+<script>
+const mode = new URL(location.href).searchParams.get('mode') || 'fixed';
+document.querySelector('#mode').textContent = mode;
+if (location.pathname === '/inventory') {
+  document.querySelector('#notes').hidden = true;
+  document.querySelector('#inventory').hidden = false;
+  async function readStock() { const stock = await (await fetch('/api/stock')).json(); document.querySelector('#stored-quantity').textContent = stock.quantity; document.querySelector('#quantity').value = stock.quantity; }
+  document.querySelector('#update').onclick = async () => {
+    const response = await fetch('/api/stock?mode=' + encodeURIComponent(mode), { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ quantity: Number(document.querySelector('#quantity').value) }) });
+    document.querySelector('#inventory-status').textContent = response.ok ? 'Saved' : 'Rejected: quantity must be nonnegative';
+    await readStock();
+  };
+  readStock();
+} else {
+  const stored = document.querySelector('#saved');
+  stored.textContent = localStorage.getItem('note') || '';
+  document.querySelector('#save').onclick = () => {
+    const value = document.querySelector('#note').value;
+    if (!value.trim()) {
+      if (mode === 'delayed-reject') setTimeout(() => { localStorage.setItem('note', value); stored.textContent = value; }, 120);
+      if (mode === 'broken-reject') { localStorage.setItem('note', value); stored.textContent = value; }
+      if (mode === 'accept-invalid') { localStorage.setItem('note', value); stored.textContent = value; document.querySelector('#status').textContent = 'Saved'; return; }
+      document.querySelector('#status').textContent = 'Rejected: note is empty'; return;
+    }
+    if (mode !== 'broken-reload') localStorage.setItem('note', value);
+    stored.textContent = value;
+    document.querySelector('#status').textContent = 'Saved';
+  };
+}
+</script></html>

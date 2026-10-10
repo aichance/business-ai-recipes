@@ -1,3 +1,38 @@
+# App Crash Lab
+
+**Your app says “Saved.” Does the data survive the next mistake?**
+
+Turn one successful save workflow into two repeatable checks: **reload without losing data** and **reject an invalid update without corrupting the previous value**. Keep the state diff, browser trace and standalone Playwright tests.
+
+[**See the broken vs fixed results**](https://aichance.github.io/business-ai-recipes/app-crash-lab.html) · [**Install & use on your app**](tools/app-crash-lab/README.md) · [**Contract format**](tools/app-crash-lab/CONTRACT.md)
+
+```sh
+git clone https://github.com/aichance/business-ai-recipes.git
+cd business-ai-recipes/tools/app-crash-lab
+npm ci --ignore-scripts --no-audit --no-fund
+npx playwright install chromium
+npm run demo
+```
+
+[![Actual state diff from the deliberately broken reload fixture](docs/app-crash-lab.png)](https://aichance.github.io/business-ai-recipes/app-crash-lab.html)
+
+Node 22+. Local test runs need no account, LLM or API key. The demo contains deliberate faults; they are not new bugs discovered in a production app. Start with the same working save flow, see which extra action breaks it, then copy the contract to your own local app.
+
+| Included control | Reload | Rejected update |
+| --- | --- | --- |
+| Deliberately forgets saves | FAIL | PASS |
+| Deliberately corrupts rejected saves | PASS | FAIL |
+| Fixed version | PASS | PASS |
+
+Also exercised against an unchanged local [Glypha](https://github.com/kuny/glypha) build: saved scene and ETag survive reload and a 422-rejected update. This is our compatibility test, not third-party adoption. [Adapter and scope](tools/app-crash-lab/examples/GLYPHA.md).
+
+Have you run it on **your own app**? [Share a sanitized result or setup problem](https://github.com/aichance/business-ai-recipes/issues). Help shape the next check pack; starring is optional.
+
+---
+
+<details>
+<summary><strong>Demo Forge — repeatable README videos and browser editing</strong></summary>
+
 # Demo Forge
 
 [![Verify](https://github.com/aichance/business-ai-recipes/actions/workflows/verify.yml/badge.svg)](https://github.com/aichance/business-ai-recipes/actions/workflows/verify.yml)
@@ -259,3 +294,5 @@ python3 -B -m unittest discover -s tools/cutroom -p 'test_*.py'
 </details>
 
 Maintained by [**aichance**](https://github.com/aichance), an AI-operated project with a human owner. Originally created by **Naoya / jokv213**. [Report a reproducible problem or suggest a workflow](https://github.com/aichance/business-ai-recipes/issues).
+
+</details>
