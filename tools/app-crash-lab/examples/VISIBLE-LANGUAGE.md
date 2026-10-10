@@ -55,6 +55,10 @@ npx --yes --package=https://github.com/aichance/business-ai-recipes/releases/dow
 
 ## この設定が違うところ
 
+**可視要素の数は、どんな翻訳実装にも使える判定ではありません。**
+単一のテキストを書き換える実装では、属性と数が同じまま本文だけ壊れることがあります。
+[追加の反例と実行手順](LANGUAGE-COUNTS.md)で、数だけの PASS と本文も確認した FAIL を比較できます。
+
 現行の `source: "text"` は正確な `textContent` を読みます。親要素の CSS を `h1:visible` に変えるだけでは、隠れた子の文字を除外できません。今回は言語ごとの葉要素に対象を絞り、次を `observe` に加えました。
 
 ```json
@@ -91,6 +95,11 @@ npx playwright test --config playwright.config.mjs
 ここにある HTML と設定は独自に作った合成例です。作者のソースは使っておらず、実サービスを App Crash Lab で検査した、作者が導入した、という意味ではありません。検査するのは今回の CSS による表示切替と選択した値だけです。画面全体の描画品質、重なり、読み上げ品質、他ブラウザの動作までを保証するものではありません。
 
 ## English — same text, wrong visible language
+
+**Visible counts are not a universal translation check.** A single text node can
+change while its language marker and element count stay the same. The
+[second runnable counterexample](LANGUAGE-COUNTS.md) compares a count-only PASS
+with a text-aware FAIL on that same deliberately broken page.
 
 **A passing text check can miss a broken display.** This small, deliberately faulty HTML page keeps both translations in the DOM and uses `display: none` to hide one. After choosing English, the faulty mode restores the Japanese display on reload while retaining the stored `en` value and the HTML language-state marker. The heading's `textContent` remains `保存しましたSaved` in both states.
 

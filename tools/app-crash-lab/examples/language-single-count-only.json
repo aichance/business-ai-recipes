@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "baseURL": "http://127.0.0.1:49734",
+  "path": "/language-single.html?mode=text-loss",
+  "timeoutMs": 3000,
+  "stabilityMs": 250,
+  "checks": [
+    "reload"
+  ],
+  "reset": [],
+  "setup": [
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Choose English"
+      },
+      "save": true
+    }
+  ],
+  "observe": {
+    "storedLanguage": {
+      "source": "localStorage",
+      "key": "example-single-language"
+    },
+    "declaredLanguage": {
+      "source": "attribute",
+      "target": {
+        "css": "html"
+      },
+      "attribute": "data-ui-language"
+    },
+    "visibleEnglish": {
+      "source": "count",
+      "target": {
+        "css": "#message[data-copy=\"en\"]:visible"
+      }
+    },
+    "visibleJapanese": {
+      "source": "count",
+      "target": {
+        "css": "#message[data-copy=\"ja\"]:visible"
+      }
+    }
+  },
+  "expected": {
+    "storedLanguage": "en",
+    "declaredLanguage": "en",
+    "visibleEnglish": 1,
+    "visibleJapanese": 0
+  },
+  "name": "language-single-count-only"
+}
