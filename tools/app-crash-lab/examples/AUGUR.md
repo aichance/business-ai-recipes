@@ -58,7 +58,7 @@ No rejection result is claimed, and no application fault is injected.
 Leave Augur running. Change into the printed report directory, then:
 
 ```sh
-npm install --no-save --package-lock=false --ignore-scripts @playwright/test@1.64.0
+npm install --prefix . --no-save --package-lock=false --ignore-scripts @playwright/test@1.64.0
 npx playwright test --config playwright.config.mjs
 ```
 

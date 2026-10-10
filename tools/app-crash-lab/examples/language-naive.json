@@ -1,0 +1,47 @@
+{
+  "name": "Hidden translation / naive observation",
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "baseURL": "http://127.0.0.1:49726",
+  "path": "/language.html?mode=display-loss",
+  "timeoutMs": 3000,
+  "stabilityMs": 250,
+  "checks": [
+    "reload"
+  ],
+  "reset": [],
+  "setup": [
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Choose English"
+      },
+      "save": true
+    }
+  ],
+  "observe": {
+    "storedLanguage": {
+      "source": "localStorage",
+      "key": "example-language"
+    },
+    "declaredLanguage": {
+      "source": "attribute",
+      "target": {
+        "css": "html"
+      },
+      "attribute": "data-ui-language"
+    },
+    "allHeadingText": {
+      "source": "text",
+      "target": {
+        "css": "#message"
+      }
+    }
+  },
+  "expected": {
+    "storedLanguage": "en",
+    "declaredLanguage": "en",
+    "allHeadingText": "保存しましたSaved"
+  }
+}

@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en" data-ui-language="ja" data-paint="ja">
+<meta charset="utf-8">
+<title>Visible language check — synthetic fixture</title>
+<style>
+body { font: 18px system-ui; max-width: 700px; margin: 60px auto; padding: 20px; }
+html[data-paint="ja"] [data-copy="en"], html[data-paint="en"] [data-copy="ja"] { display: none; }
+button { padding: 10px 24px; font: inherit; }
+</style>
+<h1 id="message"><span data-copy="ja">保存しました</span><span data-copy="en">Saved</span></h1>
+<p>Synthetic example: saved language and visible language can diverge.</p>
+<button id="english">Choose English</button>
+<script>
+const root = document.documentElement;
+const stored = localStorage.getItem('example-language');
+const broken = new URLSearchParams(location.search).get('mode') === 'display-loss';
+root.dataset.uiLanguage = stored || 'ja';
+root.dataset.paint = broken && stored ? 'ja' : (stored || 'ja');
+document.querySelector('#english').addEventListener('click', () => {
+  localStorage.setItem('example-language', 'en');
+  root.dataset.uiLanguage = 'en';
+  root.dataset.paint = 'en';
+});
+</script>
+</html>

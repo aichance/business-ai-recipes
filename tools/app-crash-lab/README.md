@@ -156,7 +156,7 @@ then install the test runner there before rerunning. Use the directory name
 from your run, not the illustrative `.crash-lab/my-first-run` above:
 
 ```sh
-npm install --no-save --package-lock=false --ignore-scripts @playwright/test@1.64.0
+npm install --prefix . --no-save --package-lock=false --ignore-scripts @playwright/test@1.64.0
 npx playwright test --config playwright.config.mjs
 ```
 
@@ -212,6 +212,10 @@ two patterns, a reusable contract and consistent debugging output. It does
 not claim a new testing technique or better bug detection than every other tool.
 
 ## More real-app examples
+
+The [TypeTrail check](examples/TYPETRAIL.md) completes a chapter through the UI and verifies its progress, completion marker and saved JSON after reload. Japanese instructions and an unchanged-source compatibility result are included.
+
+For a synthetic example of a misleading PASS, [compare saved language with visible language](examples/VISIBLE-LANGUAGE.md). The same display defect passes a full-text/storage check but fails once visible-language observations are added. Download the five-file example pack and reproduce all three outcomes with the existing 0.3.0 runner.
 
 The [Creator Frame Studio check](examples/CREATOR-FRAME.md) tests one wrong-schema project import against 11 unchanged editor values. It selects rejection only; file save/reopen is outside its automated coverage. A runnable JSON and standalone-test instructions are included.
 

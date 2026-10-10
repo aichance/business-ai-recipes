@@ -58,7 +58,7 @@ Open the absolute `index.html` report path printed by the CLI. Keep the editor
 server running. Change into the directory containing that report, then run:
 
 ```sh
-npm install --no-save --package-lock=false --ignore-scripts @playwright/test@1.64.0
+npm install --prefix . --no-save --package-lock=false --ignore-scripts @playwright/test@1.64.0
 npx playwright test --config playwright.config.mjs
 ```
 
