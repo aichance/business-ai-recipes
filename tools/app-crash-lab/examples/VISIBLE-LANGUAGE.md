@@ -1,5 +1,7 @@
 # テストは PASS。でも画面は違う言語だった
 
+[English explanation and runnable steps](#english--same-text-wrong-visible-language)
+
 保存値と DOM の文字列が一致しても、画面に見えている言語が正しいとは限りません。
 **公開版 App Crash Lab 0.3.0 で、同じ合成故障を「見逃す設定」と「検出する設定」を比べられる実行例です。**
 
@@ -87,3 +89,45 @@ npx playwright test --config playwright.config.mjs
 こどもニュースの作者による[英語モードの設計記事](https://qiita.com/kodomo-news/items/595f916fef0434f205e0)の、非表示の翻訳も `textContent` に含まれるという説明をきっかけに作りました。公開サイトでは英語設定が再読込後も保持され、日本語ページの現在地タブは日本語を示す動作を、私たちのブラウザ操作で確認しました。
 
 ここにある HTML と設定は独自に作った合成例です。作者のソースは使っておらず、実サービスを App Crash Lab で検査した、作者が導入した、という意味ではありません。検査するのは今回の CSS による表示切替と選択した値だけです。画面全体の描画品質、重なり、読み上げ品質、他ブラウザの動作までを保証するものではありません。
+
+## English — same text, wrong visible language
+
+**A passing text check can miss a broken display.** This small, deliberately faulty HTML page keeps both translations in the DOM and uses `display: none` to hide one. After choosing English, the faulty mode restores the Japanese display on reload while retaining the stored `en` value and the HTML language-state marker. The heading's `textContent` remains `保存しましたSaved` in both states.
+
+This is an independently written synthetic example, inspired by the [author's article about multilingual state](https://qiita.com/kodomo-news/items/595f916fef0434f205e0). It is not a bug claim about that author's service.
+
+| Contract | Page behavior | App Crash Lab / exported Playwright test |
+| --- | --- | --- |
+| `language-naive.json` | Deliberately loses the visible language | PASS / 1 passed: misses the fault |
+| `language-normal.json` | Restores the visible language correctly | PASS / 1 passed |
+| `language-display-loss.json` | Same deliberate fault as the first row | FAIL / 1 failed: catches it |
+
+The stronger contract adds counts of `#message [data-copy="en"]:visible` and `#message [data-copy="ja"]:visible`, expected to be `1` and `0`. On failure they become `0` and `1`. Marking only the parent `#message:visible` would not remove its hidden descendants from `textContent`. This comparison checks this CSS visibility switch; it does not test pixel fidelity, occlusion, accessibility or every browser.
+
+### Run the comparison
+
+Use Node 22+, npm and Python 3. [Download the five-file example ZIP](https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.3.0/app-crash-lab-visible-language-example.zip), extract it, and open a terminal in `visible-language`. The ZIP's Japanese guide and these English steps use the same HTML and JSON files. Start the local server and leave it running:
+
+```sh
+python3 -m http.server 49726 --bind 127.0.0.1
+```
+
+In a second terminal, enter the same folder and run:
+
+```sh
+npx --yes --package=@playwright/test@1.64.0 playwright install chromium
+npx --yes --package=https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.3.0/aichance-app-crash-lab-0.3.0.tgz app-crash-lab run language-naive.json --out report-naive
+npx --yes --package=https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.3.0/aichance-app-crash-lab-0.3.0.tgz app-crash-lab run language-normal.json --out report-normal
+npx --yes --package=https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.3.0/aichance-app-crash-lab-0.3.0.tgz app-crash-lab run language-display-loss.json --out report-display-loss
+```
+
+The last command intentionally exits with code `1`. Open each output folder's `index.html` for values, screenshots and the diff. Use a new `--out` folder when rerunning. Initial package/browser downloads need an internet connection; the local test itself needs no account or LLM.
+
+To replay a generated test without App Crash Lab, enter its report folder while the local server is still running:
+
+```sh
+npm install --prefix . --no-save --package-lock=false --ignore-scripts @playwright/test@1.64.0
+npx playwright test --config playwright.config.mjs
+```
+
+All three CLI and standalone outcomes above were verified on macOS arm64, Node 22.16.0, Playwright 1.64.0 and App Crash Lab 0.3.0 on 2026-10-11. Stop the local server with Ctrl+C afterwards. This example was added after the original 0.3.0 source archive; use the separate example ZIP or the current `examples/` files.
