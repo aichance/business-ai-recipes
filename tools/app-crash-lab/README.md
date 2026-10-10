@@ -39,7 +39,7 @@ Linux may also need `npx playwright install --with-deps chromium`.
 
 1. Start a **disposable local development instance** of your app.
 2. Copy [`examples/notes.json`](examples/notes.json) to `my-app.json`.
-3. Set your URL, save steps (`save: true` on the save trigger), saved values and invalid input/rejection signal.
+3. Set both `baseURL` (the local origin) and `path` (your app's route). The copied `/?mode=fixed` path belongs only to the demo. Set save steps (`save: true` on the save trigger), saved values and invalid input/rejection signal.
 4. Run:
 
 ```sh
@@ -110,6 +110,28 @@ The generated spec embeds the exact contract. If your app moves to a new
 port, update its `baseURL`; record that change when comparing results. To
 use the spec in another project, install `@playwright/test@1.64.0` and its
 Chromium browser there. Run with one worker so server resets do not race.
+
+### Rerun a generated test from the demo
+
+`npm run demo` stops its temporary server when finished. To try the complete
+run-and-rerun workflow with the fixed Notes fixture, keep this running in one terminal:
+
+```sh
+npm run demo:serve
+```
+
+In another terminal, from this package directory:
+
+```sh
+node cli.mjs run examples/notes.json --out .crash-lab/fixed-repro
+npx playwright test --config .crash-lab/fixed-repro/playwright.config.mjs
+```
+
+Both checks should pass. Use a new output directory for another run.
+The server defaults to `http://127.0.0.1:4173`; stop it with Ctrl+C afterward.
+To rerun a spec from the earlier three-version demo instead, change `baseURL`
+in that output's `repro.spec.mjs` to this server's address, keeping its `path`
+and expected values unchanged. Its original temporary port is no longer live.
 
 `PASS` means the selected values matched after the configured check.
 `FAIL` means the selected state changed or the expected rejection did not
