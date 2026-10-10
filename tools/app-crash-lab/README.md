@@ -1,5 +1,7 @@
 # App Crash Lab
 
+[日本語で試す・自分のアプリへ導入する](#japanese-setup)
+
 **Your app says “Saved.” Does the data survive the next mistake?**
 
 Describe one working save flow and the values worth keeping. App Crash Lab
@@ -240,3 +242,123 @@ on them.
 Development: `npm test` runs actual browser checks, fault controls, HTTP-state
 checks and reruns the generated specs. See `tests/`. Maintained by aichance
 with AI assistance; report facts and limitations are reviewed against runs.
+
+
+---
+
+<a id="japanese-setup"></a>
+## 日本語：試すところから、自分のアプリへ
+
+**「保存しました」の後も、その値は残っていますか？**
+App Crash Labは、正常に保存できる操作を1つ設定し、次の2つを検査します。
+
+- 再読み込みした後も、保存した値が残る。
+- 無効な更新が拒否された後も、直前の正常な値が壊れない。
+
+結果には、保存値の前後の差分・ブラウザtrace・単独で再実行できるPlaywrightテストが含まれます。
+実行する操作と期待値はJSONで指定します。アプリの仕様や保存場所を自動で推測するツールではありません。
+
+### まず、インストールせずに体験する
+
+[日本語のブラウザ体験ページ](https://aichance.github.io/business-ai-recipes/test-the-test-ja.html)で、
+「英語を保存 → 再読込」を押し、実際の本文を検査対象に加えてください。
+同じ画面でも、確認する値によってPASSとFAILが変わる例を試せます。
+これは故障を仕込んだ教材です。自分のアプリの検査や、Node CLIの実行ではありません。
+
+### CLIのデモを2コマンドで動かす
+
+**Node.js 22以上とnpm**が必要です。書き込み可能な作業フォルダーで実行します。
+初回は依存パッケージとChromiumをダウンロードします。cloneは不要です。
+
+```sh
+npx --yes --package=@playwright/test@1.64.0 playwright install chromium
+npx --yes --package=https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.3.0/aichance-app-crash-lab-0.3.0.tgz app-crash-lab demo
+```
+
+終了時に表示される **`index.html`の絶対パス**をブラウザで開きます。
+結果は作業フォルダーの`.crash-lab/`配下に保存されます。
+Linuxでブラウザ用のシステムライブラリが不足する場合は、最初のコマンドを
+`npx --yes --package=@playwright/test@1.64.0 playwright install --with-deps chromium`
+へ変えてください。システムライブラリの導入には管理者権限が必要になる場合があります。
+
+| デモの種類 | 再読み込み | 無効な更新の拒否後 |
+| --- | --- | --- |
+| 保存を忘れる故障例 | FAIL | PASS |
+| 拒否した更新で値を壊す故障例 | PASS | FAIL |
+| 修正版 | PASS | PASS |
+
+このFAILは教材に仕込んだ故障を検出した結果です。デモだけでは、あなたのアプリは検査していません。
+
+### 自分のアプリを検査する
+
+合成データを使う、使い捨てのローカル開発環境を起動してください。
+テストはアプリを操作して保存するので、実データが入った環境では実行しないでください。
+
+1. [notes.json](examples/notes.json)を`my-app.json`として保存します。GitHubなら **Raw → 名前を付けて保存**で取得できます。
+2. `baseURL`と`path`を自分のアプリへ合わせます。元の`/?mode=fixed`はデモ専用です。
+3. 以下の対応表に沿って、画面の項目・保存操作・期待値を書き換えます。
+4. 同じ作業フォルダーから実行します。
+
+```sh
+npx --yes --package=https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.3.0/aichance-app-crash-lab-0.3.0.tgz app-crash-lab run my-app.json
+```
+
+| JSONの項目 | 自分のアプリで指定するもの |
+| --- | --- |
+| `setup` | 正常な入力、保存ボタン、保存完了の確認。保存のきっかけとなる操作に`save: true`を付ける |
+| `observe` / `expected` | 保存後に残るべきデータと、その既知の正常値。編集中の下書きやエラー文だけを見ない |
+| `rejectedUpdate.steps` | アプリの仕様上、拒否される無効な更新操作 |
+| `rejectedUpdate.observe` / `expected` | 今回の拒否が完了したことを確認できる表示や応答 |
+| `reset` | 必要な場合のデータ初期化。ブラウザを分けてもサーバー側の記録は初期化されない |
+
+完全な形式と対応アクションは[CONTRACT.md](CONTRACT.md)にあります。
+拒否の表示と保存値は別に観測します。[失敗処理の完了を待つ比較例](examples/failure-boundary/README.md)では、
+値が正しくても早く読みすぎると故障を見逃すケースを再現できます。
+ネイティブ`alert()`でJSON読込を拒否するアプリなら、[Setheraの設定例](examples/SETHERA.md)も参照できます。
+
+### 設定作成を、普段のコーディングエージェントに頼む
+
+次の依頼文を、**検査対象のアプリのプロジェクト内**で使ってください。
+エージェントの利用は任意で、CLI自体はLLMやAPIキーを使いません。
+作られた設定と結果は確認してください。アプリのソースや個人データをIssueへ貼る必要はありません。
+
+```text
+App Crash Lab 0.3.0で、この使い捨てのローカル開発アプリを検査してください。
+形式と設定例を読んでから、実際の保存操作・画面要素・入力検証を確認してください。
+https://github.com/aichance/business-ai-recipes/blob/app-crash-lab-v0.3.0/tools/app-crash-lab/CONTRACT.md
+https://github.com/aichance/business-ai-recipes/blob/app-crash-lab-v0.3.0/tools/app-crash-lab/examples/notes.json
+
+合成データを正常に保存し、再読み込みと無効な更新の拒否後に同じ保存値を確認する
+my-app.jsonを作ってください。編集中の下書きやエラー文を、保存済みデータと混同しないでください。
+拒否処理の完了も確認し、必要ならサーバー側データのresetを設定してください。
+アプリ本体を書き換えたり、PASSにするために期待値を緩めたりしないでください。
+
+Node 22以上を確認して、次を実行してください。
+npx --yes --package=@playwright/test@1.64.0 playwright install chromium
+npx --yes --package=https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.3.0/aichance-app-crash-lab-0.3.0.tgz app-crash-lab run my-app.json
+
+検査結果、前後の値の差分、レポートの絶対パス、生成されたrepro.spec.mjsを示してください。
+観測や拒否の確認がこの形式で表せなければ、検査できない点を説明してください。
+```
+
+### 結果を読む・再実行する
+
+**PASS**は設定した値が保たれたこと、**FAIL**は確認した差異や失敗があることを示します。
+基準値・拒否の確認・必要な観測が得られない場合は、PASSと解釈しないでください。
+レポートの段階・メッセージを読み、設定の不備とアプリの挙動を区別します。
+
+生成されたPlaywrightテストを再実行するときは、対象アプリを起動したまま、
+表示された**レポートのフォルダー**へ移動して次を実行します。
+
+```sh
+npm install --prefix . --no-save --package-lock=false --ignore-scripts @playwright/test@1.64.0
+npx playwright test --config playwright.config.mjs
+```
+
+デモは実行後に一時サーバーを停止するため、そのままでは再実行できません。
+デモの再実行手順は[こちら](#rerun-a-generated-test-from-the-demo)です。
+利用者のアプリ・対応環境全体の安全性や品質を保証する検査ではありません。
+実行にはアカウント・APIキー・有料プランは不要です。MITライセンスで公開しています。
+
+試した結果や設定で止まった箇所は、[GitHub Issues](https://github.com/aichance/business-ai-recipes/issues)へ
+日本語で書けます。実データや認証情報は含めず、環境・実行した検査・結果を教えてください。
