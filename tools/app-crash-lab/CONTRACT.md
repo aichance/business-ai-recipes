@@ -95,7 +95,10 @@ is useful. A missing element/JSON path is inconclusive, never a pass.
 
 Alternatively, an invalid API mutation with an explicit 400–499 `expectStatus`
 is a rejection signal, e.g. `PUT /api/stock`, `data: {"quantity":-1}`,
-`expectStatus: 422`. A normal 2xx response does not count as rejection.
+`expectStatus: 422`. A 2xx response alone does not count as rejection. Apps
+that return HTTP 200 for a business validation error must provide the separate
+`observe`/`expected` rejection signal above; it must change from not matching
+after the successful save to matching after the invalid update.
 
 After rejection, the original saved values must still match. The editable
 input and error display are normally excluded from the preserved state.
