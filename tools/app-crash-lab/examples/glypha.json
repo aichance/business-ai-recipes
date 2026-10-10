@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "Glypha — saved scene survives reload and HTTP 422",
+  "baseURL": "http://127.0.0.1:4394",
+  "path": "/",
+  "timeoutMs": 4000,
+  "reset": [],
+  "setup": [
+    {
+      "action": "request",
+      "method": "PUT",
+      "path": "/content",
+      "data": "--crash-lab-synthetic-glypha\r\nContent-Disposition: form-data; name=\"content\"; filename=\"content.json\"\r\nContent-Type: application/json\r\n\r\n{\"format\": 1, \"canvas\": {\"width\": 1920, \"height\": 1080}, \"schedule\": {\"utcOffset\": \"+09:00\", \"defaultScene\": \"event\", \"daily\": []}, \"scenes\": {\"event\": {\"background\": {\"color\": \"#183848\"}, \"elements\": [{\"type\": \"text\", \"x\": 120, \"y\": 100, \"width\": 1680, \"height\": 180, \"text\": \"AI活用ハンズオン\", \"fontSize\": 96, \"color\": \"#FFFFFF\", \"align\": \"left\"}, {\"type\": \"text\", \"x\": 120, \"y\": 380, \"width\": 1680, \"height\": 180, \"text\": \"会場 A / 14:00 開始\", \"fontSize\": 80, \"color\": \"#FFFFFF\", \"align\": \"left\"}, {\"type\": \"text\", \"x\": 120, \"y\": 700, \"width\": 1680, \"height\": 180, \"text\": \"これは合成データを使った検証画面です。\", \"fontSize\": 48, \"color\": \"#FFFFFF\", \"align\": \"left\"}]}}}\r\n--crash-lab-synthetic-glypha--\r\n",
+      "headers": {
+        "Content-Type": "multipart/form-data; boundary=crash-lab-synthetic-glypha"
+      },
+      "expectStatus": 200,
+      "save": true
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": "canvas[aria-label=\"Glypha scene\"]"
+      }
+    }
+  ],
+  "afterReload": [
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": "canvas[aria-label=\"Glypha scene\"]"
+      }
+    }
+  ],
+  "observe": {
+    "display": {
+      "source": "response",
+      "url": "/display",
+      "field": "json"
+    },
+    "etag": {
+      "source": "response",
+      "url": "/display",
+      "field": "header",
+      "header": "etag"
+    },
+    "caption": {
+      "source": "response",
+      "url": "/display",
+      "field": "json",
+      "jsonPath": [
+        "ast",
+        "elements",
+        1,
+        "text"
+      ]
+    }
+  },
+  "expected": {
+    "caption": "会場 A / 14:00 開始"
+  },
+  "rejectedUpdate": {
+    "steps": [
+      {
+        "action": "request",
+        "method": "PUT",
+        "path": "/content",
+        "data": "--crash-lab-synthetic-glypha\r\nContent-Disposition: form-data; name=\"content\"; filename=\"content.json\"\r\nContent-Type: application/json\r\n\r\n{\"format\": 1, \"canvas\": {\"width\": 1920, \"height\": 1080}, \"schedule\": {\"utcOffset\": \"+09:00\", \"defaultScene\": \"event\", \"daily\": []}, \"scenes\": {\"event\": {\"background\": {\"color\": \"#183848\"}, \"elements\": [{\"type\": \"text\", \"x\": 1900, \"y\": 100, \"width\": 1680, \"height\": 180, \"text\": \"AI活用ハンズオン\", \"fontSize\": 96, \"color\": \"#FFFFFF\", \"align\": \"left\"}, {\"type\": \"text\", \"x\": 120, \"y\": 380, \"width\": 1680, \"height\": 180, \"text\": \"会場 A / 14:00 開始\", \"fontSize\": 80, \"color\": \"#FFFFFF\", \"align\": \"left\"}, {\"type\": \"text\", \"x\": 120, \"y\": 700, \"width\": 1680, \"height\": 180, \"text\": \"これは合成データを使った検証画面です。\", \"fontSize\": 48, \"color\": \"#FFFFFF\", \"align\": \"left\"}]}}}\r\n--crash-lab-synthetic-glypha--\r\n",
+        "headers": {
+          "Content-Type": "multipart/form-data; boundary=crash-lab-synthetic-glypha"
+        },
+        "expectStatus": 422
+      }
+    ]
+  }
+}
