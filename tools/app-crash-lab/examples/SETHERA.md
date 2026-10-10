@@ -54,11 +54,27 @@ The runner dismissed the alert normally. It compared stored nodes, piece
 data, edges and paper settings, plus the rendered label, value and piece count.
 The two generated standalone Playwright tests also passed.
 
-This does not establish the author's use of App Crash Lab, cover every Sethera
-feature, or prove browser/process-crash recovery. Native alert handling is a
+Our local verification does not cover every Sethera feature or prove
+browser/process-crash recovery. Native alert handling is a
 runner feature; Sethera source and expected values were not changed to pass.
 Export/download, calculations, IndexedDB and concurrent edits are outside this
 fixture. The separate checks each begin in a new browser context.
 
 If you adapt this to your app, observe the saved/domain record rather than
 the editable draft. Declare the real rejection message and use synthetic data.
+
+## Independent author report
+
+On 2026-10-10 at 21:04 JST, [Sethera's author reported](https://qiita.com/cuculhart/items/4425ab63e6b1dd497ae1#comment-4dfcb4ac9ecead546607)
+running the two App Crash Lab checks on Windows with Node v22.16.0 and
+Playwright 1.64.0: reload PASS, rejected-update PASS, and both generated
+standalone Playwright tests PASS. They also reported matching the ZIP's
+published SHA-256.
+
+The same comment reports reusing the contract on Sethera **v0.5.0
+(`5c81c5d`)**, with both checks passing. The author plans to use it before
+future releases; that intention is not evidence of future runs.
+
+This is one independent user's public report, not test logs replayed by us
+or a general Windows compatibility guarantee. Our pinned v0.4.0 instructions
+and local verification above remain separate from the author's v0.5.0 run.
