@@ -51,6 +51,8 @@ EXPECTED_FILES = {
     "tools/app-crash-lab/examples/language-display-loss.json",
     "tools/app-crash-lab/examples/notes.json",
     "tools/app-crash-lab/examples/pixie.json",
+    "tools/app-crash-lab/examples/pixie-roundtrip/playwright.config.mjs",
+    "tools/app-crash-lab/examples/pixie-roundtrip/roundtrip.spec.mjs",
     "tools/app-crash-lab/examples/tunoron.json",
     "tools/app-crash-lab/examples/typetrail.json",
     "tools/app-crash-lab/examples/sethera.json",

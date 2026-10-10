@@ -60,7 +60,64 @@ Our macOS arm64 / Node 22.16.0 / Playwright 1.64.0 run passed the one generated
 test. It depends on Playwright, not the App Crash Lab CLI. Stop the local server
 with Ctrl+C when done.
 
-## Scope
+## Also check the downloaded file and a fresh import
+
+The original contract checks five exact input values. After the author's
+[question about end-to-end integrity](https://bsky.app/profile/ibloud.xyz/post/3mxk57g3pa22z),
+we added a **separate, handwritten Playwright test** for the portable JSON
+boundary. This is not an additional check implemented by the 0.3.0 CLI.
+
+Save these two files into the same empty working folder:
+
+- [`roundtrip.spec.mjs`](pixie-roundtrip/roundtrip.spec.mjs)
+- [`playwright.config.mjs`](pixie-roundtrip/playwright.config.mjs)
+
+Keep the same disposable PIXIE server running on `127.0.0.1:49731`. From the
+folder containing those two files, run:
+
+```sh
+npm install --prefix . --no-save --package-lock=false --ignore-scripts @playwright/test@1.64.0
+npx playwright install chromium
+npx playwright test --config playwright.config.mjs
+```
+
+The test uses the UI to prepare synthetic text and one **synthetic,
+user-reported publication-link record** pointing to `example.com`. It never
+opens a sharing destination or posts anything. Requests to other origins are
+blocked. It then:
+
+1. Downloads the actual JSON and checks the prepared metadata and receipt.
+2. Rejects one unsupported import, downloads again, and compares the complete
+   parsed JSON to the first file.
+3. Opens a fresh browser context, imports the first downloaded file, checks the
+   five visible input values, rights choice, destination and recorded link, then
+   downloads again and compares the complete parsed JSON.
+4. Checks that import invalidates the previous review/handoff, as PIXIE intends.
+
+**Observed: 1 passed** against the unchanged pinned source on macOS arm64,
+Node 22.16.0 and Playwright 1.64.0. The three downloaded JSON objects matched
+across all 12 top-level fields, including `pixie_id` and the one receipt.
+
+We also tested a deliberately modified local control that changes only
+`pixie_id` after import. The five visible input values still matched, but the
+full JSON comparison failed on `pixie_id`. This control is our seeded defect,
+not a bug found in the author's original app.
+
+Outputs are under `.crash-lab/pixie-roundtrip/` in the current working folder:
+`results.json`, three downloaded JSON files, screenshots and a Playwright trace.
+Playwright replaces its output on another run; copy evidence first if needed.
+The config accepts `PIXIE_BASE_URL` for another loopback URL and
+`PIXIE_TEST_OUTPUT_DIR` for a separate output folder. Stop your local server
+with Ctrl+C when finished.
+
+This expands coverage to the **portable metadata file**. Media bytes are
+deliberately excluded by PIXIE's draft format. Account identity/authentication,
+actual destination publishing, browser/device coverage, concurrent edits,
+every invalid input, and restoration of arbitrary histories remain untested.
+The one receipt is synthetic; the test does not verify that its URL represents
+a real publication. JSON objects are compared, not formatting/byte identity.
+
+## Scope of the original five-field contract
 
 The automated result covers one unsupported-schema import and five observed
 input values over a 250 ms stability window. It does not verify the downloaded
