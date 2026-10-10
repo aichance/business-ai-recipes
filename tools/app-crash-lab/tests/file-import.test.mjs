@@ -5,7 +5,10 @@ import { mkdtemp, rm, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawn } from 'node:child_process';
+import { chromium } from '@playwright/test';
 import { runContract } from '../lib/runner.mjs';
+import { validateContract } from '../lib/contract.mjs';
+import { executeCheck, confineContext } from '../lib/protocol.mjs';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const document = { title: 'Synthetic melody — 合成曲', notes: [60, 64], bpm: 145 };
@@ -38,11 +41,13 @@ async function startFixture() {
       try {
         const doc = JSON.parse(await event.target.files[0].text());
         if (mode === 'never-save') return;
-        setTimeout(() => {
+        const save = () => {
           const id = Math.random().toString(36).slice(2);
           localStorage.setItem('doc.' + id, JSON.stringify(doc)); localStorage.setItem('current', id);
           document.querySelector('#status').textContent = 'Saved';
-        }, 120);
+        };
+        if (mode === 'gated-save') window.commitImport = save;
+        else setTimeout(save, 120);
       } catch {
         if (mode === 'broken-reject') {
           const doc = JSON.parse(localStorage.getItem('doc.' + current()));
@@ -68,6 +73,31 @@ test('file imports, dynamic storage keys and portable failure evidence', { timeo
   t.after(async () => { await app.close(); await rm(temp, { recursive: true, force: true }); });
   const run = (name, changes = {}) => runContract({ ...contract, baseURL: app.baseURL, ...changes }, { out: join(temp, name) });
   let fixed, broken;
+  await t.test('a save completing between browser reads cannot create a mixed storage baseline', async () => {
+    const browser = await chromium.launch();
+    const context = await browser.newContext({ serviceWorkers: 'block' });
+    try {
+      await confineContext(context, app.baseURL);
+      const page = await context.newPage();
+      const evaluate = page.evaluate.bind(page);
+      let firstRead = true;
+      // Complete the queued save only after the first observation has returned.
+      // This makes the CI timing boundary deterministic without changing verdicts.
+      page.evaluate = async (...args) => {
+        const value = await evaluate(...args);
+        if (firstRead) {
+          firstRead = false;
+          await page.waitForFunction(() => typeof window.commitImport === 'function');
+          await evaluate(() => window.commitImport());
+        }
+        return value;
+      };
+      const result = await executeCheck(page, validateContract({ ...contract, baseURL: app.baseURL, path: '/?mode=gated-save', timeoutMs: 3000 }), 'reload');
+      assert.equal(result.status, 'pass', JSON.stringify(result));
+      assert.deepEqual(result.before.saved, document);
+      assert.deepEqual(result.after.saved, document);
+    } finally { await context.close(); await browser.close(); }
+  });
   await t.test('waits for delayed persistence, then both patterns preserve the full JSON', async () => {
     fixed = await run('fixed');
     assert.deepEqual(fixed.results.map(r => r.status), ['pass', 'pass']);
