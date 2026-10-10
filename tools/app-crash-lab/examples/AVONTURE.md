@@ -48,7 +48,7 @@ it prints `/your/work/app-crash-lab-report/index.html`, run
 `cd /your/work/app-crash-lab-report`. Then run:
 
 ```sh
-npm install --no-save --package-lock=false --ignore-scripts @playwright/test@1.64.0
+npm install --prefix . --no-save --package-lock=false --ignore-scripts @playwright/test@1.64.0
 npx playwright test --config playwright.config.mjs
 ```
 
