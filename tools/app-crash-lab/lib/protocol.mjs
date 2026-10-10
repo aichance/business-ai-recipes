@@ -75,6 +75,13 @@ async function applySteps(page, contract, steps, phase, events) {
 
 async function readState(page, contract, probes) {
   const result = {};
+  const storageProbes = Object.entries(probes).filter(([, probe]) => probe.source.endsWith('Storage'));
+  // A delayed save must not split one snapshot into old and new storage values.
+  const storageValues = storageProbes.length ? await page.evaluate(entries => Object.fromEntries(entries.map(([name, { source, key, keyFrom, keyPrefix = '' }]) => {
+    const storage = window[source];
+    const suffix = keyFrom === undefined ? null : storage.getItem(keyFrom);
+    return [name, keyFrom !== undefined && suffix === null ? null : storage.getItem(keyFrom === undefined ? key : keyPrefix + suffix)];
+  })), storageProbes) : {};
   for (const [name, probe] of Object.entries(probes)) {
     let value;
     if (['text', 'value', 'attribute', 'count'].includes(probe.source)) {
@@ -87,12 +94,7 @@ async function readState(page, contract, probes) {
         else value = await locator.getAttribute(probe.attribute);
       }
     } else if (probe.source.endsWith('Storage')) {
-      value = await page.evaluate(({ source, key, keyFrom, keyPrefix = '' }) => {
-        const storage = window[source];
-        const suffix = keyFrom === undefined ? null : storage.getItem(keyFrom);
-        if (keyFrom !== undefined && suffix === null) return null;
-        return storage.getItem(keyFrom === undefined ? key : keyPrefix + suffix);
-      }, probe);
+      value = storageValues[name];
     } else {
       const response = await page.context().request.get(scopedURL(contract.baseURL, probe.url), { maxRedirects: 0, timeout: contract.timeoutMs });
       try {
