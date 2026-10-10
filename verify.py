@@ -16,6 +16,8 @@ from recipe import Refused, apply_local, approve, prepare, read_json, validate_p
 
 EXPECTED_FILES = {
     "docs/test-the-test.html",
+    "docs/test-the-test-ja.html",
+    "docs/test-the-test.js",
     "docs/app-crash-lab-language-single.html",
     "docs/app-crash-lab.html",
     "docs/app-crash-lab.png",
