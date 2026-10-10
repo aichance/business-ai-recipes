@@ -31,9 +31,36 @@ for (const [label, edit] of [
   ['GET masquerading as a save', c => c.setup = [{ action: 'request', method: 'GET', path: '/', expectStatus: 200, save: true }]],
   ['5xx masquerading as rejection', c => c.rejectedUpdate = { steps: [{ action: 'request', method: 'PUT', path: '/', expectStatus: 500 }] }],
   ['multiple selectors', c => c.setup[0].target = { label: 'Note', css: '#note' }],
+  ['storage key and pointer together', c => c.observe.savedNote = { source: 'localStorage', key: 'document', keyFrom: 'current' }],
+  ['empty storage pointer name', c => c.observe.savedNote = { source: 'localStorage', keyFrom: '' }],
+  ['storage prefix without pointer', c => c.observe.savedNote = { source: 'localStorage', key: 'document', keyPrefix: 'doc.' }],
+  ['storage pointer on DOM probe', c => c.observe.savedNote.keyFrom = 'current'],
+  ['file field on click', c => c.setup[1].file = { name: 'x.json', mimeType: 'application/json', text: '{}' }],
 ]) {
   test(`refuses ${label}`, () => { const c = structuredClone(sample); edit(c); assert.throws(() => validateContract(c)); });
 }
+test('literal file and same-storage pointer validate without filesystem access', () => {
+  const c = structuredClone(sample);
+  c.setup = [{ action: 'setFile', target: { css: '#file' }, file: { name: '合成.json', mimeType: 'application/json', text: '{"title":"テスト"}' }, save: true }];
+  c.observe.savedNote = { source: 'localStorage', keyFrom: 'current', keyPrefix: 'doc.', parse: 'json' };
+  assert.equal(validateContract(c).setup[0].file.text, '{"title":"テスト"}');
+  for (const file of [
+    { name: '../private.json', mimeType: 'application/json', text: '{}' },
+    { name: 'dir\\private.json', mimeType: 'application/json', text: '{}' },
+    { name: 'x\n.json', mimeType: 'application/json', text: '{}' },
+    { name: '..', mimeType: 'application/json', text: '{}' },
+    { name: 'x'.repeat(129), mimeType: 'application/json', text: '{}' },
+    { name: 'x.json', mimeType: 'invalid', text: '{}' },
+    { name: 'x.json', mimeType: 'application/json', text: 'あ'.repeat(21846) },
+    { name: 'x.json', mimeType: 'application/json', text: 123 },
+    { name: 'x.json', mimeType: 'application/json', text: '{}', path: '/private' },
+  ]) {
+    const bad = structuredClone(c); bad.setup[0].file = file;
+    assert.throws(() => validateContract(bad));
+  }
+  c.setup[0].file.text = 'x'.repeat(65536);
+  assert.equal(validateContract(c).setup[0].file.text.length, 65536);
+});
 test('diff keeps types, order and absent values meaningful', () => {
   assert.equal(differences({ n: 2 }, { n: '2' }).length, 1);
   assert.equal(differences({ values: ['a', 'b'] }, { values: ['b', 'a'] }).length, 2);
