@@ -33,6 +33,11 @@ language, declared marker and both counts still match.
 
 ## Run it
 
+**[Try the browser comparison first — no install](https://aichance.github.io/business-ai-recipes/test-the-test.html).**
+It uses the same synthetic fixture with a small browser harness and an actual
+reload. Toggle the text observation to compare the verdicts. The Node CLI and
+exported Playwright tests still run locally with the commands below.
+
 Use Node 22+, npm and Python 3. [Download this comparison ZIP](https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.3.0/app-crash-lab-single-text-example.zip)
 and enter the extracted `single-text-language` folder. Alternatively, in a current
 checkout enter `tools/app-crash-lab/examples`. These four `language-single*` files
@@ -80,6 +85,10 @@ for prompting this explicit counterexample. This is our own seeded fault, not a
 bug claim about someone else's app or an additional third-party adoption report.
 
 ## 日本語：要素数と本文は別の観測
+
+[ブラウザだけで先に試せます](https://aichance.github.io/business-ai-recipes/test-the-test.html)。
+保存→再読込を実行し、本文の観測を追加すると同じ故障の判定が変わります。
+この体験画面はCLIとは別の小さなブラウザ実装です。
 
 前の例は、日本語と英語の2つの子要素を `display: none` で切り替えていました。
 今回の追加例は、1つの見出しの文字を書き換える実装です。再読込後に本文だけ
