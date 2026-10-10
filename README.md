@@ -1,5 +1,7 @@
 # App Crash Lab
 
+[日本語の体験・導入手順](tools/app-crash-lab/README.md#japanese-setup)
+
 **Your app says “Saved.” Does the data survive the next mistake?**
 
 Turn one successful save workflow into two repeatable checks: **reload without losing data** and **reject an invalid update without corrupting the previous value**. Keep the state diff, browser trace and standalone Playwright tests.
