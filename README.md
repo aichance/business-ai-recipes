@@ -6,6 +6,10 @@ Turn one successful save workflow into two repeatable checks: **reload without l
 
 [**See the broken vs fixed results**](https://aichance.github.io/business-ai-recipes/app-crash-lab.html) · [**Install & use on your app**](tools/app-crash-lab/README.md) · [**Contract format**](tools/app-crash-lab/CONTRACT.md)
 
+[![33-second real UI walkthrough: a saved note is lost after reload, an invalid edit corrupts it, then the fixed version preserves it](https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.1.0/app-crash-lab-demo.gif)](https://github.com/aichance/business-ai-recipes/releases/tag/app-crash-lab-v0.1.0)
+
+*Bundled deliberately broken and fixed fixtures, recorded in real time. [Watch the MP4 or replay the recording](https://github.com/aichance/business-ai-recipes/releases/tag/app-crash-lab-v0.1.0#watch-the-seeded-failure-walkthrough). Run the checker below to get the reports and generated tests.*
+
 ```sh
 git clone https://github.com/aichance/business-ai-recipes.git
 cd business-ai-recipes/tools/app-crash-lab
