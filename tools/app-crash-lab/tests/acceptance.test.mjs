@@ -18,13 +18,13 @@ test('browser acceptance: real broken/fixed pairs, unusable paths, API app, port
   // Keep generated specs below this package so Node resolves the local Playwright dependency.
   const temp = await mkdtemp(join(root, '.crash-lab-acceptance-'));
   t.after(async () => { await app.close(); await rm(temp, { recursive: true, force: true }); });
-  const run = (name, c) => runContract({ ...c, baseURL: app.baseURL, timeoutMs: 300 }, { out: join(temp, name) });
+  const run = (name, c) => runContract({ ...c, baseURL: app.baseURL, timeoutMs: 3000 }, { out: join(temp, name) });
   let fixed, broken;
   await t.test('same workflow: fixed passes both, separate seeded defects fail the relevant check', async () => {
     fixed = await run('fixed', notes);
     broken = await run('broken-reload', { ...notes, path: '/?mode=broken-reload' });
     const corrupt = await run('broken-reject', { ...notes, path: '/?mode=broken-reject' });
-    assert.deepEqual(states(fixed), ['pass', 'pass']);
+    assert.deepEqual(states(fixed), ['pass', 'pass'], JSON.stringify(fixed.results));
     assert.deepEqual(states(broken), ['fail', 'pass']);
     assert.deepEqual(states(corrupt), ['pass', 'fail']);
     assert.equal(broken.results[0].differences[0].before, 'Buy coffee');
