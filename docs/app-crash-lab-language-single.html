@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en" data-ui-language="ja">
+<meta charset="utf-8">
+<title>Single text node — synthetic language control</title>
+<style>
+body { font: 18px system-ui; max-width: 700px; margin: 60px auto; padding: 20px; }
+button { padding: 10px 24px; font: inherit; }
+</style>
+<h1 id="message" data-copy="ja">保存しました</h1>
+<p>Synthetic example: a language marker can disagree with the text it labels.</p>
+<button id="english">Choose English</button>
+<script>
+const root = document.documentElement;
+const message = document.querySelector('#message');
+const stored = localStorage.getItem('example-single-language');
+const broken = new URLSearchParams(location.search).get('mode') === 'text-loss';
+const language = stored || 'ja';
+root.dataset.uiLanguage = language;
+message.dataset.copy = language;
+message.textContent = broken && stored ? '保存しました' : (language === 'en' ? 'Saved' : '保存しました');
+document.querySelector('#english').addEventListener('click', () => {
+  localStorage.setItem('example-single-language', 'en');
+  root.dataset.uiLanguage = 'en';
+  message.dataset.copy = 'en';
+  message.textContent = 'Saved';
+});
+</script>
+</html>
