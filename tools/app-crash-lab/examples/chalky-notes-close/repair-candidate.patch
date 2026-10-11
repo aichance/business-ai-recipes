@@ -1,0 +1,121 @@
+--- a/src/lib/components/MarkdownNotes.svelte
++++ b/src/lib/components/MarkdownNotes.svelte
+@@ -58,2 +58,16 @@
+ 
++  /** Read the live document before a parent commits or closes the editor.
++   * The markdownUpdated listener can still have a debounced update pending. */
++  export function flush(): string {
++    if (!crepe || !ready || value !== shown) return value;
++    const md = crepe.getMarkdown();
++    if (md !== serialized) {
++      serialized = md;
++      shown = md;
++      value = md;
++      oninput?.();
++    }
++    return value;
++  }
++
+   let root = $state<HTMLDivElement>();
+@@ -68,2 +82,5 @@
+   let shown = "";
++  // Keep the editor's normalized baseline separate from the parent bytes.
++  // Opening an untouched note must not write remark's normalization back.
++  let serialized = "";
+   // Guards every async continuation: bumped on rebuild and unmount so a slow
+@@ -160,3 +177,4 @@
+           // and dirty it before the user touched anything.
+-          if (!created || myGen !== gen || md === shown) return;
++          if (!created || myGen !== gen || value !== shown || md === serialized) return;
++          serialized = md;
+           shown = md;
+@@ -167,3 +185,2 @@
+       await c.create();
+-      created = true;
+       if (myGen !== gen) {
+@@ -172,2 +189,4 @@
+       }
++      serialized = c.getMarkdown();
++      created = true;
+       // Linkify a URL pasted over a selection. A capture-phase listener beats
+--- a/src/lib/components/DetailsPanel.svelte
++++ b/src/lib/components/DetailsPanel.svelte
+@@ -222,13 +222,18 @@
+   // like any other delete for the sync engine.
+-  function close() {
++  async function close() {
++    const closingId = task?.id;
++    if (!closingId) return false;
++    notes = notesRef?.flush() ?? notes;
+     if (task && !title.trim() && !notes.trim() && task.subtasks.length === 0) {
+-      store.removeSeries(task.id);
++      await store.removeSeries(task.id);
++      if (ui.detailsId !== closingId) return false;
+       ui.closeDetails();
+       lastId = null;
+-      return;
+-    }
+-    commitTitle();
+-    commitNotes();
++      return true;
++    }
++    await Promise.all([commitTitle(), commitNotes()]);
++    if (ui.detailsId !== closingId) return false;
+     ui.closeDetails();
+     lastId = null;
++    return true;
+   }
+@@ -239,3 +244,4 @@
+   // discarding and recreating the same blank task.
+-  function saveAndAddAnother() {
++  async function saveAndAddAnother() {
++    notes = notesRef?.flush() ?? notes;
+     if (task && !title.trim() && !notes.trim() && task.subtasks.length === 0) {
+@@ -244,10 +250,30 @@
+     }
+-    close();
+-    void ui.addSomedayTask();
+-  }
+-
++    if (await close()) void ui.addSomedayTask();
++  }
++
++  // A blur can start a write before close() runs. Retain that promise even
++  // when the in-memory task already matches, so closing waits for persistence.
++  interface DraftWrite {
++    id: string;
++    fields: { text?: string; notes?: string };
++    failed: boolean;
++    promise: Promise<void>;
++  }
++  let titleWrite: DraftWrite | null = null;
++  let notesWrite: DraftWrite | null = null;
++  function writeDraft(id: string, fields: DraftWrite["fields"]): DraftWrite {
++    const write: DraftWrite = { id, fields, failed: false, promise: Promise.resolve() };
++    write.promise = store.patch(id, fields).catch((error) => {
++      write.failed = true;
++      throw error;
++    });
++    return write;
++  }
+   function commitTitle() {
+     if (task && title.trim() && title.trim() !== task.text) {
+-      store.patch(task.id, { text: title.trim() });
+-    }
++      titleWrite = writeDraft(task.id, { text: title.trim() });
++    } else if (task && titleWrite?.id === task.id && titleWrite.failed) {
++      titleWrite = writeDraft(task.id, titleWrite.fields);
++    }
++    return titleWrite && titleWrite.id === task?.id ? titleWrite.promise : Promise.resolve();
+   }
+@@ -264,3 +290,9 @@
+   function commitNotes() {
+-    if (task && notes !== task.notes) store.patch(task.id, { notes });
++    notes = notesRef?.flush() ?? notes;
++    if (task && notes !== task.notes) {
++      notesWrite = writeDraft(task.id, { notes });
++    } else if (task && notesWrite?.id === task.id && notesWrite.failed) {
++      notesWrite = writeDraft(task.id, notesWrite.fields);
++    }
++    return notesWrite && notesWrite.id === task?.id ? notesWrite.promise : Promise.resolve();
+   }
