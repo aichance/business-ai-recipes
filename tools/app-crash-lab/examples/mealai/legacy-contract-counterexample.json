@@ -1,0 +1,177 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "MealAI: synthetic manual meal survives reload and zero-calorie rejection",
+  "baseURL": "http://127.0.0.1:54198",
+  "path": "/",
+  "timeoutMs": 7000,
+  "stabilityMs": 500,
+  "checks": [
+    "reload",
+    "rejected-update"
+  ],
+  "reset": [],
+  "setup": [
+    {
+      "action": "fill",
+      "target": {
+        "css": "#datePickerInput"
+      },
+      "value": "2026-10-10"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "#datePickerInput"
+      },
+      "value": "Tab"
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": ".meal-card[data-meal=\"lunch\"] button[title=\"手動入力やアルバムから選ぶ\"]"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "#tabManualBtn"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "#manualDishName"
+      },
+      "value": "Crash Lab synthetic meal"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "#manualCalories"
+      },
+      "value": "450"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "#manualP"
+      },
+      "value": "20"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "#manualF"
+      },
+      "value": "12"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "#manualC"
+      },
+      "value": "60"
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "#saveManualMealBtn"
+      },
+      "save": true
+    }
+  ],
+  "observe": {
+    "records": {
+      "source": "localStorage",
+      "key": "mealai_records_2026-10-10",
+      "parse": "json"
+    },
+    "savedNameCount": {
+      "source": "count",
+      "target": {
+        "css": ".meal-card[data-meal=\"lunch\"] .record-filled-view span:visible:text-is(\"Crash Lab synthetic meal\")"
+      }
+    },
+    "savedCard": {
+      "source": "text",
+      "target": {
+        "css": ".meal-card[data-meal=\"lunch\"] .record-filled-view"
+      }
+    }
+  },
+  "expected": {
+    "records": {
+      "breakfast": null,
+      "lunch": {
+        "name": "Crash Lab synthetic meal",
+        "items": null,
+        "calories": 450,
+        "p": 20,
+        "f": 12,
+        "c": 60,
+        "img": null,
+        "icon": "✏️"
+      },
+      "dinner": null,
+      "snack": null
+    },
+    "savedNameCount": 1
+  },
+  "afterReload": [
+    {
+      "action": "fill",
+      "target": {
+        "css": "#datePickerInput"
+      },
+      "value": "2026-10-10"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "#datePickerInput"
+      },
+      "value": "Tab"
+    }
+  ],
+  "rejectedUpdate": {
+    "steps": [
+      {
+        "action": "click",
+        "target": {
+          "css": ".meal-card[data-meal=\"lunch\"] button[title=\"手動入力やアルバムから選ぶ\"]"
+        }
+      },
+      {
+        "action": "click",
+        "target": {
+          "css": "#tabManualBtn"
+        }
+      },
+      {
+        "action": "fill",
+        "target": {
+          "css": "#manualDishName"
+        },
+        "value": "Rejected synthetic replacement"
+      },
+      {
+        "action": "fill",
+        "target": {
+          "css": "#manualCalories"
+        },
+        "value": "0"
+      },
+      {
+        "action": "click",
+        "target": {
+          "css": "#saveManualMealBtn"
+        }
+      }
+    ],
+    "dialog": {
+      "type": "alert",
+      "message": "カロリーを入力してください！"
+    }
+  }
+}

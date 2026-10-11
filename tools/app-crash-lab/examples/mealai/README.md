@@ -61,6 +61,10 @@ An earlier run without Tailwind also returned PASS, but was **not accepted**:
 it could click a control that is normally hidden. The visibility assertion and
 normal-UI rejection path were added before the reported result above.
 
+The [CSS precondition experiment](CSS-PRECONDITIONS.md) reproduces this difference
+with a four-run comparison at one local URL. It includes the rejected
+first contract as a counterexample and keeps the app JavaScript unchanged.
+
 ## Limits
 
 This is our compatibility run, not the author's use or endorsement. The public
