@@ -25,6 +25,14 @@ a defect in the CereusDB 0.4.0 package. We observed no data-loss defect in
 `@cereusdb/minimal@0.4.0`. The author's confirmation does not establish that
 they ran App Crash Lab or the generated test.
 
+**Later live UI recheck (2026-10-11):** after [the author reported a playground
+redeploy](https://bsky.app/profile/tobilg.com/post/3mxlz7t6py22y), we created a
+new synthetic database on the public playground. `CREATE TABLE` now populated
+Tables. After reload and `ATTACH`, `notes` reappeared; a fresh `SELECT` returned
+the same complete row. This was a manual check of the updated live UI, separate
+from the pinned-source App Crash Lab run above. It does not change the old
+source snapshot or establish author adoption of this tool.
+
 ## Start an unchanged local playground
 
 Use a disposable folder, Node 22+ and npm. Download and extract the pinned
