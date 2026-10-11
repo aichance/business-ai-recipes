@@ -37,17 +37,47 @@ this settings-only test. Do not click Preview, Send now or Send test.
 
 ## Prepare and run
 
-Use Node 22+ in the **current App Crash Lab source directory**. These new
-example files are not in the original 0.3.0 release archive. Keep
-`prepare-latestarr.mjs` and `latestarr.template.json` together in `examples/`.
+Use **Node 22+** and an empty folder. You only need two example files and the
+published CLI; a repository checkout is not required. Download
+[`prepare-latestarr.mjs`](https://raw.githubusercontent.com/aichance/business-ai-recipes/3008372ec4c2c66f56af0cdbc4b5d66a67dab01d/tools/app-crash-lab/examples/prepare-latestarr.mjs)
+and [`latestarr.template.json`](https://raw.githubusercontent.com/aichance/business-ai-recipes/3008372ec4c2c66f56af0cdbc4b5d66a67dab01d/tools/app-crash-lab/examples/latestarr.template.json)
+into that same folder, keeping these filenames. The links are pinned to the
+tested revision; these example files are not inside the 0.3.0 release archive.
+
+On macOS/Linux, the equivalent download commands are:
 
 ```sh
-npm ci --ignore-scripts --no-audit --no-fund
-npx playwright install chromium
-node examples/prepare-latestarr.mjs http://127.0.0.1:54193
-node cli.mjs run .crash-lab/latestarr.local.json --out .crash-lab/latestarr-first
-npx playwright test --config .crash-lab/latestarr-first/playwright.config.mjs
+mkdir latestarr-check
+cd latestarr-check
+curl --fail --location --output prepare-latestarr.mjs https://raw.githubusercontent.com/aichance/business-ai-recipes/3008372ec4c2c66f56af0cdbc4b5d66a67dab01d/tools/app-crash-lab/examples/prepare-latestarr.mjs
+curl --fail --location --output latestarr.template.json https://raw.githubusercontent.com/aichance/business-ai-recipes/3008372ec4c2c66f56af0cdbc4b5d66a67dab01d/tools/app-crash-lab/examples/latestarr.template.json
 ```
+
+With the fresh disposable app still running, run these from that folder:
+
+```sh
+node prepare-latestarr.mjs http://127.0.0.1:54193
+npx --yes --package=@playwright/test@1.64.0 playwright install chromium
+npx --yes --package=https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.3.0/aichance-app-crash-lab-0.3.0.tgz app-crash-lab run .crash-lab/latestarr.local.json --out .crash-lab/latestarr-first
+```
+
+Expect `PASS reload`, `PASS rejected-update` and a printed report path. Open
+`.crash-lab/latestarr-first/index.html` locally to inspect the evidence.
+On a minimal Linux host, Playwright may also need its documented system
+dependencies. The no-checkout sequence above was verified on macOS; the
+LatestArr container's ARM limitation still applies.
+
+To rerun the exported tests **without App Crash Lab**, keep the app running,
+change into the report folder and install Playwright there:
+
+```sh
+cd .crash-lab/latestarr-first
+npm install --prefix . --no-save --package-lock=false --ignore-scripts @playwright/test@1.64.0
+npx playwright test --config playwright.config.mjs
+```
+
+Expect `2 passed`. To run the CLI again, return to the `latestarr-check`
+folder and choose a new `--out` directory. You do not need to repeat preparation.
 
 Preparation refuses a non-loopback origin, an already initialized app or an
 existing output file. On a fresh instance it creates one synthetic local
