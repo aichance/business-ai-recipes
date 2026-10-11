@@ -237,6 +237,10 @@ The [Creator Frame Studio check](examples/CREATOR-FRAME.md) tests one wrong-sche
 
 The [CereusDB check](examples/CEREUSDB.md) creates one synthetic OPFS row, reloads the page, explicitly attaches the database and compares a fresh SQL result. It includes setup with the official 0.4.0 package and a reload-only contract; machine-crash durability is outside coverage.
 
+The [LatestArr settings check](examples/LATESTARR.md) verifies saved newsletter
+settings across reload and a rejected zero-day lookback. Its preparation script
+generates a private test login for a fresh, disposable local instance.
+
 ## Contribute a real use case
 
 If you tried it on **your own app**, an issue with the app/framework, which
