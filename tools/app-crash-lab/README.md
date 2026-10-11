@@ -106,6 +106,9 @@ For native `alert()` rejection, the [Sethera example](examples/SETHERA.md)
 checks a synthetic piece across reload and malformed JSON import. Requires
 runner 0.3 or later. The [annotate.js example](examples/ANNOTATE.md) checks a
 synthetic review comment and its malformed-import toast.
+The [Multi-Counter example](examples/MULTI-COUNTER.md) compares two saved names,
+counts and a three-event history in local mode, with a reload-only contract.
+
 The [Fala Gringo example](examples/FALA-GRINGO.md) preserves synthetic learning
 progress and saved goals while excluding an intentional visit counter. It
 shows how a whole-storage assertion can report a false data-loss failure.
