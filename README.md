@@ -14,6 +14,8 @@ Turn one successful save workflow into two repeatable checks: **reload without l
 
 **Independent own-app use:** [Sethera's author reported](https://qiita.com/cuculhart/items/4425ab63e6b1dd497ae1#comment-4dfcb4ac9ecead546607) running both checks and the two generated Playwright tests on Windows (Node 22.16.0 / Playwright 1.64.0), then reusing the same contract on Sethera v0.5.0. This is the author's public report, separate from our compatibility runs. [Reported scope and pinned setup](tools/app-crash-lab/examples/SETHERA.md#independent-author-report).
 
+**Real-app finding:** while checking an unchanged local Chalky build, the normal-save baseline failed before reload. A separate keyboard diagnostic lost the last edit with immediate close and kept it with a 350ms delayed control. [See the measured result and runnable reproduction](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#note-close). This is our local finding, not author confirmation or a verified fix.
+
 [![33-second real UI walkthrough: a saved note is lost after reload, an invalid edit corrupts it, then the fixed version preserves it](https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.1.0/app-crash-lab-demo.gif)](https://github.com/aichance/business-ai-recipes/releases/tag/app-crash-lab-v0.1.0)
 
 *Bundled deliberately broken and fixed fixtures, recorded in real time. [Watch the MP4 or replay the recording](https://github.com/aichance/business-ai-recipes/releases/tag/app-crash-lab-v0.1.0#watch-the-seeded-failure-walkthrough). Run the checker below to get the reports and generated tests.*

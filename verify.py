@@ -21,6 +21,8 @@ EXPECTED_FILES = {
     "docs/app-crash-lab-language-single.html",
     "docs/app-crash-lab.html",
     "docs/app-crash-lab.png",
+    "docs/chalky-fast-close.png",
+    "docs/chalky-delayed-close.png",
     "tools/app-crash-lab/.gitignore",
     "tools/app-crash-lab/CONTRACT.md",
     "tools/app-crash-lab/LICENSE",
