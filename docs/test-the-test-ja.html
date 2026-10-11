@@ -18,11 +18,11 @@ html[lang=ja] h1{font-size:clamp(32px,5vw,54px);line-height:1.2;letter-spacing:-
       <h2>保存と再読込を試す</h2>
       <label for="mode" class="control-label">検査用ページの動作</label>
       <div class="row"><select id="mode"><option value="text-loss">故障例：本文が日本語へ戻る</option><option value="normal">正常系：英語の本文を保つ</option></select><button id="run" type="button">英語を保存 → 再読込</button></div>
+      <div id="status" role="status" aria-live="polite">準備できました。まず故障例を実行してください。</div>
+      <p id="explanation" class="small">まだ結果を記録していません。</p>
       <p class="small">最初の検査では、保存された言語・ページが示す言語・言語ラベルごとの表示要素数を比較します。</p>
       <label class="check"><input id="include-text" type="checkbox">実際のメッセージ本文も検査する</label>
       <p class="small">実行後にチェックを切り替えると、同じ記録を使って判定し直します。アプリの修正や再実行はしません。</p>
-      <div id="status" role="status" aria-live="polite">準備できました。まず故障例を実行してください。</div>
-      <p id="explanation" class="small">まだ結果を記録していません。</p>
       <p class="small">プレビューは検査対象です。英語を保存したのに「保存しました」へ戻るのが、今回の故障です。</p>
     </section>
     <section class="card">
