@@ -1,0 +1,192 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "Chalky: anonymous task details survive reload",
+  "baseURL": "http://127.0.0.1:54196",
+  "path": "/",
+  "timeoutMs": 15000,
+  "stabilityMs": 500,
+  "checks": [
+    "reload"
+  ],
+  "reset": [],
+  "setup": [
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Let's-a go!"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "section.col[data-day=\"__someday__\"] textarea[placeholder=\"Add task\"]"
+      },
+      "value": "ACL synthetic task"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "section.col[data-day=\"__someday__\"] textarea[placeholder=\"Add task\"]"
+      },
+      "value": "Enter",
+      "save": true
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Mark done"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": ".task .chip"
+      }
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "role": "button",
+        "name": "Bold"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "[aria-label=\"Task details\"] [contenteditable=\"true\"]"
+      },
+      "value": "Synthetic note for a reload check."
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": "[aria-label=\"Task details\"] [contenteditable=\"true\"]"
+      },
+      "value": "Synthetic note for a reload check."
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "textarea[placeholder=\"Add subtask\"]"
+      },
+      "value": "Synthetic child"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "textarea[placeholder=\"Add subtask\"]"
+      },
+      "value": "Enter"
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "[aria-label=\"Task details\"] button[aria-label=\"mint green\"]"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "[aria-label=\"Task details\"] button[aria-label=\"Close\"]"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": ".task .chip"
+      }
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": "[aria-label=\"Task details\"] [contenteditable=\"true\"]"
+      },
+      "value": "Synthetic note for a reload check."
+    }
+  ],
+  "observe": {
+    "tasks": {
+      "source": "count",
+      "target": {
+        "css": ".task"
+      }
+    },
+    "taskId": {
+      "source": "attribute",
+      "target": {
+        "css": ".task"
+      },
+      "attribute": "data-task-id"
+    },
+    "completed": {
+      "source": "count",
+      "target": {
+        "css": ".task.done"
+      }
+    },
+    "title": {
+      "source": "text",
+      "target": {
+        "css": ".task .md"
+      }
+    },
+    "notes": {
+      "source": "text",
+      "target": {
+        "css": "[aria-label=\"Task details\"] [contenteditable=\"true\"]"
+      }
+    },
+    "subtasks": {
+      "source": "count",
+      "target": {
+        "css": "[aria-label=\"Task details\"] .sub-label"
+      }
+    },
+    "subtaskText": {
+      "source": "text",
+      "target": {
+        "css": "[aria-label=\"Task details\"] .sub-label .txt"
+      }
+    },
+    "incompleteSubtasks": {
+      "source": "count",
+      "target": {
+        "css": "[aria-label=\"Task details\"] button[aria-label=\"Mark subtask done\"]"
+      }
+    },
+    "selectedMint": {
+      "source": "count",
+      "target": {
+        "css": "[aria-label=\"Task details\"] button[aria-label=\"mint green\"].sel"
+      }
+    }
+  },
+  "expected": {
+    "tasks": 1,
+    "completed": 1,
+    "title": "ACL synthetic task",
+    "notes": "Synthetic note for a reload check.",
+    "subtasks": 1,
+    "subtaskText": "Synthetic child",
+    "incompleteSubtasks": 1,
+    "selectedMint": 1
+  },
+  "afterReload": [
+    {
+      "action": "click",
+      "target": {
+        "css": ".task .chip"
+      }
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": "[aria-label=\"Task details\"] [contenteditable=\"true\"]"
+      },
+      "value": "Synthetic note for a reload check."
+    }
+  ]
+}
