@@ -1,0 +1,143 @@
+{
+  "started_at": "2026-10-11T06:58:01.093736+00:00",
+  "finished_at": "2026-10-11T06:58:33.444272+00:00",
+  "origin": "http://127.0.0.1:54198",
+  "app_crash_lab": "0.3.0",
+  "node": "v22.16.0",
+  "playwright": "1.64.0",
+  "chromium": "156.0.8078.4",
+  "app_files_sha256": {
+    "css/style.css": "608b2a4ee3c2b536e2241bdef7296fcd07f15d6d280d788d9198e5d47de90315",
+    "css/tailwind-local.css": "ae05a44db7f31b427d44af5a64805a4213d726f4ea3c0a3952a036aa8cb3f3ac",
+    "index.html": "1f388adf7a013d726895843781da8dd9fb39e3fbf7b2b41bf4758d94adfbf717",
+    "js/app.js": "ed8b80bcc6950e14096ee5b00ee96196ccdd96141b29432c725ec7800e0fd3e7",
+    "js/calculator.js": "77fdebb39c70376daa048ce5d998dce4655928388e60cd36d470ea22dec9f1fc",
+    "js/data.js": "d1dbe159353b8f509443fd363a015f38742b3fa75647804b41c233c12f355568",
+    "tailwind-input.css": "cc1a7ad0d019ddb1d32d0ecb588ba0ac26ce41d8625dd6c366348b25f83a28ec",
+    "tailwind.config.cjs": "312524b1953f7a2a82b546923316e6594b79781d5561641fedb2d479560b4d70"
+  },
+  "contract_sha256": {
+    "legacy": "e56e47c3b7c7c9711763c0549ecd40f7d8aa765c9d285abe4215faba09687978",
+    "corrected": "acf3dfe7cb43ea9b03b8bcbd85bd2937485d26ad588c576f07bb59b6cbe2558b"
+  },
+  "scope": "Local dependency-prepared MealAI copy. Same origin; CSS available versus one CSS response deliberately 404. Fresh context for each check. Synthetic data only; not production-site behavior or third-party adoption.",
+  "runs": [
+    {
+      "contract": "legacy",
+      "css": "available",
+      "exit_code": 2,
+      "results": [
+        {
+          "check": "reload",
+          "status": "pass",
+          "phase": "compare"
+        },
+        {
+          "check": "rejected-update",
+          "status": "inconclusive",
+          "phase": "invalid-update",
+          "error_summary": "locator.click: Timeout 7000ms exceeded."
+        }
+      ]
+    },
+    {
+      "contract": "corrected",
+      "css": "available",
+      "exit_code": 0,
+      "results": [
+        {
+          "check": "reload",
+          "status": "pass",
+          "phase": "compare",
+          "baseline_old_entry_visible": 0
+        },
+        {
+          "check": "rejected-update",
+          "status": "pass",
+          "phase": "compare",
+          "baseline_old_entry_visible": 0
+        }
+      ]
+    },
+    {
+      "contract": "legacy",
+      "css": "withheld",
+      "exit_code": 0,
+      "results": [
+        {
+          "check": "reload",
+          "status": "pass",
+          "phase": "compare"
+        },
+        {
+          "check": "rejected-update",
+          "status": "pass",
+          "phase": "compare"
+        }
+      ]
+    },
+    {
+      "contract": "corrected",
+      "css": "withheld",
+      "exit_code": 2,
+      "results": [
+        {
+          "check": "reload",
+          "status": "inconclusive",
+          "phase": "baseline",
+          "baseline_old_entry_visible": 1,
+          "error_summary": "Known-good baseline did not match expected values; no preservation verdict"
+        },
+        {
+          "check": "rejected-update",
+          "status": "inconclusive",
+          "phase": "baseline",
+          "baseline_old_entry_visible": 1,
+          "error_summary": "Known-good baseline did not match expected values; no preservation verdict"
+        }
+      ]
+    }
+  ],
+  "asset_checks": [
+    {
+      "mode": "available",
+      "asset": "/css/tailwind-local.css",
+      "status": 200,
+      "sha256": "ae05a44db7f31b427d44af5a64805a4213d726f4ea3c0a3952a036aa8cb3f3ac"
+    },
+    {
+      "mode": "available",
+      "asset": "/js/app.js",
+      "status": 200,
+      "sha256": "ed8b80bcc6950e14096ee5b00ee96196ccdd96141b29432c725ec7800e0fd3e7"
+    },
+    {
+      "mode": "available",
+      "asset": "/tailwind.config.cjs",
+      "status": 404,
+      "sha256": null
+    },
+    {
+      "mode": "withheld",
+      "asset": "/css/tailwind-local.css",
+      "status": 404,
+      "sha256": null
+    },
+    {
+      "mode": "withheld",
+      "asset": "/js/app.js",
+      "status": 200,
+      "sha256": "ed8b80bcc6950e14096ee5b00ee96196ccdd96141b29432c725ec7800e0fd3e7"
+    },
+    {
+      "mode": "withheld",
+      "asset": "/tailwind.config.cjs",
+      "status": 404,
+      "sha256": null
+    }
+  ],
+  "app_bytes_unchanged_after_run": true,
+  "tested_server_sha256_before_format": "94c3a3fa5538605f3827307b4f10234004af28bc23db6689b088f8f601724e70",
+  "server_sha256": "a2c3abf4d57059e46e33a775f54e55631bb228b11984900e8243880d8b28cc47",
+  "server_change_after_measurement": "Import ordering and line wrapping only; runtime logic unchanged."
+}
