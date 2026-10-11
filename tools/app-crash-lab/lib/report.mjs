@@ -15,5 +15,5 @@ ${r.differences.length ? `<table><thead><tr><th>Value</th><th>Before</th><th>Aft
 <p><a href="${escape(r.check)}.trace.zip">Playwright trace</a>${r.screenshot ? ` · <a href="${escape(r.screenshot)}">Final screenshot</a>` : ''}</p>
 ${r.screenshot ? `<details><summary>See the app</summary><img src="${escape(r.screenshot)}" alt="Final app state for ${escape(r.check)}"></details>` : ''}
 <details><summary>Executed steps</summary><pre>${json(r.events)}</pre></details></article>`).join('')}
-<footer><small>Runner ${escape(report.version)} · Contract SHA-256 ${escape(report.contractHash)}<br>Reports and traces stay on this machine. Review captured app data before sharing.</small></footer></main></html>`;
+<footer><small><a href="https://github.com/aichance/business-ai-recipes/tree/main/tools/app-crash-lab" rel="noreferrer">App Crash Lab source</a><br>Runner ${escape(report.version)} · Contract SHA-256 ${escape(report.contractHash)}<br>Reports and traces stay on this machine. Review captured app data before sharing.</small></footer></main></html>`;
 }
