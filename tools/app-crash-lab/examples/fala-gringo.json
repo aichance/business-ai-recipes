@@ -1,0 +1,308 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "Fala Gringo v1.32.8 — preserve imported progress and saved settings",
+  "baseURL": "http://127.0.0.1:54191",
+  "path": "/",
+  "timeoutMs": 8000,
+  "stabilityMs": 500,
+  "checks": [
+    "reload",
+    "rejected-update"
+  ],
+  "reset": [],
+  "setup": [
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Settings and backup"
+      }
+    },
+    {
+      "action": "setFile",
+      "target": {
+        "css": "#importBackup"
+      },
+      "file": {
+        "name": "synthetic-fala-progress.json",
+        "mimeType": "application/json",
+        "text": "{\"format\":\"fala-gringo-backup\",\"version\":2,\"app\":\"pvs:v1\",\"data\":{\"mastered\":{\"numbers\":{\"one=um\":1}},\"strength\":{\"numbers\":{\"one=um\":{\"s\":2,\"m\":1,\"l\":1,\"c\":2,\"w\":1}}}}}"
+      }
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": "#settingsStatus"
+      },
+      "value": "Backup imported"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "#setting-goalMax"
+      },
+      "value": "37"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "#setting-goalNew"
+      },
+      "value": "7"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "#setting-newPerDay"
+      },
+      "value": "12"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Save settings"
+      },
+      "save": true
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": "#settingsStatus"
+      },
+      "value": "Settings saved"
+    }
+  ],
+  "observe": {
+    "mastered": {
+      "source": "localStorage",
+      "key": "pvs:v1",
+      "parse": "json",
+      "jsonPath": [
+        "mastered"
+      ]
+    },
+    "strength": {
+      "source": "localStorage",
+      "key": "pvs:v1",
+      "parse": "json",
+      "jsonPath": [
+        "strength"
+      ]
+    },
+    "totalGoal": {
+      "source": "value",
+      "target": {
+        "css": "#setting-goalMax"
+      }
+    },
+    "newGoal": {
+      "source": "value",
+      "target": {
+        "css": "#setting-goalNew"
+      }
+    },
+    "newPerTopic": {
+      "source": "value",
+      "target": {
+        "css": "#setting-newPerDay"
+      }
+    },
+    "daily": {
+      "source": "localStorage",
+      "key": "pvs:v1",
+      "parse": "json",
+      "jsonPath": [
+        "daily"
+      ]
+    },
+    "dailyDone": {
+      "source": "localStorage",
+      "key": "pvs:v1",
+      "parse": "json",
+      "jsonPath": [
+        "dailyDone"
+      ]
+    },
+    "days": {
+      "source": "localStorage",
+      "key": "pvs:v1",
+      "parse": "json",
+      "jsonPath": [
+        "days"
+      ]
+    },
+    "right": {
+      "source": "localStorage",
+      "key": "pvs:v1",
+      "parse": "json",
+      "jsonPath": [
+        "right"
+      ]
+    },
+    "drilled": {
+      "source": "localStorage",
+      "key": "pvs:v1",
+      "parse": "json",
+      "jsonPath": [
+        "drilled"
+      ]
+    },
+    "graduated": {
+      "source": "localStorage",
+      "key": "pvs:v1",
+      "parse": "json",
+      "jsonPath": [
+        "graduated"
+      ]
+    },
+    "milestones": {
+      "source": "localStorage",
+      "key": "pvs:v1",
+      "parse": "json",
+      "jsonPath": [
+        "milestones"
+      ]
+    },
+    "resets": {
+      "source": "localStorage",
+      "key": "pvs:v1",
+      "parse": "json",
+      "jsonPath": [
+        "resets"
+      ]
+    },
+    "saved_lastTab": {
+      "source": "localStorage",
+      "key": "pvs:v1",
+      "parse": "json",
+      "jsonPath": [
+        "prefs",
+        "lastTab"
+      ]
+    },
+    "time_lastTab": {
+      "source": "localStorage",
+      "key": "pvs:v1",
+      "parse": "json",
+      "jsonPath": [
+        "prefTimes",
+        "lastTab"
+      ]
+    },
+    "saved_goalMax": {
+      "source": "localStorage",
+      "key": "pvs:v1",
+      "parse": "json",
+      "jsonPath": [
+        "prefs",
+        "goalMax"
+      ]
+    },
+    "time_goalMax": {
+      "source": "localStorage",
+      "key": "pvs:v1",
+      "parse": "json",
+      "jsonPath": [
+        "prefTimes",
+        "goalMax"
+      ]
+    },
+    "saved_goalNew": {
+      "source": "localStorage",
+      "key": "pvs:v1",
+      "parse": "json",
+      "jsonPath": [
+        "prefs",
+        "goalNew"
+      ]
+    },
+    "time_goalNew": {
+      "source": "localStorage",
+      "key": "pvs:v1",
+      "parse": "json",
+      "jsonPath": [
+        "prefTimes",
+        "goalNew"
+      ]
+    },
+    "saved_newPerDay": {
+      "source": "localStorage",
+      "key": "pvs:v1",
+      "parse": "json",
+      "jsonPath": [
+        "prefs",
+        "newPerDay"
+      ]
+    },
+    "time_newPerDay": {
+      "source": "localStorage",
+      "key": "pvs:v1",
+      "parse": "json",
+      "jsonPath": [
+        "prefTimes",
+        "newPerDay"
+      ]
+    }
+  },
+  "expected": {
+    "mastered": {
+      "numbers": {
+        "one=um": 1
+      }
+    },
+    "strength": {
+      "numbers": {
+        "one=um": {
+          "s": 2,
+          "m": 1,
+          "l": 1,
+          "c": 2,
+          "w": 1
+        }
+      }
+    },
+    "totalGoal": "37",
+    "newGoal": "7",
+    "newPerTopic": "12",
+    "saved_goalMax": 37,
+    "saved_goalNew": 7,
+    "saved_newPerDay": 12
+  },
+  "afterReload": [
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Settings and backup"
+      }
+    }
+  ],
+  "rejectedUpdate": {
+    "steps": [
+      {
+        "action": "setFile",
+        "target": {
+          "css": "#importBackup"
+        },
+        "file": {
+          "name": "truncated-backup.json",
+          "mimeType": "application/json",
+          "text": "{\"data\":["
+        }
+      }
+    ],
+    "observe": {
+      "message": {
+        "source": "text",
+        "target": {
+          "css": "#settingsStatus"
+        }
+      }
+    },
+    "expected": {
+      "message": "Could not import: invalid file or a backup for another language."
+    }
+  }
+}
