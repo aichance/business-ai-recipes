@@ -54,7 +54,9 @@ On the pinned source, our run produced:
 exits nonzero. It is not an installation failure. Each test prints its measured
 interval and observed strings. Screenshots and traces go to `test-results/`;
 copy them elsewhere before rerunning if you need to keep them. With a corrected
-app, both assertions should pass. We have not implemented or verified that fix.
+app, both assertions should pass. A later [local repair candidate and extended
+comparison](REPAIR.md) tests 13 normal-save conditions plus two write-failure
+recovery controls. It has not been released or confirmed by the Chalky author.
 
 Timing depends on the machine. If an immediate close takes 200ms or more,
 that run may not exercise the suspected window. The fixed delay is an explicit
@@ -73,7 +75,8 @@ this exact failure.
 
 A potential fix should flush/read the current editor document before committing
 and destroying it. Replacing this regression with an arbitrary wait would hide
-the behavior instead of protecting the last edit. We did not modify upstream.
+the behavior instead of protecting the last edit. We did not modify upstream. The [repair supplement](REPAIR.md) records the
+local candidate and its acceptance limits.
 
 ## The App Crash Lab baseline that exposed it
 

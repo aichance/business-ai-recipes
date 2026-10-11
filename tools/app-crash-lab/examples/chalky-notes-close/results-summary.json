@@ -1,0 +1,249 @@
+{
+  "source": "https://tangled.org/tyler.fun/chalky.town",
+  "source_commit": "4bf2b174243b3c20e44ef3e7d612de410f44b4b1",
+  "scope": "Local anonymous synthetic data; unchanged source vs local candidate. Not upstream confirmation, CLI success or independent use.",
+  "environment": {
+    "platform": "macOS",
+    "node": "22.16.0",
+    "playwright": "1.64.0",
+    "browser": "Chromium",
+    "svelte": "5.56.8",
+    "vite": "8.1.5",
+    "@milkdown/crepe": "7.21.3"
+  },
+  "baseline": {
+    "started_at": "2026-10-11T05:08:45.751Z",
+    "duration_ms": 48829.331,
+    "passed": 6,
+    "failed": 7,
+    "tests": [
+      {
+        "name": "close: last edit survives with 0ms added",
+        "status": "failed",
+        "observation": {
+          "path": "close",
+          "delay": 0,
+          "elapsedMs": 64,
+          "persisted": "Synthetic baseline\n",
+          "reopened": "Synthetic baseline",
+          "reloaded": "Synthetic baseline"
+        }
+      },
+      {
+        "name": "close: last edit survives with 350ms added",
+        "status": "passed",
+        "observation": {
+          "path": "close",
+          "delay": 350,
+          "elapsedMs": 382,
+          "persisted": "x\n",
+          "reopened": "x",
+          "reloaded": "x"
+        }
+      },
+      {
+        "name": "close: untouched raw markdown and metadata remain byte-exact",
+        "status": "passed"
+      },
+      {
+        "name": "escape: last edit survives with 0ms added",
+        "status": "failed",
+        "observation": {
+          "path": "escape",
+          "delay": 0,
+          "elapsedMs": 14,
+          "persisted": "Synthetic baseline\n",
+          "reopened": "Synthetic baseline",
+          "reloaded": "Synthetic baseline"
+        }
+      },
+      {
+        "name": "escape: last edit survives with 350ms added",
+        "status": "passed",
+        "observation": {
+          "path": "escape",
+          "delay": 350,
+          "elapsedMs": 372,
+          "persisted": "x\n",
+          "reopened": "x",
+          "reloaded": "x"
+        }
+      },
+      {
+        "name": "escape: untouched raw markdown and metadata remain byte-exact",
+        "status": "passed"
+      },
+      {
+        "name": "blur: last edit survives with 0ms added",
+        "status": "failed",
+        "observation": {
+          "path": "blur",
+          "delay": 0,
+          "elapsedMs": 32,
+          "persisted": "Synthetic baseline\n",
+          "reopened": "Synthetic baseline",
+          "reloaded": "Synthetic baseline"
+        }
+      },
+      {
+        "name": "blur: last edit survives with 350ms added",
+        "status": "passed",
+        "observation": {
+          "path": "blur",
+          "delay": 350,
+          "elapsedMs": 390,
+          "persisted": "x\n",
+          "reopened": "x",
+          "reloaded": "x"
+        }
+      },
+      {
+        "name": "blur: untouched raw markdown and metadata remain byte-exact",
+        "status": "passed"
+      },
+      {
+        "name": "a second edit after a blur flush remains current",
+        "status": "failed"
+      },
+      {
+        "name": "visible filled text after blur is committed on close",
+        "status": "failed"
+      },
+      {
+        "name": "visible filled text after blur is committed on escape",
+        "status": "failed"
+      },
+      {
+        "name": "notes-only new task survives Save and add another",
+        "status": "failed"
+      }
+    ]
+  },
+  "candidate": {
+    "started_at": "2026-10-11T05:13:55.156Z",
+    "duration_ms": 42851.288,
+    "passed": 15,
+    "failed": 0,
+    "tests": [
+      {
+        "name": "close: last edit survives with 0ms added",
+        "status": "passed",
+        "observation": {
+          "path": "close",
+          "delay": 0,
+          "elapsedMs": 56,
+          "persisted": "x\n",
+          "reopened": "x",
+          "reloaded": "x"
+        }
+      },
+      {
+        "name": "close: last edit survives with 350ms added",
+        "status": "passed",
+        "observation": {
+          "path": "close",
+          "delay": 350,
+          "elapsedMs": 406,
+          "persisted": "x\n",
+          "reopened": "x",
+          "reloaded": "x"
+        }
+      },
+      {
+        "name": "close: untouched raw markdown and metadata remain byte-exact",
+        "status": "passed"
+      },
+      {
+        "name": "escape: last edit survives with 0ms added",
+        "status": "passed",
+        "observation": {
+          "path": "escape",
+          "delay": 0,
+          "elapsedMs": 38,
+          "persisted": "x\n",
+          "reopened": "x",
+          "reloaded": "x"
+        }
+      },
+      {
+        "name": "escape: last edit survives with 350ms added",
+        "status": "passed",
+        "observation": {
+          "path": "escape",
+          "delay": 350,
+          "elapsedMs": 370,
+          "persisted": "x\n",
+          "reopened": "x",
+          "reloaded": "x"
+        }
+      },
+      {
+        "name": "escape: untouched raw markdown and metadata remain byte-exact",
+        "status": "passed"
+      },
+      {
+        "name": "blur: last edit survives with 0ms added",
+        "status": "passed",
+        "observation": {
+          "path": "blur",
+          "delay": 0,
+          "elapsedMs": 47,
+          "persisted": "x\n",
+          "reopened": "x",
+          "reloaded": "x"
+        }
+      },
+      {
+        "name": "blur: last edit survives with 350ms added",
+        "status": "passed",
+        "observation": {
+          "path": "blur",
+          "delay": 350,
+          "elapsedMs": 387,
+          "persisted": "x\n",
+          "reopened": "x",
+          "reloaded": "x"
+        }
+      },
+      {
+        "name": "blur: untouched raw markdown and metadata remain byte-exact",
+        "status": "passed"
+      },
+      {
+        "name": "a second edit after a blur flush remains current",
+        "status": "passed"
+      },
+      {
+        "name": "visible filled text after blur is committed on close",
+        "status": "passed"
+      },
+      {
+        "name": "visible filled text after blur is committed on escape",
+        "status": "passed"
+      },
+      {
+        "name": "notes-only new task survives Save and add another",
+        "status": "passed"
+      },
+      {
+        "name": "one rejected write can recover on the same task",
+        "status": "passed"
+      },
+      {
+        "name": "one rejected write can recover after another task",
+        "status": "passed"
+      }
+    ]
+  },
+  "comparison_note": "The same first 13 normal-save tests are compared; 2 additional one-shot write-rejection controls ran only on the candidate.",
+  "checks": {
+    "check": 0,
+    "build": 0,
+    "patch_sha256": "92cd86a62ab5bd45bffc66b0fd1938e69a0b8223db2acd967325ed1219f21ee0"
+  },
+  "sha256": {
+    "commit-paths.spec.mjs": "6e7cb1a6e59b3589925e10df561ed2ec5ebe9e3ea44da4a38adf356bb312f187",
+    "commit-playwright.config.mjs": "e701d657f69e736035147bcab32d0ab21cbd8906c195d661e5afe80fa89c81b3",
+    "repair-candidate.patch": "92cd86a62ab5bd45bffc66b0fd1938e69a0b8223db2acd967325ed1219f21ee0"
+  }
+}
