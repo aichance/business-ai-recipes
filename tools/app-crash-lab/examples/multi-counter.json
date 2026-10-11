@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "Multi-Counter: saved names, counts and history survive reload",
+  "baseURL": "http://127.0.0.1:54192",
+  "path": "/",
+  "timeoutMs": 8000,
+  "stabilityMs": 500,
+  "checks": [
+    "reload"
+  ],
+  "reset": [],
+  "setup": [
+    {
+      "action": "fill",
+      "target": {
+        "css": "#counter-list .counter-card:nth-child(1) .counter-name"
+      },
+      "value": "ACL synthetic A"
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "#counter-list .counter-card:nth-child(1) .btn-plus"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "#counter-list .counter-card:nth-child(1) .btn-plus"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "#btn-add"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "#counter-list .counter-card:nth-child(2) .counter-name"
+      },
+      "value": "ACL synthetic B"
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "#counter-list .counter-card:nth-child(2) .btn-plus"
+      },
+      "save": true
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "#btn-menu"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "#menu-history"
+      }
+    }
+  ],
+  "observe": {
+    "stored": {
+      "source": "localStorage",
+      "key": "multi-counter-local-v1",
+      "parse": "json"
+    },
+    "nameA": {
+      "source": "value",
+      "target": {
+        "css": "#counter-list .counter-card:nth-child(1) .counter-name"
+      }
+    },
+    "nameB": {
+      "source": "value",
+      "target": {
+        "css": "#counter-list .counter-card:nth-child(2) .counter-name"
+      }
+    },
+    "countA": {
+      "source": "value",
+      "target": {
+        "css": "#counter-list .counter-card:nth-child(1) .counter-value"
+      }
+    },
+    "countB": {
+      "source": "value",
+      "target": {
+        "css": "#counter-list .counter-card:nth-child(2) .counter-value"
+      }
+    },
+    "total": {
+      "source": "text",
+      "target": {
+        "css": "#total-value"
+      }
+    },
+    "counterCount": {
+      "source": "count",
+      "target": {
+        "css": "#counter-list .counter-card"
+      }
+    },
+    "historyCount": {
+      "source": "count",
+      "target": {
+        "css": "#history-list .history-item"
+      }
+    },
+    "historyText": {
+      "source": "text",
+      "target": {
+        "css": "#history-list"
+      }
+    }
+  },
+  "expected": {
+    "nameA": "ACL synthetic A",
+    "nameB": "ACL synthetic B",
+    "countA": "2",
+    "countB": "1",
+    "total": "3",
+    "counterCount": 2,
+    "historyCount": 3
+  },
+  "afterReload": [
+    {
+      "action": "click",
+      "target": {
+        "css": "#btn-menu"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "#menu-history"
+      }
+    }
+  ]
+}
