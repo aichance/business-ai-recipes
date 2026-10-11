@@ -113,6 +113,11 @@ The [Fala Gringo example](examples/FALA-GRINGO.md) preserves synthetic learning
 progress and saved goals while excluding an intentional visit counter. It
 shows how a whole-storage assertion can report a false data-loss failure.
 
+The [MealAI example](examples/mealai/README.md) checks a date-specific manual record
+and native-alert rejection. It also verifies that a normally hidden entry stays
+hidden after preparing local CSS, so blocked CDN styling cannot expose an invalid
+test route.
+
 ### Ask your coding agent to configure it
 
 [Copy a self-contained setup prompt](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#agent)
