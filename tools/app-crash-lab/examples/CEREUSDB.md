@@ -18,6 +18,13 @@ successful `ATTACH`. That was not evidence of lost data: a fresh `SELECT`
 returned the saved row. This check observes the JSON result, not the sidebar
 or the previous query's row-count label.
 
+**Scope clarification (2026-10-11):** [the author independently confirmed](https://bsky.app/profile/tobilg.com/post/3mxlyqd2jvc2y)
+that the saved row survives reload and `ATTACH`. The author identified the
+empty Tables list as a **playground UI refresh issue after SQL queries**, not
+a defect in the CereusDB 0.4.0 package. We observed no data-loss defect in
+`@cereusdb/minimal@0.4.0`. The author's confirmation does not establish that
+they ran App Crash Lab or the generated test.
+
 ## Start an unchanged local playground
 
 Use a disposable folder, Node 22+ and npm. Download and extract the pinned
