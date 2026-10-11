@@ -57,7 +57,7 @@ function showResult() {
   status.textContent = differences.length ? text('FAIL · caught the text change', 'FAIL · 本文の変化を検出') : missed ? text('PASS · but the UI is wrong', 'PASS · でも画面は壊れている') : text('PASS · the selected values survived', 'PASS · 選んだ値は保持された');
   explanation.textContent = differences.length
     ? text('The text observation catches Saved → 保存しました. The stored language, marker and counts still match.', '本文の検査で Saved → 保存しました の変化を検出。保存された言語・ラベル・要素数は同じままです。')
-    : missed ? text('The check did not observe the changed text. Add the checkbox above to detect it from the same run.', 'この検査は変化した本文を見ていません。上のチェックを追加すると、同じ実行で記録した値から検出できます。')
+    : missed ? text('The check did not observe the changed text. Enable the actual-message-text check to detect it from the same run.', 'この検査は変化した本文を見ていません。本文検査のチェックを追加すると、同じ実行で記録した値から検出できます。')
     : text('This is the normal control. Its recorded values remain the same after reload.', 'これは正常系との比較です。再読込後も記録した値が保たれています。');
   table.replaceChildren();
   for (const [key, label] of Object.entries(names)) {

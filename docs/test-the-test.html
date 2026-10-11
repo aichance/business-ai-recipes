@@ -18,11 +18,11 @@
       <h2>Run the same save and reload.</h2>
       <label for="mode" class="control-label">App behavior</label>
       <div class="row"><select id="mode"><option value="text-loss">Broken: forget the message text</option><option value="normal">Normal: preserve the text</option></select><button id="run" type="button">Save English → reload</button></div>
+      <div id="status" role="status" aria-live="polite">Ready. Run the broken example first.</div>
+      <p id="explanation" class="small">No result has been collected yet.</p>
       <p class="small">The first check compares stored language, declared language and language-labelled element counts.</p>
       <label class="check"><input id="include-text" type="checkbox">Also check the actual message text</label>
       <p class="small">Toggle this after a run to re-evaluate the same recorded values. It does not fix or rerun the app.</p>
-      <div id="status" role="status" aria-live="polite">Ready. Run the broken example first.</div>
-      <p id="explanation" class="small">No result has been collected yet.</p>
       <p lang="ja" class="small">日本語：保存→再読込を実行すると、本文が壊れても最初の検査はPASSします。チェックを追加すると、同じ観測結果から故障を検出できます。正常系とも比べてください。</p>
     </section>
     <section class="card">
