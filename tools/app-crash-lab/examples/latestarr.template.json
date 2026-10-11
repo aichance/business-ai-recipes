@@ -1,0 +1,195 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "LatestArr — saved newsletter settings survive reload and rejected zero-day lookback",
+  "baseURL": "LOCAL_ORIGIN",
+  "path": "/newsletters",
+  "timeoutMs": 15000,
+  "reset": [
+    {
+      "action": "request",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "data": {
+        "email": "crash-lab@example.invalid",
+        "password": "LOCAL_TEST_PASSWORD"
+      },
+      "headers": {
+        "Origin": "LOCAL_ORIGIN"
+      },
+      "expectStatus": 200
+    },
+    {
+      "action": "request",
+      "method": "PATCH",
+      "path": "/api/newsletters/NEWSLETTER_ID",
+      "data": {
+        "name": "ACL synthetic baseline",
+        "scheduleCron": "FUTURE_CRON",
+        "timezone": "UTC",
+        "subjectTemplate": "Synthetic baseline",
+        "lookbackDays": 7,
+        "isEnabled": false,
+        "smtpProfileId": null,
+        "skipWhenEmpty": true
+      },
+      "headers": {
+        "Origin": "LOCAL_ORIGIN"
+      },
+      "expectStatus": 200
+    }
+  ],
+  "setup": [
+    {
+      "action": "goto",
+      "path": "/newsletters"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "ACL synthetic baseline Custom FUTURE_CRON UTC 7-day lookback"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "label": "Name"
+      },
+      "value": "ACL saved settings"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "label": "Lookback (days)"
+      },
+      "value": "14"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "label": "Subject template (optional)"
+      },
+      "value": "Synthetic release check"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Save changes"
+      },
+      "save": true
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "role": "button",
+        "name": "ACL saved settings Custom FUTURE_CRON UTC 14-day lookback"
+      }
+    }
+  ],
+  "afterReload": [
+    {
+      "action": "expectVisible",
+      "target": {
+        "role": "button",
+        "name": "ACL saved settings Custom FUTURE_CRON UTC 14-day lookback"
+      }
+    }
+  ],
+  "observe": {
+    "record": {
+      "source": "response",
+      "url": "/api/newsletters/NEWSLETTER_ID",
+      "field": "json"
+    },
+    "savedName": {
+      "source": "response",
+      "url": "/api/newsletters/NEWSLETTER_ID",
+      "field": "json",
+      "jsonPath": [
+        "newsletter",
+        "name"
+      ]
+    },
+    "savedLookback": {
+      "source": "response",
+      "url": "/api/newsletters/NEWSLETTER_ID",
+      "field": "json",
+      "jsonPath": [
+        "newsletter",
+        "lookbackDays"
+      ]
+    },
+    "savedSubject": {
+      "source": "response",
+      "url": "/api/newsletters/NEWSLETTER_ID",
+      "field": "json",
+      "jsonPath": [
+        "newsletter",
+        "subjectTemplate"
+      ]
+    },
+    "disabled": {
+      "source": "response",
+      "url": "/api/newsletters/NEWSLETTER_ID",
+      "field": "json",
+      "jsonPath": [
+        "newsletter",
+        "isEnabled"
+      ]
+    },
+    "savedRowCount": {
+      "source": "count",
+      "target": {
+        "role": "button",
+        "name": "ACL saved settings Custom FUTURE_CRON UTC 14-day lookback"
+      }
+    },
+    "enabledSwitch": {
+      "source": "attribute",
+      "target": {
+        "role": "switch",
+        "name": "Enabled"
+      },
+      "attribute": "aria-checked"
+    }
+  },
+  "expected": {
+    "savedName": "ACL saved settings",
+    "savedLookback": 14,
+    "savedSubject": "Synthetic release check",
+    "disabled": false,
+    "savedRowCount": 1,
+    "enabledSwitch": "false"
+  },
+  "rejectedUpdate": {
+    "steps": [
+      {
+        "action": "fill",
+        "target": {
+          "label": "Lookback (days)"
+        },
+        "value": "0"
+      },
+      {
+        "action": "click",
+        "target": {
+          "role": "button",
+          "name": "Save changes"
+        }
+      }
+    ],
+    "observe": {
+      "message": {
+        "source": "count",
+        "target": {
+          "css": "[role=\"alert\"]:visible:text-is(\"Too small: expected number to be >0\")"
+        }
+      }
+    },
+    "expected": {
+      "message": 1
+    }
+  }
+}
