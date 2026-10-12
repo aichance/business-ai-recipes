@@ -8,19 +8,21 @@ Turn one successful save workflow into two repeatable checks: **reload without l
 
 [**See the broken vs fixed results**](https://aichance.github.io/business-ai-recipes/app-crash-lab.html) · [**Install & use on your app**](tools/app-crash-lab/README.md) · [**Contract format**](tools/app-crash-lab/CONTRACT.md)
 
+**It exported a backup it could not restore.** In an unchanged local [DevTasks build](tools/app-crash-lab/examples/devtasks/README.md), a synthetic task with a custom `DOCS` category exported successfully, then the same file was rejected in a fresh browser context. The built-in `FEATURE` control restored.
+
+[![21-second actual DevTasks flow: export a synthetic DOCS task, reject its backup in a fresh context, then restore a FEATURE control](docs/devtasks-backup-roundtrip.gif)](https://aichance.github.io/business-ai-recipes/devtasks-backup-roundtrip.mp4)
+
+*[Watch the 21-second MP4](https://aichance.github.io/business-ai-recipes/devtasks-backup-roundtrip.mp4) · [Run the separate Playwright round-trip test](tools/app-crash-lab/examples/devtasks/README.md). This recording uses synthetic records on pinned local source, not the public service. The round-trip test supplements the CLI preservation checks; it is not author adoption.*
+
 [**Try App Crash Lab 0.4.0 without cloning**](#try-the-seeded-demo) · [**Source ZIP & checksums**](https://github.com/aichance/business-ai-recipes/releases/tag/app-crash-lab-v0.4.0)
 
 **No install:** [**Would your test catch this?**](https://aichance.github.io/business-ai-recipes/test-the-test.html) Save English, reload a deliberately broken UI, then add a text observation to turn a misleading PASS into a detected failure. This interactive browser example links to the matching CLI checks.
 
 **Independent own-app use:** [Sethera's author reported](https://qiita.com/cuculhart/items/4425ab63e6b1dd497ae1#comment-4dfcb4ac9ecead546607) running both checks and the two generated Playwright tests on Windows (Node 22.16.0 / Playwright 1.64.0), then reusing the same contract on Sethera v0.5.0. This is the author's public report, separate from our compatibility runs. [Reported scope and pinned setup](tools/app-crash-lab/examples/SETHERA.md#independent-author-report).
 
-**A backup that will not restore:** unchanged local DevTasks exported a UI-created custom-category task, then rejected the exact same file in a fresh browser context. A built-in-category control restored. [Watch the real export/restore flow and run the tests](tools/app-crash-lab/examples/devtasks/README.md#watch-the-real-exportrestore-flow). This is a separate Playwright round-trip example alongside the CLI preservation checks.
-
-[![33-second real UI walkthrough: a saved note is lost after reload, an invalid edit corrupts it, then the fixed version preserves it](https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.1.0/app-crash-lab-demo.gif)](https://github.com/aichance/business-ai-recipes/releases/tag/app-crash-lab-v0.1.0)
-
-*Bundled deliberately broken and fixed fixtures, recorded in real time. [Watch the MP4 or replay the recording](https://github.com/aichance/business-ai-recipes/releases/tag/app-crash-lab-v0.1.0#watch-the-seeded-failure-walkthrough). Run the checker below to get the reports and generated tests.*
-
 ## Try the seeded demo
+
+[Watch the bundled broken/fixed fixture recording](https://github.com/aichance/business-ai-recipes/releases/tag/app-crash-lab-v0.1.0#watch-the-seeded-failure-walkthrough), or run it yourself below. These defects are deliberately authored controls.
 
 In any writable working directory, with **Node 22+ and npm**:
 
