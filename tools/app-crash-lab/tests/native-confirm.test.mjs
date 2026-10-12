@@ -61,6 +61,10 @@ test('confirmation does not replace rejection or saved-state checks', { timeout:
       const update = () => {
         if (mode !== 'missing' && !confirm(mode === 'wrong' ? 'A different operation?' : message)) return;
         if (mode === 'twice' && !confirm(message)) return;
+        if (mode === 'unexpected-during-wait') {
+          setTimeout(() => confirm(message), 300);
+          return;
+        }
         if (mode === 'no-rejection') return;
         if (mode === 'alert') alert('Invalid note');
         else document.querySelector('#error').textContent = 'Invalid note';
@@ -78,7 +82,7 @@ test('confirmation does not replace rejection or saved-state checks', { timeout:
   t.after(async () => { await new Promise(resolve => server.close(resolve)); await rm(temp, { recursive: true, force: true }); });
   const baseURL = `http://127.0.0.1:${server.address().port}`;
   const run = (mode, changes = {}) => runContract({ ...contract, baseURL, path: '/?mode=' + mode, ...changes }, { out: join(temp, mode) });
-  let fixed, corrupt;
+  let fixed, corrupt, unexpected;
   await t.test('one exact confirm allows a real DOM rejection; a delayed confirm also works', async () => {
     fixed = await run('fixed');
     assert.equal(fixed.results[0].status, 'pass');
@@ -105,6 +109,13 @@ test('confirmation does not replace rejection or saved-state checks', { timeout:
       assert.equal(result.confirmations?.length ?? 0, ['twice', 'late'].includes(mode) ? 1 : 0);
     }
   });
+  await t.test('a second confirm during rejection waiting overrides a missing-rejection failure', async () => {
+    unexpected = await run('unexpected-during-wait');
+    assert.equal(unexpected.results[0].status, 'inconclusive', JSON.stringify(unexpected.results[0]));
+    assert.equal(unexpected.exitCode, 2);
+    assert.equal(unexpected.results[0].dialogs.length, 2);
+    assert.equal(unexpected.results[0].confirmations.length, 1);
+  });
   await t.test('an expected alert remains a separate rejection signal after confirmation', async () => {
     const rejectedUpdate = structuredClone(contract.rejectedUpdate);
     delete rejectedUpdate.observe; delete rejectedUpdate.expected;
@@ -115,7 +126,7 @@ test('confirmation does not replace rejection or saved-state checks', { timeout:
     assert.deepEqual(result.dialogs.map(d => d.type), ['confirm', 'alert']);
   });
   await t.test('standalone exports reproduce the same pass and deliberate data-loss failure', async () => {
-    for (const [report, expectedCode] of [[fixed, 0], [corrupt, 1]]) {
+    for (const [report, expectedCode] of [[fixed, 0], [corrupt, 1], [unexpected, 1]]) {
       const result = await new Promise((done, reject) => {
         const child = spawn(process.execPath, [join(root, 'node_modules/@playwright/test/cli.js'), 'test', '--config', join(report.out, 'playwright.config.mjs')], { cwd: root, stdio: ['ignore', 'pipe', 'pipe'] });
         let output = ''; child.stdout.on('data', c => output += c); child.stderr.on('data', c => output += c);
@@ -123,6 +134,7 @@ test('confirmation does not replace rejection or saved-state checks', { timeout:
       });
       assert.equal(result.code, expectedCode, result.output);
       assert.match(result.output, expectedCode === 0 ? /1 passed/ : /1 failed/);
+      if (report === unexpected) assert.match(result.output, /"status": "inconclusive"/);
     }
   });
 });
