@@ -15,6 +15,18 @@ and `REFACTOR`. We did not change the app, manufacture the exported JSON, or
 claim that existing data was deleted. This is an AI-assisted local reproduction,
 not a test of the current public deployment or an endorsement by its author.
 
+## Watch the real export/restore flow
+
+[![Actual DevTasks UI: create a custom DOCS task and export JSON; import the unchanged file into a fresh context and receive a schema rejection; the built-in FEATURE control restores and survives reload](../../../../docs/devtasks-backup-roundtrip.gif)](https://aichance.github.io/business-ai-recipes/devtasks-backup-roundtrip.mp4)
+
+[Play the MP4](https://aichance.github.io/business-ai-recipes/devtasks-backup-roundtrip.mp4).
+This is a local recording of the pinned, unchanged DevTasks source above,
+with synthetic records. Separate source and fresh-target context clips are
+joined at normal speed; initial startup waits are trimmed and explanatory
+captions sit above the app. App pixels are not altered. The `FEATURE` control
+uses its own export. The round-trip is the separate Playwright test below,
+not an App Crash Lab CLI download/import feature.
+
 ## Two different promises to check
 
 | Promise | Local result on the pinned source |
