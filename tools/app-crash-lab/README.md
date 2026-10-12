@@ -58,11 +58,16 @@ fixtures; running the demo does not test your own app.
 1. Start a **disposable local development instance** of your app.
 2. Save [`examples/notes.json`](examples/notes.json) as `my-app.json` in your working folder (use **Raw → Save As** on GitHub, or copy it from the source ZIP).
 3. Set both `baseURL` (the local origin) and `path` (your app's route). The copied `/?mode=fixed` path belongs only to the demo. Set save steps (`save: true` on the save trigger), saved values and invalid input/rejection signal.
-4. Run:
+4. With **Node 22+ and npm**, run these commands in the same working folder. The first installs the Chromium version needed by Playwright 1.64.0; run it once per machine, even if you skipped the demo:
 
 ```sh
+npx --yes --package=@playwright/test@1.64.0 playwright install chromium
 npx --yes --package=https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.4.0/aichance-app-crash-lab-0.4.0.tgz app-crash-lab run my-app.json
 ```
+
+On Linux, missing browser system libraries may require replacing the first
+command with `npx --yes --package=@playwright/test@1.64.0 playwright install --with-deps chromium`.
+Installing system libraries may require administrator access.
 
 From a source checkout, `node cli.mjs run my-app.json` also works. Each run
 prints its report path and creates a new output directory by default. If
@@ -325,11 +330,16 @@ Linuxでブラウザ用のシステムライブラリが不足する場合は、
 1. [notes.json](examples/notes.json)を`my-app.json`として保存します。GitHubなら **Raw → 名前を付けて保存**で取得できます。
 2. `baseURL`と`path`を自分のアプリへ合わせます。元の`/?mode=fixed`はデモ専用です。
 3. 以下の対応表に沿って、画面の項目・保存操作・期待値を書き換えます。
-4. 同じ作業フォルダーから実行します。
+4. **Node.js 22以上とnpm**を用意し、同じ作業フォルダーから以下を実行します。最初のコマンドはPlaywright 1.64.0用のChromiumを導入します。デモを飛ばした場合も、この環境で初回のみ実行してください。
 
 ```sh
+npx --yes --package=@playwright/test@1.64.0 playwright install chromium
 npx --yes --package=https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.4.0/aichance-app-crash-lab-0.4.0.tgz app-crash-lab run my-app.json
 ```
+
+Linuxでブラウザ用のシステムライブラリが不足する場合は、最初のコマンドを
+`npx --yes --package=@playwright/test@1.64.0 playwright install --with-deps chromium`
+へ変えてください。システムライブラリの導入には管理者権限が必要になる場合があります。
 
 | JSONの項目 | 自分のアプリで指定するもの |
 | --- | --- |
