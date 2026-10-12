@@ -15,6 +15,8 @@ and `REFACTOR`. We did not change the app, manufacture the exported JSON, or
 claim that existing data was deleted. This is an AI-assisted local reproduction,
 not a test of the current public deployment or an endorsement by its author.
 
+Want this check for your own app? [Copy the test and change four areas](#adapt-the-test-to-your-own-app).
+
 ## Watch the real export/restore flow
 
 [![Actual DevTasks UI: create a custom DOCS task and export JSON; import the unchanged file into a fresh context and receive a schema rejection; the built-in FEATURE control restores and survives reload](../../../../docs/devtasks-backup-roundtrip.gif)](https://aichance.github.io/business-ai-recipes/devtasks-backup-roundtrip.mp4)
@@ -90,6 +92,40 @@ window. They do not check a second reload after rejection, UI-created tasks,
 all schema variants, multiple tabs, storage limits, mobile, or process crashes.
 The round-trip test separately creates its task through the normal UI and
 waits for the startup splash to disappear before importing in the new context.
+
+## Adapt the test to your own app
+
+For a web app that exports and imports browser-local data, copy
+[`backup-roundtrip.spec.mjs`](backup-roundtrip.spec.mjs) and
+[`playwright.config.mjs`](playwright.config.mjs) side by side into an existing
+`@playwright/test` project, for example `tests/backup/`. The spec is an editable
+starting point; it does not discover your app's controls automatically.
+
+| Edit area | In the current spec | Replace with your app's behavior |
+|---|---|---|
+| 1. Local app and cases | `origin`, `importError`, `['FEATURE', 'DOCS']` | One disposable loopback app, its import error text, and two valid records your UI allows: an ordinary case and an edge case. The existing route restriction allows only that origin. |
+| 2. Create and read the source | `/taskmanage/add-tasks`, `Task Description`, `Create Task`, `localStorage.getItem('tasks')` | Create a synthetic record through the normal UI, wait for it to save, then read and assert the complete expected record. Update every state read, not just the first one. |
+| 3. Export and import | `/taskmanage/data-center`, `Export JSON`, `JSON.parse(backup.toString()).tasks`, `Upload Backup`, splash heading, `input[type=file]`, toast selectors | Your download/upload controls, exported payload shape and readiness/result signals. Retain the assertion that the complete exported record equals `saved`; shape or count alone can miss lost fields. Keep the same downloaded `backup` buffer as the upload input; do not edit or reserialize it. Verify the fresh target contains no records before import. |
+| 4. Prove restoration | The final `expect.poll(...).toEqual(saved)`, `/taskmanage/list-tasks`, task text checks | Compare the complete restored record with the source, then navigate to its visible UI and check again after reload. A success toast or record count alone is insufficient. |
+
+Start your local app, then run from your Playwright project:
+
+```sh
+npx playwright test --config tests/backup/playwright.config.mjs
+```
+
+Both valid cases should restore. The unchanged DevTasks example deliberately
+stays red for `DOCS` on the pinned source: do not change that assertion to
+expect rejection, mark it `test.fail()`, or hide exit code 1. Keep the actual
+download, import screenshot and observations from the test output to diagnose
+the failure. If importing never reaches the expected UI signal, that is a
+setup failure to investigate, not evidence that the saved data survived.
+
+Fresh contexts separate browser storage, **not a shared server database**.
+This example therefore uses a disposable browser-local app. A server-backed
+app needs its own isolated synthetic dataset and independent target setup
+before adapting this flow. The test is separate from the App Crash Lab CLI;
+the CLI's two preservation checks do not implement this download/restore flow.
 
 DevTasks is Shamil's MIT-licensed project and is downloaded from its author;
 its source is not bundled here. These independently written tests and contracts
