@@ -8,7 +8,7 @@ Turn one successful save workflow into two repeatable checks: **reload without l
 
 [**See the broken vs fixed results**](https://aichance.github.io/business-ai-recipes/app-crash-lab.html) · [**Install & use on your app**](tools/app-crash-lab/README.md) · [**Contract format**](tools/app-crash-lab/CONTRACT.md)
 
-[**Try App Crash Lab 0.3.1 without cloning**](#try-the-seeded-demo) · [**Source ZIP & checksums**](https://github.com/aichance/business-ai-recipes/releases/tag/app-crash-lab-v0.3.1)
+[**Try App Crash Lab 0.4.0 without cloning**](#try-the-seeded-demo) · [**Source ZIP & checksums**](https://github.com/aichance/business-ai-recipes/releases/tag/app-crash-lab-v0.4.0)
 
 **No install:** [**Would your test catch this?**](https://aichance.github.io/business-ai-recipes/test-the-test.html) Save English, reload a deliberately broken UI, then add a text observation to turn a misleading PASS into a detected failure. This interactive browser example links to the matching CLI checks.
 
@@ -26,7 +26,7 @@ In any writable working directory, with **Node 22+ and npm**:
 
 ```sh
 npx --yes --package=@playwright/test@1.64.0 playwright install chromium
-npx --yes --package=https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.3.1/aichance-app-crash-lab-0.3.1.tgz app-crash-lab demo
+npx --yes --package=https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.4.0/aichance-app-crash-lab-0.4.0.tgz app-crash-lab demo
 ```
 
 Open the printed absolute `index.html` path. Reports are saved in your working directory. For Linux browser dependencies, a source checkout, or **your own app's JSON config**, use the [setup and own-app guide](tools/app-crash-lab/README.md).
@@ -46,6 +46,8 @@ Also exercised against an unchanged local [Glypha](https://github.com/kuny/glyph
 Browser-only JSON importer? The [Tunoron example](tools/app-crash-lab/examples/TUNORON.md) imports a synthetic song and checks the complete saved record after reload and malformed JSON rejection. Requires App Crash Lab 0.2+.
 
 Your app rejects input with a native `alert()`? The [Sethera example](tools/app-crash-lab/examples/SETHERA.md) checks both reload and saved-state preservation after a malformed JSON import. Exact alert text and state are checked separately. Requires App Crash Lab 0.3+.
+
+An importer asks “Replace the current document?” before parsing? The [FloorPlanner example](tools/app-crash-lab/examples/FLOORPLANNER.md) accepts one declared confirmation, then separately checks the parse error and unchanged saved data. Requires App Crash Lab 0.4+.
 
 If these checks are useful, [star the repository](https://github.com/aichance/business-ai-recipes) to find them again before your next release. Starring is optional.
 
