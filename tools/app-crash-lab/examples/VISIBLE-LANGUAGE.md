@@ -29,7 +29,7 @@ visibleJapanese: 0 → 1
 
 ## 自分で再現する
 
-[実行例 ZIP をダウンロード](https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.3.0/app-crash-lab-visible-language-example.zip)して展開します。中身はこの説明、`language.html`、3つの JSON の計5ファイルです。現在のリポジトリの `examples/` にも同じファイルがあります。元の 0.3.0 ソースアーカイブには、この後から追加した例は入っていません。
+[実行例 ZIP をダウンロード](https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.3.0/app-crash-lab-visible-language-example.zip)して展開します。中身は公開時の説明、`language.html`、3つの JSON の計5ファイルです。現在のリポジトリの `examples/` にも同じ HTML と設定があり、この説明には後日の補足を加えています。元の 0.3.0 ソースアーカイブには、この後から追加した例は入っていません。
 
 Node 22 以上、npm、Python 3 が必要です。展開した `visible-language` フォルダでサーバーを起動し、そのターミナルは開いたままにします。
 
@@ -90,7 +90,11 @@ npx playwright test --config playwright.config.mjs
 
 ## きっかけと範囲
 
-こどもニュースの作者による[英語モードの設計記事](https://qiita.com/kodomo-news/items/595f916fef0434f205e0)の、非表示の翻訳も `textContent` に含まれるという説明をきっかけに作りました。公開サイトでは英語設定が再読込後も保持され、日本語ページの現在地タブは日本語を示す動作を、私たちのブラウザ操作で確認しました。
+こどもニュースの作者による[英語モードの設計記事](https://qiita.com/kodomo-news/items/595f916fef0434f205e0)の、非表示の翻訳も `textContent` に含まれるという説明をきっかけに作りました。**2026-10-11の初回確認時点**では、英語を選んで再読込後に日本語トップへ移ると、見出しは英語、現在地タブは日本語を示していました。これは当時の仕様の観測です。
+
+**2026-10-12追記:** [作者の返信](https://qiita.com/kodomo-news/items/595f916fef0434f205e0#comment-efbeca447bcf88c156b5)によると、10/11に、版を持つURLを直接開いたときは保存言語もそのURLの版へ合わせる仕様へ変更されています。10/12のブラウザ再確認でも、英語版を選択・再読込した後に日本語トップを直接開くと、見出しと主要ナビは日本語、選択中タブは「ふつう」でした。再読込後も同じ表示でした。内部の保存値は今回取得していません。
+
+この場合、日本語URLで英語表示を維持する期待値は現行仕様に合いません。実アプリの検査では、保存した設定とURLのどちらが表示を決めるかを先に確認してください。下記の合成例は仕様変更を取り込んだ実サイトのテストではなく、引き続き意図した表示故障と観測方法の比較です。
 
 ここにある HTML と設定は独自に作った合成例です。作者のソースは使っておらず、実サービスを App Crash Lab で検査した、作者が導入した、という意味ではありません。検査するのは今回の CSS による表示切替と選択した値だけです。画面全体の描画品質、重なり、読み上げ品質、他ブラウザの動作までを保証するものではありません。
 
@@ -104,6 +108,8 @@ with a text-aware FAIL on that same deliberately broken page.
 **A passing text check can miss a broken display.** This small, deliberately faulty HTML page keeps both translations in the DOM and uses `display: none` to hide one. After choosing English, the faulty mode restores the Japanese display on reload while retaining the stored `en` value and the HTML language-state marker. The heading's `textContent` remains `保存しましたSaved` in both states.
 
 This is an independently written synthetic example, inspired by the [author's article about multilingual state](https://qiita.com/kodomo-news/items/595f916fef0434f205e0). It is not a bug claim about that author's service.
+
+**Source-site update, October 12, 2026:** In a [reply dated October 11](https://qiita.com/kodomo-news/items/595f916fef0434f205e0#comment-efbeca447bcf88c156b5), the author explained that opening a language-specific URL now aligns the saved preference with that URL. Our October 12 UI check confirmed Japanese headings and navigation after selecting English, reloading, then directly opening the Japanese homepage; reloading kept that Japanese display. We did not inspect stored values in this check. An assertion that English must persist on that URL would now encode an outdated requirement. Determine whether the URL or stored preference should win before writing the contract. This does not change the synthetic comparison below or demonstrate the author's use of App Crash Lab.
 
 | Contract | Page behavior | App Crash Lab / exported Playwright test |
 | --- | --- | --- |
