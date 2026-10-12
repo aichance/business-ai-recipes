@@ -288,6 +288,10 @@ export async function executeCheck(page, contract, check) {
       dialogs.confirmation = null;
       page.off('dialog', dialogs.listener);
       await Promise.all(dialogs.pending);
+      // A dialog may arrive during observation before an early failure return.
+      // It invalidates that verdict just as it does the normal comparison path.
+      try { assertSupportedDialogs(dialogs); }
+      catch (error) { result.status = 'inconclusive'; result.error = error.message; }
       if (dialogs.accepted.size) result.confirmations = [...dialogs.accepted].map(index => dialogs.events[index]);
     }
   }
