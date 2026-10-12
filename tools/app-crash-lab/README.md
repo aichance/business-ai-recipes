@@ -108,6 +108,12 @@ runner 0.3 or later. The [annotate.js example](examples/ANNOTATE.md) checks a
 synthetic review comment and its malformed-import toast.
 For a native `confirm()` before invalid-file parsing, the [FloorPlanner example](examples/FLOORPLANNER.md) includes two ready-to-run contracts. They require one exact replacement confirmation, a separate parse/schema error and preserved state. Only one invalid `setFile` step may accept a confirmation; use synthetic records. Requires runner 0.4 or later.
 
+The [DevTasks backup example](examples/devtasks/README.md) shows a different gap:
+invalid backups are safely rejected, yet a custom-category backup exported by
+the app itself cannot be restored. It includes three passing preservation
+checks and a separate round-trip reproduction with a passing default-category
+control. The latter is a standalone Playwright test, beyond the CLI's two patterns.
+
 The [Multi-Counter example](examples/MULTI-COUNTER.md) compares two saved names,
 counts and a three-event history in local mode, with a reload-only contract.
 
