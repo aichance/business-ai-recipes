@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "DevTasks / malformed backup",
+  "baseURL": "http://127.0.0.1:54431",
+  "path": "/taskmanage/data-center",
+  "timeoutMs": 5000,
+  "stabilityMs": 750,
+  "checks": [
+    "reload",
+    "rejected-update"
+  ],
+  "reset": [],
+  "setup": [
+    {
+      "action": "setFile",
+      "target": {
+        "css": "input[type=file]"
+      },
+      "file": {
+        "name": "synthetic-backup.json",
+        "mimeType": "application/json",
+        "text": "{\"exportedAt\": \"2026-10-12T00:00:00.000Z\", \"tasks\": [{\"id\": 1, \"text\": \"Crash Lab saved task\", \"category\": \"BUG\", \"priority\": \"HIGH\", \"completed\": false, \"createdAt\": \"2026-10-12T00:00:00.000Z\"}]}"
+      },
+      "save": true
+    }
+  ],
+  "observe": {
+    "tasks": {
+      "source": "localStorage",
+      "key": "tasks",
+      "parse": "json"
+    },
+    "inventory": {
+      "source": "count",
+      "target": {
+        "css": ":text-is(\"1 active tasks ready\"):visible"
+      }
+    }
+  },
+  "expected": {
+    "tasks": [
+      {
+        "id": 1,
+        "text": "Crash Lab saved task",
+        "category": "BUG",
+        "priority": "HIGH",
+        "completed": false,
+        "createdAt": "2026-10-12T00:00:00.000Z"
+      }
+    ],
+    "inventory": 1
+  },
+  "rejectedUpdate": {
+    "steps": [
+      {
+        "action": "setFile",
+        "target": {
+          "css": "input[type=file]"
+        },
+        "file": {
+          "name": "invalid.json",
+          "mimeType": "application/json",
+          "text": "{"
+        }
+      }
+    ],
+    "observe": {
+      "error": {
+        "source": "count",
+        "target": {
+          "css": "[data-sonner-toast][data-type=\"error\"] [data-title]:visible:text-is(\"Parsing failed — ensure file is a valid DevTasks JSON backup.\")"
+        }
+      }
+    },
+    "expected": {
+      "error": 1
+    }
+  }
+}
