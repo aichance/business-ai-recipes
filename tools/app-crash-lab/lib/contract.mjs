@@ -61,7 +61,7 @@ function steps(value, where, nonempty = false) {
   requireThat(Array.isArray(value) && (!nonempty || value.length > 0) && value.length <= 100, `${where} must be an array of up to 100 steps`);
   for (const [i, step] of value.entries()) {
     const at = `${where}[${i}]`;
-    keys(step, ['action', 'target', 'value', 'file', 'path', 'method', 'data', 'expectStatus', 'headers', 'save'], at);
+    keys(step, ['action', 'target', 'value', 'file', 'path', 'method', 'data', 'expectStatus', 'headers', 'save', 'confirm'], at);
     requireThat(['click', 'fill', 'press', 'select', 'check', 'uncheck', 'setFile', 'expectText', 'expectValue', 'expectVisible', 'goto', 'request'].includes(step.action), `${at}: unsupported action`);
     if (['goto', 'request'].includes(step.action)) path(step.path, `${at}.path`);
     else target(step.target, `${at}.target`);
@@ -81,6 +81,11 @@ function steps(value, where, nonempty = false) {
       requireThat(step.save === true, `${at}.save must be true when present`);
       const mutation = ['click', 'fill', 'press', 'select', 'check', 'uncheck', 'setFile'].includes(step.action) || (step.action === 'request' && step.method !== 'GET' && step.expectStatus >= 200 && step.expectStatus < 300);
       requireThat(mutation, `${at}.save must mark an actual save-triggering action or successful HTTP mutation`);
+    }
+    if (step.confirm !== undefined) {
+      requireThat(where === 'rejectedUpdate.steps' && value.length === 1 && step.action === 'setFile', `${at}.confirm requires one setFile invalid-update step`);
+      keys(step.confirm, ['message', 'accept'], `${at}.confirm`);
+      requireThat(text(step.confirm.message) && step.confirm.accept === true, `${at}.confirm requires an exact nonempty message and accept: true`);
     }
   }
 }

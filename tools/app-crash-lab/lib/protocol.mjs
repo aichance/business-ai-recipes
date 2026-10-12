@@ -42,8 +42,9 @@ export async function confineContext(context, baseURL) {
   });
 }
 
-async function applySteps(page, contract, steps, phase, events) {
+async function applySteps(page, contract, steps, phase, events, dialogs = null) {
   for (const [index, step] of steps.entries()) {
+    if (dialogs) dialogs.confirmation = step.confirm ? { message: step.confirm.message, seen: false, deadline: Date.now() + contract.timeoutMs } : null;
     events.push({ phase, step: index + 1, action: step.action, ...(step.save ? { save: true } : {}), status: 'started' });
     if (step.action === 'goto') await page.goto(scopedURL(contract.baseURL, step.path), { waitUntil: 'domcontentloaded' });
     else if (step.action === 'request') {
@@ -69,6 +70,23 @@ async function applySteps(page, contract, steps, phase, events) {
       else if (step.action === 'expectVisible') await expect(locator).toBeVisible({ timeout: contract.timeoutMs });
       else throw new Error(`Unsupported action: ${step.action}`);
     }
+    if (step.confirm) {
+      const deadline = dialogs.confirmation.deadline;
+      while (!dialogs.confirmation.seen && Date.now() < deadline) {
+        assertSupportedDialogs(dialogs);
+        await new Promise(resolve => setTimeout(resolve, 25));
+      }
+      await Promise.all(dialogs.pending);
+      assertSupportedDialogs(dialogs);
+      const seen = dialogs.confirmation.seen;
+      dialogs.confirmation = null;
+      if (!seen) {
+        const error = new Error(`Required confirmation was not observed during ${phase} step ${index + 1}`);
+        error.violation = true;
+        throw error;
+      }
+    }
+    if (dialogs) { dialogs.confirmation = null; assertSupportedDialogs(dialogs); }
     events[events.length - 1].status = 'completed';
   }
 }
@@ -142,12 +160,15 @@ async function waitForState(page, contract, probes, expected) {
   return { state, matched: false };
 }
 
-function captureDialogs(page) {
-  const capture = { events: [], pending: new Set(), error: null };
+function captureDialogs(page, allowAlerts) {
+  const capture = { events: [], accepted: new Set(), confirmation: null, pending: new Set(), error: null, allowAlerts };
   capture.listener = dialog => {
-    capture.events.push({ type: dialog.type(), message: dialog.message() });
+    const event = { type: dialog.type(), message: dialog.message() };
+    const index = capture.events.push(event) - 1;
+    const accept = event.type === 'confirm' && capture.confirmation && !capture.confirmation.seen && Date.now() < capture.confirmation.deadline && event.message === capture.confirmation.message;
+    if (accept) { capture.confirmation.seen = true; capture.accepted.add(index); }
     // Handling is required: an unhandled modal would stall the triggering action.
-    const pending = dialog.dismiss().catch(error => { capture.error = error; });
+    const pending = (accept ? dialog.accept() : dialog.dismiss()).catch(error => { capture.error = error; });
     capture.pending.add(pending);
     pending.finally(() => capture.pending.delete(pending));
   };
@@ -156,15 +177,15 @@ function captureDialogs(page) {
 }
 
 function assertSupportedDialogs(capture) {
-  if (capture.error) throw new Error(`Could not dismiss native dialog: ${capture.error.message}`);
-  if (capture.events.some(event => event.type !== 'alert')) throw new Error('Native confirm/prompt/beforeunload dialogs are unsupported; no rejection verdict');
+  if (capture.error) throw new Error(`Could not handle native dialog: ${capture.error.message}`);
+  if (capture.events.some((event, index) => !(event.type === 'alert' && capture.allowAlerts) && !capture.accepted.has(index))) throw new Error('Unexpected native dialog; no rejection verdict');
 }
 
 async function waitForDialog(capture, start, timeoutMs) {
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline) {
     assertSupportedDialogs(capture);
-    if (capture.events.length > start && capture.pending.size === 0) break;
+    if (capture.events.slice(start).some((_, i) => !capture.accepted.has(start + i)) && capture.pending.size === 0) break;
     await new Promise(resolve => setTimeout(resolve, 25));
   }
   await Promise.all(capture.pending);
@@ -172,13 +193,13 @@ async function waitForDialog(capture, start, timeoutMs) {
 }
 
 function dialogRejection(capture, start, expected) {
-  const actual = capture.events.slice(start);
+  const actual = capture.events.slice(start).filter((_, i) => !capture.accepted.has(start + i));
   return { expected, actual, confirmed: actual.length === 1 && isDeepStrictEqual(actual[0], expected) };
 }
 
 export async function executeCheck(page, contract, check) {
   const result = { check, status: 'inconclusive', phase: 'reset', before: null, after: null, differences: [], events: [] };
-  const dialogs = check === 'rejected-update' && contract.rejectedUpdate.dialog ? captureDialogs(page) : null;
+  const dialogs = check === 'rejected-update' && (contract.rejectedUpdate.dialog || contract.rejectedUpdate.steps.some(step => step.confirm)) ? captureDialogs(page, Boolean(contract.rejectedUpdate.dialog)) : null;
   let dialogStart;
   if (dialogs) result.dialogs = dialogs.events;
   page.setDefaultTimeout(contract.timeoutMs);
@@ -211,10 +232,10 @@ export async function executeCheck(page, contract, check) {
         dialogStart = dialogs.events.length;
       }
       result.phase = 'invalid-update';
-      await applySteps(page, contract, invalid.steps, 'invalid-update', result.events);
-      if (invalid.observe || dialogs) {
+      await applySteps(page, contract, invalid.steps, 'invalid-update', result.events, dialogs);
+      if (invalid.observe || invalid.dialog) {
         result.phase = 'confirm-rejection';
-        if (dialogs) {
+        if (invalid.dialog) {
           await waitForDialog(dialogs, dialogStart, contract.timeoutMs);
           result.rejection = dialogRejection(dialogs, dialogStart, invalid.dialog);
         } else {
@@ -247,11 +268,14 @@ export async function executeCheck(page, contract, check) {
     if (dialogs) {
       await Promise.all(dialogs.pending);
       assertSupportedDialogs(dialogs);
-      result.rejection = dialogRejection(dialogs, dialogStart, contract.rejectedUpdate.dialog);
-      if (!result.rejection.confirmed) { result.status = 'fail'; result.error = 'Expected exactly one matching rejection alert'; }
+      if (contract.rejectedUpdate.dialog) {
+        result.rejection = dialogRejection(dialogs, dialogStart, contract.rejectedUpdate.dialog);
+        if (!result.rejection.confirmed) { result.status = 'fail'; result.error = 'Expected exactly one matching rejection alert'; }
+      }
     }
     return result;
   } catch (error) {
+    if (dialogs) dialogs.confirmation = null;
     result.status = error.violation ? 'fail' : 'inconclusive';
     result.error = error.message;
     // Preserve observable differences even when the rejection requirement failed.
@@ -261,8 +285,14 @@ export async function executeCheck(page, contract, check) {
     return result;
   } finally {
     if (dialogs) {
+      dialogs.confirmation = null;
       page.off('dialog', dialogs.listener);
       await Promise.all(dialogs.pending);
+      // A dialog may arrive during observation before an early failure return.
+      // It invalidates that verdict just as it does the normal comparison path.
+      try { assertSupportedDialogs(dialogs); }
+      catch (error) { result.status = 'inconclusive'; result.error = error.message; }
+      if (dialogs.accepted.size) result.confirmations = [...dialogs.accepted].map(index => dialogs.events[index]);
     }
   }
 }

@@ -1,0 +1,157 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "FloorPlanner / schema import",
+  "baseURL": "http://127.0.0.1:54421",
+  "path": "/",
+  "timeoutMs": 5000,
+  "stabilityMs": 750,
+  "checks": [
+    "rejected-update"
+  ],
+  "reset": [],
+  "setup": [
+    {
+      "action": "setFile",
+      "target": {
+        "css": "#import-file"
+      },
+      "file": {
+        "name": "synthetic-layout.json",
+        "mimeType": "application/json",
+        "text": "{\"schemaVersion\": 1, \"meta\": {\"title\": \"無題レイアウト\", \"savedAt\": \"2026-10-11T14:07:33.950Z\"}, \"settings\": {\"gridSize\": 25, \"scaleMetersPerGrid\": 0.5, \"hiddenGroups\": []}, \"rooms\": [], \"templates\": [], \"items\": [{\"id\": \"item-mv3wdksp-1\", \"templateId\": \"tpl-pc\", \"kind\": \"device\", \"x\": 506.25, \"y\": 287.5, \"rotation\": 0, \"label\": \"\"}], \"cables\": [], \"checklist\": {\"checked\": [\"tpl-pc\"]}}"
+      },
+      "save": true
+    }
+  ],
+  "observe": {
+    "settings": {
+      "source": "localStorage",
+      "key": "venue-layout-planner:v1:autosave",
+      "parse": "json",
+      "jsonPath": [
+        "settings"
+      ]
+    },
+    "rooms": {
+      "source": "localStorage",
+      "key": "venue-layout-planner:v1:autosave",
+      "parse": "json",
+      "jsonPath": [
+        "rooms"
+      ]
+    },
+    "templates": {
+      "source": "localStorage",
+      "key": "venue-layout-planner:v1:autosave",
+      "parse": "json",
+      "jsonPath": [
+        "templates"
+      ]
+    },
+    "items": {
+      "source": "localStorage",
+      "key": "venue-layout-planner:v1:autosave",
+      "parse": "json",
+      "jsonPath": [
+        "items"
+      ]
+    },
+    "cables": {
+      "source": "localStorage",
+      "key": "venue-layout-planner:v1:autosave",
+      "parse": "json",
+      "jsonPath": [
+        "cables"
+      ]
+    },
+    "checklist": {
+      "source": "localStorage",
+      "key": "venue-layout-planner:v1:autosave",
+      "parse": "json",
+      "jsonPath": [
+        "checklist"
+      ]
+    },
+    "title": {
+      "source": "localStorage",
+      "key": "venue-layout-planner:v1:autosave",
+      "parse": "json",
+      "jsonPath": [
+        "meta",
+        "title"
+      ]
+    },
+    "checklistText": {
+      "source": "text",
+      "target": {
+        "css": "#checklist-body"
+      }
+    },
+    "checkedCount": {
+      "source": "count",
+      "target": {
+        "css": "#checklist-body input:checked"
+      }
+    }
+  },
+  "expected": {
+    "settings": {
+      "gridSize": 25,
+      "scaleMetersPerGrid": 0.5,
+      "hiddenGroups": []
+    },
+    "rooms": [],
+    "templates": [],
+    "items": [
+      {
+        "id": "item-mv3wdksp-1",
+        "templateId": "tpl-pc",
+        "kind": "device",
+        "x": 506.25,
+        "y": 287.5,
+        "rotation": 0,
+        "label": ""
+      }
+    ],
+    "cables": [],
+    "checklist": {
+      "checked": [
+        "tpl-pc"
+      ]
+    },
+    "title": "無題レイアウト",
+    "checklistText": "機器PC×1",
+    "checkedCount": 1
+  },
+  "rejectedUpdate": {
+    "steps": [
+      {
+        "action": "setFile",
+        "target": {
+          "css": "#import-file"
+        },
+        "file": {
+          "name": "invalid-layout.json",
+          "mimeType": "application/json",
+          "text": "{}"
+        },
+        "confirm": {
+          "message": "現在のレイアウトを破棄して読み込みますか？",
+          "accept": true
+        }
+      }
+    ],
+    "observe": {
+      "error": {
+        "source": "text",
+        "target": {
+          "css": "#toast"
+        }
+      }
+    },
+    "expected": {
+      "error": "レイアウトファイルの形式が不正です"
+    }
+  }
+}

@@ -26,7 +26,26 @@ jobs:
           persist-credentials: false
       - run: npm ci --ignore-scripts --no-audit --no-fund
       - run: npx playwright install --with-deps chromium
-      - run: npm test
+      - name: Run browser tests
+        shell: bash
+        run: |
+          set -o pipefail
+          npm test 2>&1 | tee "$RUNNER_TEMP/app-crash-lab-tests.log"
+      - name: Summarize browser tests
+        if: always()
+        run: |
+          node --input-type=module <<'JS'
+          import { existsSync, readFileSync, appendFileSync } from 'node:fs';
+          const log = `${process.env.RUNNER_TEMP}/app-crash-lab-tests.log`;
+          if (existsSync(log)) {
+            const lines = readFileSync(log, 'utf8').split('\n');
+            const tail = lines.slice(-500).join('\n').replaceAll('```', "'''");
+            appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+              '## App Crash Lab browser tests\n\n' +
+              (lines.length > 500 ? 'Last 500 lines; full output remains in the job log.\n\n' : '') +
+              '```text\n' + tail + '\n```\n');
+          }
+          JS
       - run: npm run demo
   demo-forge-first-run:
     if: github.event_name == 'workflow_dispatch'

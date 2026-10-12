@@ -193,14 +193,56 @@ alert fails. Additional alerts observed through the saved-state comparison and
 stability window also fail. `timeoutMs` is a maximum wait for the first alert,
 not a full-duration monitor. Alerts after that comparison window are outside
 coverage; `stabilityMs: 0` adds no extra monitoring time. Native `confirm`, `prompt`
-and `beforeunload` are not supported rejection signals and make this check
-inconclusive. The runner dismisses them; it never supplies confirmation or input.
+and `beforeunload` are not rejection signals. Unconfigured confirmations,
+prompts and before-unload dialogs are dismissed and make this check inconclusive.
 
 Even after a correct alert, changed saved data fails. `report.json` includes
 the observed dialog type/text, and the generated standalone test uses the same
 checks. As with DOM signals, this is bounded observation, not proof that an
 unrelated delayed event could never produce the same message. See the
 [unchanged Sethera example](examples/SETHERA.md).
+
+### Confirmation before invalid input (requires 0.4 or later)
+
+An importer may ask whether to replace the current document *before* parsing
+the file. Configure the exact type/text permitted in a single file-import
+observation window:
+
+```json
+{
+  "rejectedUpdate": {
+    "steps": [{
+      "action": "setFile",
+      "target": { "css": "input[type=\"file\"]" },
+      "file": { "name": "invalid.json", "mimeType": "application/json", "text": "{" },
+      "confirm": { "message": "Replace this synthetic note?", "accept": true }
+    }],
+    "observe": { "error": { "source": "text", "target": { "css": "#error" } } },
+    "expected": { "error": "Invalid note" }
+  }
+}
+```
+
+The runner accepts exactly one matching native `confirm()` during this step,
+within `timeoutMs` from the start of the action. The message matches the full
+text, including whitespace and case. Missing confirmation fails. A wrong,
+repeated, earlier or later confirmation observed by the listener is dismissed
+and makes the check inconclusive. This option requires exactly one `setFile`
+step in `rejectedUpdate.steps`; multistep updates and all other actions are
+unsupported. Setup, navigation and observations cannot accept confirmations.
+
+Acceptance is **not** evidence of rejection. A separate DOM error, HTTP4xx or
+configured alert must still confirm the failed update, and the saved state
+must remain unchanged. Use a fresh disposable app with synthetic records:
+this option really accepts that app's replacement confirmation. It does not
+replace `window.confirm` or grant general permission to dialogs. Reports list
+observed dialogs and accepted confirmations. The generated standalone spec
+uses the same bounded checks. Dialogs after the state comparison and stability
+window are outside coverage. The native dialog event identifies its type and
+text, not which timer or operation caused it: an unrelated identical message
+inside the allowed window cannot be distinguished. Inspect the app's import
+flow when choosing the exact message; a PASS is not proof of that causal link.
+Versions before 0.4 reject this field.
 
 ## Isolation and timing
 

@@ -6,7 +6,7 @@ import { validateContract, PACK } from './contract.mjs';
 import { executeCheck, confineContext } from './protocol.mjs';
 import { renderReport } from './report.mjs';
 
-export const VERSION = '0.3.1';
+export const VERSION = '0.4.0';
 
 export async function reproductionSpec(contract, hash) {
   const runtime = (await readFile(new URL('./protocol.mjs', import.meta.url), 'utf8'))
