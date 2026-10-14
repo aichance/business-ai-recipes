@@ -68,6 +68,7 @@ Every entry under `observe` has one source:
 | `attribute` | `target`, `attribute` | Attribute string, or `null` if absent |
 | `count` | `target` | Number of matching elements |
 | `localStorage`, `sessionStorage` | Exactly one of `key` or `keyFrom`; optional `keyPrefix` with `keyFrom` | String or `null` |
+| `indexedDB` | `database`, `store`, `key`; optional `field` | `{exists, value}` by default; see below |
 | `response` | `url`, `field` | Same-origin GET result |
 
 Response fields are `json`, `text`, `status`, or `header` (add `header`).
@@ -96,6 +97,59 @@ pointer or record returns `null`; there is no cached last value. Observe
 selected record must also count as a failure, even if its contents are equal.
 Adding a `jsonPath` to a missing record makes it an unavailable observation
 (inconclusive), rather than a `null` value diff.
+
+### IndexedDB (runner 0.5+)
+
+Observe the actual database and object store, rather than unrelated preferences
+in Web Storage:
+
+```json
+{
+  "savedCheckpoint": {
+    "source": "indexedDB",
+    "database": "loft",
+    "store": "checkpoints",
+    "key": "current"
+  },
+  "savedDay": {
+    "source": "indexedDB",
+    "database": "loft",
+    "store": "checkpoints",
+    "key": "current",
+    "jsonPath": ["value", "day"]
+  }
+}
+```
+
+The default `field: "entry"` returns `{ "exists": true, "value": ... }`.
+A missing key returns `{ "exists": false, "value": null }`, so deleting a
+record containing JSON `null` still changes the snapshot. `field: "value"`
+selects only its value and intentionally omits presence; `field: "exists"`
+selects only a boolean, without comparing the stored value. `parse: "json"`
+decodes a stored JSON **string** before wrapping/selecting its value.
+`jsonPath` traverses the selected result. It cannot be used with `exists`.
+
+Keys can be strings (including an empty string), finite numbers, or arrays
+containing those keys, with at most 16 array levels. Date/binary keys are not
+representable in this JSON contract. Values must be acyclic plain JSON data;
+Date, Map, Blob, binary data, BigInt, undefined and nonfinite numbers are
+inconclusive instead of being silently converted. An existence-only probe
+can check the presence of an opaque value, but does not prove its preservation.
+
+The reader enumerates existing databases, aborts an unexpected upgrade if
+deletion races open, and uses one `readonly` transaction for all configured
+stores/keys in each database. It closes its own connections on success,
+failure and late open events. It never creates a persistent missing database
+or writes records. Missing databases/stores, unavailable enumeration, blocked
+or timed-out reads are inconclusive. The enumeration requirement is documented
+in [MDN](https://developer.mozilla.org/en-US/docs/Web/API/IDBFactory/databases).
+
+Atomicity applies within one database; separate databases, DOM, Web Storage
+and HTTP observations are not a single atomic snapshot. Wait for the app's
+real load/save confirmation in `setup` and `afterReload`. Choose your durable
+checkpoint as the baseline, rather than unsaved simulation time. Use a full
+entry observation when deletion should appear in a diff; a missing nested
+`jsonPath` is an unavailable observation, not a passing preservation result.
 
 Object key order is ignored; value types, array ordering, IDs and timestamps
 are retained. To ignore an irrelevant field, select the actual invariant
