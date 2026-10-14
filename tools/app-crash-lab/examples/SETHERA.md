@@ -78,3 +78,32 @@ future releases; that intention is not evidence of future runs.
 This is one independent user's public report, not test logs replayed by us
 or a general Windows compatibility guarantee. Our pinned v0.4.0 instructions
 and local verification above remain separate from the author's v0.5.0 run.
+
+### Later run on Sethera v1.0.0
+
+On 2026-10-14 at 21:40 JST, the [same author reported a new run](https://qiita.com/cuculhart/items/f020080b2ef1331222d0#comment-79c9c450f3a54f3ba6ac)
+on a fresh, unchanged Sethera **v1.0.0 (`bcd882f`)** checkout, using Windows,
+Node v22.16.0, Playwright 1.64.0 and **App Crash Lab 0.4.1**. They reported
+matching the published ZIP checksum and these results:
+
+| Setup pack file | Reported result |
+| --- | --- |
+| `contract.json` | Reload PASS; rejected-update PASS |
+| Exported standalone Playwright tests | Both PASS |
+| `changed-filter-control.json` | FAIL at comparison; detected sum 300 → 900 |
+| `wrong-baseline-control.json` | Both INCONCLUSIVE at baseline |
+
+[Download the six-file v1.0.0 pack](https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.4.1/app-crash-lab-sethera-v1-pack.zip)
+and [its checksum](https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.4.1/app-crash-lab-sethera-v1-pack.zip.sha256).
+Its README contains the pinned startup and test commands. The older instructions
+above remain for v0.4.0; use the pack for the v1.0.0 colour-filter workflow.
+
+The v1.0.0 rejection message follows the selected UI language. The pack chooses
+Japanese in Settings → Language before checking that exact message. The author
+confirmed this distinction: a translated warning differs from a changed saved
+record. Choose a known language when your own app localises an asserted message.
+
+These results extend the public author evidence to this specific v1.0.0 pack.
+They do not verify App Crash Lab 0.5.0 on Windows, every font's rendering, future
+Sethera releases or general Windows compatibility. Their intention to reuse it
+before the next release remains separate from an observed future run.
