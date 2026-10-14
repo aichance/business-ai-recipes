@@ -25,12 +25,12 @@ the broken and fixed versions.
 ## Try it
 
 You need **Node 22+** and npm. In an empty folder, run these two commands.
-The second downloads the pinned 0.4.1 package from this project's GitHub release;
+The second downloads the pinned 0.5.0 package from this project's GitHub release;
 you do not need to clone or extract the repository:
 
 ```sh
 npx --yes --package=@playwright/test@1.64.0 playwright install chromium
-npx --yes --package=https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.4.1/aichance-app-crash-lab-0.4.1.tgz app-crash-lab demo
+npx --yes --package=https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.5.0/aichance-app-crash-lab-0.5.0.tgz app-crash-lab demo
 ```
 
 Open the **absolute `index.html` path printed by the command**. Reports are
@@ -41,7 +41,7 @@ libraries may also be required; replace the first command with
 Installing system libraries may require administrator access on your machine.
 
 Prefer a source checkout? From this directory in the checkout or
-[0.4.1 source ZIP](https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.4.1/app-crash-lab-0.4.1.zip):
+[0.5.0 source ZIP](https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.5.0/app-crash-lab-0.5.0.zip):
 
 ```sh
 npm ci --ignore-scripts --no-audit --no-fund
@@ -59,7 +59,7 @@ fixtures; running the demo does not test your own app.
 2. Create a starter in your working folder. This downloads the pinned package, but does not run a browser or inspect your app:
 
 ```sh
-npx --yes --package=https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.4.1/aichance-app-crash-lab-0.4.1.tgz app-crash-lab init my-app.json
+npx --yes --package=https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.5.0/aichance-app-crash-lab-0.5.0.tgz app-crash-lab init my-app.json
 ```
 
 The starter uses the bundled Synthetic Notes selectors. Edit it for your app;
@@ -72,7 +72,7 @@ remains available for manual copying.
 
 ```sh
 npx --yes --package=@playwright/test@1.64.0 playwright install chromium
-npx --yes --package=https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.4.1/aichance-app-crash-lab-0.4.1.tgz app-crash-lab run my-app.json
+npx --yes --package=https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.5.0/aichance-app-crash-lab-0.5.0.tgz app-crash-lab run my-app.json
 ```
 
 On Linux, missing browser system libraries may require replacing the first
@@ -121,6 +121,12 @@ For native `alert()` rejection, the [Sethera example](examples/SETHERA.md)
 checks a synthetic piece across reload and malformed JSON import. Requires
 runner 0.3 or later. The [annotate.js example](examples/ANNOTATE.md) checks a
 synthetic review comment and its malformed-import toast.
+For browser games and local editors whose saved documents live in **IndexedDB**,
+runner 0.5+ can observe a configured database/store/key directly. It reads JSON
+records in a readonly transaction and compares record presence as well as data.
+See [IndexedDB observations](CONTRACT.md#indexeddb-runner-05) for the contract,
+JSON-value limits and why an unavailable database is inconclusive. A preferences
+key in localStorage is not a substitute for the actual saved checkpoint.
 For a native `confirm()` before invalid-file parsing, the [FloorPlanner example](examples/FLOORPLANNER.md) includes two ready-to-run contracts. They require one exact replacement confirmation, a separate parse/schema error and preserved state. Only one invalid `setFile` step may accept a confirmation; use synthetic records. Requires runner 0.4 or later.
 
 The [DevTasks backup example](examples/devtasks/README.md) shows a different gap:
@@ -315,7 +321,7 @@ App Crash Labは、正常に保存できる操作を1つ設定し、次の2つ�
 
 ```sh
 npx --yes --package=@playwright/test@1.64.0 playwright install chromium
-npx --yes --package=https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.4.1/aichance-app-crash-lab-0.4.1.tgz app-crash-lab demo
+npx --yes --package=https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.5.0/aichance-app-crash-lab-0.5.0.tgz app-crash-lab demo
 ```
 
 終了時に表示される **`index.html`の絶対パス**をブラウザで開きます。
@@ -340,7 +346,7 @@ Linuxでブラウザ用のシステムライブラリが不足する場合は、
 1. 作業フォルダーで、次のコマンドから設定のひな形を作ります。パッケージを取得しますが、ブラウザやアプリの検査は実行しません。
 
 ```sh
-npx --yes --package=https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.4.1/aichance-app-crash-lab-0.4.1.tgz app-crash-lab init my-app.json
+npx --yes --package=https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.5.0/aichance-app-crash-lab-0.5.0.tgz app-crash-lab init my-app.json
 ```
 
 ひな形は教材のSynthetic Notes用です。自分のアプリへ合わせて編集してください。
@@ -353,7 +359,7 @@ npx --yes --package=https://github.com/aichance/business-ai-recipes/releases/dow
 
 ```sh
 npx --yes --package=@playwright/test@1.64.0 playwright install chromium
-npx --yes --package=https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.4.1/aichance-app-crash-lab-0.4.1.tgz app-crash-lab run my-app.json
+npx --yes --package=https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.5.0/aichance-app-crash-lab-0.5.0.tgz app-crash-lab run my-app.json
 ```
 
 Linuxでブラウザ用のシステムライブラリが不足する場合は、最初のコマンドを
@@ -380,10 +386,10 @@ Linuxでブラウザ用のシステムライブラリが不足する場合は、
 作られた設定と結果は確認してください。アプリのソースや個人データをIssueへ貼る必要はありません。
 
 ```text
-App Crash Lab 0.4.1で、この使い捨てのローカル開発アプリを検査してください。
+App Crash Lab 0.5.0で、この使い捨てのローカル開発アプリを検査してください。
 形式と設定例を読んでから、実際の保存操作・画面要素・入力検証を確認してください。
-https://github.com/aichance/business-ai-recipes/blob/app-crash-lab-v0.4.1/tools/app-crash-lab/CONTRACT.md
-https://github.com/aichance/business-ai-recipes/blob/app-crash-lab-v0.4.1/tools/app-crash-lab/examples/notes.json
+https://github.com/aichance/business-ai-recipes/blob/app-crash-lab-v0.5.0/tools/app-crash-lab/CONTRACT.md
+https://github.com/aichance/business-ai-recipes/blob/app-crash-lab-v0.5.0/tools/app-crash-lab/examples/notes.json
 
 合成データを正常に保存し、再読み込みと無効な更新の拒否後に同じ保存値を確認する
 my-app.jsonを作ってください。編集中の下書きやエラー文を、保存済みデータと混同しないでください。
@@ -392,7 +398,7 @@ my-app.jsonを作ってください。編集中の下書きやエラー文を、
 
 Node 22以上を確認して、次を実行してください。
 npx --yes --package=@playwright/test@1.64.0 playwright install chromium
-npx --yes --package=https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.4.1/aichance-app-crash-lab-0.4.1.tgz app-crash-lab run my-app.json
+npx --yes --package=https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.5.0/aichance-app-crash-lab-0.5.0.tgz app-crash-lab run my-app.json
 
 検査結果、前後の値の差分、レポートの絶対パス、生成されたrepro.spec.mjsを示してください。
 観測や拒否の確認がこの形式で表せなければ、検査できない点を説明してください。
