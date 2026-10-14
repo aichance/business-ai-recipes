@@ -121,6 +121,7 @@ EXPECTED_FILES = {
     "tools/app-crash-lab/tests/acceptance.test.mjs",
     "tools/app-crash-lab/tests/contract.test.mjs",
     "tools/app-crash-lab/tests/file-import.test.mjs",
+    "tools/app-crash-lab/tests/indexeddb.test.mjs",
     "tools/app-crash-lab/tests/native-alert.test.mjs",
     "tools/app-crash-lab/tests/native-confirm.test.mjs",
     ".agents/skills/demo-forge/SKILL.md",
