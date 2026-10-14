@@ -6,7 +6,17 @@
 
 Turn one successful save workflow into two repeatable checks: **reload without losing data** and **reject an invalid update without corrupting the previous value**. Keep the state diff, browser trace and standalone Playwright tests.
 
-[**See the broken vs fixed results**](https://aichance.github.io/business-ai-recipes/app-crash-lab.html) · [**Install & use on your app**](tools/app-crash-lab/README.md) · [**Contract format**](tools/app-crash-lab/CONTRACT.md)
+[**Check your own app**](#check-your-own-app) · [**See the broken vs fixed results**](https://aichance.github.io/business-ai-recipes/app-crash-lab.html) · [**Contract format**](tools/app-crash-lab/CONTRACT.md)
+
+## Check your own app
+
+Use a disposable **local copy of your app**, with **Node 22+ and npm**.
+
+1. Open that app's project in your existing coding agent.
+2. [**Copy the setup prompt**](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#agent). It asks the agent to inspect your actual save flow, write `my-app.json` and run the pinned checks.
+3. Review the contract, report and generated Playwright tests. If only reload applies, select it explicitly and report that rejected updates were not tested.
+
+The runner makes no LLM calls; optional agent setup uses your existing agent. Prefer manual setup? [Create, adapt and run a config](tools/app-crash-lab/README.md). [日本語の導入手順](tools/app-crash-lab/README.md#japanese-setup).
 
 **It exported a backup it could not restore.** In an unchanged local [DevTasks build](tools/app-crash-lab/examples/devtasks/README.md), a synthetic task with a custom `DOCS` category exported successfully, then the same file was rejected in a fresh browser context. The built-in `FEATURE` control restored.
 
