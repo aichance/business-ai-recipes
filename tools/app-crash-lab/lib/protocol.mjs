@@ -91,6 +91,105 @@ async function applySteps(page, contract, steps, phase, events, dialogs = null) 
   }
 }
 
+async function readIndexedDB(page, entries, timeoutMs) {
+  if (!entries.length) return {};
+  const outcome = await page.evaluate(async ({ entries, timeoutMs }) => {
+    const deadline = Date.now() + timeoutMs;
+    const pending = message => Object.assign(new Error(message), { observationPending: true });
+    function jsonValue(value, seen = new Set()) {
+      if (value === null || ['string', 'boolean'].includes(typeof value)) return value;
+      if (typeof value === 'number' && Number.isFinite(value)) return value;
+      if (typeof value !== 'object' || seen.has(value)) throw new Error('IndexedDB value is not acyclic JSON data');
+      if (!Array.isArray(value) && ![Object.prototype, null].includes(Object.getPrototypeOf(value))) throw new Error('IndexedDB value is not plain JSON data');
+      seen.add(value);
+      try {
+        return Array.isArray(value) ? Array.from(value, v => jsonValue(v, seen)) :
+          Object.fromEntries(Object.entries(value).map(([k, v]) => [k, jsonValue(v, seen)]));
+      } finally { seen.delete(value); }
+    }
+    async function existingDatabases() {
+      let timer;
+      try {
+        return await Promise.race([indexedDB.databases(), new Promise((_, reject) => {
+          timer = setTimeout(() => reject(new Error('IndexedDB database listing timed out')), Math.max(1, deadline - Date.now()));
+        })]);
+      } finally { clearTimeout(timer); }
+    }
+    function readDatabase(database, group) {
+      return new Promise((resolve, reject) => {
+        let db, transaction, finished = false;
+        const finish = (error, values) => {
+          if (finished) return;
+          if (!error && Date.now() >= deadline) error = new Error(`IndexedDB ${database}: read timed out`);
+          finished = true;
+          clearTimeout(timer);
+          if (error && transaction) { try { transaction.abort(); } catch {} }
+          if (db) db.close();
+          error ? reject(error) : resolve(values);
+        };
+        const timer = setTimeout(() => finish(new Error(`IndexedDB ${database}: read timed out`)), Math.max(1, deadline - Date.now()));
+        let opening;
+        try { opening = indexedDB.open(database); } catch (error) { finish(error); return; }
+        // Enumeration is a snapshot: deletion can race it. Never create/upgrade a DB.
+        opening.onupgradeneeded = () => {
+          // This event can arrive after timeout/blocked finished the promise.
+          // Close the transient connection even when finish() would be a no-op.
+          const transient = opening.result;
+          try { opening.transaction.abort(); } finally { transient.close(); }
+          finish(pending(`IndexedDB ${database}: database disappeared before open`));
+        };
+        opening.onerror = () => finish(opening.error ?? new Error(`IndexedDB ${database}: open failed`));
+        opening.onblocked = () => finish(new Error(`IndexedDB ${database}: open blocked`));
+        opening.onsuccess = () => {
+          db = opening.result;
+          if (finished) { db.close(); return; }
+          db.onversionchange = () => db.close();
+          try {
+            const stores = [...new Set(group.map(([, p]) => p.store))];
+            for (const store of stores) if (!db.objectStoreNames.contains(store)) throw pending(`IndexedDB ${database}: store ${store} is missing`);
+            // Queue every get/getKey synchronously in one readonly transaction.
+            transaction = db.transaction(stores, 'readonly');
+            const records = group.map(([name, probe]) => {
+              const store = transaction.objectStore(probe.store);
+              return { name, probe, value: store.get(probe.key), key: store.getKey(probe.key) };
+            });
+            transaction.onabort = () => finish(transaction.error ?? new Error(`IndexedDB ${database}: read aborted`));
+            transaction.onerror = () => finish(transaction.error ?? new Error(`IndexedDB ${database}: read failed`));
+            transaction.oncomplete = () => {
+              try {
+                const values = Object.fromEntries(records.map(({ name, probe, value, key }) => {
+                  const exists = key.result !== undefined;
+                  if (probe.field === 'exists') return [name, exists];
+                  let data = exists ? jsonValue(value.result) : null;
+                  if (exists && probe.parse === 'json') {
+                    if (typeof data !== 'string') throw new Error(`IndexedDB observation ${name}: parse requires a JSON string`);
+                    data = JSON.parse(data);
+                  }
+                  return [name, probe.field === 'value' ? data : { exists, value: data }];
+                }));
+                finish(null, values);
+              } catch (error) { finish(error); }
+            };
+          } catch (error) { finish(error); }
+        };
+      });
+    }
+    try {
+      if (typeof indexedDB === 'undefined' || typeof indexedDB.databases !== 'function') throw new Error('IndexedDB database enumeration is unavailable');
+      const available = await existingDatabases();
+      const values = {};
+      for (const database of new Set(entries.map(([, p]) => p.database))) {
+        if (!available.some(d => d.name === database)) throw pending(`IndexedDB ${database}: database is missing`);
+        if (Date.now() >= deadline) throw new Error('IndexedDB observation timed out');
+        Object.assign(values, await readDatabase(database, entries.filter(([, p]) => p.database === database)));
+      }
+      return { values };
+    } catch (error) { return { error: error.message, pending: error.observationPending === true }; }
+  }, { entries, timeoutMs });
+  if (outcome.error) throw Object.assign(new Error(outcome.error), { observationPending: outcome.pending });
+  return outcome.values;
+}
+
 async function readState(page, contract, probes) {
   const result = {};
   const storageProbes = Object.entries(probes).filter(([, probe]) => probe.source.endsWith('Storage'));
@@ -100,6 +199,7 @@ async function readState(page, contract, probes) {
     const suffix = keyFrom === undefined ? null : storage.getItem(keyFrom);
     return [name, keyFrom !== undefined && suffix === null ? null : storage.getItem(keyFrom === undefined ? key : keyPrefix + suffix)];
   })), storageProbes) : {};
+  const indexedValues = await readIndexedDB(page, Object.entries(probes).filter(([, p]) => p.source === 'indexedDB'), contract.timeoutMs);
   for (const [name, probe] of Object.entries(probes)) {
     let value;
     if (['text', 'value', 'attribute', 'count'].includes(probe.source)) {
@@ -113,6 +213,8 @@ async function readState(page, contract, probes) {
       }
     } else if (probe.source.endsWith('Storage')) {
       value = storageValues[name];
+    } else if (probe.source === 'indexedDB') {
+      value = indexedValues[name];
     } else {
       const response = await page.context().request.get(scopedURL(contract.baseURL, probe.url), { maxRedirects: 0, timeout: contract.timeoutMs });
       try {
@@ -125,7 +227,7 @@ async function readState(page, contract, probes) {
         }
       } finally { await response.dispose(); }
     }
-    if (probe.parse === 'json' && value !== null) value = JSON.parse(value);
+    if (probe.parse === 'json' && value !== null && probe.source !== 'indexedDB') value = JSON.parse(value);
     for (const key of probe.jsonPath ?? []) {
       if (value === null || typeof value !== 'object' || !Object.hasOwn(value, key)) {
         const error = new Error(`Observation ${name}: JSON path ${JSON.stringify(probe.jsonPath)} is missing`);

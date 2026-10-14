@@ -4,6 +4,10 @@ const own = (object, key) => Object.hasOwn(object, key);
 const object = value => value !== null && typeof value === 'object' && !Array.isArray(value);
 function requireThat(condition, message) { if (!condition) throw new Error(`Invalid contract: ${message}`); }
 function text(value) { return typeof value === 'string' && value.length > 0; }
+function indexedKey(value, depth = 0) {
+  return typeof value === 'string' || (typeof value === 'number' && Number.isFinite(value)) ||
+    (depth < 16 && Array.isArray(value) && Array.from(value).every(v => indexedKey(v, depth + 1)));
+}
 function keys(value, allowed, where) {
   requireThat(object(value), `${where} must be an object`);
   for (const key of Object.keys(value)) requireThat(allowed.includes(key), `${where}: unknown field ${key}`);
@@ -30,8 +34,8 @@ function target(value, where) {
 }
 
 function probe(value, where) {
-  keys(value, ['source', 'target', 'attribute', 'key', 'keyFrom', 'keyPrefix', 'parse', 'url', 'field', 'header', 'jsonPath'], where);
-  requireThat(['text', 'value', 'attribute', 'count', 'localStorage', 'sessionStorage', 'response'].includes(value.source), `${where}: unsupported source`);
+  keys(value, ['source', 'target', 'attribute', 'key', 'keyFrom', 'keyPrefix', 'parse', 'url', 'field', 'header', 'jsonPath', 'database', 'store'], where);
+  requireThat(['text', 'value', 'attribute', 'count', 'localStorage', 'sessionStorage', 'indexedDB', 'response'].includes(value.source), `${where}: unsupported source`);
   if (['text', 'value', 'attribute', 'count'].includes(value.source)) target(value.target, `${where}.target`);
   if (value.source === 'attribute') requireThat(text(value.attribute), `${where}.attribute required`);
   if (value.source.endsWith('Storage')) {
@@ -40,6 +44,12 @@ function probe(value, where) {
     else requireThat(text(value.keyFrom), `${where}.keyFrom must name a pointer in the same storage`);
     requireThat(value.keyPrefix === undefined || (own(value, 'keyFrom') && typeof value.keyPrefix === 'string'), `${where}.keyPrefix requires keyFrom`);
   } else requireThat(value.keyFrom === undefined && value.keyPrefix === undefined, `${where}: keyFrom/keyPrefix only apply to Web Storage`);
+  if (value.source === 'indexedDB') {
+    requireThat(text(value.database) && text(value.store), `${where}.database and .store required`);
+    requireThat(own(value, 'key') && indexedKey(value.key), `${where}.key must be a string, finite number or array of keys (at most 16 array levels)`);
+    requireThat(value.field === undefined || ['entry', 'value', 'exists'].includes(value.field), `${where}.field must be entry/value/exists`);
+    requireThat(value.field !== 'exists' || (value.parse === undefined && value.jsonPath === undefined), `${where}: exists cannot be parsed or traversed`);
+  } else requireThat(value.database === undefined && value.store === undefined, `${where}: database/store only apply to indexedDB`);
   if (value.source === 'response') {
     path(value.url, `${where}.url`);
     requireThat(['json', 'text', 'status', 'header'].includes(value.field), `${where}.field required (json/text/status/header)`);
