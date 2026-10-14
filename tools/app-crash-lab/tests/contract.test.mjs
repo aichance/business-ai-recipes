@@ -61,6 +61,26 @@ test('literal file and same-storage pointer validate without filesystem access',
   c.setup[0].file.text = 'x'.repeat(65536);
   assert.equal(validateContract(c).setup[0].file.text.length, 65536);
 });
+test('IndexedDB observations select one existing store/key with explicit result fields', () => {
+  for (const key of ['current', '', 0, ['campaign', 2], []]) {
+    const c = structuredClone(sample);
+    c.observe.savedNote = { source: 'indexedDB', database: 'loft', store: 'checkpoints', key };
+    assert.deepEqual(validateContract(c).observe.savedNote.key, key);
+  }
+  for (const edit of [
+    p => delete p.database, p => p.store = '', p => p.key = null,
+    p => p.key = { id: 2 }, p => p.key = true, p => p.key = Infinity,
+    p => p.key = new Array(2), p => p.keyFrom = 'current',
+    p => p.field = 'count', p => { p.field = 'exists'; p.jsonPath = ['title']; },
+    p => { p.field = 'exists'; p.parse = 'json'; },
+  ]) {
+    const c = structuredClone(sample);
+    c.observe.savedNote = { source: 'indexedDB', database: 'loft', store: 'checkpoints', key: 'current' };
+    edit(c.observe.savedNote); assert.throws(() => validateContract(c));
+  }
+  const c = structuredClone(sample); c.observe.savedNote.database = 'loft';
+  assert.throws(() => validateContract(c), /only apply to indexedDB/);
+});
 test('diff keeps types, order and absent values meaningful', () => {
   assert.equal(differences({ n: 2 }, { n: '2' }).length, 1);
   assert.equal(differences({ values: ['a', 'b'] }, { values: ['b', 'a'] }).length, 2);
