@@ -7,6 +7,7 @@ import { startDemo } from './demo/server.mjs';
 
 const help = `App Crash Lab ${VERSION}
 
+  app-crash-lab init [CONTRACT.json]
   app-crash-lab demo [--out DIRECTORY] [--headed]
   app-crash-lab run CONTRACT.json [--base-url http://127.0.0.1:PORT] [--out DIRECTORY] [--headed]
 
@@ -16,6 +17,8 @@ Exit codes (run): 0 all checks passed; 1 contract failed; 2 inconclusive/config/
 Demo succeeds only when the intentionally broken and fixed fixtures behave as advertised.
 No signup, runtime LLM or API key. Requires Node22+, npm dependencies and Playwright Chromium.
 Install browser: npx playwright install chromium
+init writes a Synthetic Notes starter (default: my-app.json), without running a browser.
+Edit it for your app before running a check. Existing files are never overwritten.
 `;
 
 try {
@@ -23,7 +26,22 @@ try {
   const [command, file, ...extra] = args.positionals;
   if (args.values.version) console.log(VERSION);
   else if (args.values.help || !command) console.log(help);
-  else if (command === 'run' && file && !extra.length) {
+  else if (command === 'init' && !extra.length) {
+    if (['out', 'base-url', 'headed'].some(key => key in args.values)) {
+      throw new Error('init accepts only a new contract path. --out, --base-url and --headed are run/demo options.');
+    }
+    const destination = resolve(file ?? 'my-app.json');
+    const starter = await readFile(new URL('./examples/notes.json', import.meta.url), 'utf8');
+    try { await writeFile(destination, starter, { flag: 'wx' }); }
+    catch (error) {
+      if (error.code === 'EEXIST') throw new Error(`Refusing to overwrite ${destination}. Choose a new contract path.`);
+      throw error;
+    }
+    console.log(`Created: ${destination}`);
+    console.log('Synthetic Notes starter only; your app has not been inspected or tested.');
+    console.log('Edit baseURL/path, save steps, observe/expected and the rejected-update signal for your disposable local app.');
+    console.log('After editing, run app-crash-lab run with this contract path.');
+  } else if (command === 'run' && file && !extra.length) {
     const contract = JSON.parse(await readFile(resolve(file), 'utf8'));
     if (args.values['base-url']) contract.baseURL = args.values['base-url'];
     const report = await runContract(contract, { out: args.values.out, headless: !args.values.headed, onResult: r => console.log(`${r.status.toUpperCase().padEnd(12)} ${r.check}${r.error ? ' — ' + r.error : ''}`) });
