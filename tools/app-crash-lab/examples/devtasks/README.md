@@ -19,7 +19,7 @@ Want this check for your own app? [Copy the test and change four areas](#adapt-t
 
 ## Watch the real export/restore flow
 
-[![Actual DevTasks UI: create a custom DOCS task and export JSON; import the unchanged file into a fresh context and receive a schema rejection; the built-in FEATURE control restores and survives reload](../../../../docs/devtasks-backup-roundtrip.gif)](https://aichance.github.io/business-ai-recipes/devtasks-backup-roundtrip.mp4)
+[![Actual DevTasks UI: create a custom DOCS task and export JSON; import the unchanged file into a fresh context and receive a schema rejection; the built-in FEATURE control restores and survives reload](https://aichance.github.io/business-ai-recipes/devtasks-backup-roundtrip.gif)](https://aichance.github.io/business-ai-recipes/devtasks-backup-roundtrip.mp4)
 
 [Play the MP4](https://aichance.github.io/business-ai-recipes/devtasks-backup-roundtrip.mp4).
 This is a local recording of the pinned, unchanged DevTasks source above,
@@ -27,7 +27,7 @@ with synthetic records. Separate source and fresh-target context clips are
 joined at normal speed; initial startup waits are trimmed and explanatory
 captions sit above the app. App pixels are not altered. The `FEATURE` control
 uses its own export. The round-trip is the separate Playwright test below,
-not an App Crash Lab CLI download/import feature.
+not a recording of the later App Crash Lab0.6 CLI feature.
 
 ## Two different promises to check
 
@@ -39,10 +39,9 @@ not an App Crash Lab CLI download/import feature.
 | The app's own default-category export restores in a fresh context | PASS |
 | The app's own custom-category export restores in a fresh context | FAIL: schema rejection; no target task restored |
 
-The first three are App Crash Lab contracts (CLI **3 PASS**, exported
+The first three were App Crash Lab0.4.0 contracts (CLI **3 PASS**, exported
 Playwright **3 PASS**). The last two are a separate Playwright round-trip test
-(**1 PASS, 1 FAIL**). App Crash Lab does not currently capture downloads as
-dynamic input for a later import. Passing its preservation checks does not
+(**1 PASS, 1 FAIL**). That 0.4 release did not capture downloads as dynamic input for a later import. Passing its preservation checks does not
 prove that all valid backups can be restored.
 
 ## Run against disposable local source
@@ -124,9 +123,35 @@ setup failure to investigate, not evidence that the saved data survived.
 Fresh contexts separate browser storage, **not a shared server database**.
 This example therefore uses a disposable browser-local app. A server-backed
 app needs its own isolated synthetic dataset and independent target setup
-before adapting this flow. The test is separate from the App Crash Lab CLI;
-the CLI's two preservation checks do not implement this download/restore flow.
+before adapting this flow. The historical separate test remains available; runner0.6+ also offers the
+common backup-roundtrip mode described below.
 
 DevTasks is Shamil's MIT-licensed project and is downloaded from its author;
 its source is not bundled here. These independently written tests and contracts
 use this repository's MIT license.
+
+## Run the same real-file roundtrip with App Crash Lab0.6+
+
+Keep the unchanged app preview running at `http://127.0.0.1:54439` (change the
+preview port above, or pass `--base-url` to match your chosen loopback port).
+From `tools/app-crash-lab` in the current source checkout:
+
+```sh
+node cli.mjs run examples/devtasks/roundtrip-feature.json
+node cli.mjs run examples/devtasks/roundtrip-docs.json
+```
+
+On the unchanged pinned source, FEATURE must PASS and DOCS must FAIL. These
+contracts create real UI records, download each app-generated JSON file, check
+its complete `tasks` payload against the source, and import the same bytes in
+a separate empty context. The normal control must retain every task field and
+rendered task after reload. DOCS never reaches the expected successful import
+signal because its self-exported custom category is rejected. Do not relabel
+that failure as a passing rejection test. This is a local reproduction with
+synthetic data, not the author's own run or a claim about the current deployment.
+
+The core [backup contract guide](../../BACKUP.md) explains adapting the mode.
+Unlike the historical separate spec, this mode does not attach the raw backup,
+state values, screenshots or traces. Its report retains status/phase, export
+size/hash and comparison flags; the declared contract remains in the output.
+Generated standalone tests use the same protocol and preserve result semantics.

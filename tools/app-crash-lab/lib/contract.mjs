@@ -101,7 +101,7 @@ function steps(value, where, nonempty = false) {
 }
 
 export function validateContract(input) {
-  keys(input, ['schemaVersion', 'pack', 'name', 'baseURL', 'path', 'timeoutMs', 'stabilityMs', 'reset', 'setup', 'observe', 'expected', 'afterReload', 'rejectedUpdate', 'checks'], 'contract');
+  keys(input, ['schemaVersion', 'pack', 'name', 'baseURL', 'path', 'timeoutMs', 'stabilityMs', 'reset', 'setup', 'observe', 'expected', 'afterReload', 'rejectedUpdate', 'backupRoundtrip', 'checks'], 'contract');
   requireThat(input.schemaVersion === 1 && input.pack === PACK, `schemaVersion=1 and pack=${PACK} required`);
   requireThat(text(input.name), 'name required');
   localURL(input.baseURL);
@@ -116,7 +116,39 @@ export function validateContract(input) {
   requireThat(Object.keys(input.expected).every(k => own(input.observe, k)), 'expected keys must name observations');
   if (input.afterReload !== undefined) steps(input.afterReload, 'afterReload');
   const checks = input.checks ?? CHECKS;
-  requireThat(Array.isArray(checks) && checks.length > 0 && checks.every(c => CHECKS.includes(c)) && new Set(checks).size === checks.length, 'checks must contain unique known patterns');
+  requireThat(Array.isArray(checks) && checks.length > 0 && checks.every(c => [...CHECKS, 'backup-roundtrip'].includes(c)) && new Set(checks).size === checks.length, 'checks must contain unique known patterns');
+  if (input.backupRoundtrip !== undefined) {
+    const backup = input.backupRoundtrip;
+    keys(backup, ['isolation', 'export', 'restore'], 'backupRoundtrip');
+    requireThat(backup.isolation === 'browser-local', 'backupRoundtrip.isolation must be browser-local; shared server datasets are not supported');
+    keys(backup.export, ['steps', 'maxBytes', 'statePaths'], 'backupRoundtrip.export');
+    steps(backup.export.steps, 'backupRoundtrip.export.steps', true);
+    requireThat(Number.isInteger(backup.export.maxBytes) && backup.export.maxBytes > 0 && backup.export.maxBytes <= 1048576, 'backupRoundtrip.export.maxBytes must be 1..1048576');
+    const restore = backup.restore;
+    keys(restore, ['path', 'ready', 'empty', 'target', 'success', 'after', 'fileName', 'mimeType'], 'backupRoundtrip.restore');
+    path(restore.path, 'backupRoundtrip.restore.path');
+    steps(restore.ready, 'backupRoundtrip.restore.ready', true);
+    target(restore.target, 'backupRoundtrip.restore.target');
+    const observed = Object.keys(input.observe);
+    const stored = observed.filter(name => ['localStorage', 'sessionStorage', 'indexedDB'].includes(input.observe[name].source));
+    requireThat(object(restore.empty) && Object.keys(restore.empty).length === observed.length && observed.every(k => own(restore.empty, k)), 'backupRoundtrip.restore.empty must declare every selected observation');
+    requireThat(stored.length > 0, 'backup-roundtrip needs a saved browser-storage observation, not only UI counts');
+    requireThat(object(backup.export.statePaths) && Object.keys(backup.export.statePaths).length === stored.length && stored.every(k => own(backup.export.statePaths, k)), 'backupRoundtrip.export.statePaths must map every saved browser-storage observation');
+    requireThat(Object.values(backup.export.statePaths).every(p => Array.isArray(p) && p.length <= 64 && p.every(k => typeof k === 'string' || (Number.isSafeInteger(k) && k >= 0))), 'backupRoundtrip.export.statePaths values must be arrays of JSON keys');
+    requireThat(typeof restore.mimeType === 'string' && /^[a-zA-Z0-9.+-]+\/[a-zA-Z0-9.+-]+$/.test(restore.mimeType), 'backupRoundtrip.restore.mimeType must declare the upload file type');
+    if (restore.fileName !== undefined) requireThat(text(restore.fileName) && restore.fileName.length <= 255 && !/[\\/\x00-\x1f\x7f]/.test(restore.fileName) && !['.', '..'].includes(restore.fileName), 'backupRoundtrip.restore.fileName must be a filename, not a path');
+    requireThat(!Object.values(input.observe).some(p => p.source === 'response'), 'backup-roundtrip does not support server response state');
+    keys(restore.success, ['observe', 'expected'], 'backupRoundtrip.restore.success');
+    probes(restore.success.observe, 'backupRoundtrip.restore.success.observe');
+    requireThat(object(restore.success.expected) && Object.keys(restore.success.expected).length > 0 && Object.keys(restore.success.expected).every(k => own(restore.success.observe, k)), 'backupRoundtrip.restore.success.expected must name success observations');
+    if (restore.after !== undefined) steps(restore.after, 'backupRoundtrip.restore.after');
+    const readiness = [...restore.ready, ...(restore.after ?? []), ...(input.afterReload ?? [])];
+    requireThat(readiness.every(s => ['goto', 'expectText', 'expectValue', 'expectVisible'].includes(s.action)), 'backup-roundtrip readiness hooks must only observe or navigate, never repair saved state');
+    const allSteps = [...input.reset, ...input.setup, ...(input.afterReload ?? []), ...backup.export.steps, ...restore.ready, ...(restore.after ?? [])];
+    requireThat(!allSteps.some(s => s.action === 'request'), 'backup-roundtrip uses browser-local UI steps, not server mutations');
+  }
+  requireThat(input.backupRoundtrip === undefined || checks.includes('backup-roundtrip'), 'backupRoundtrip settings require checks to include backup-roundtrip');
+  requireThat(!checks.includes('backup-roundtrip') || input.backupRoundtrip !== undefined, 'backup-roundtrip requires export and fresh-restore conditions');
   if (input.rejectedUpdate !== undefined) {
     keys(input.rejectedUpdate, ['steps', 'observe', 'expected', 'dialog'], 'rejectedUpdate');
     steps(input.rejectedUpdate.steps, 'rejectedUpdate.steps', true);

@@ -13,6 +13,8 @@ const help = `App Crash Lab ${VERSION}
 
 Run your disposable local app first. Only the configured loopback origin is allowed.
 Output: HTML/JSON, state differences, traces, screenshots and standalone Playwright tests.
+Optional backup-roundtrip: export real JSON, restore unchanged bytes in a fresh context,
+then compare all selected state and reload. Browser-local apps only; metadata-only capture.
 Exit codes (run): 0 all checks passed; 1 contract failed; 2 inconclusive/config/infrastructure.
 Demo succeeds only when the intentionally broken and fixed fixtures behave as advertised.
 No signup, runtime LLM or API key. Requires Node22+, npm dependencies and Playwright Chromium.

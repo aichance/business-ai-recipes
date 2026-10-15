@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "DevTasks / own FEATURE backup restores",
+  "baseURL": "http://127.0.0.1:54439",
+  "path": "/taskmanage/add-tasks",
+  "timeoutMs": 6000,
+  "stabilityMs": 750,
+  "checks": [
+    "backup-roundtrip"
+  ],
+  "reset": [],
+  "setup": [
+    {
+      "action": "fill",
+      "target": {
+        "label": "Task Description"
+      },
+      "value": "Crash Lab FEATURE roundtrip"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Create Task"
+      },
+      "save": true
+    },
+    {
+      "action": "goto",
+      "path": "/taskmanage/list-tasks"
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": ":text-is(\"Crash Lab FEATURE roundtrip\"):visible"
+      }
+    }
+  ],
+  "observe": {
+    "tasks": {
+      "source": "localStorage",
+      "key": "tasks",
+      "parse": "json"
+    },
+    "visibleTask": {
+      "source": "count",
+      "target": {
+        "css": ":text-is(\"Crash Lab FEATURE roundtrip\"):visible"
+      }
+    },
+    "splash": {
+      "source": "count",
+      "target": {
+        "role": "heading",
+        "name": "DevTasks"
+      }
+    }
+  },
+  "expected": {
+    "visibleTask": 1,
+    "splash": 0
+  },
+  "backupRoundtrip": {
+    "isolation": "browser-local",
+    "export": {
+      "maxBytes": 65536,
+      "steps": [
+        {
+          "action": "goto",
+          "path": "/taskmanage/data-center"
+        },
+        {
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "Export JSON"
+          }
+        }
+      ],
+      "statePaths": {
+        "tasks": [
+          "tasks"
+        ]
+      }
+    },
+    "restore": {
+      "path": "/taskmanage/data-center",
+      "ready": [
+        {
+          "action": "expectVisible",
+          "target": {
+            "role": "button",
+            "name": "Upload Backup"
+          }
+        }
+      ],
+      "empty": {
+        "tasks": null,
+        "visibleTask": 0,
+        "splash": 0
+      },
+      "target": {
+        "css": "input[type=file]"
+      },
+      "success": {
+        "observe": {
+          "imported": {
+            "source": "count",
+            "target": {
+              "css": "[data-sonner-toast][data-type=\"success\"] [data-title]:visible:text-is(\"Import completed successfully! Loaded 1 tasks.\")"
+            }
+          }
+        },
+        "expected": {
+          "imported": 1
+        }
+      },
+      "after": [
+        {
+          "action": "goto",
+          "path": "/taskmanage/list-tasks"
+        },
+        {
+          "action": "expectVisible",
+          "target": {
+            "css": ":text-is(\"Crash Lab FEATURE roundtrip\"):visible"
+          }
+        }
+      ],
+      "mimeType": "application/json"
+    }
+  },
+  "afterReload": [
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": ":text-is(\"Crash Lab FEATURE roundtrip\"):visible"
+      }
+    }
+  ]
+}
