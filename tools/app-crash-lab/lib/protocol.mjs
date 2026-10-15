@@ -93,21 +93,59 @@ async function applySteps(page, contract, steps, phase, events, dialogs = null, 
   }
 }
 
+function recordKeyToken(key, depth = 0) {
+  if (typeof key === 'string') return JSON.stringify(['s', key]);
+  if (typeof key === 'number' && Number.isFinite(key) && !Object.is(key, -0)) return JSON.stringify(['n', key]);
+  if (depth < 16 && Array.isArray(key)) return JSON.stringify(['a', Array.from(key, part => recordKeyToken(part, depth + 1))]);
+  throw new Error('Unsupported inline IndexedDB record key');
+}
+
+// This mode certifies complete keyed record sets, not application array order.
+// IDs and every record field remain intact; only their comparison order changes.
+function canonicalRecords(records, probe) {
+  if (!Array.isArray(records) || records.length > probe.maxEntries) throw new Error('IndexedDB records shape or entry limit');
+  const seen = new Set();
+  const rows = records.map(record => {
+    if (!record || typeof record !== 'object' || Array.isArray(record) || !Object.hasOwn(record, probe.keyPath)) throw new Error('IndexedDB record has no declared inline key');
+    const token = recordKeyToken(record[probe.keyPath]);
+    if (seen.has(token)) throw new Error('Duplicate inline IndexedDB record key');
+    seen.add(token);
+    return { token, record };
+  });
+  if (Buffer.byteLength(JSON.stringify(records), 'utf8') > probe.maxBytes) throw new Error('IndexedDB records byte limit');
+  rows.sort((a, b) => a.token < b.token ? -1 : a.token > b.token ? 1 : 0);
+  return rows.map(row => row.record);
+}
+
+function comparisonExpected(probes, expected) {
+  return Object.fromEntries(Object.entries(expected).map(([name, value]) => [name,
+    probes[name]?.source === 'indexedDB' && probes[name].field === 'records' ? canonicalRecords(value, probes[name]) : value]));
+}
+
 async function readIndexedDB(page, entries, timeoutMs) {
   if (!entries.length) return {};
   const outcome = await page.evaluate(async ({ entries, timeoutMs }) => {
     const deadline = Date.now() + timeoutMs;
     const pending = message => Object.assign(new Error(message), { observationPending: true });
-    function jsonValue(value, seen = new Set()) {
+    function jsonValue(value, seen = new Set(), strictRecords = false) {
       if (value === null || ['string', 'boolean'].includes(typeof value)) return value;
-      if (typeof value === 'number' && Number.isFinite(value)) return value;
+      if (typeof value === 'number' && Number.isFinite(value)) {
+        if (strictRecords && Object.is(value, -0)) throw new Error('IndexedDB records contain a number not preserved by JSON serialization');
+        return value;
+      }
       if (typeof value !== 'object' || seen.has(value)) throw new Error('IndexedDB value is not acyclic JSON data');
       if (!Array.isArray(value) && ![Object.prototype, null].includes(Object.getPrototypeOf(value))) throw new Error('IndexedDB value is not plain JSON data');
       seen.add(value);
       try {
-        return Array.isArray(value) ? Array.from(value, v => jsonValue(v, seen)) :
-          Object.fromEntries(Object.entries(value).map(([k, v]) => [k, jsonValue(v, seen)]));
+        return Array.isArray(value) ? Array.from(value, v => jsonValue(v, seen, strictRecords)) :
+          Object.fromEntries(Object.entries(value).map(([k, v]) => [k, jsonValue(v, seen, strictRecords)]));
       } finally { seen.delete(value); }
+    }
+    function keyToken(key, depth = 0) {
+      if (typeof key === 'string') return JSON.stringify(['s', key]);
+      if (typeof key === 'number' && Number.isFinite(key) && !Object.is(key, -0)) return JSON.stringify(['n', key]);
+      if (depth < 16 && Array.isArray(key)) return JSON.stringify(['a', Array.from(key, part => keyToken(part, depth + 1))]);
+      throw new Error('Unsupported inline IndexedDB record key');
     }
     async function existingDatabases() {
       let timer;
@@ -137,8 +175,12 @@ async function readIndexedDB(page, entries, timeoutMs) {
           // This event can arrive after timeout/blocked finished the promise.
           // Close the transient connection even when finish() would be a no-op.
           const transient = opening.result;
-          try { opening.transaction.abort(); } finally { transient.close(); }
-          finish(pending(`IndexedDB ${database}: database disappeared before open`));
+          let failure = pending(`IndexedDB ${database}: database disappeared before open`);
+          try { opening.transaction.abort(); }
+          catch { failure = new Error(`IndexedDB ${database}: upgrade could not be aborted`); }
+          try { transient.close(); }
+          catch { failure = new Error(`IndexedDB ${database}: transient connection could not close`); }
+          finish(failure);
         };
         opening.onerror = () => finish(opening.error ?? new Error(`IndexedDB ${database}: open failed`));
         opening.onblocked = () => finish(new Error(`IndexedDB ${database}: open blocked`));
@@ -149,17 +191,43 @@ async function readIndexedDB(page, entries, timeoutMs) {
           try {
             const stores = [...new Set(group.map(([, p]) => p.store))];
             for (const store of stores) if (!db.objectStoreNames.contains(store)) throw pending(`IndexedDB ${database}: store ${store} is missing`);
-            // Queue every get/getKey synchronously in one readonly transaction.
+            // Queue every get/getKey/cursor in one readonly transaction.
             transaction = db.transaction(stores, 'readonly');
             const records = group.map(([name, probe]) => {
               const store = transaction.objectStore(probe.store);
+              if (probe.field === 'records') {
+                if (typeof store.keyPath !== 'string' || store.keyPath !== probe.keyPath) throw new Error('IndexedDB inline keyPath does not match its declaration');
+                const record = { name, probe, data: [], bytes: 2, complete: false };
+                const request = store.openCursor();
+                request.onerror = () => finish(new Error('IndexedDB record cursor failed'));
+                request.onsuccess = () => {
+                  if (finished) return;
+                  try {
+                    if (Date.now() >= deadline) throw new Error('IndexedDB record cursor timed out');
+                    const cursor = request.result;
+                    if (!cursor) { record.complete = true; return; }
+                    if (record.data.length >= probe.maxEntries) throw new Error('IndexedDB records entry limit');
+                    const value = jsonValue(cursor.value, new Set(), true);
+                    if (!value || typeof value !== 'object' || Array.isArray(value) || !Object.hasOwn(value, probe.keyPath) || keyToken(cursor.primaryKey) !== keyToken(value[probe.keyPath])) throw new Error('IndexedDB record does not retain its primary key');
+                    record.bytes += (record.data.length ? 1 : 0) + new TextEncoder().encode(JSON.stringify(value)).length;
+                    if (record.bytes > probe.maxBytes) throw new Error('IndexedDB records byte limit');
+                    record.data.push(value);
+                    cursor.continue();
+                  } catch (error) { finish(error); }
+                };
+                return record;
+              }
               return { name, probe, value: store.get(probe.key), key: store.getKey(probe.key) };
             });
             transaction.onabort = () => finish(transaction.error ?? new Error(`IndexedDB ${database}: read aborted`));
             transaction.onerror = () => finish(transaction.error ?? new Error(`IndexedDB ${database}: read failed`));
             transaction.oncomplete = () => {
               try {
-                const values = Object.fromEntries(records.map(({ name, probe, value, key }) => {
+                const values = Object.fromEntries(records.map(({ name, probe, value, key, data: recordData, complete }) => {
+                  if (probe.field === 'records') {
+                    if (!complete) throw new Error('IndexedDB record cursor did not complete');
+                    return [name, recordData];
+                  }
                   const exists = key.result !== undefined;
                   if (probe.field === 'exists') return [name, exists];
                   let data = exists ? jsonValue(value.result) : null;
@@ -189,7 +257,7 @@ async function readIndexedDB(page, entries, timeoutMs) {
     } catch (error) { return { error: error.message, pending: error.observationPending === true }; }
   }, { entries, timeoutMs });
   if (outcome.error) throw Object.assign(new Error(outcome.error), { observationPending: outcome.pending });
-  return outcome.values;
+  return Object.fromEntries(entries.map(([name, probe]) => [name, probe.field === 'records' ? canonicalRecords(outcome.values[name], probe) : outcome.values[name]]));
 }
 
 async function readState(page, contract, probes) {
@@ -247,6 +315,7 @@ async function readState(page, contract, probes) {
 function selected(state, expected) { return Object.fromEntries(Object.keys(expected).map(key => [key, state[key]])); }
 
 async function waitForState(page, contract, probes, expected) {
+  expected = comparisonExpected(probes, expected);
   const deadline = Date.now() + contract.timeoutMs;
   let state, pending;
   do {
@@ -439,6 +508,7 @@ async function downloadBytes(download, maxBytes, timeoutMs) {
 }
 
 async function stableState(page, contract, probes, expected) {
+  expected = comparisonExpected(probes, expected);
   const result = await waitForState(page, contract, probes, expected);
   if (result.matched) {
     const until = Date.now() + contract.stabilityMs;
@@ -580,6 +650,10 @@ export async function executeBackupRoundtrip(browser, contract) {
         if (value === null || typeof value !== 'object' || !Object.hasOwn(value, key)) throw backupError('EXPORT_STATE_PATH_MISSING', true);
         value = value[key];
       }
+      if (contract.observe[name].source === 'indexedDB' && contract.observe[name].field === 'records') {
+        try { value = canonicalRecords(value, contract.observe[name]); }
+        catch { throw backupError('EXPORT_RECORD_SET_INVALID', true); }
+      }
       if (!isDeepStrictEqual(value, baseline.state[name])) throw backupError('EXPORT_STATE_DIFFERS', true);
     }
     result.comparisons.export = { matched: true };
@@ -595,6 +669,12 @@ export async function executeBackupRoundtrip(browser, contract) {
     result.phase = 'target-empty';
     const target = await localPage();
     await target.goto(scopedURL(contract.baseURL, backup.restore.path), { waitUntil: 'domcontentloaded' });
+    const targetDialogs = dialogs.find(entry => entry.page === target).capture;
+    if (backup.restore.prepare) {
+      result.phase = 'target-prepare';
+      await applySteps(target, contract, backup.restore.prepare, 'target-prepare', result.events, targetDialogs);
+    }
+    result.phase = 'target-empty';
     await applySteps(target, contract, backup.restore.ready, 'target-ready', result.events);
     const empty = await stableState(target, contract, contract.observe, backup.restore.empty);
     if (!empty.matched) throw backupError('FRESH_TARGET_NOT_EMPTY');
@@ -609,8 +689,6 @@ export async function executeBackupRoundtrip(browser, contract) {
         assertSupportedDialogs(capture);
       }
     }
-    const targetDialogs = dialogs.find(entry => entry.page === target).capture;
-
     result.phase = 'import';
     // Upload the actual unedited bytes. Never JSON.stringify the parsed export.
     const fileName = backup.restore.fileName ?? downloads[0].suggestedFilename();

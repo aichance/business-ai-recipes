@@ -4,7 +4,7 @@ A malformed file can be safely rejected while a valid, self-exported backup
 cannot be restored. This optional check runs the real export/import flow.
 
 For your own app, [copy the backup-specific coding-agent prompt](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#backup-agent).
-It links the pinned 0.8.0 format and asks the agent to inspect your real import,
+It links the pinned 0.9.0 format and asks the agent to inspect your real import,
 configure complete selected records and execute the test. Supply one workflow
 to check. Review the generated contract and actual result; unsupported steps
 must be reported without bypassing them or changing the app to pass.
@@ -58,6 +58,44 @@ example assumes an existing status node whose text changes to `Restored`.
 For a toast that is absent until success, use a `count` observation selecting
 its exact success text, with expected `1`; it reads `0` before import. A `text`
 probe on an absent node times out and is INCONCLUSIVE.
+
+## Open the restore UI in a fresh context (0.9+)
+
+If the real import control requires opening Settings or completing normal
+onboarding, declare `restore.prepare` before the read-only `restore.ready`:
+
+```json
+"prepare": [
+  {"action":"click","target":{"role":"button","name":"Settings"}},
+  {"action":"expectVisible","target":{"label":"Import backup"}}
+]
+```
+
+At most 32 normal UI actions/expectations are allowed. There is no API request,
+programmatic navigation, file injection, native-dialog acceptance or post-import
+repair in this stage. It runs only on the fresh target, once, before the full
+initial-state stability check. Declare any preferences initialized through the
+normal UI in `restore.empty`. Do not create the source's business records in
+preparation. Missing/default/unstable initial values are INCONCLUSIVE, rather
+than permission to change or normalize them. No preparation preserves the
+earlier behavior. `restore.ready` and `afterReload` remain read-only.
+
+## Backups containing generated IndexedDB IDs (0.9+)
+
+Use [`field: "records"`](CONTRACT.md#complete-inline-key-record-sets-runner-09)
+with an explicit single-property inline `keyPath` and entry/UTF-8-byte bounds.
+Map its complete plain record array in `export.statePaths`; do not choose a
+known ID, count, preference or partial field as a substitute. The reader checks
+primary-key/record-ID equality and all selected stores in one database share a
+readonly transaction. Full record identity/value sets are compared independent
+of the outer export array order. Nested arrays, every field and all IDs remain
+significant. This mode does not verify business-specific export ordering.
+
+Out-of-line/compound keys, unsupported structured-clone values, own undefined
+properties, negative zero, missing stores and exceeded limits remain
+INCONCLUSIVE. It does not rewrite IDs or make non-JSON storage JSON-compatible.
+Fresh preferences saved with undefined values may also be unsupported; record
+that boundary and use only explicitly declared normal UI initialization.
 
 ## Import buttons that open a file chooser (0.6.1+)
 

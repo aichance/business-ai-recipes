@@ -1,0 +1,30 @@
+{
+  "project": "NestSave Savings Planner",
+  "upstream": "https://github.com/jojin1709/NestSave-Savings-Planner",
+  "ownerType": "User",
+  "ownerId": 197761551,
+  "repositoryId": 1414053737,
+  "ref": "7fb4f23e0dcc835ef7b2813b6f440ff3038e5eae",
+  "license": "MIT",
+  "licenseSha256": "e834ec3993ecdd8072f0810311f952d0149bae36c24a69423995461f4ac24495",
+  "appModified": false,
+  "sourceFilesVerifiedUnchanged": 98,
+  "inputs": "synthetic normal UI only",
+  "selectedDomains": {
+    "goals": "complete inline-id records",
+    "transactions": "complete inline-id records",
+    "expenses": "complete inline-id records",
+    "budgets": "complete inline-id records",
+    "settings": "complete fixed app_settings value"
+  },
+  "outsideCoverage": [
+    "streak/badges localStorage metadata omitted by upstream export",
+    "non-created celebratedMilestones",
+    "encrypted vault",
+    "service workers and native Android app",
+    "accounting correctness"
+  ],
+  "operatorTestDate": "2026-10-16",
+  "independentAuthorAdoption": false,
+  "runnerVersion": "0.9.0"
+}

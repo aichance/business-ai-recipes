@@ -299,6 +299,43 @@ inside the allowed window cannot be distinguished. Inspect the app's import
 flow when choosing the exact message; a PASS is not proof of that causal link.
 Versions before 0.4 reject this field.
 
+### Complete inline-key record sets (runner 0.9+)
+
+For generated IDs, opt into an entire existing store instead of guessing keys:
+
+```json
+{"source":"indexedDB","database":"my-app","store":"notes","field":"records","keyPath":"id","maxEntries":128,"maxBytes":262144}
+```
+
+`keyPath` must be one explicit property (for example `id`), and must exactly
+match the store's inline keyPath. Each cursor primary key must match that
+record's own inline ID, including its type. Out-of-line, nested and compound
+keyPaths are unsupported. String, finite number and array keys are supported;
+Date/binary keys and negative zero are unsupported. A `records` observation
+cannot share its database/store with another observation or use `key`, `parse`
+or `jsonPath` to omit fields.
+
+The value is the complete array of records, compared as an **unordered keyed
+set**. IDs, nested arrays, field presence and every value remain significant;
+duplicate, missing and extra IDs are not ignored. Only the outer record order
+is canonicalized, including in explicit expected arrays and export state paths.
+This does not certify an application-specific ordering contract. The export
+path must contain the full plain record array with the declared inline IDs.
+
+Both bounds are required: `maxEntries` is 1..4096, and `maxBytes` is 2..1048576
+UTF-8 bytes for the serialized array including brackets and commas. A missing
+store/DB, incomplete cursor, abort, timeout, unsupported value or exceeded bound
+is INCONCLUSIVE. An existing empty store is `[]`. Own undefined properties,
+non-JSON structured-clone values and negative zero are not silently normalized.
+The byte limit bounds serialized evidence, not the browser's initial allocation
+when IndexedDB returns a stored value. All selected stores in one database
+share a readonly transaction; different databases are not one atomic snapshot.
+
+For backup checks, captured records and keys remain excluded from reports and
+standalone result attachments. Declared synthetic contract inputs remain in
+the output. Ordinary reload/rejected-update checks retain their documented
+state diffs, screenshots and traces.
+
 ## Actual backup and restore (runner 0.6+)
 
 Select `checks: ["backup-roundtrip"]` and configure `backupRoundtrip` as shown
@@ -324,6 +361,19 @@ saved state must still match `restore.empty` and success must remain absent
 before one commit click. This is mutually exclusive with native `confirm`.
 New completion, full selected records and reload remain required; see
 [the DOM stage and failure classifications](BACKUP.md#in-app-import-preview-and-confirmation-08).
+
+Runner0.9 adds optional `restore.prepare`, a nonempty array of at most 32 normal
+UI actions (`click/fill/press/select/check/uncheck`) or read-only expectations.
+It runs once after the fresh target's initial route, before `restore.ready` and
+the full `restore.empty` stability check. It cannot `goto`, request an API,
+inject a file, accept a native dialog or repair data after import. Declare the
+exact initialized state in `restore.empty`, including any normally saved
+preferences; it need not be an untouched blank storage snapshot. Preparation
+must not seed the source's business records. Matching the complete source
+saved state to the declared initial state is rejected before export.
+Unexpected dialogs, unreachable preparation and initial-state mismatch remain
+INCONCLUSIVE. The runner cannot infer whether configured UI steps create
+business data, so inspect those steps and retain an independent normal control.
 
 ## Isolation and timing
 

@@ -15,6 +15,14 @@ from tempfile import TemporaryDirectory
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "tools/app-crash-lab/examples/nestsave/initial-balance.png",
+    "tools/app-crash-lab/examples/nestsave/initial-deposit.spec.mjs",
+    "tools/app-crash-lab/examples/nestsave/playwright.config.mjs",
+    "tools/app-crash-lab/tests/backup-records.test.mjs",
+    "tools/app-crash-lab/examples/nestsave/README.md",
+    "tools/app-crash-lab/examples/nestsave/SOURCE.json",
+    "tools/app-crash-lab/examples/nestsave/roundtrip.json",
+    "tools/app-crash-lab/examples/nestsave/LICENSE.upstream",
     "tools/app-crash-lab/examples/toeic-tracker/LICENSE.upstream",
     "tools/app-crash-lab/examples/toeic-tracker/serve-export.mjs",
     "tools/app-crash-lab/examples/toeic-tracker/README.md",
