@@ -53,8 +53,8 @@ cd focus-backup-test
 npm init --yes
 npm install --ignore-scripts --save-dev --save-exact @playwright/test@1.64.0
 npx playwright install chromium
-curl -fSL https://raw.githubusercontent.com/aichance/business-ai-recipes/main/tools/app-crash-lab/examples/focus-backup/roundtrip.spec.mjs -o roundtrip.spec.mjs
-curl -fSL https://raw.githubusercontent.com/aichance/business-ai-recipes/main/tools/app-crash-lab/examples/focus-backup/playwright.config.mjs -o playwright.config.mjs
+curl -fSL https://raw.githubusercontent.com/aichance/business-ai-recipes/3449463dc0e56395aa3082cdfef101a2a6a0a6e3/tools/app-crash-lab/examples/focus-backup/roundtrip.spec.mjs -o roundtrip.spec.mjs
+curl -fSL https://raw.githubusercontent.com/aichance/business-ai-recipes/3449463dc0e56395aa3082cdfef101a2a6a0a6e3/tools/app-crash-lab/examples/focus-backup/playwright.config.mjs -o playwright.config.mjs
 npx playwright test --config playwright.config.mjs
 ```
 
