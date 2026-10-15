@@ -1,0 +1,736 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "NestSave full JSON record sets and fresh initialized preferences",
+  "baseURL": "http://127.0.0.1:54594",
+  "path": "/",
+  "timeoutMs": 15000,
+  "stabilityMs": 250,
+  "reset": [],
+  "setup": [
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Create Goal"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[placeholder=\"https://example.com/product...\"]"
+      },
+      "value": "https://example.com/study-laptop"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Create Manually"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[placeholder=\"e.g. Work Laptop, Summer Trip, Emergency Buffer\"]"
+      },
+      "value": "Work Laptop"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[placeholder=\"e.g. 75000\"]"
+      },
+      "value": "75000"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[placeholder=\"e.g. 5000\"]"
+      },
+      "value": "5000"
+    },
+    {
+      "action": "select",
+      "target": {
+        "css": "div:has(> label:text-is(\"Category\")) select:visible"
+      },
+      "value": "Technology"
+    },
+    {
+      "action": "select",
+      "target": {
+        "css": "div:has(> label:text-is(\"Goal Type\")) select:visible"
+      },
+      "value": "purchase"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "textarea[placeholder=\"Any details about this goal...\"]"
+      },
+      "value": "OLED laptop fund for autumn study"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Next: Time Plan"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "div:has(> label:text-is(\"Start Date\")) input[type=\"date\"]:visible"
+      },
+      "value": "2026-10-15"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "div:has(> div > label:text-is(\"Target Deadline *\")) input[type=\"date\"]:visible"
+      },
+      "value": "2027-04-15"
+    },
+    {
+      "action": "select",
+      "target": {
+        "css": "div:has(> label:text-is(\"Savings Frequency\")) select:visible"
+      },
+      "value": "monthly"
+    },
+    {
+      "action": "select",
+      "target": {
+        "css": "div:has(> label:text-is(\"Priority\")) select:visible"
+      },
+      "value": "high"
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "label:has-text(\"Enable recurring contribution reminder\")"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[placeholder=\"e.g. 5000\"]"
+      },
+      "value": "2500"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "input[placeholder=\"e.g. 5000\"]"
+      },
+      "value": "Tab"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Next: Financial Capacity"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[placeholder=\"e.g. 60000\"]"
+      },
+      "value": "60000"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[placeholder=\"Rent, bills, groceries\"]"
+      },
+      "value": "18000"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[placeholder=\"e.g. Existing investments\"]"
+      },
+      "value": "5000"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[placeholder=\"Unplanned cushion\"]"
+      },
+      "value": "5000"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "input[placeholder=\"Unplanned cushion\"]"
+      },
+      "value": "Tab"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Next: Plan Review"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Create Savings Plan"
+      }
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": "main h1:text-is(\"Work Laptop\")"
+      },
+      "value": "Work Laptop"
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": "main span.text-2xl:text-is(\"₹10,000\")"
+      },
+      "value": "₹10,000"
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": "div.fixed.z-50 span.flex-1:text-is(\"Your savings plan is ready.\")"
+      },
+      "value": "Your savings plan is ready."
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[placeholder=\"e.g. 5000\"]"
+      },
+      "value": "2000"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[placeholder=\"e.g. Monthly transfer, bonus\"]"
+      },
+      "value": "October study bonus"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "input[placeholder=\"e.g. Monthly transfer, bonus\"]"
+      },
+      "value": "Tab"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Save Deposit"
+      }
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": "main span.text-2xl:text-is(\"₹12,000\")"
+      },
+      "value": "₹12,000"
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": "div.fixed.z-50 span.flex-1:text-is(\"+ ₹2,000 added. You're now 16% toward your goal.\")"
+      },
+      "value": "+ ₹2,000 added. You're now 16% toward your goal."
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Expenses"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Log Expense"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[placeholder=\"e.g. 250\"]"
+      },
+      "value": "1300"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[placeholder=\"e.g. Lunch with team\"]"
+      },
+      "value": "Study lunch and supplies"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "input[placeholder=\"e.g. Lunch with team\"]"
+      },
+      "value": "Tab"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Log Food & Dining Expense"
+      }
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": "main p.text-3xl.font-extrabold:text-is(\"₹1,300\")"
+      },
+      "value": "₹1,300"
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": "main p:text-is(\"1 transactions recorded\")"
+      },
+      "value": "1 transactions recorded"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Budgets"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Set Budget"
+      }
+    },
+    {
+      "action": "select",
+      "target": {
+        "css": "select:visible"
+      },
+      "value": "Food & Dining"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[placeholder=\"e.g. 5000\"]"
+      },
+      "value": "8000"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "input[placeholder=\"e.g. 5000\"]"
+      },
+      "value": "Tab"
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "button:has-text(\"Save Budget for\")"
+      }
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": "main p:text-is(\"₹1,300 of ₹8,000\")"
+      },
+      "value": "₹1,300 of ₹8,000"
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": "div.fixed.z-50 span.flex-1:text-is(\"Budget saved.\")"
+      },
+      "value": "Budget saved."
+    },
+    {
+      "action": "goto",
+      "path": "/"
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": "main div:has(> div > span:text-is(\"Total Saved\")) > p:text-is(\"₹12,000\")"
+      },
+      "value": "₹12,000"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Settings"
+      }
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "role": "heading",
+        "name": "Preferences & Data Vault"
+      },
+      "value": "Preferences & Data Vault"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "dark"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[placeholder=\"e.g. 70000\"]"
+      },
+      "value": "60000"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[placeholder=\"Rent, utilities, EMIs\"]"
+      },
+      "value": "18000"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[placeholder=\"Existing investments\"]"
+      },
+      "value": "5000"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[placeholder=\"Emergency cushion\"]"
+      },
+      "value": "5000"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "input[placeholder=\"Emergency cushion\"]"
+      },
+      "value": "Tab"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Save Financial Capacity"
+      },
+      "save": true
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": "div.fixed.z-50 span.flex-1:text-is(\"Preferences saved.\")"
+      },
+      "value": "Preferences saved."
+    }
+  ],
+  "observe": {
+    "goals": {
+      "source": "indexedDB",
+      "database": "nest_save_vault",
+      "store": "goals",
+      "field": "records",
+      "keyPath": "id",
+      "maxEntries": 128,
+      "maxBytes": 262144
+    },
+    "transactions": {
+      "source": "indexedDB",
+      "database": "nest_save_vault",
+      "store": "transactions",
+      "field": "records",
+      "keyPath": "id",
+      "maxEntries": 128,
+      "maxBytes": 262144
+    },
+    "expenses": {
+      "source": "indexedDB",
+      "database": "nest_save_vault",
+      "store": "expenses",
+      "field": "records",
+      "keyPath": "id",
+      "maxEntries": 128,
+      "maxBytes": 262144
+    },
+    "budgets": {
+      "source": "indexedDB",
+      "database": "nest_save_vault",
+      "store": "budgets",
+      "field": "records",
+      "keyPath": "id",
+      "maxEntries": 128,
+      "maxBytes": 262144
+    },
+    "settings": {
+      "source": "indexedDB",
+      "database": "nest_save_vault",
+      "store": "settings",
+      "key": "app_settings",
+      "field": "value",
+      "jsonPath": [
+        "value"
+      ]
+    }
+  },
+  "expected": {
+    "settings": {
+      "theme": "dark",
+      "currency": "INR",
+      "notificationsEnabled": true,
+      "aiEnabled": false,
+      "pushNotificationsEnabled": false,
+      "reminderDayOfWeek": 1,
+      "reminderHour": 20,
+      "monthlyIncome": 60000,
+      "fixedMonthlyExpenses": 18000,
+      "otherMonthlySavings": 5000,
+      "safetyBuffer": 5000
+    }
+  },
+  "backupRoundtrip": {
+    "isolation": "browser-local",
+    "export": {
+      "steps": [
+        {
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "Export Plain JSON"
+          }
+        }
+      ],
+      "maxBytes": 262144,
+      "statePaths": {
+        "goals": [
+          "goals"
+        ],
+        "transactions": [
+          "transactions"
+        ],
+        "expenses": [
+          "expenses"
+        ],
+        "budgets": [
+          "budgets"
+        ],
+        "settings": [
+          "settings"
+        ]
+      }
+    },
+    "restore": {
+      "path": "/",
+      "prepare": [
+        {
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "Settings"
+          }
+        },
+        {
+          "action": "expectText",
+          "target": {
+            "role": "heading",
+            "name": "Preferences & Data Vault"
+          },
+          "value": "Preferences & Data Vault"
+        },
+        {
+          "action": "expectValue",
+          "target": {
+            "css": "input[placeholder=\"e.g. 70000\"]"
+          },
+          "value": ""
+        },
+        {
+          "action": "expectValue",
+          "target": {
+            "css": "input[placeholder=\"Rent, utilities, EMIs\"]"
+          },
+          "value": ""
+        },
+        {
+          "action": "expectValue",
+          "target": {
+            "css": "input[placeholder=\"Existing investments\"]"
+          },
+          "value": ""
+        },
+        {
+          "action": "expectValue",
+          "target": {
+            "css": "input[placeholder=\"Emergency cushion\"]"
+          },
+          "value": ""
+        },
+        {
+          "action": "fill",
+          "target": {
+            "css": "input[placeholder=\"e.g. 70000\"]"
+          },
+          "value": "40000"
+        },
+        {
+          "action": "fill",
+          "target": {
+            "css": "input[placeholder=\"Rent, utilities, EMIs\"]"
+          },
+          "value": "10000"
+        },
+        {
+          "action": "fill",
+          "target": {
+            "css": "input[placeholder=\"Existing investments\"]"
+          },
+          "value": "1000"
+        },
+        {
+          "action": "fill",
+          "target": {
+            "css": "input[placeholder=\"Emergency cushion\"]"
+          },
+          "value": "2000"
+        },
+        {
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "Save Financial Capacity"
+          },
+          "save": true
+        },
+        {
+          "action": "expectText",
+          "target": {
+            "css": "div.fixed.z-50 span.flex-1:text-is(\"Preferences saved.\")"
+          },
+          "value": "Preferences saved."
+        }
+      ],
+      "ready": [
+        {
+          "action": "expectVisible",
+          "target": {
+            "css": "label:has(input[type=\"file\"][accept=\"application/json,.json\"])"
+          }
+        },
+        {
+          "action": "expectText",
+          "target": {
+            "role": "heading",
+            "name": "Preferences & Data Vault"
+          },
+          "value": "Preferences & Data Vault"
+        }
+      ],
+      "empty": {
+        "goals": [],
+        "transactions": [],
+        "expenses": [],
+        "budgets": [],
+        "settings": {
+          "theme": "system",
+          "currency": "INR",
+          "notificationsEnabled": true,
+          "aiEnabled": false,
+          "pushNotificationsEnabled": false,
+          "reminderDayOfWeek": 1,
+          "reminderHour": 20,
+          "monthlyIncome": 40000,
+          "fixedMonthlyExpenses": 10000,
+          "otherMonthlySavings": 1000,
+          "safetyBuffer": 2000
+        }
+      },
+      "target": {
+        "css": "input[type=\"file\"][accept=\"application/json,.json\"]"
+      },
+      "fileName": "nestsave-backup-2026-10-15.json",
+      "mimeType": "application/json",
+      "success": {
+        "observe": {
+          "feedbackCount": {
+            "source": "count",
+            "target": {
+              "css": "div.fixed.z-50 span.flex-1:text-is(\"Backup imported successfully.\")"
+            }
+          }
+        },
+        "expected": {
+          "feedbackCount": 1
+        }
+      },
+      "after": [
+        {
+          "action": "goto",
+          "path": "/"
+        },
+        {
+          "action": "expectText",
+          "target": {
+            "css": "main h4:text-is(\"Work Laptop\")"
+          },
+          "value": "Work Laptop"
+        },
+        {
+          "action": "expectText",
+          "target": {
+            "css": "main div:has(> div > span:text-is(\"Total Saved\")) > p:text-is(\"₹12,000\")"
+          },
+          "value": "₹12,000"
+        },
+        {
+          "action": "expectText",
+          "target": {
+            "css": "main span:text-is(\"₹2,500/monthly\")"
+          },
+          "value": "₹2,500/monthly"
+        }
+      ]
+    }
+  },
+  "afterReload": [
+    {
+      "action": "expectText",
+      "target": {
+        "css": "main h4:text-is(\"Work Laptop\")"
+      },
+      "value": "Work Laptop"
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": "main div:has(> div > span:text-is(\"Total Saved\")) > p:text-is(\"₹12,000\")"
+      },
+      "value": "₹12,000"
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": "main span:text-is(\"₹2,500/monthly\")"
+      },
+      "value": "₹2,500/monthly"
+    }
+  ],
+  "checks": [
+    "reload",
+    "backup-roundtrip"
+  ]
+}
