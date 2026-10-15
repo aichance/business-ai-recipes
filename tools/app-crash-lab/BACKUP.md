@@ -4,7 +4,7 @@ A malformed file can be safely rejected while a valid, self-exported backup
 cannot be restored. This optional check runs the real export/import flow.
 
 For your own app, [copy the backup-specific coding-agent prompt](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#backup-agent).
-It links the pinned 0.9.0 format and asks the agent to inspect your real import,
+It links the pinned 0.10.0 format and asks the agent to inspect your real import,
 configure complete selected records and execute the test. Supply one workflow
 to check. Review the generated contract and actual result; unsupported steps
 must be reported without bypassing them or changing the app to pass.
@@ -89,7 +89,10 @@ settings, photos and sync are explicitly outside that contract.
 ## Backups containing generated IndexedDB IDs (0.9+)
 
 Use [`field: "records"`](CONTRACT.md#complete-inline-key-record-sets-runner-09)
-with an explicit single-property inline `keyPath` and entry/UTF-8-byte bounds.
+with an explicit single-property `keyPath` and entry/UTF-8-byte bounds.
+Inline keys remain the default. For a non-autoIncrement out-of-line store whose
+actual primary keys equal a property in every full record, 0.10 adds explicit
+[`keyMode: "out-of-line"`](CONTRACT.md#out-of-line-keys-with-an-in-record-identity-runner-010).
 Map its complete plain record array in `export.statePaths`; do not choose a
 known ID, count, preference or partial field as a substitute. The reader checks
 primary-key/record-ID equality and all selected stores in one database share a
@@ -97,7 +100,8 @@ readonly transaction. Full record identity/value sets are compared independent
 of the outer export array order. Nested arrays, every field and all IDs remain
 significant. This mode does not verify business-specific export ordering.
 
-Out-of-line/compound keys, unsupported structured-clone values, own undefined
+Undeclared out-of-line keys, auto-generated external keys, compound store
+keyPaths, unsupported structured-clone values, own undefined
 properties, negative zero, missing stores and exceeded limits remain
 INCONCLUSIVE. It does not rewrite IDs or make non-JSON storage JSON-compatible.
 Fresh preferences saved with undefined values may also be unsupported; record
