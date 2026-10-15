@@ -3,6 +3,12 @@
 A malformed file can be safely rejected while a valid, self-exported backup
 cannot be restored. This optional check runs the real export/import flow.
 
+For your own app, [copy the backup-specific coding-agent prompt](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#backup-agent).
+It links the pinned 0.6.2 format and asks the agent to inspect your real import,
+configure complete selected records and execute the test. Supply one workflow
+to check. Review the generated contract and actual result; unsupported steps
+must be reported without bypassing them or changing the app to pass.
+
 Use a **disposable browser-local app with synthetic records**, running on a
 loopback origin. Start with the complete [FEATURE contract](examples/devtasks/roundtrip-feature.json)
 or [DOCS contract](examples/devtasks/roundtrip-docs.json). They create records

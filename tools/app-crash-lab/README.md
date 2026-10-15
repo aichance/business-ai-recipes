@@ -13,6 +13,9 @@ app's real JSON backup, verifies it contains the selected saved records, imports
 the unchanged bytes in a blank context, and compares every selected field again
 after reload. This check keeps metadata in its report, without screenshots or
 a trace. [Configure the backup check](BACKUP.md).
+[Use the separate backup setup prompt in your coding agent](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#backup-agent).
+It configures the real download → fresh restore → reload workflow for your app;
+the ordinary save/rejection prompt does not select backup mode.
 
 Local Node CLI. No account, LLM call or API key during a test run. MIT licensed.
 Built for disposable local web apps, including apps made with coding agents.
