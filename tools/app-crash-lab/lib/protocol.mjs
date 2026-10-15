@@ -97,7 +97,7 @@ function recordKeyToken(key, depth = 0) {
   if (typeof key === 'string') return JSON.stringify(['s', key]);
   if (typeof key === 'number' && Number.isFinite(key) && !Object.is(key, -0)) return JSON.stringify(['n', key]);
   if (depth < 16 && Array.isArray(key)) return JSON.stringify(['a', Array.from(key, part => recordKeyToken(part, depth + 1))]);
-  throw new Error('Unsupported inline IndexedDB record key');
+  throw new Error('Unsupported IndexedDB record key');
 }
 
 // This mode certifies complete keyed record sets, not application array order.
@@ -106,9 +106,9 @@ function canonicalRecords(records, probe) {
   if (!Array.isArray(records) || records.length > probe.maxEntries) throw new Error('IndexedDB records shape or entry limit');
   const seen = new Set();
   const rows = records.map(record => {
-    if (!record || typeof record !== 'object' || Array.isArray(record) || !Object.hasOwn(record, probe.keyPath)) throw new Error('IndexedDB record has no declared inline key');
+    if (!record || typeof record !== 'object' || Array.isArray(record) || !Object.hasOwn(record, probe.keyPath)) throw new Error('IndexedDB record has no declared identity property');
     const token = recordKeyToken(record[probe.keyPath]);
-    if (seen.has(token)) throw new Error('Duplicate inline IndexedDB record key');
+    if (seen.has(token)) throw new Error('Duplicate IndexedDB record identity');
     seen.add(token);
     return { token, record };
   });
@@ -145,7 +145,7 @@ async function readIndexedDB(page, entries, timeoutMs) {
       if (typeof key === 'string') return JSON.stringify(['s', key]);
       if (typeof key === 'number' && Number.isFinite(key) && !Object.is(key, -0)) return JSON.stringify(['n', key]);
       if (depth < 16 && Array.isArray(key)) return JSON.stringify(['a', Array.from(key, part => keyToken(part, depth + 1))]);
-      throw new Error('Unsupported inline IndexedDB record key');
+      throw new Error('Unsupported IndexedDB record key');
     }
     async function existingDatabases() {
       let timer;
@@ -196,7 +196,9 @@ async function readIndexedDB(page, entries, timeoutMs) {
             const records = group.map(([name, probe]) => {
               const store = transaction.objectStore(probe.store);
               if (probe.field === 'records') {
-                if (typeof store.keyPath !== 'string' || store.keyPath !== probe.keyPath) throw new Error('IndexedDB inline keyPath does not match its declaration');
+                if (probe.keyMode === 'out-of-line') {
+                  if (store.keyPath !== null || store.autoIncrement) throw new Error('IndexedDB out-of-line records require a store without keyPath or autoIncrement');
+                } else if (typeof store.keyPath !== 'string' || store.keyPath !== probe.keyPath) throw new Error('IndexedDB inline keyPath does not match its declaration');
                 const record = { name, probe, data: [], bytes: 2, complete: false };
                 const request = store.openCursor();
                 request.onerror = () => finish(new Error('IndexedDB record cursor failed'));
