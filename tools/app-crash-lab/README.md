@@ -225,6 +225,11 @@ keeps imported order fields through reload, but catches missing icing instructio
 and source positions at the confirmation baseline. It includes a passing import
 control and an explicitly inconclusive confirmation check on pinned unchanged source.
 
+A display-baseline case: [Repwise](examples/repwise/README.md) preserves complete
+workout records through a real JSON backup, fresh restore and reload, while a
+completed workout is already absent from History. Its backup check passes and
+its separate History check stays inconclusive at baseline.
+
 A real-app timing case: the [Chalky note-close diagnostic](examples/chalky-notes-close/README.md)
 compares a rapid keyboard edit/close with a delayed control. The last edit was
 lost on the pinned source; the original CLI correctly stopped at its failed
