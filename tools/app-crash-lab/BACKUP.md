@@ -80,6 +80,12 @@ preparation. Missing/default/unstable initial values are INCONCLUSIVE, rather
 than permission to change or normalize them. No preparation preserves the
 earlier behavior. `restore.ready` and `afterReload` remain read-only.
 
+The [Cadence Journal example](examples/bujo/README.md) uses this first-run
+preparation for a real localStorage journal. It creates six domains through
+the normal UI and compares each complete selected array, including IDs and
+collection references, through export, fresh import and reload. Starter habits,
+settings, photos and sync are explicitly outside that contract.
+
 ## Backups containing generated IndexedDB IDs (0.9+)
 
 Use [`field: "records"`](CONTRACT.md#complete-inline-key-record-sets-runner-09)
