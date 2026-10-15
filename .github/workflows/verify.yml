@@ -16,7 +16,7 @@ jobs:
   app-crash-lab:
     runs-on: ubuntu-24.04
     container: node:22.16.0-bookworm
-    timeout-minutes: 10
+    timeout-minutes: 15
     defaults:
       run:
         working-directory: tools/app-crash-lab

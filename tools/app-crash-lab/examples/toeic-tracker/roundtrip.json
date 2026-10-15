@@ -1,0 +1,810 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "Cheese TOEIC Tracker / pinned normal-control / generic 0.8 backup roundtrip",
+  "baseURL": "http://127.0.0.1:54571",
+  "path": "/practice",
+  "timeoutMs": 15000,
+  "stabilityMs": 250,
+  "reset": [],
+  "setup": [
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "开始计时（可选）"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "做完了，去对答案"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[aria-label=\"Part 1 看图短句 每个 Part 错了几题\"]"
+      },
+      "value": "1"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "input[aria-label=\"Part 1 看图短句 每个 Part 错了几题\"]"
+      },
+      "value": "Tab"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[aria-label=\"Part 2 应答反应 每个 Part 错了几题\"]"
+      },
+      "value": "0"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "input[aria-label=\"Part 2 应答反应 每个 Part 错了几题\"]"
+      },
+      "value": "Tab"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[aria-label=\"Part 3 对话理解 每个 Part 错了几题\"]"
+      },
+      "value": "2"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "input[aria-label=\"Part 3 对话理解 每个 Part 错了几题\"]"
+      },
+      "value": "Tab"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[aria-label=\"Part 4 说明文听力 每个 Part 错了几题\"]"
+      },
+      "value": "0"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "input[aria-label=\"Part 4 说明文听力 每个 Part 错了几题\"]"
+      },
+      "value": "Tab"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "单词不认识"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "+ 写点笔记（可选）"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "textarea[placeholder=\"这套题有什么教训？下次要注意什么？\"]"
+      },
+      "value": "Synthetic normal-control note: review Part 3 vocabulary in the next short practice."
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "textarea[placeholder=\"这套题有什么教训？下次要注意什么？\"]"
+      },
+      "value": "Tab"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "保存，看结果"
+      }
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "role": "button",
+        "name": "已保存"
+      },
+      "value": "已保存"
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "role": "heading",
+        "name": "L1 已完成"
+      },
+      "value": "L1 已完成"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "修改错题数"
+      }
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[aria-label=\"Part 1 看图短句 每个 Part 错了几题\"]"
+      },
+      "value": "1"
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[aria-label=\"Part 2 应答反应 每个 Part 错了几题\"]"
+      },
+      "value": "0"
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[aria-label=\"Part 3 对话理解 每个 Part 错了几题\"]"
+      },
+      "value": "2"
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[aria-label=\"Part 4 说明文听力 每个 Part 错了几题\"]"
+      },
+      "value": "0"
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "textarea[placeholder=\"这套题有什么教训？下次要注意什么？\"]"
+      },
+      "value": "Synthetic normal-control note: review Part 3 vocabulary in the next short practice."
+    },
+    {
+      "action": "goto",
+      "path": "/vocab"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "textarea[placeholder=\"输入单词或短语...\"]"
+      },
+      "value": "quarterly procurement review"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "textarea[placeholder=\"输入单词或短语...\"]"
+      },
+      "value": "Tab"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "添加"
+      }
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": "a[href*=\"quarterly\"] > span"
+      },
+      "value": "quarterly procurement review"
+    },
+    {
+      "action": "goto",
+      "path": "/insights"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "估分"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[type=\"date\"]"
+      },
+      "value": "2026-10-15"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "input[type=\"date\"]"
+      },
+      "value": "Tab"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "div.flex.items-center.justify-between:has(> span:text-is(\"Listening\")) input[type=\"number\"][min=\"5\"][max=\"495\"][step=\"5\"]"
+      },
+      "value": "480"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "div.flex.items-center.justify-between:has(> span:text-is(\"Listening\")) input[type=\"number\"][min=\"5\"][max=\"495\"][step=\"5\"]"
+      },
+      "value": "Tab"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "div.flex.items-center.justify-between:has(> span:text-is(\"Reading\")) input[type=\"number\"][min=\"5\"][max=\"495\"][step=\"5\"]"
+      },
+      "value": "450"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "div.flex.items-center.justify-between:has(> span:text-is(\"Reading\")) input[type=\"number\"][min=\"5\"][max=\"495\"][step=\"5\"]"
+      },
+      "value": "Tab"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "保存至成绩单"
+      },
+      "save": true
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": "div.space-y-3.max-h-70 [class~=\"text-[20px]\"]"
+      },
+      "value": "930"
+    },
+    {
+      "action": "goto",
+      "path": "/vault"
+    }
+  ],
+  "observe": {
+    "sessions": {
+      "source": "localStorage",
+      "key": "cheese-toeic-storage",
+      "parse": "json",
+      "jsonPath": [
+        "state",
+        "sessions"
+      ]
+    },
+    "activeSessionId": {
+      "source": "localStorage",
+      "key": "cheese-toeic-storage",
+      "parse": "json",
+      "jsonPath": [
+        "state",
+        "activeSessionId"
+      ]
+    },
+    "locale": {
+      "source": "localStorage",
+      "key": "cheese-toeic-storage",
+      "parse": "json",
+      "jsonPath": [
+        "state",
+        "locale"
+      ]
+    },
+    "examDate": {
+      "source": "localStorage",
+      "key": "cheese-toeic-storage",
+      "parse": "json",
+      "jsonPath": [
+        "state",
+        "examDate"
+      ]
+    },
+    "historicalScores": {
+      "source": "localStorage",
+      "key": "cheese-toeic-storage",
+      "parse": "json",
+      "jsonPath": [
+        "state",
+        "historicalScores"
+      ]
+    },
+    "sprintConfig": {
+      "source": "localStorage",
+      "key": "cheese-toeic-storage",
+      "parse": "json",
+      "jsonPath": [
+        "state",
+        "sprintConfig"
+      ]
+    },
+    "vocabularyEntries": {
+      "source": "localStorage",
+      "key": "cheese-toeic-storage",
+      "parse": "json",
+      "jsonPath": [
+        "state",
+        "vocabularyEntries"
+      ]
+    },
+    "targetScore": {
+      "source": "localStorage",
+      "key": "cheese-toeic-storage",
+      "parse": "json",
+      "jsonPath": [
+        "state",
+        "targetScore"
+      ]
+    },
+    "unlockedAchievements": {
+      "source": "localStorage",
+      "key": "cheese-toeic-storage",
+      "parse": "json",
+      "jsonPath": [
+        "state",
+        "unlockedAchievements"
+      ]
+    },
+    "achievementUnlocks": {
+      "source": "localStorage",
+      "key": "cheese-toeic-storage",
+      "parse": "json",
+      "jsonPath": [
+        "state",
+        "achievementUnlocks"
+      ]
+    },
+    "vaultHistoryCount": {
+      "source": "text",
+      "target": {
+        "css": "div.mx-auto.max-w-4xl > div.grid.grid-cols-2.gap-3 > div:nth-child(3) [class~=\"text-3xl\"]"
+      }
+    },
+    "vaultExamDate": {
+      "source": "text",
+      "target": {
+        "css": "div.mx-auto.max-w-4xl > div.grid.grid-cols-2.gap-3 > div:nth-child(4) [class~=\"text-[11px]\"]"
+      }
+    }
+  },
+  "expected": {
+    "locale": "zh",
+    "vaultHistoryCount": "1",
+    "vaultExamDate": "2026-05-24"
+  },
+  "checks": [
+    "backup-roundtrip"
+  ],
+  "backupRoundtrip": {
+    "isolation": "browser-local",
+    "export": {
+      "steps": [
+        {
+          "action": "goto",
+          "path": "/vault"
+        },
+        {
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "下载"
+          }
+        }
+      ],
+      "maxBytes": 65536,
+      "statePaths": {
+        "sessions": [
+          "data",
+          "sessions"
+        ],
+        "activeSessionId": [
+          "data",
+          "activeSessionId"
+        ],
+        "locale": [
+          "data",
+          "locale"
+        ],
+        "examDate": [
+          "data",
+          "examDate"
+        ],
+        "historicalScores": [
+          "data",
+          "historicalScores"
+        ],
+        "sprintConfig": [
+          "data",
+          "sprintConfig"
+        ],
+        "vocabularyEntries": [
+          "data",
+          "vocabularyEntries"
+        ],
+        "targetScore": [
+          "data",
+          "targetScore"
+        ],
+        "unlockedAchievements": [
+          "data",
+          "unlockedAchievements"
+        ],
+        "achievementUnlocks": [
+          "data",
+          "achievementUnlocks"
+        ]
+      }
+    },
+    "restore": {
+      "path": "/vault",
+      "ready": [
+        {
+          "action": "expectVisible",
+          "target": {
+            "role": "button",
+            "name": "选择文件"
+          }
+        }
+      ],
+      "empty": {
+        "sessions": [
+          {
+            "id": "L1",
+            "sprintDay": 1,
+            "type": "L",
+            "setNumber": 1,
+            "label": "L1",
+            "title": "Listening Set 1",
+            "targetMinutes": 45,
+            "status": "not-started",
+            "mistakes": {},
+            "reasons": [],
+            "readingLapTimes": {}
+          },
+          {
+            "id": "R1",
+            "sprintDay": 2,
+            "type": "R",
+            "setNumber": 1,
+            "label": "R1",
+            "title": "Reading Set 1",
+            "targetMinutes": 75,
+            "status": "not-started",
+            "mistakes": {},
+            "reasons": [],
+            "readingLapTimes": {}
+          },
+          {
+            "id": "L2",
+            "sprintDay": 3,
+            "type": "L",
+            "setNumber": 2,
+            "label": "L2",
+            "title": "Listening Set 2",
+            "targetMinutes": 45,
+            "status": "not-started",
+            "mistakes": {},
+            "reasons": [],
+            "readingLapTimes": {}
+          },
+          {
+            "id": "R2",
+            "sprintDay": 4,
+            "type": "R",
+            "setNumber": 2,
+            "label": "R2",
+            "title": "Reading Set 2",
+            "targetMinutes": 75,
+            "status": "not-started",
+            "mistakes": {},
+            "reasons": [],
+            "readingLapTimes": {}
+          },
+          {
+            "id": "L3",
+            "sprintDay": 5,
+            "type": "L",
+            "setNumber": 3,
+            "label": "L3",
+            "title": "Listening Set 3",
+            "targetMinutes": 45,
+            "status": "not-started",
+            "mistakes": {},
+            "reasons": [],
+            "readingLapTimes": {}
+          },
+          {
+            "id": "R3",
+            "sprintDay": 6,
+            "type": "R",
+            "setNumber": 3,
+            "label": "R3",
+            "title": "Reading Set 3",
+            "targetMinutes": 75,
+            "status": "not-started",
+            "mistakes": {},
+            "reasons": [],
+            "readingLapTimes": {}
+          },
+          {
+            "id": "L4",
+            "sprintDay": 7,
+            "type": "L",
+            "setNumber": 4,
+            "label": "L4",
+            "title": "Listening Set 4",
+            "targetMinutes": 45,
+            "status": "not-started",
+            "mistakes": {},
+            "reasons": [],
+            "readingLapTimes": {}
+          },
+          {
+            "id": "R4",
+            "sprintDay": 8,
+            "type": "R",
+            "setNumber": 4,
+            "label": "R4",
+            "title": "Reading Set 4",
+            "targetMinutes": 75,
+            "status": "not-started",
+            "mistakes": {},
+            "reasons": [],
+            "readingLapTimes": {}
+          },
+          {
+            "id": "L5",
+            "sprintDay": 9,
+            "type": "L",
+            "setNumber": 5,
+            "label": "L5",
+            "title": "Listening Set 5",
+            "targetMinutes": 45,
+            "status": "not-started",
+            "mistakes": {},
+            "reasons": [],
+            "readingLapTimes": {}
+          },
+          {
+            "id": "R5",
+            "sprintDay": 10,
+            "type": "R",
+            "setNumber": 5,
+            "label": "R5",
+            "title": "Reading Set 5",
+            "targetMinutes": 75,
+            "status": "not-started",
+            "mistakes": {},
+            "reasons": [],
+            "readingLapTimes": {}
+          },
+          {
+            "id": "L6",
+            "sprintDay": 11,
+            "type": "L",
+            "setNumber": 6,
+            "label": "L6",
+            "title": "Listening Set 6",
+            "targetMinutes": 45,
+            "status": "not-started",
+            "mistakes": {},
+            "reasons": [],
+            "readingLapTimes": {}
+          },
+          {
+            "id": "R6",
+            "sprintDay": 12,
+            "type": "R",
+            "setNumber": 6,
+            "label": "R6",
+            "title": "Reading Set 6",
+            "targetMinutes": 75,
+            "status": "not-started",
+            "mistakes": {},
+            "reasons": [],
+            "readingLapTimes": {}
+          },
+          {
+            "id": "L7",
+            "sprintDay": 13,
+            "type": "L",
+            "setNumber": 7,
+            "label": "L7",
+            "title": "Listening Set 7",
+            "targetMinutes": 45,
+            "status": "not-started",
+            "mistakes": {},
+            "reasons": [],
+            "readingLapTimes": {}
+          },
+          {
+            "id": "R7",
+            "sprintDay": 14,
+            "type": "R",
+            "setNumber": 7,
+            "label": "R7",
+            "title": "Reading Set 7",
+            "targetMinutes": 75,
+            "status": "not-started",
+            "mistakes": {},
+            "reasons": [],
+            "readingLapTimes": {}
+          },
+          {
+            "id": "L8",
+            "sprintDay": 15,
+            "type": "L",
+            "setNumber": 8,
+            "label": "L8",
+            "title": "Listening Set 8",
+            "targetMinutes": 45,
+            "status": "not-started",
+            "mistakes": {},
+            "reasons": [],
+            "readingLapTimes": {}
+          },
+          {
+            "id": "R8",
+            "sprintDay": 16,
+            "type": "R",
+            "setNumber": 8,
+            "label": "R8",
+            "title": "Reading Set 8",
+            "targetMinutes": 75,
+            "status": "not-started",
+            "mistakes": {},
+            "reasons": [],
+            "readingLapTimes": {}
+          },
+          {
+            "id": "L9",
+            "sprintDay": 17,
+            "type": "L",
+            "setNumber": 9,
+            "label": "L9",
+            "title": "Listening Set 9",
+            "targetMinutes": 45,
+            "status": "not-started",
+            "mistakes": {},
+            "reasons": [],
+            "readingLapTimes": {}
+          },
+          {
+            "id": "R9",
+            "sprintDay": 18,
+            "type": "R",
+            "setNumber": 9,
+            "label": "R9",
+            "title": "Reading Set 9",
+            "targetMinutes": 75,
+            "status": "not-started",
+            "mistakes": {},
+            "reasons": [],
+            "readingLapTimes": {}
+          },
+          {
+            "id": "L10",
+            "sprintDay": 19,
+            "type": "L",
+            "setNumber": 10,
+            "label": "L10",
+            "title": "Listening Set 10",
+            "targetMinutes": 45,
+            "status": "not-started",
+            "mistakes": {},
+            "reasons": [],
+            "readingLapTimes": {}
+          },
+          {
+            "id": "R10",
+            "sprintDay": 20,
+            "type": "R",
+            "setNumber": 10,
+            "label": "R10",
+            "title": "Reading Set 10",
+            "targetMinutes": 75,
+            "status": "not-started",
+            "mistakes": {},
+            "reasons": [],
+            "readingLapTimes": {}
+          }
+        ],
+        "activeSessionId": "L1",
+        "locale": "zh",
+        "examDate": "2026-05-24",
+        "historicalScores": [],
+        "sprintConfig": {
+          "listeningCount": 10,
+          "readingCount": 10
+        },
+        "vocabularyEntries": [],
+        "targetScore": 850,
+        "unlockedAchievements": [],
+        "achievementUnlocks": {},
+        "vaultHistoryCount": "0",
+        "vaultExamDate": "2026-05-24"
+      },
+      "target": {
+        "css": "input[type=\"file\"][accept=\"application/json,.json\"]"
+      },
+      "mimeType": "application/json",
+      "fileName": "cheese-toeic-tracker-v3-2026-10-15.json",
+      "commit": {
+        "frame": {
+          "role": "dialog",
+          "name": "确认用这份备份替换当前记录？"
+        },
+        "target": {
+          "role": "button",
+          "name": "确认导入"
+        },
+        "ready": [
+          {
+            "action": "expectText",
+            "target": {
+              "role": "heading",
+              "name": "确认用这份备份替换当前记录？"
+            },
+            "value": "确认用这份备份替换当前记录？"
+          },
+          {
+            "action": "expectVisible",
+            "target": {
+              "role": "button",
+              "name": "确认导入"
+            }
+          }
+        ]
+      },
+      "success": {
+        "observe": {
+          "feedbackCount": {
+            "source": "count",
+            "target": {
+              "css": "div.fixed.right-3.top-22 [class~=\"wrap-break-word\"]:text-is(\"恢复成功。 来源：标准快照。\")"
+            }
+          },
+          "vaultHistoryCount": {
+            "source": "text",
+            "target": {
+              "css": "div.mx-auto.max-w-4xl > div.grid.grid-cols-2.gap-3 > div:nth-child(3) [class~=\"text-3xl\"]"
+            }
+          },
+          "vaultExamDate": {
+            "source": "text",
+            "target": {
+              "css": "div.mx-auto.max-w-4xl > div.grid.grid-cols-2.gap-3 > div:nth-child(4) [class~=\"text-[11px]\"]"
+            }
+          }
+        },
+        "expected": {
+          "feedbackCount": 1,
+          "vaultHistoryCount": "1",
+          "vaultExamDate": "2026-05-24"
+        }
+      },
+      "after": [
+        {
+          "action": "expectText",
+          "target": {
+            "css": "div.fixed.right-3.top-22 [class~=\"wrap-break-word\"]"
+          },
+          "value": "恢复成功。 来源：标准快照。"
+        }
+      ]
+    }
+  }
+}

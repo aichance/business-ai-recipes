@@ -6,7 +6,7 @@ import { validateContract, PACK } from './contract.mjs';
 import { executeCheck, executeBackupRoundtrip, confineContext } from './protocol.mjs';
 import { renderReport } from './report.mjs';
 
-export const VERSION = '0.7.0';
+export const VERSION = '0.8.0';
 
 export async function reproductionSpec(contract, hash) {
   const runtime = (await readFile(new URL('./protocol.mjs', import.meta.url), 'utf8'))
@@ -22,7 +22,7 @@ test.describe.configure({ mode: 'default' });
 for (const check of contract.checks) {
   test(contract.name + ' / ' + check, async ({ browser }, testInfo) => {
     const backup = contract.backupRoundtrip;
-    const stepCount = contract.setup.length + contract.reset.length + (contract.afterReload?.length ?? 0) + (contract.rejectedUpdate?.steps.length ?? 0) + (backup?.export.steps.length ?? 0) + (backup?.restore.ready.length ?? 0) + (backup?.restore.after?.length ?? 0);
+    const stepCount = contract.setup.length + contract.reset.length + (contract.afterReload?.length ?? 0) + (contract.rejectedUpdate?.steps.length ?? 0) + (backup?.export.steps.length ?? 0) + (backup?.restore.ready.length ?? 0) + (backup?.restore.after?.length ?? 0) + (backup?.restore.commit ? backup.restore.commit.ready.length + 1 : 0);
     test.setTimeout(Math.max(60000, contract.timeoutMs * (stepCount + 24) + 5 * contract.stabilityMs));
     let result;
     if (check === 'backup-roundtrip') result = await executeBackupRoundtrip(browser, contract);
