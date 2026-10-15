@@ -130,7 +130,13 @@ DevTasks is Shamil's MIT-licensed project and is downloaded from its author;
 its source is not bundled here. These independently written tests and contracts
 use this repository's MIT license.
 
-## Run the same real-file roundtrip with App Crash Lab0.6+
+## Run the same real-file roundtrip with App Crash Lab0.6.2+
+
+Use runner **0.6.2+**. Version0.6.1 rejected the post-import `goto` in
+these bundled contracts before running a browser. Version0.6.2 checks every
+selected saved value before allowing the single view navigation, then checks
+all selected values after navigation and reload. The app/configuration is not
+changed to make a failing restoration pass.
 
 Keep the unchanged app preview running at `http://127.0.0.1:54439` (change the
 preview port above, or pass `--base-url` to match your chosen loopback port).
