@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "Leftover 1.5.7 — unrelated JSON rejection preserves last good budget",
+  "baseURL": "http://127.0.0.1:54680",
+  "path": "/",
+  "timeoutMs": 5000,
+  "stabilityMs": 750,
+  "checks": [
+    "rejected-update"
+  ],
+  "reset": [],
+  "setup": [
+    {
+      "action": "click",
+      "target": {
+        "css": "#tourSkip"
+      }
+    },
+    {
+      "action": "select",
+      "target": {
+        "css": "#lang"
+      },
+      "value": "en-US"
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "#addExpense"
+      }
+    },
+    {
+      "action": "select",
+      "target": {
+        "css": "#nfCat"
+      },
+      "value": "food"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "#nfAmt"
+      },
+      "value": "25.50"
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "#nfAdd"
+      },
+      "save": true
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": "#sBal"
+      },
+      "value": "-$25.50"
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": "#saveNote"
+      },
+      "value": "Saved on this device"
+    }
+  ],
+  "observe": {
+    "state": {
+      "source": "localStorage",
+      "key": "leftover:v2",
+      "parse": "json"
+    },
+    "balance": {
+      "source": "text",
+      "target": {
+        "css": "#sBal"
+      }
+    },
+    "historyCount": {
+      "source": "count",
+      "target": {
+        "role": "button",
+        "name": "Undo"
+      }
+    }
+  },
+  "expected": {
+    "balance": "-$25.50",
+    "historyCount": 1
+  },
+  "afterReload": [
+    {
+      "action": "expectText",
+      "target": {
+        "css": "#sBal"
+      },
+      "value": "-$25.50"
+    }
+  ],
+  "rejectedUpdate": {
+    "steps": [
+      {
+        "action": "setFile",
+        "target": {
+          "css": "#restoreFile"
+        },
+        "file": {
+          "name": "acl-reject-unrelated.json",
+          "mimeType": "application/json",
+          "text": "{\"not\": \"a Leftover backup\"}"
+        }
+      }
+    ],
+    "observe": {
+      "rejection": {
+        "source": "text",
+        "target": {
+          "css": "#saveNote"
+        }
+      }
+    },
+    "expected": {
+      "rejection": "That file is not a Leftover backup"
+    }
+  }
+}
