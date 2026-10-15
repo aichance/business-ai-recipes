@@ -43,7 +43,7 @@ export async function confineContext(context, baseURL) {
   });
 }
 
-async function applySteps(page, contract, steps, phase, events, dialogs = null) {
+async function applySteps(page, contract, steps, phase, events, dialogs = null, scope = null) {
   for (const [index, step] of steps.entries()) {
     if (dialogs) dialogs.confirmation = step.confirm ? { message: step.confirm.message, seen: false, deadline: Date.now() + contract.timeoutMs } : null;
     events.push({ phase, step: index + 1, action: step.action, ...(step.save ? { save: true } : {}), status: 'started' });
@@ -58,7 +58,8 @@ async function applySteps(page, contract, steps, phase, events, dialogs = null) 
         throw error;
       }
     } else {
-      const locator = locate(page, step.target);
+      const raw = locate(page, step.target);
+      const locator = scope ? raw.and(scope.locator('*')) : raw;
       if (step.action === 'fill') await locator.fill(step.value);
       else if (step.action === 'click') await locator.click();
       else if (step.action === 'press') await locator.press(step.value);
@@ -473,6 +474,65 @@ async function deliverBackupFile(capture, confirmation, timeoutMs, action, resul
   }
 }
 
+async function requireInactiveImportCommit(page, commit) {
+  if (!commit) return;
+  try {
+    const frame = locate(page, commit.frame);
+    const count = await frame.count();
+    if (count > 1) throw backupError('IMPORT_COMMIT_AMBIGUOUS');
+    if (count === 1 && await frame.isVisible()) throw backupError('IMPORT_COMMIT_ALREADY_VISIBLE');
+    if (await locate(frame, commit.target).and(frame.locator('*')).count() > 1) throw backupError('IMPORT_COMMIT_AMBIGUOUS');
+  } catch (error) {
+    if (error.backupCode) throw error;
+    throw backupError('IMPORT_COMMIT_PRECONDITION_UNAVAILABLE');
+  }
+}
+
+async function commitBackupImport(page, contract, savedProbes, success, result) {
+  const restore = contract.backupRoundtrip.restore;
+  const commit = restore.commit;
+  if (!commit) return;
+  result.phase = 'import-commit';
+  const receipt = result.importCommit = { required: true, ready: false, attemptedCount: 0, clicked: false };
+  const frame = locate(page, commit.frame);
+  try {
+    await expect(frame).toBeVisible({ timeout: contract.timeoutMs });
+    if (await frame.count() !== 1) throw backupError('IMPORT_COMMIT_AMBIGUOUS');
+    await applySteps(frame, contract, commit.ready, 'import-commit-ready', result.events, null, frame);
+    const button = locate(frame, commit.target).and(frame.locator('*'));
+    if (await button.count() > 1) throw backupError('IMPORT_COMMIT_AMBIGUOUS');
+    await expect(button).toBeVisible({ timeout: contract.timeoutMs });
+    if (await button.count() !== 1) throw backupError('IMPORT_COMMIT_AMBIGUOUS');
+    await expect(button).toBeEnabled({ timeout: contract.timeoutMs });
+  } catch (error) {
+    if (error.backupCode) throw error;
+    throw backupError('IMPORT_COMMIT_NOT_READY');
+  }
+  receipt.ready = true;
+  // A preview/confirmation must not disguise an import that already completed
+  // or a later click that repairs data. Check storage before the one UI commit.
+  const previous = await readState(page, contract, success.observe);
+  if (isDeepStrictEqual(selected(previous, success.expected), success.expected)) throw backupError('IMPORT_SUCCESS_BEFORE_COMMIT');
+  const expected = Object.fromEntries(Object.keys(savedProbes).map(name => [name, restore.empty[name]]));
+  let pending;
+  try {
+    const state = await readState(page, contract, savedProbes);
+    // Do not wait for already changed storage to become empty again.
+    pending = { state, matched: isDeepStrictEqual(state, expected) };
+    if (pending.matched) pending = await stableState(page, contract, savedProbes, expected);
+  }
+  catch { throw backupError('IMPORT_STATE_UNAVAILABLE_BEFORE_COMMIT'); }
+  const changedObservations = Object.keys(savedProbes).filter(name => !isDeepStrictEqual(expected[name], pending.state[name]));
+  result.comparisons.beforeCommit = { matched: pending.matched, changedObservations };
+  if (!pending.matched) throw backupError('IMPORT_STATE_CHANGED_BEFORE_COMMIT');
+  const latest = await readState(page, contract, success.observe);
+  if (isDeepStrictEqual(selected(latest, success.expected), success.expected)) throw backupError('IMPORT_SUCCESS_BEFORE_COMMIT');
+  receipt.attemptedCount = 1;
+  try { await locate(frame, commit.target).and(frame.locator('*')).click({ timeout: contract.timeoutMs }); }
+  catch { throw backupError('IMPORT_COMMIT_CLICK_FAILED'); }
+  receipt.clicked = true;
+}
+
 export async function executeBackupRoundtrip(browser, contract) {
   const result = { check: 'backup-roundtrip', status: 'inconclusive', phase: 'source-setup', before: null, after: null, differences: [], events: [], capture: 'metadata-only', comparisons: {} };
   const contexts = [], dialogs = [];
@@ -541,6 +601,7 @@ export async function executeBackupRoundtrip(browser, contract) {
     const success = backup.restore.success;
     const previous = await readState(target, contract, success.observe);
     if (isDeepStrictEqual(selected(previous, success.expected), success.expected)) throw backupError('IMPORT_SUCCESS_ALREADY_TRUE');
+    await requireInactiveImportCommit(target, backup.restore.commit);
 
     if (backup.restore.confirm) {
       for (const { capture } of dialogs) {
@@ -567,6 +628,7 @@ export async function executeBackupRoundtrip(browser, contract) {
       }
       const { chooser } = await choosing;
       if (!chooser) throw backupError('IMPORT_FILE_CHOOSER_NOT_OBSERVED');
+      await requireInactiveImportCommit(target, backup.restore.commit);
       // A dialog while opening the chooser is outside the upload permission.
       if (backup.restore.confirm) {
         await Promise.all(targetDialogs.pending);
@@ -586,7 +648,19 @@ export async function executeBackupRoundtrip(browser, contract) {
         result.uploadNameSource = backup.restore.fileName === undefined ? 'download' : 'contract';
       }, result);
     }
+    await commitBackupImport(target, contract, savedProbes, success, result);
     const imported = await waitForState(target, contract, success.observe, success.expected);
+    if (!imported.matched && backup.restore.commit) {
+      result.phase = 'import-commit-result';
+      let actual;
+      try { actual = await readState(target, contract, savedProbes); }
+      catch { throw backupError('IMPORT_STATE_UNAVAILABLE_AFTER_COMMIT'); }
+      const changedObservations = storedNames.filter(name => !isDeepStrictEqual(savedBaseline[name], actual[name]));
+      const sameAsEmpty = storedNames.every(name => isDeepStrictEqual(backup.restore.empty[name], actual[name]));
+      result.comparisons.restoration = { matched: changedObservations.length === 0, changedObservations };
+      if (!sameAsEmpty && changedObservations.length) throw backupError('RESTORED_STATE_DIFFERS_WITHOUT_COMPLETION', true);
+      throw backupError('IMPORT_COMMIT_COMPLETION_NOT_OBSERVED');
+    }
     if (!imported.matched) throw backupError('IMPORT_SUCCESS_NOT_OBSERVED', true);
     if (backup.restore.after?.some(step => step.action === 'goto')) {
       // Check every selected saved value before view navigation can run code

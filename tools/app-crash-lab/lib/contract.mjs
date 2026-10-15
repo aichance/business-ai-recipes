@@ -125,7 +125,7 @@ export function validateContract(input) {
     steps(backup.export.steps, 'backupRoundtrip.export.steps', true);
     requireThat(Number.isInteger(backup.export.maxBytes) && backup.export.maxBytes > 0 && backup.export.maxBytes <= 1048576, 'backupRoundtrip.export.maxBytes must be 1..1048576');
     const restore = backup.restore;
-    keys(restore, ['path', 'ready', 'empty', 'target', 'fileChooser', 'success', 'after', 'fileName', 'mimeType', 'confirm'], 'backupRoundtrip.restore');
+    keys(restore, ['path', 'ready', 'empty', 'target', 'fileChooser', 'success', 'after', 'fileName', 'mimeType', 'confirm', 'commit'], 'backupRoundtrip.restore');
     path(restore.path, 'backupRoundtrip.restore.path');
     steps(restore.ready, 'backupRoundtrip.restore.ready', true);
     requireThat(own(restore, 'target') !== own(restore, 'fileChooser'), 'backupRoundtrip.restore needs exactly one target input or fileChooser trigger');
@@ -134,6 +134,16 @@ export function validateContract(input) {
     if (restore.confirm !== undefined) {
       keys(restore.confirm, ['message', 'accept'], 'backupRoundtrip.restore.confirm');
       requireThat(text(restore.confirm.message) && restore.confirm.accept === true, 'backupRoundtrip.restore.confirm requires an exact nonempty message and accept: true');
+    }
+    if (restore.commit !== undefined) {
+      requireThat(restore.confirm === undefined, 'backupRoundtrip.restore.commit cannot be combined with native confirm');
+      keys(restore.commit, ['frame', 'target', 'ready'], 'backupRoundtrip.restore.commit');
+      target(restore.commit.frame, 'backupRoundtrip.restore.commit.frame');
+      target(restore.commit.target, 'backupRoundtrip.restore.commit.target');
+      steps(restore.commit.ready, 'backupRoundtrip.restore.commit.ready', true);
+      requireThat(restore.commit.ready.every(s => ['expectText', 'expectValue', 'expectVisible'].includes(s.action)), 'backup-roundtrip commit readiness must only observe the import preview');
+      requireThat(restore.commit.ready.some(s => ['expectText', 'expectValue'].includes(s.action) && s.value.trim().length > 0), 'backup-roundtrip commit readiness needs a nonblank exact text or value assertion');
+      requireThat(!restore.commit.ready.some(s => s.save !== undefined || s.confirm !== undefined), 'backup-roundtrip commit readiness cannot save or accept dialogs');
     }
     const observed = Object.keys(input.observe);
     const stored = observed.filter(name => ['localStorage', 'sessionStorage', 'indexedDB'].includes(input.observe[name].source));
