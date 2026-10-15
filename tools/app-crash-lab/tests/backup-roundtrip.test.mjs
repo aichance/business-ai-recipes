@@ -44,7 +44,11 @@ test('backup contracts retain old defaults and require actual storage, fresh tar
   invalid(c => c.checks = ['reload']);
   invalid(c => c.backupRoundtrip.restore.fileName = '../private.json');
   invalid(c => c.backupRoundtrip.restore.mimeType = 'invalid');
+  invalid(c => c.backupRoundtrip.restore.fileChooser = { css: '#choose' });
+  invalid(c => delete c.backupRoundtrip.restore.target);
   invalid(c => c.backupRoundtrip.restore.after = [{ action: 'click', target: { css: '#repair' } }]);
+  for (const hook of ['ready', 'after']) invalid(c => c.backupRoundtrip.restore[hook] = [{ action: 'goto', path: '/repair' }]);
+  invalid(c => c.afterReload = [{ action: 'goto', path: '/repair' }]);
   invalid(c => c.afterReload = [{ action: 'setFile', target: { css: '#file' }, file: { name: 'repair.json', mimeType: 'application/json', text: '{}' } }]);
   invalid(c => { delete c.observe.records; delete c.backupRoundtrip.restore.empty.records; });
   invalid(c => c.backupRoundtrip.restore.ready = []);
@@ -54,7 +58,7 @@ test('backup contracts retain old defaults and require actual storage, fresh tar
 
 async function fixture() {
   const uploads = [];
-  const html = `<!doctype html><meta charset="utf-8"><button id="save">Save</button><button id="export">Export</button><input id="file" type="file"><p id="status">Ready</p><section id="items"></section><script>
+  const html = `<!doctype html><meta charset="utf-8"><button id="save">Save</button><button id="export">Export</button><button id="choose">Import</button><input id="file" type="file"><p id="status">Ready</p><section id="items"></section><script>
   const mode = new URLSearchParams(location.search).get('mode');
   const saved = ${JSON.stringify(records)};
   const draw = () => document.querySelector('#items').innerHTML = JSON.parse(localStorage.getItem('saved') || '[]').map(item => '<p class="item">' + item.nested.hidden + '</p>').join('');
@@ -79,14 +83,22 @@ async function fixture() {
     if (mode === 'late-multiple') setTimeout(download, 900);
     if (mode === 'destructive-export') { localStorage.removeItem('saved'); draw(); }
   };
-  document.querySelector('#file').onchange = async event => {
+  const importFile = async event => {
     const file = event.target.files[0]; const bytes = await file.arrayBuffer();
     await fetch('/received', { method: 'POST', headers: { 'x-file-name': encodeURIComponent(file.name), 'x-file-type': file.type }, body: bytes });
     const data = mode === 'wrong-export' ? saved : JSON.parse(new TextDecoder().decode(bytes)).saved;
     if (mode === 'field-loss') delete data[0].nested.hidden;
     if (mode !== 'toast-only') localStorage.setItem('saved', JSON.stringify(data));
     draw(); document.querySelector('#status').textContent = mode === 'no-success' ? 'Ready' : 'Restored';
+    if (mode === 'chooser-reload') location.reload();
   };
+  document.querySelector('#file').onchange = importFile;
+  document.querySelector('#choose').onclick = () => {
+    if (mode === 'no-chooser') return;
+    const input = document.createElement('input'); input.type = 'file';
+    input.onchange = importFile; input.click();
+  };
+  if (['chooser', 'chooser-reload', 'no-chooser', 'chooser-wrong-button'].includes(mode)) document.querySelector('#file').remove();
   </script>`;
   const names = [], types = [];
   const server = http.createServer(async (req, res) => {
@@ -162,6 +174,27 @@ test('real bytes, fresh contexts, full records, reload and private failure artif
     const r = await run('late-multiple', c => c.timeoutMs = 1300);
     assert.equal(r.status, 'inconclusive'); assert.equal(r.error, 'MULTIPLE_EXPORT_DOWNLOADS');
   });
+  await t.test('an on-demand unattached file input receives the real download through its native chooser', async () => {
+    const c = source => {
+      delete source.backupRoundtrip.restore.target; source.backupRoundtrip.restore.fileChooser = { css: '#choose' };
+      source.backupRoundtrip.restore.ready = [{ action: 'expectVisible', target: { css: '#choose' } }];
+    };
+    const before = app.uploads.length; const r = await run('chooser', c);
+    assert.equal(r.status, 'pass', JSON.stringify(r)); assert.equal(r.uploadTransport, 'file-chooser');
+    assert.deepEqual(app.uploads[before], exported);
+    const missing = await run('no-chooser', c); assert.equal(missing.status, 'inconclusive'); assert.equal(missing.error, 'IMPORT_FILE_CHOOSER_NOT_OBSERVED');
+    const count = app.uploads.length;
+    const wrong = await run('chooser-wrong-button', source => { c(source); source.backupRoundtrip.restore.fileChooser = { css: '#missing' }; });
+    assert.equal(wrong.status, 'inconclusive'); assert.equal(wrong.error, 'IMPORT_FILE_CHOOSER_TRIGGER_FAILED'); assert.equal(app.uploads.length, count);
+  });
+  await t.test('file chooser import may reload automatically without changing the saved record verdict', async () => {
+    const r = await run('chooser-reload', c => {
+      delete c.backupRoundtrip.restore.target; c.backupRoundtrip.restore.fileChooser = { css: '#choose' };
+      c.backupRoundtrip.restore.ready = [{ action: 'expectVisible', target: { css: '#choose' } }];
+      c.backupRoundtrip.restore.success = { observe: { count: { source: 'count', target: { css: '.item' } } }, expected: { count: 1 } };
+    });
+    assert.equal(r.status, 'pass', JSON.stringify(r)); assert.equal(r.comparisons.reload.matched, true);
+  });
   await t.test('fresh context is insufficient when it opens with existing shared data or stale success', async () => {
     const count = app.uploads.length;
     assert.equal((await run('nonempty-target')).error, 'FRESH_TARGET_NOT_EMPTY');
@@ -176,7 +209,7 @@ test('real bytes, fresh contexts, full records, reload and private failure artif
     assert.equal((await run('dialog')).error, 'UNEXPECTED_NATIVE_DIALOG');
   });
   await t.test('standalone tests replay the same pass and failure with no runner import or harvested data', async () => {
-    for (const [mode, exit] of [['fixed', 0], ['field-loss', 1], ['no-download', 1]]) {
+    for (const [mode, exit] of [['fixed', 0], ['field-loss', 1], ['no-download', 1], ['chooser', 0], ['chooser-reload', 0]]) {
       const r = reports[mode];
       const source = await readFile(join(r.out, 'repro.spec.mjs'), 'utf8');
       assert.ok(!source.includes("from './lib")); assert.ok(!source.includes(sentinel));
