@@ -1,0 +1,618 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "Bami Fitness full workout backup roundtrip",
+  "baseURL": "http://127.0.0.1:54561",
+  "path": "/",
+  "timeoutMs": 5000,
+  "stabilityMs": 300,
+  "reset": [],
+  "setup": [
+    {
+      "action": "click",
+      "target": {
+        "css": "button[data-view=\"settings\"]"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[data-set=\"age\"]"
+      },
+      "value": "34"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "input[data-set=\"age\"]"
+      },
+      "value": "Tab"
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[data-set=\"age\"]"
+      },
+      "value": "34"
+    },
+    {
+      "action": "select",
+      "target": {
+        "css": "select[data-set=\"sex\"]"
+      },
+      "value": "female"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[data-set=\"heightCm\"]"
+      },
+      "value": "168"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "input[data-set=\"heightCm\"]"
+      },
+      "value": "Tab"
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[data-set=\"heightCm\"]"
+      },
+      "value": "168"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[data-set=\"weightKg\"]"
+      },
+      "value": "63.5"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "input[data-set=\"weightKg\"]"
+      },
+      "value": "Tab"
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[data-set=\"weightKg\"]"
+      },
+      "value": "63.5"
+    },
+    {
+      "action": "select",
+      "target": {
+        "css": "select[data-set=\"goal\"]"
+      },
+      "value": "muscle"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[data-set=\"weeklyGoal\"]"
+      },
+      "value": "3"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "input[data-set=\"weeklyGoal\"]"
+      },
+      "value": "Tab"
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[data-set=\"weeklyGoal\"]"
+      },
+      "value": "3"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[data-set=\"restSec\"]"
+      },
+      "value": "120"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "input[data-set=\"restSec\"]"
+      },
+      "value": "Tab"
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[data-set=\"restSec\"]"
+      },
+      "value": "120"
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "button[data-view=\"plans\"]"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "button[data-act=\"plan-new\"]"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[data-f=\"name\"]"
+      },
+      "value": "Synthetic Strength 2026-10-15"
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[data-f=\"name\"]"
+      },
+      "value": "Synthetic Strength 2026-10-15"
+    },
+    {
+      "action": "select",
+      "target": {
+        "css": "select[data-f=\"tag\"]"
+      },
+      "value": "Full body"
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "button[data-act=\"addex\"]"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "#pickQ"
+      },
+      "value": "Single Arm Landmine Press"
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "button[data-pk=\"create\"]"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "#pickQ"
+      },
+      "value": "Squat"
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "button[data-pk=\"toggle\"][data-n=\"Squat\"]"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "#pickDone"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[data-ex=\"0\"][data-set=\"0\"][data-f=\"weight\"]"
+      },
+      "value": "22.5"
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[data-ex=\"0\"][data-set=\"0\"][data-f=\"weight\"]"
+      },
+      "value": "22.5"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[data-ex=\"0\"][data-set=\"0\"][data-f=\"reps\"]"
+      },
+      "value": "10"
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[data-ex=\"0\"][data-set=\"0\"][data-f=\"reps\"]"
+      },
+      "value": "10"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[data-ex=\"0\"][data-set=\"1\"][data-f=\"weight\"]"
+      },
+      "value": "25"
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[data-ex=\"0\"][data-set=\"1\"][data-f=\"weight\"]"
+      },
+      "value": "25"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[data-ex=\"0\"][data-set=\"1\"][data-f=\"reps\"]"
+      },
+      "value": "8"
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[data-ex=\"0\"][data-set=\"1\"][data-f=\"reps\"]"
+      },
+      "value": "8"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[data-ex=\"0\"][data-set=\"2\"][data-f=\"weight\"]"
+      },
+      "value": "25"
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[data-ex=\"0\"][data-set=\"2\"][data-f=\"weight\"]"
+      },
+      "value": "25"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[data-ex=\"0\"][data-set=\"2\"][data-f=\"reps\"]"
+      },
+      "value": "8"
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[data-ex=\"0\"][data-set=\"2\"][data-f=\"reps\"]"
+      },
+      "value": "8"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[data-ex=\"1\"][data-set=\"0\"][data-f=\"weight\"]"
+      },
+      "value": "80"
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[data-ex=\"1\"][data-set=\"0\"][data-f=\"weight\"]"
+      },
+      "value": "80"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[data-ex=\"1\"][data-set=\"0\"][data-f=\"reps\"]"
+      },
+      "value": "8"
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[data-ex=\"1\"][data-set=\"0\"][data-f=\"reps\"]"
+      },
+      "value": "8"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[data-ex=\"1\"][data-set=\"1\"][data-f=\"weight\"]"
+      },
+      "value": "85"
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[data-ex=\"1\"][data-set=\"1\"][data-f=\"weight\"]"
+      },
+      "value": "85"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[data-ex=\"1\"][data-set=\"1\"][data-f=\"reps\"]"
+      },
+      "value": "6"
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[data-ex=\"1\"][data-set=\"1\"][data-f=\"reps\"]"
+      },
+      "value": "6"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[data-ex=\"1\"][data-set=\"2\"][data-f=\"weight\"]"
+      },
+      "value": "85"
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[data-ex=\"1\"][data-set=\"2\"][data-f=\"weight\"]"
+      },
+      "value": "85"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[data-ex=\"1\"][data-set=\"2\"][data-f=\"reps\"]"
+      },
+      "value": "6"
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[data-ex=\"1\"][data-set=\"2\"][data-f=\"reps\"]"
+      },
+      "value": "6"
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "button[data-act=\"plan-save\"]"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "button[data-act=\"plan-use\"]"
+      }
+    },
+    {
+      "action": "select",
+      "target": {
+        "css": "select[data-f=\"tag\"]"
+      },
+      "value": "Full body"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[data-f=\"date\"]"
+      },
+      "value": "2026-10-14"
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[data-f=\"date\"]"
+      },
+      "value": "2026-10-14"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[data-f=\"time\"]"
+      },
+      "value": "19:30"
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[data-f=\"time\"]"
+      },
+      "value": "19:30"
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "button[data-act=\"status\"][data-v=\"done\"]"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[data-f=\"durationMin\"]"
+      },
+      "value": "75"
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[data-f=\"durationMin\"]"
+      },
+      "value": "75"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[data-f=\"avgHr\"]"
+      },
+      "value": "132"
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[data-f=\"avgHr\"]"
+      },
+      "value": "132"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[data-f=\"maxHr\"]"
+      },
+      "value": "161"
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[data-f=\"maxHr\"]"
+      },
+      "value": "161"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[data-f=\"minHr\"]"
+      },
+      "value": "86"
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[data-f=\"minHr\"]"
+      },
+      "value": "86"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "textarea[data-f=\"notes\"]"
+      },
+      "value": "Synthetic roundtrip audit: progressive loading with a custom exercise."
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "textarea[data-f=\"notes\"]"
+      },
+      "value": "Synthetic roundtrip audit: progressive loading with a custom exercise."
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "button[data-act=\"save\"]"
+      },
+      "save": true
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "button[data-view=\"settings\"]"
+      }
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": "button[data-act=\"export\"]"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "button[data-view=\"home\"]"
+      }
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": "button[data-act=\"quickplan\"]"
+      },
+      "value": "Synthetic Strength 2026-10-15"
+    }
+  ],
+  "observe": {
+    "database": {
+      "source": "localStorage",
+      "key": "fitlog.v1",
+      "parse": "json"
+    },
+    "renderedRoutine": {
+      "source": "count",
+      "target": {
+        "role": "button",
+        "name": "Synthetic Strength 2026-10-15"
+      }
+    }
+  },
+  "expected": {
+    "renderedRoutine": 1
+  },
+  "afterReload": [
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": "#view"
+      }
+    }
+  ],
+  "checks": [
+    "backup-roundtrip"
+  ],
+  "backupRoundtrip": {
+    "isolation": "browser-local",
+    "export": {
+      "steps": [
+        {
+          "action": "click",
+          "target": {
+            "css": "button[data-view=\"settings\"]"
+          }
+        },
+        {
+          "action": "click",
+          "target": {
+            "css": "button[data-act=\"export\"]"
+          }
+        }
+      ],
+      "maxBytes": 65536,
+      "statePaths": {
+        "database": []
+      }
+    },
+    "restore": {
+      "path": "/",
+      "ready": [
+        {
+          "action": "expectVisible",
+          "target": {
+            "css": "#view"
+          }
+        }
+      ],
+      "empty": {
+        "database": null,
+        "renderedRoutine": 0
+      },
+      "target": {
+        "css": "#importFile"
+      },
+      "mimeType": "application/json",
+      "confirm": {
+        "message": "Replace current data with the backup (1 sessions, 1 routines)?",
+        "accept": true
+      },
+      "success": {
+        "observe": {
+          "status": {
+            "source": "text",
+            "target": {
+              "css": "#toast"
+            }
+          }
+        },
+        "expected": {
+          "status": "Backup restored"
+        }
+      }
+    }
+  }
+}

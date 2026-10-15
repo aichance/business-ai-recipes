@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repo": "anhdang1112/bamifitlog",
+    "repoId": 1420333021,
+    "ownerId": 130378220,
+    "ownerType": "User",
+    "commit": "542945b50dceabc91fd4c1df81b3cf1c648d32d3",
+    "appVersion": "2.5.0",
+    "url": "https://github.com/anhdang1112/bamifitlog",
+    "upstreamSourceBundled": false,
+    "sourceFilesReadAndUnchanged": 10,
+    "licenseDeclaredByGitHub": null
+  },
+  "operatorTest": {
+    "packageVersion": "0.7.0",
+    "environment": {
+      "os": "macOS",
+      "architecture": "arm64",
+      "node": "22.16.0",
+      "playwright": "1.64.0",
+      "browser": "Chromium",
+      "serviceWorkers": "block"
+    },
+    "startedAt": "2026-10-15T11:18:42.625634+00:00",
+    "completedAt": "2026-10-15T11:19:29.157751+00:00",
+    "syntheticData": true,
+    "scope": "complete saved fitlog.v1 database: settings/plans/sessions/customEx; exact rendered routine presence; native confirmation; new import completion; reload",
+    "normalUiSourceControl": {
+      "at": "2026-10-15T11:26:17.695Z",
+      "result": "PASS",
+      "normalUiOnly": true,
+      "allSevenSettingsKnownGood": true,
+      "routines": 1,
+      "sessions": 1,
+      "customExercises": 1,
+      "exercises": 2,
+      "setsPerExercise": 3,
+      "allPlanAndSessionWeightsRepsMatched": true,
+      "allSessionsDone": true,
+      "planSessionReferenceMatched": true,
+      "dateTimeDurationHeartRatesNotesMatched": true,
+      "actualExportBytes": 2541,
+      "sha256": "9e97640004d0e6a314f3603926cce28e5fcc4cd23c4719e2557c29cf50998386",
+      "fullExportEqualsSavedDatabase": true
+    },
+    "cli": {
+      "status": "pass",
+      "exitCode": 0,
+      "durationMs": 19384,
+      "error": null,
+      "phase": "complete",
+      "backup": {
+        "format": "utf8-json",
+        "sizeBytes": 2541,
+        "sha256": "fc252fe59bbef3cf5ad7a2a0a6133c4e2a36cf7a0d589c4c8c39ab8f6f55bae3"
+      },
+      "comparisons": {
+        "export": {
+          "matched": true
+        },
+        "sourceAfterExport": {
+          "matched": true
+        },
+        "restoration": {
+          "matched": true,
+          "changedObservations": []
+        },
+        "reload": {
+          "matched": true,
+          "changedObservations": []
+        }
+      },
+      "importConfirmation": {
+        "required": true,
+        "observed": true,
+        "acceptedCount": 1
+      },
+      "uploadedOriginalBytes": true,
+      "uploadTransport": "input",
+      "downloadCount": 1
+    },
+    "generatedPlaywright": {
+      "status": "pass",
+      "exitCode": 0,
+      "durationMs": 26632,
+      "error": null,
+      "phase": "complete",
+      "backup": {
+        "format": "utf8-json",
+        "sizeBytes": 2541,
+        "sha256": "0479c31ded74be78c181ab6d101afb049818e012dfcca553fd572bc6d4749a4d"
+      },
+      "comparisons": {
+        "export": {
+          "matched": true
+        },
+        "sourceAfterExport": {
+          "matched": true
+        },
+        "restoration": {
+          "matched": true,
+          "changedObservations": []
+        },
+        "reload": {
+          "matched": true,
+          "changedObservations": []
+        }
+      },
+      "importConfirmation": {
+        "required": true,
+        "observed": true,
+        "acceptedCount": 1
+      },
+      "uploadedOriginalBytes": true,
+      "uploadTransport": "input",
+      "downloadCount": 1
+    },
+    "sourceUnchanged": true,
+    "sourceServerStopped": true,
+    "contractSha256": "6a1d2406617fef36e3d58a7579e1c0390dfce032a64cd6f1258fa4bf8be80563",
+    "sourceHashes": {
+      "README.md": "c1f8b8c704a6a84e9b63228798c1fceb314b305109436abf626ef8a5b6437ab6",
+      "app.js": "38d939de307b7797da034a9212448598674ebf48f65163419a058d50a5976274",
+      "coach.js": "5b1ce12c056b4874671686bbec22d70e11aa8df4981355b8820858c04033d20d",
+      "exercises.js": "f93cd3e859fa32c9996bd077cbca69de4dc9b7d722e5eccad4d0a474d647434b",
+      "index.html": "b22a619401756736da20c4c8d7fbd8ba3ff12957fea91091476436f4de49f3b9",
+      "manifest.webmanifest": "60485d6913869e9c7702d621a590ba2a7394e46d1fa55401cccc21939e257d36",
+      "styles.css": "603ea37cebf5c0a14a924a14b8a6915c8b88dbc10b0c6fb2e47f0272dde320ff",
+      "sw.js": "05badf5240bc4324869b4eeb2d4d6f47eb2b0a92d6e930c94e16e84403ee620a",
+      "tags.js": "b27fea2bc335de6bcb1c2efcc3cef2da9d0dc6179036fedc6c30795e389a5bcd",
+      "version.json": "ccc1af7892e150dd4f39d9f1637bc9df0427a69560af4829d72bc7879230f095"
+    }
+  },
+  "coverageLimits": [
+    "operator compatibility test; author execution unverified",
+    "fresh contexts and synthetic data, not live user records",
+    "service-worker/offline/update lifecycle not tested",
+    "broken-file handling and multi-device/power-loss behavior not tested",
+    "dynamic IDs differ between separate independent runs"
+  ],
+  "configurationCorrections": [
+    "commit numeric settings with Tab/change",
+    "perform normal Settings navigation before Export",
+    "observe the entire database with JSON root mapping; fresh storage is null",
+    "use exact-name count for rendered presence when missing on an empty target"
+  ],
+  "independentUseCredit": 0,
+  "organicStarCredit": 0
+}
