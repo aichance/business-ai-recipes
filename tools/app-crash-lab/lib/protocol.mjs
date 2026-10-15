@@ -525,7 +525,25 @@ export async function executeBackupRoundtrip(browser, contract) {
     // Upload the actual unedited bytes. Never JSON.stringify the parsed export.
     const fileName = backup.restore.fileName ?? downloads[0].suggestedFilename();
     if (!fileName || fileName.length > 255 || /[\\/\x00-\x1f\x7f]/.test(fileName) || ['.', '..'].includes(fileName)) throw backupError('DOWNLOAD_FILENAME_UNSUPPORTED');
-    await locate(target, backup.restore.target).setInputFiles({ name: fileName, mimeType: backup.restore.mimeType, buffer: bytes });
+    const upload = { name: fileName, mimeType: backup.restore.mimeType, buffer: bytes };
+    if (backup.restore.fileChooser) {
+      // Some apps create an unattached input only when Import is clicked.
+      // Listen first; never manufacture/append an input into the app's DOM.
+      const choosing = target.waitForEvent('filechooser', { timeout: contract.timeoutMs })
+        .then(chooser => ({ chooser }), () => ({ chooser: null }));
+      try { await locate(target, backup.restore.fileChooser).click(); }
+      catch {
+        await choosing;
+        throw backupError('IMPORT_FILE_CHOOSER_TRIGGER_FAILED');
+      }
+      const { chooser } = await choosing;
+      if (!chooser) throw backupError('IMPORT_FILE_CHOOSER_NOT_OBSERVED');
+      await chooser.setFiles(upload, { timeout: contract.timeoutMs });
+      result.uploadTransport = 'file-chooser';
+    } else {
+      await locate(target, backup.restore.target).setInputFiles(upload);
+      result.uploadTransport = 'input';
+    }
     result.uploadedOriginalBytes = true;
     result.uploadNameSource = backup.restore.fileName === undefined ? 'download' : 'contract';
     const imported = await waitForState(target, contract, success.observe, success.expected);
