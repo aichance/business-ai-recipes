@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "ChatLedger — imported order survives reload",
+  "baseURL": "http://127.0.0.1:54620",
+  "path": "/",
+  "timeoutMs": 5000,
+  "stabilityMs": 250,
+  "reset": [
+    {
+      "action": "request",
+      "method": "POST",
+      "path": "/api/settings",
+      "expectStatus": 200,
+      "data": {
+        "seller_name": "ACL Synthetic Shop",
+        "seller_phone": "0000000000",
+        "ollama_url": "http://127.0.0.1:54621"
+      }
+    }
+  ],
+  "setup": [
+    {
+      "action": "click",
+      "target": {
+        "css": "#btnOpenUpload"
+      }
+    },
+    {
+      "action": "select",
+      "target": {
+        "css": "#selectEnginePreference"
+      },
+      "value": "heuristic"
+    },
+    {
+      "action": "setFile",
+      "target": {
+        "css": "#chatFileInput"
+      },
+      "file": {
+        "name": "acl-synthetic-order.txt",
+        "mimeType": "text/plain",
+        "text": "15/10/2026, 14:00 - ACL Import Reload: I would like to order a 1kg chocolate cake for Sunday evening, delivered to Kandy.\n15/10/2026, 14:01 - ACL Import Reload: Please write 'ACL SYNTHETIC CAKE' in chocolate icing.\n15/10/2026, 14:02 - ACL Synthetic Shop: Confirmed for Sunday.\n"
+      },
+      "save": true
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": "#toastContainer .toast span:last-child"
+      },
+      "value": "Processed 3 messages! Created 1 order(s)."
+    }
+  ],
+  "observe": {
+    "savedOrder": {
+      "source": "response",
+      "url": "/api/orders?search=ACL%20Import%20Reload",
+      "field": "json",
+      "jsonPath": [
+        0
+      ]
+    },
+    "customerName": {
+      "source": "response",
+      "url": "/api/orders?search=ACL%20Import%20Reload",
+      "field": "json",
+      "jsonPath": [
+        0,
+        "customer_name"
+      ]
+    },
+    "itemNote": {
+      "source": "response",
+      "url": "/api/orders?search=ACL%20Import%20Reload",
+      "field": "json",
+      "jsonPath": [
+        0,
+        "items",
+        0,
+        "notes"
+      ]
+    },
+    "itemSources": {
+      "source": "response",
+      "url": "/api/orders?search=ACL%20Import%20Reload",
+      "field": "json",
+      "jsonPath": [
+        0,
+        "items",
+        0,
+        "source_message_ids"
+      ]
+    },
+    "status": {
+      "source": "response",
+      "url": "/api/orders?search=ACL%20Import%20Reload",
+      "field": "json",
+      "jsonPath": [
+        0,
+        "status"
+      ]
+    },
+    "amount": {
+      "source": "response",
+      "url": "/api/orders?search=ACL%20Import%20Reload",
+      "field": "json",
+      "jsonPath": [
+        0,
+        "total_amount"
+      ]
+    },
+    "userNote": {
+      "source": "response",
+      "url": "/api/orders?search=ACL%20Import%20Reload",
+      "field": "json",
+      "jsonPath": [
+        0,
+        "user_notes"
+      ]
+    }
+  },
+  "expected": {
+    "customerName": "ACL Import Reload",
+    "itemNote": "Icing text: 'ACL SYNTHETIC CAKE'",
+    "itemSources": [
+      1,
+      2
+    ],
+    "status": "new",
+    "amount": 3800
+  },
+  "afterReload": [
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "#editCustomerName"
+      },
+      "value": "ACL Import Reload"
+    }
+  ],
+  "checks": [
+    "reload"
+  ]
+}

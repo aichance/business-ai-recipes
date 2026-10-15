@@ -1,0 +1,185 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "ChatLedger — confirmation retains item instructions and source links",
+  "baseURL": "http://127.0.0.1:54620",
+  "path": "/",
+  "timeoutMs": 5000,
+  "stabilityMs": 250,
+  "reset": [
+    {
+      "action": "request",
+      "method": "POST",
+      "path": "/api/settings",
+      "expectStatus": 200,
+      "data": {
+        "seller_name": "ACL Synthetic Shop",
+        "seller_phone": "0000000000",
+        "ollama_url": "http://127.0.0.1:54621"
+      }
+    }
+  ],
+  "setup": [
+    {
+      "action": "click",
+      "target": {
+        "css": "#btnOpenUpload"
+      }
+    },
+    {
+      "action": "select",
+      "target": {
+        "css": "#selectEnginePreference"
+      },
+      "value": "heuristic"
+    },
+    {
+      "action": "setFile",
+      "target": {
+        "css": "#chatFileInput"
+      },
+      "file": {
+        "name": "acl-synthetic-order.txt",
+        "mimeType": "text/plain",
+        "text": "15/10/2026, 14:00 - ACL Confirm Preserve: I would like to order a 1kg chocolate cake for Sunday evening, delivered to Kandy.\n15/10/2026, 14:01 - ACL Confirm Preserve: Please write 'ACL SYNTHETIC CAKE' in chocolate icing.\n15/10/2026, 14:02 - ACL Synthetic Shop: Confirmed for Sunday.\n"
+      }
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": "#toastContainer .toast span:last-child"
+      },
+      "value": "Processed 3 messages! Created 1 order(s)."
+    },
+    {
+      "action": "goto",
+      "path": "/"
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "#editCustomerName"
+      },
+      "value": "ACL Confirm Preserve"
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": ".order-item-card.active .order-tag"
+      },
+      "value": "new"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "#editUserNotes"
+      },
+      "value": "ACL correction 日本語 🧁"
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "#btnConfirmOrder"
+      },
+      "save": true
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": ".order-item-card.active .order-tag"
+      },
+      "value": "confirmed"
+    }
+  ],
+  "observe": {
+    "savedOrder": {
+      "source": "response",
+      "url": "/api/orders?search=ACL%20Confirm%20Preserve",
+      "field": "json",
+      "jsonPath": [
+        0
+      ]
+    },
+    "customerName": {
+      "source": "response",
+      "url": "/api/orders?search=ACL%20Confirm%20Preserve",
+      "field": "json",
+      "jsonPath": [
+        0,
+        "customer_name"
+      ]
+    },
+    "itemNote": {
+      "source": "response",
+      "url": "/api/orders?search=ACL%20Confirm%20Preserve",
+      "field": "json",
+      "jsonPath": [
+        0,
+        "items",
+        0,
+        "notes"
+      ]
+    },
+    "itemSources": {
+      "source": "response",
+      "url": "/api/orders?search=ACL%20Confirm%20Preserve",
+      "field": "json",
+      "jsonPath": [
+        0,
+        "items",
+        0,
+        "source_message_ids"
+      ]
+    },
+    "status": {
+      "source": "response",
+      "url": "/api/orders?search=ACL%20Confirm%20Preserve",
+      "field": "json",
+      "jsonPath": [
+        0,
+        "status"
+      ]
+    },
+    "amount": {
+      "source": "response",
+      "url": "/api/orders?search=ACL%20Confirm%20Preserve",
+      "field": "json",
+      "jsonPath": [
+        0,
+        "total_amount"
+      ]
+    },
+    "userNote": {
+      "source": "response",
+      "url": "/api/orders?search=ACL%20Confirm%20Preserve",
+      "field": "json",
+      "jsonPath": [
+        0,
+        "user_notes"
+      ]
+    }
+  },
+  "expected": {
+    "customerName": "ACL Confirm Preserve",
+    "itemNote": "Icing text: 'ACL SYNTHETIC CAKE'",
+    "itemSources": [
+      1,
+      2
+    ],
+    "status": "confirmed",
+    "amount": 3800,
+    "userNote": "ACL correction 日本語 🧁"
+  },
+  "afterReload": [
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "#editCustomerName"
+      },
+      "value": "ACL Confirm Preserve"
+    }
+  ],
+  "checks": [
+    "reload"
+  ]
+}
