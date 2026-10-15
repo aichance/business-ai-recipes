@@ -1,0 +1,41 @@
+{
+  "repository": "https://github.com/SathishKumarAI/bujo",
+  "commit": "f016bc013e8fde8082a77192c8557a782d393938",
+  "license": "MIT",
+  "licenseFile": "LICENSE.upstream",
+  "appName": "Cadence Journal (repository and storage key retain bujo)",
+  "testedAt": "2026-10-15T16:34:17.977Z",
+  "sourceChanged": false,
+  "sourceFileCount": 928,
+  "runnerVersion": "0.9.0",
+  "scope": {
+    "selectedCompleteDomains": [
+      "entries",
+      "workouts",
+      "metrics",
+      "collections",
+      "books",
+      "readLinks"
+    ],
+    "notObserved": [
+      "other JournalData domains including seeded habits",
+      "settings and lastBackup metadata",
+      "top-level updatedAt",
+      "photos and IndexedDB image bytes",
+      "cloud/account/sync/encryption",
+      "historical schema migrations",
+      "native shell and power loss"
+    ]
+  },
+  "adoption": "Independent operator compatibility check, not a report from the upstream author.",
+  "verification": {
+    "cli": [
+      "reload PASS",
+      "backup-roundtrip PASS"
+    ],
+    "standalonePlaywright": "2 passed, 0 failed, 0 skipped",
+    "allOriginalSourceFilesHashedUnchanged": 928,
+    "oneMeasuredExportBytes": 4538,
+    "scope": "all fields and IDs of the six declared arrays; source count guards are additional"
+  }
+}

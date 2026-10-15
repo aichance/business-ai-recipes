@@ -1,0 +1,435 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "Cadence Journal: six complete selected JSON domains through real export/import",
+  "baseURL": "http://127.0.0.1:54610",
+  "path": "/",
+  "timeoutMs": 10000,
+  "stabilityMs": 250,
+  "reset": [],
+  "setup": [
+    {
+      "action": "click",
+      "target": {
+        "css": "button:has(> h2:text-is(\"This device only\"))"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Skip tour"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "label": "Smart capture"
+      },
+      "value": "n Round-trip journal — 日本語 🐢 #backup"
+    },
+    {
+      "action": "press",
+      "target": {
+        "label": "Smart capture"
+      },
+      "value": "Enter"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "label": "Smart capture"
+      },
+      "value": "t Review the recovery checklist"
+    },
+    {
+      "action": "press",
+      "target": {
+        "label": "Smart capture"
+      },
+      "value": "Enter"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "label": "Smart capture"
+      },
+      "value": "ran 5k in 28min"
+    },
+    {
+      "action": "press",
+      "target": {
+        "label": "Smart capture"
+      },
+      "value": "Enter"
+    },
+    {
+      "action": "goto",
+      "path": "/?view=today"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "label": "Smart capture"
+      },
+      "value": "mood 7 sleep 8"
+    },
+    {
+      "action": "press",
+      "target": {
+        "label": "Smart capture"
+      },
+      "value": "Enter"
+    },
+    {
+      "action": "goto",
+      "path": "/?view=collections"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "label": "Collection name"
+      },
+      "value": "Release rehearsal"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "label": "Collection icon"
+      },
+      "value": "🐢"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "New collection"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "#bujo-collections button[aria-expanded]:has-text(\"Release rehearsal\")"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "label": "Add an entry to Release rehearsal"
+      },
+      "value": "n Keep IDs and collection links intact #backup"
+    },
+    {
+      "action": "press",
+      "target": {
+        "label": "Add an entry to Release rehearsal"
+      },
+      "value": "Enter"
+    },
+    {
+      "action": "goto",
+      "path": "/?view=reading"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "label": "Book title"
+      },
+      "value": "Designing Data-Intensive Applications"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "label": "Author"
+      },
+      "value": "Martin Kleppmann"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Add to shelf"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "label": "Link to save"
+      },
+      "value": "https://example.com/restore-checklist"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "label": "Link title"
+      },
+      "value": "Recovery checklist — 日本語"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Save"
+      },
+      "save": true
+    },
+    {
+      "action": "goto",
+      "path": "/?view=settings"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "tab",
+        "name": "Data"
+      }
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "role": "button",
+        "name": "Export JSON"
+      }
+    }
+  ],
+  "observe": {
+    "entries": {
+      "source": "localStorage",
+      "key": "bujo:data",
+      "parse": "json",
+      "jsonPath": [
+        "entries"
+      ]
+    },
+    "workouts": {
+      "source": "localStorage",
+      "key": "bujo:data",
+      "parse": "json",
+      "jsonPath": [
+        "workouts"
+      ]
+    },
+    "metrics": {
+      "source": "localStorage",
+      "key": "bujo:data",
+      "parse": "json",
+      "jsonPath": [
+        "metrics"
+      ]
+    },
+    "collections": {
+      "source": "localStorage",
+      "key": "bujo:data",
+      "parse": "json",
+      "jsonPath": [
+        "collections"
+      ]
+    },
+    "books": {
+      "source": "localStorage",
+      "key": "bujo:data",
+      "parse": "json",
+      "jsonPath": [
+        "books"
+      ]
+    },
+    "readLinks": {
+      "source": "localStorage",
+      "key": "bujo:data",
+      "parse": "json",
+      "jsonPath": [
+        "readLinks"
+      ]
+    },
+    "entryCount": {
+      "source": "localStorage",
+      "key": "bujo:data",
+      "parse": "json",
+      "jsonPath": [
+        "entries",
+        "length"
+      ]
+    },
+    "workoutCount": {
+      "source": "localStorage",
+      "key": "bujo:data",
+      "parse": "json",
+      "jsonPath": [
+        "workouts",
+        "length"
+      ]
+    },
+    "metricCount": {
+      "source": "localStorage",
+      "key": "bujo:data",
+      "parse": "json",
+      "jsonPath": [
+        "metrics",
+        "length"
+      ]
+    },
+    "collectionCount": {
+      "source": "localStorage",
+      "key": "bujo:data",
+      "parse": "json",
+      "jsonPath": [
+        "collections",
+        "length"
+      ]
+    },
+    "bookCount": {
+      "source": "localStorage",
+      "key": "bujo:data",
+      "parse": "json",
+      "jsonPath": [
+        "books",
+        "length"
+      ]
+    },
+    "linkCount": {
+      "source": "localStorage",
+      "key": "bujo:data",
+      "parse": "json",
+      "jsonPath": [
+        "readLinks",
+        "length"
+      ]
+    }
+  },
+  "expected": {
+    "entryCount": 3,
+    "workoutCount": 1,
+    "metricCount": 1,
+    "collectionCount": 1,
+    "bookCount": 1,
+    "linkCount": 1
+  },
+  "checks": [
+    "reload",
+    "backup-roundtrip"
+  ],
+  "backupRoundtrip": {
+    "isolation": "browser-local",
+    "export": {
+      "steps": [
+        {
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "Export JSON"
+          }
+        }
+      ],
+      "maxBytes": 262144,
+      "statePaths": {
+        "entries": [
+          "entries"
+        ],
+        "workouts": [
+          "workouts"
+        ],
+        "metrics": [
+          "metrics"
+        ],
+        "collections": [
+          "collections"
+        ],
+        "books": [
+          "books"
+        ],
+        "readLinks": [
+          "readLinks"
+        ],
+        "entryCount": [
+          "entries",
+          "length"
+        ],
+        "workoutCount": [
+          "workouts",
+          "length"
+        ],
+        "metricCount": [
+          "metrics",
+          "length"
+        ],
+        "collectionCount": [
+          "collections",
+          "length"
+        ],
+        "bookCount": [
+          "books",
+          "length"
+        ],
+        "linkCount": [
+          "readLinks",
+          "length"
+        ]
+      }
+    },
+    "restore": {
+      "path": "/?view=settings",
+      "prepare": [
+        {
+          "action": "click",
+          "target": {
+            "css": "button:has(> h2:text-is(\"This device only\"))"
+          }
+        },
+        {
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "Skip tour"
+          }
+        },
+        {
+          "action": "click",
+          "target": {
+            "role": "tab",
+            "name": "Data"
+          }
+        }
+      ],
+      "ready": [
+        {
+          "action": "expectVisible",
+          "target": {
+            "role": "button",
+            "name": "Import JSON"
+          }
+        }
+      ],
+      "empty": {
+        "entries": [],
+        "workouts": [],
+        "metrics": [],
+        "collections": [],
+        "books": [],
+        "readLinks": [],
+        "entryCount": 0,
+        "workoutCount": 0,
+        "metricCount": 0,
+        "collectionCount": 0,
+        "bookCount": 0,
+        "linkCount": 0
+      },
+      "target": {
+        "css": "input[type=\"file\"][accept=\"application/json\"]"
+      },
+      "mimeType": "application/json",
+      "success": {
+        "observe": {
+          "imported": {
+            "source": "count",
+            "target": {
+              "css": "[data-sonner-toast] [data-title]:text-is(\"Backup imported\")"
+            }
+          }
+        },
+        "expected": {
+          "imported": 1
+        }
+      }
+    }
+  }
+}
