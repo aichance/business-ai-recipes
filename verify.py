@@ -15,6 +15,10 @@ from tempfile import TemporaryDirectory
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "tools/app-crash-lab/examples/repwise/README.md",
+    "tools/app-crash-lab/examples/repwise/SOURCE.json",
+    "tools/app-crash-lab/examples/repwise/roundtrip.json",
+    "tools/app-crash-lab/examples/repwise/history-reload.json",
     "tools/app-crash-lab/examples/voxeldraft/README.md",
     "tools/app-crash-lab/examples/voxeldraft/SOURCE.json",
     "tools/app-crash-lab/examples/voxeldraft/project.voxs.json",
