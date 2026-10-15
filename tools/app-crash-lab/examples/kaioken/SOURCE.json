@@ -1,0 +1,119 @@
+{
+  "app": "Kaioken",
+  "upstream": "https://github.com/rabocse/kaioken-gym-log",
+  "sourceCommit": "afe0e19d1a68101500ddb7b1b7d179c5601a6f8a",
+  "sourceUrl": "https://github.com/rabocse/kaioken-gym-log/tree/afe0e19d1a68101500ddb7b1b7d179c5601a6f8a",
+  "sourceVersionConstant": "1.7.1",
+  "demand": "https://github.com/rabocse/kaioken-gym-log/issues/32",
+  "demandCreatedAt": "2026-10-15T20:49:58Z",
+  "measuredAt": "2026-10-15T22:07:32.425535+00:00",
+  "environment": {
+    "os": "macOS",
+    "node": "v22.16.0",
+    "playwright": "1.64.0",
+    "browser": "Chromium",
+    "serviceWorkers": "blocked",
+    "network": "declared loopback origin only; data/blob URLs permitted"
+  },
+  "sourceIntegrity": {
+    "files": 17,
+    "originalAndRunCopyUnchanged": true,
+    "upstreamSourceOrAssetsRedistributed": false,
+    "license": "Repository API metadata null; no upstream source/assets copied into this test pack"
+  },
+  "measured": {
+    "normalUIWritesOnly": true,
+    "freshContextPerCase": true,
+    "originalRoutineCreatedThroughUI": true,
+    "samePinStandalone": {
+      "tests": 3,
+      "passed": 1,
+      "failed": 2,
+      "skipped": 0,
+      "exitCode": 1,
+      "durationMs": 5855.494,
+      "failureClassification": "real REGRESSION assertions on the unfixed pin, not unexpected harness errors",
+      "freshDirectoryRun": "same1PASS2FAIL, no skip, exit1, Playwright-only dependency installed"
+    },
+    "stringControl": {
+      "incomingIdentity": "acl-valid-1",
+      "openBeforeAndAfterReload": true,
+      "completeRecordsAndKeysSurviveReload": true
+    },
+    "numeric": {
+      "incomingIdentity": 12345,
+      "recordCountsBeforeAfterReload": [
+        1,
+        2,
+        2
+      ],
+      "completeRecordsAndKeysSurviveReload": true,
+      "openDetailBeforeAndAfterReload": false,
+      "observedHeading": "Kaioken"
+    },
+    "object": {
+      "incomingIdentity": {},
+      "unhandledError": "DataError",
+      "explicitRejectionShown": false,
+      "recordCountsBeforeAfterReload": [
+        1,
+        1,
+        1
+      ],
+      "originalCompleteRecordAndKeyUnchanged": true
+    },
+    "duplicateSeparateDiagnostic": {
+      "preview": "Adds 2 new.",
+      "incomingSameStringIdentity": true,
+      "onlySecondRecordVisibleBeforeAndAfterReload": true,
+      "reloadOnlyRowLossReproduced": false,
+      "acceptanceTest": false
+    },
+    "appCrashLabControl": {
+      "version": "0.10.0",
+      "package": "existing public release tgz",
+      "cliStatus": "PASS",
+      "cliExit": 0,
+      "generatedStandalonePassed": 1,
+      "generatedStandaloneExit": 0,
+      "checks": [
+        "reload"
+      ],
+      "completeStores": [
+        "routines",
+        "settings"
+      ],
+      "routineRecords": 1,
+      "settingsRecords": 0,
+      "uiRowCount": 1,
+      "scope": "normal UI save/reload only; not invalid-ID import or backup roundtrip",
+      "rawReports": "private synthetic-only artifacts"
+    }
+  },
+  "oracle": {
+    "invalidIds": "explicit rejection with unchanged stores/UI OR usable repaired string identity with fields/baseline preserved",
+    "validControl": "successful import retaining valid string identity",
+    "afterReload": "complete observed records and typed keys remain equal; accepted entry opens again",
+    "observerBounds": {
+      "recordsPerStore": 32,
+      "totalSerializedBytes": 65536
+    },
+    "storeSchema": {
+      "database": "gymlog",
+      "routinesKeyPath": "id",
+      "settingsKeyPath": "key",
+      "autoIncrement": false
+    }
+  },
+  "notVerified": [
+    "A fixed upstream build or either invalid-ID acceptance branch on a fixed app",
+    "OS clipboard and complete real export/import roundtrip",
+    "iOS eviction, storage pressure, service workers, all browsers/operating systems",
+    "live production behavior, author execution or third-party adoption"
+  ],
+  "customAttachment": "hashes/counts/error names only; regular Playwright error context may contain synthetic UI text",
+  "specSha256": "25e8256cf218ae4149d13177fa8e3145659e9bcdfee22a2e49a72d4ac9fd9142",
+  "appCrashLabRuntimeChange": false,
+  "adoptionCredit": 0,
+  "normalReloadSha256": "37b884331d005ddb8886bc8986ff5fb8ea88b54b9d5b16a1099565987d21e1c6"
+}
