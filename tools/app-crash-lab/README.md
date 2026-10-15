@@ -145,6 +145,13 @@ Runner 0.6+ can run both real-export cases directly with the included
 for pinned local setup, expected failure and scope. Older releases use the
 separate standalone test.
 
+The [Focus backup case](examples/focus-backup/README.md) shows why a successful
+import toast and restored record count can still miss lost settings. Its native
+JSON backup restores a complete synthetic workout but leaves selected profile fields, weight units,
+week-start and goals at defaults on the pinned source. A standalone Playwright regression and
+passing record control exercise the app's actual preview-confirm button; this
+workflow is not supported by the 0.6.2 JSON backup contract.
+
 The [Multi-Counter example](examples/MULTI-COUNTER.md) compares two saved names,
 counts and a three-event history in local mode, with a reload-only contract.
 

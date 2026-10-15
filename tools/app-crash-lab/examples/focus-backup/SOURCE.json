@@ -1,0 +1,14 @@
+{
+  "repository": "https://github.com/mfundora19/workout-tracker",
+  "owner_type": "User",
+  "commit": "81b731bef0719f55f6a2ab93bf4dfd00d6d25037",
+  "archive_url": "https://codeload.github.com/mfundora19/workout-tracker/zip/81b731bef0719f55f6a2ab93bf4dfd00d6d25037",
+  "archive_sha256": "cc5cdd90dde52fdca1f6916afe1a4b1990283f2a4151fa6bff039fd709bbdb1a",
+  "upstream_files": 35,
+  "upstream_license": "GPL-3.0",
+  "upstream_source_included": false,
+  "case_license": "MIT; original test and documentation only",
+  "verified_date": "2026-10-15",
+  "author_execution_confirmed": false,
+  "scope": "One synthetic workout and eight named user-settings properties, actual JSON download, fresh contexts with only the three record stores cleared via app UI (settings and seed marker remain), app HTML preview-confirm button, reload. No real user data, Excel/PDF, food-log conflicts, other settings, measurement/challenge features."
+}

@@ -1,0 +1,32 @@
+{
+  "verified_date": "2026-10-15",
+  "source_commit": "81b731bef0719f55f6a2ab93bf4dfd00d6d25037",
+  "upstream_files_checked_unchanged": 35,
+  "spec_sha256": "f45abb9b13307e75750f118e012ba26adf8033a9c64006e91c0c31755525d8ec",
+  "playwright": "1.64.0",
+  "command": "npx playwright test --config examples/focus-backup/playwright.config.mjs --repeat-each=2",
+  "exit_code": 1,
+  "tests": 4,
+  "complete_workout_control": {
+    "passed": 2,
+    "failed": 0
+  },
+  "settings_roundtrip": {
+    "passed": 0,
+    "failed_at_expected_equality": 2,
+    "timeout_or_other_failure": 0
+  },
+  "failure_line": "expect(restoredSettings).toEqual(originalSettings)",
+  "source_seed_removed_via_native_ui": true,
+  "target_seed_removed_via_native_ui": true,
+  "actual_file_unchanged_upload": true,
+  "complete_workout_fields_compared": true,
+  "independent_prior_diagnostic_runs": 2,
+  "third_party_author_execution_confirmed": false,
+  "credits": {
+    "natural_stars": 0,
+    "own_app_users": 0
+  },
+  "scope": "One synthetic workout, eight selected user-settings properties (whole goals object). Empty measurement/challenge stores remain empty; their features are not tested. Settings and seed marker remain after UI reset. Excludes metadata, real user data, other settings, Excel/PDF, food conflicts and nonempty-target merges.",
+  "target_settings_retained_while_record_stores_cleared": true
+}
