@@ -34,7 +34,7 @@ function target(value, where) {
 }
 
 function probe(value, where) {
-  keys(value, ['source', 'target', 'attribute', 'key', 'keyFrom', 'keyPrefix', 'parse', 'url', 'field', 'header', 'jsonPath', 'database', 'store'], where);
+  keys(value, ['source', 'target', 'attribute', 'key', 'keyFrom', 'keyPrefix', 'parse', 'url', 'field', 'header', 'jsonPath', 'database', 'store', 'keyPath', 'maxEntries', 'maxBytes'], where);
   requireThat(['text', 'value', 'attribute', 'count', 'localStorage', 'sessionStorage', 'indexedDB', 'response'].includes(value.source), `${where}: unsupported source`);
   if (['text', 'value', 'attribute', 'count'].includes(value.source)) target(value.target, `${where}.target`);
   if (value.source === 'attribute') requireThat(text(value.attribute), `${where}.attribute required`);
@@ -46,10 +46,19 @@ function probe(value, where) {
   } else requireThat(value.keyFrom === undefined && value.keyPrefix === undefined, `${where}: keyFrom/keyPrefix only apply to Web Storage`);
   if (value.source === 'indexedDB') {
     requireThat(text(value.database) && text(value.store), `${where}.database and .store required`);
-    requireThat(own(value, 'key') && indexedKey(value.key), `${where}.key must be a string, finite number or array of keys (at most 16 array levels)`);
-    requireThat(value.field === undefined || ['entry', 'value', 'exists'].includes(value.field), `${where}.field must be entry/value/exists`);
+    requireThat(value.field === undefined || ['entry', 'value', 'exists', 'records'].includes(value.field), `${where}.field must be entry/value/exists/records`);
+    if (value.field === 'records') {
+      requireThat(!own(value, 'key') && value.parse === undefined && value.jsonPath === undefined, `${where}: records cannot select, parse or project individual values`);
+      requireThat(typeof value.keyPath === 'string' && /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(value.keyPath) && !['__proto__', 'constructor', 'prototype'].includes(value.keyPath), `${where}.keyPath must be one explicit inline property`);
+      requireThat(Number.isInteger(value.maxEntries) && value.maxEntries >= 1 && value.maxEntries <= 4096, `${where}.maxEntries must be 1..4096`);
+      requireThat(Number.isInteger(value.maxBytes) && value.maxBytes >= 2 && value.maxBytes <= 1048576, `${where}.maxBytes must be 2..1048576`);
+    } else {
+      requireThat(own(value, 'key') && indexedKey(value.key), `${where}.key must be a string, finite number or array of keys (at most 16 array levels)`);
+      requireThat(value.keyPath === undefined && value.maxEntries === undefined && value.maxBytes === undefined, `${where}: bounds/keyPath require records`);
+    }
     requireThat(value.field !== 'exists' || (value.parse === undefined && value.jsonPath === undefined), `${where}: exists cannot be parsed or traversed`);
   } else requireThat(value.database === undefined && value.store === undefined, `${where}: database/store only apply to indexedDB`);
+  if (value.source !== 'indexedDB') requireThat(value.keyPath === undefined && value.maxEntries === undefined && value.maxBytes === undefined, `${where}: bounds/keyPath require indexedDB records`);
   if (value.source === 'response') {
     path(value.url, `${where}.url`);
     requireThat(['json', 'text', 'status', 'header'].includes(value.field), `${where}.field required (json/text/status/header)`);
@@ -64,6 +73,9 @@ function probes(value, where) {
   for (const [name, value2] of Object.entries(value)) {
     requireThat(/^[a-zA-Z][a-zA-Z0-9_-]*$/.test(name) && !['constructor', '__proto__', 'prototype'].includes(name), `${where}: invalid observation name`);
     probe(value2, `${where}.${name}`);
+  }
+  for (const item of Object.values(value).filter(p => p.source === 'indexedDB' && p.field === 'records')) {
+    requireThat(Object.values(value).filter(p => p.source === 'indexedDB' && p.database === item.database && p.store === item.store).length === 1, `${where}: records cannot share a store with another observation`);
   }
 }
 
@@ -125,8 +137,13 @@ export function validateContract(input) {
     steps(backup.export.steps, 'backupRoundtrip.export.steps', true);
     requireThat(Number.isInteger(backup.export.maxBytes) && backup.export.maxBytes > 0 && backup.export.maxBytes <= 1048576, 'backupRoundtrip.export.maxBytes must be 1..1048576');
     const restore = backup.restore;
-    keys(restore, ['path', 'ready', 'empty', 'target', 'fileChooser', 'success', 'after', 'fileName', 'mimeType', 'confirm', 'commit'], 'backupRoundtrip.restore');
+    keys(restore, ['path', 'prepare', 'ready', 'empty', 'target', 'fileChooser', 'success', 'after', 'fileName', 'mimeType', 'confirm', 'commit'], 'backupRoundtrip.restore');
     path(restore.path, 'backupRoundtrip.restore.path');
+    if (restore.prepare !== undefined) {
+      steps(restore.prepare, 'backupRoundtrip.restore.prepare', true);
+      requireThat(restore.prepare.length <= 32, 'backup-roundtrip prepare allows at most 32 normal UI steps');
+      requireThat(restore.prepare.every(s => ['click', 'fill', 'press', 'select', 'check', 'uncheck', 'expectText', 'expectValue', 'expectVisible'].includes(s.action) && s.confirm === undefined), 'backup-roundtrip prepare only permits normal UI actions and observations');
+    }
     steps(restore.ready, 'backupRoundtrip.restore.ready', true);
     requireThat(own(restore, 'target') !== own(restore, 'fileChooser'), 'backupRoundtrip.restore needs exactly one target input or fileChooser trigger');
     if (restore.target !== undefined) target(restore.target, 'backupRoundtrip.restore.target');
@@ -162,7 +179,7 @@ export function validateContract(input) {
     requireThat(readiness.every(s => ['expectText', 'expectValue', 'expectVisible'].includes(s.action)), 'backup-roundtrip readiness hooks must only observe, never navigate or repair saved state');
     requireThat((restore.after ?? []).every(s => ['goto', 'expectText', 'expectValue', 'expectVisible'].includes(s.action)), 'backup-roundtrip post-restore hooks must only navigate or observe after saved-state comparison');
     requireThat((restore.after ?? []).filter(s => s.action === 'goto').length <= 1, 'backup-roundtrip post-restore hooks allow at most one view navigation');
-    const allSteps = [...input.reset, ...input.setup, ...(input.afterReload ?? []), ...backup.export.steps, ...restore.ready, ...(restore.after ?? [])];
+    const allSteps = [...input.reset, ...input.setup, ...(input.afterReload ?? []), ...backup.export.steps, ...(restore.prepare ?? []), ...restore.ready, ...(restore.after ?? [])];
     requireThat(!allSteps.some(s => s.action === 'request'), 'backup-roundtrip uses browser-local UI steps, not server mutations');
   }
   requireThat(input.backupRoundtrip === undefined || checks.includes('backup-roundtrip'), 'backupRoundtrip settings require checks to include backup-roundtrip');
