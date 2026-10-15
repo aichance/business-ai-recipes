@@ -144,8 +144,10 @@ export function validateContract(input) {
     probes(restore.success.observe, 'backupRoundtrip.restore.success.observe');
     requireThat(object(restore.success.expected) && Object.keys(restore.success.expected).length > 0 && Object.keys(restore.success.expected).every(k => own(restore.success.observe, k)), 'backupRoundtrip.restore.success.expected must name success observations');
     if (restore.after !== undefined) steps(restore.after, 'backupRoundtrip.restore.after');
-    const readiness = [...restore.ready, ...(restore.after ?? []), ...(input.afterReload ?? [])];
+    const readiness = [...restore.ready, ...(input.afterReload ?? [])];
     requireThat(readiness.every(s => ['expectText', 'expectValue', 'expectVisible'].includes(s.action)), 'backup-roundtrip readiness hooks must only observe, never navigate or repair saved state');
+    requireThat((restore.after ?? []).every(s => ['goto', 'expectText', 'expectValue', 'expectVisible'].includes(s.action)), 'backup-roundtrip post-restore hooks must only navigate or observe after saved-state comparison');
+    requireThat((restore.after ?? []).filter(s => s.action === 'goto').length <= 1, 'backup-roundtrip post-restore hooks allow at most one view navigation');
     const allSteps = [...input.reset, ...input.setup, ...(input.afterReload ?? []), ...backup.export.steps, ...restore.ready, ...(restore.after ?? [])];
     requireThat(!allSteps.some(s => s.action === 'request'), 'backup-roundtrip uses browser-local UI steps, not server mutations');
   }
