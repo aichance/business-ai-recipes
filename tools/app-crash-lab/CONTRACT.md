@@ -18,7 +18,8 @@ does not evaluate JavaScript supplied by the app or contract.
 | `expected` | At least one known-good observed baseline value |
 | `afterReload` | Optional readiness steps after reloading |
 | `rejectedUpdate` | Invalid steps and an explicit rejection signal |
-| `checks` | Default `["reload", "rejected-update"]`; can select either |
+| `backupRoundtrip` | Real JSON export → fresh restore → reload; [runner 0.6+ fields](BACKUP.md) |
+| `checks` | Default `["reload", "rejected-update"]`; select either, or explicitly opt into `"backup-roundtrip"` |
 
 Mark exactly one save-triggering step in `setup` with `save: true`. It may
 be a click, autosaving fill or a successful HTTP mutation, never a read-only
