@@ -1,0 +1,65 @@
+{
+  "repository": "https://github.com/Chizukuo/toeic-tracker",
+  "commit": "ba5790b381d045618173a3415b4c3a3366947caf",
+  "license": "MIT",
+  "ownerType": "User",
+  "ownerId": 114127936,
+  "repoId": 1176852643,
+  "upstreamSourceBundled": false,
+  "sourceVerification": {
+    "matchedTrackedFiles": 94,
+    "files": [
+      {
+        "path": "LICENSE",
+        "gitBlobSha1": "ca41788e1d1ff807aa98ffd70d73a9576d4e6be2",
+        "sha256": "eba4cdcc467228e08f55aee6608b9b277e06c1322d30bd1b4137660f47a0994d"
+      },
+      {
+        "path": "README.md",
+        "gitBlobSha1": "5daca02fb9a89b7854aebd7f816686acafa69250",
+        "sha256": "341aeeb167e890e6c80cbe77599a9e524b0919b00f76a8f5f04f3ec306ee1a62"
+      },
+      {
+        "path": "package-lock.json",
+        "gitBlobSha1": "dcacf556deabe1a9ed1e7b02f139027a26b41d3b",
+        "sha256": "b0ea83040995d9445634e500e96bfe7369a30a1717e0e7277b432bc630628c3a"
+      },
+      {
+        "path": "package.json",
+        "gitBlobSha1": "27e64410f73fadd7b9ff308f12a5aea896eaeeba",
+        "sha256": "4faf733e730e06724d73b34adede8debbcb4ecdb4d83f846340bdc7951dad899"
+      },
+      {
+        "path": "src/components/DataVaultPanel.tsx",
+        "gitBlobSha1": "e8454fd7e14482d8856539b87c3f6411c1ec1bb4",
+        "sha256": "234e1fa5d6eef83e559f99e3193e56f6be9a77eb3a17c681ba71f20c25fa3da8"
+      },
+      {
+        "path": "src/lib/storeSnapshot.ts",
+        "gitBlobSha1": "67962380b7f944031465b85eab44a54f77426a59",
+        "sha256": "8a5eeaed46d65dd77370540f1abe92ebdd0f69824307721ef38aa91ed1b148e8"
+      },
+      {
+        "path": "src/store/useStore.ts",
+        "gitBlobSha1": "b3234f663f143c41af2f8bb5b461e7d643af95ab",
+        "sha256": "3b2fa8cc0fb7e671408e59ea7fe89b0fbef8e0f7bcb75de1361e32add92a14cc"
+      }
+    ]
+  },
+  "testData": "Synthetic L1 mistakes/note, one vocabulary phrase and one manual score; not real study records",
+  "coverage": [
+    "All ten exported data domains, including full session/score/vocabulary/achievement objects",
+    "Existing app HTML import preview and one explicit confirmation",
+    "Complete selected saved data before view navigation and after reload"
+  ],
+  "outsideCoverage": [
+    "Cloud or cross-device sync links",
+    "Browser profiles and real user data",
+    "Automatic backup ring/history outside exported data",
+    "Process kill, filesystem durability and timer accuracy",
+    "Other source revisions and mobile browsers"
+  ],
+  "measurementAt": "2026-10-15",
+  "upstreamDefaultStateFixture": true,
+  "upstreamLicenseNotice": "LICENSE.upstream"
+}
