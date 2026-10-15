@@ -1,0 +1,42 @@
+{
+  "kind": "publicly-served-static-snapshot",
+  "observedAt": "2026-10-15T18:56:23.986075+00:00",
+  "app": "VoxelDraft",
+  "url": "https://voxeldraft.com/ja/edit/",
+  "authorArticle": "https://qiita.com/Renburu/items/430328e9993f8499c07f",
+  "repositoryCommit": null,
+  "privateSnapshotFileCount": 119,
+  "privateSnapshotManifestSha256": "b7d7b57e4fe78c40a0419aded38ab838e7d16242ded3ebd67b19a3d7e0daee49",
+  "snapshotRestoreByteExact": true,
+  "allSnapshotFilesUnchangedAfterTrial": true,
+  "identifyingFiles": [
+    {
+      "path": "ja/edit/index.html",
+      "bytes": 8122,
+      "sha256": "356d79bdd2edace5723f35e3914548e143377f4766f7b94ff37d88812c794119"
+    },
+    {
+      "path": "assets/entries/pages_-lang_edit.B-Z4EZ5B.js",
+      "bytes": 11745,
+      "sha256": "a6824a87fdbb81633ec683e36e8249c0389cafe13ef0a43015e043c806132d16"
+    },
+    {
+      "path": "assets/chunks/chunk-BEC8zl4X.js",
+      "bytes": 281077,
+      "sha256": "43f1978a514951e91e885604663b48132f0dc00e11104bcba8f01efde5ebd977"
+    },
+    {
+      "path": "assets/chunks/chunk-DRrXZP2z.js",
+      "bytes": 40976,
+      "sha256": "e8dc55582eb62a37d24d18821be8e54c99485fd984f244dbd49c3a434e623201"
+    }
+  ],
+  "redistributedUpstreamSourceOrAssets": false,
+  "scope": [
+    "complete selected voxel records, layer definitions, active layer ID",
+    "synthetic JSON only",
+    "loopback browser-local workflow; no account, cloud, share, backend parity, rendered-pixel or animation coverage"
+  ],
+  "runnerVersion": "0.9.0",
+  "runnerBackupMode": "Not used for the compressed voxel format; separate native Playwright roundtrip test"
+}

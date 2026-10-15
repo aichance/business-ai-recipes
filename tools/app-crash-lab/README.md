@@ -214,6 +214,12 @@ Both paths passed the same two normal-case Glypha checks. This does not prove
 faster setup or better bug detection. The comparison is available in the
 current checkout; the original v0.1.0 source ZIP predates these extra examples.
 
+A compressed-file backup case: the [VoxelDraft example](examples/voxeldraft/README.md)
+keeps all three blocks, coordinates and colors, yet changes two layer assignments
+on a fresh JSON restore. It includes a failing native Playwright regression and
+a passing control. Its separate 0.9 reload/rejection contract passes; the
+compressed representation is outside generic backup mappings.
+
 A save-time metadata case: the [ChatLedger example](examples/chatledger/README.md)
 keeps imported order fields through reload, but catches missing icing instructions
 and source positions at the confirmation baseline. It includes a passing import
