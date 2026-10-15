@@ -15,6 +15,11 @@ from tempfile import TemporaryDirectory
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "tools/app-crash-lab/examples/nvim-edu-progress/progress.json",
+    "tools/app-crash-lab/examples/nvim-edu-progress/best-score.json",
+    "tools/app-crash-lab/examples/nvim-edu-progress/README.md",
+    "tools/app-crash-lab/examples/nvim-edu-progress/SOURCE.json",
+    "tools/app-crash-lab/examples/nvim-edu-progress/LICENSE",
     "tools/app-crash-lab/BACKUP.md",
     "tools/app-crash-lab/examples/price-table/README.md",
     "tools/app-crash-lab/examples/price-table/roundtrip.json",
