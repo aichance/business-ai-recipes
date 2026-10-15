@@ -245,6 +245,13 @@ save/reload, with its generated standalone reproduction also passing. The
 JSON-text import test is separate from that control and actual-file backup
 round trips.
 
+A backup-version case: [Leftover](examples/leftover/README.md) passes a real
+JSON backup, fresh restore and full-state reload check. Unrelated JSON is
+safely rejected. A declared synthetic `v: 999` file instead replaces the budget
+with empty data and shows “Backup restored”; rejecting unknown versions is an
+explicit proposed contract, not a quoted product guarantee. Three configs keep
+these checks separate.
+
 A display-baseline case: [Repwise](examples/repwise/README.md) preserves complete
 workout records through a real JSON backup, fresh restore and reload, while a
 completed workout is already absent from History. Its backup check passes and
