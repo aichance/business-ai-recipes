@@ -299,6 +299,23 @@ inside the allowed window cannot be distinguished. Inspect the app's import
 flow when choosing the exact message; a PASS is not proof of that causal link.
 Versions before 0.4 reject this field.
 
+## Actual backup and restore (runner 0.6+)
+
+Select `checks: ["backup-roundtrip"]` and configure `backupRoundtrip` as shown
+in [BACKUP.md](BACKUP.md). This is distinct from supplying a literal invalid
+file to `rejectedUpdate.steps`. It downloads the real JSON and imports the
+unchanged bytes in an empty browser context.
+
+Runner0.7 adds optional `backupRoundtrip.restore.confirm` with exactly
+`{"message":"Exact native restore question","accept":true}`. It applies only
+to one native confirm observed while delivering the actual backup to the target.
+Dialogs observed during source/setup/readiness or the chooser trigger are not
+accepted; a delayed identical target dialog inside the window has no causal
+identifier and cannot be distinguished from the intended confirmation. Missing, wrong, duplicate
+or out-of-window dialogs are INCONCLUSIVE. New import completion, full selected
+saved state and reload checks remain required. See the backup guide for the
+bounded window, metadata-only output and causal-attribution limits.
+
 ## Isolation and timing
 
 Each pattern has a fresh, nonpersistent browser context. First navigate to
