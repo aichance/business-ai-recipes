@@ -1,0 +1,248 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "Repwise — completed workout is visible in History before reload",
+  "baseURL": "http://127.0.0.1:54640",
+  "path": "/",
+  "timeoutMs": 10000,
+  "stabilityMs": 500,
+  "reset": [],
+  "setup": [
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Continue as Guest (Offline Only)"
+      }
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "role": "link",
+        "name": "Workouts"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "link",
+        "name": "Workouts"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Plan Routine"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[placeholder=\"e.g. Pull Day\"]"
+      },
+      "value": "ACL 合成 Strength 🧱"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Add Exercise to Routine"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "div.border.rounded-xl.p-3:has(p:text-is(\"Barbell Bench Press\")) button[title=\"Add Single\"]"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[type=\"number\"][min=\"1\"][max=\"15\"]"
+      },
+      "value": "1"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[type=\"number\"][min=\"1\"][max=\"100\"]"
+      },
+      "value": "8"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Save Routine"
+      }
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": "main h3:text-is(\"ACL 合成 Strength 🧱\")"
+      },
+      "value": "ACL 合成 Strength 🧱"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Start"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[placeholder=\"0\"][step=\"0.5\"]"
+      },
+      "value": "12.5"
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[placeholder=\"0\"][step=\"0.5\"]"
+      },
+      "value": "12.5"
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[placeholder=\"0\"]:not([step])"
+      },
+      "value": "8"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[placeholder=\"Weight\"][step=\"0.1\"]"
+      },
+      "value": "72.4"
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[placeholder=\"Weight\"][step=\"0.1\"]"
+      },
+      "value": "72.4"
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "button:has(svg.lucide-check)"
+      }
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": "button.bg-emerald-600:has(svg.lucide-check)"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Finish"
+      },
+      "save": true
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "role": "button",
+        "name": "History"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "History"
+      }
+    }
+  ],
+  "observe": {
+    "routines": {
+      "source": "indexedDB",
+      "database": "RepwiseDatabase",
+      "store": "routines",
+      "field": "records",
+      "keyPath": "id",
+      "maxEntries": 32,
+      "maxBytes": 65536
+    },
+    "routineItems": {
+      "source": "indexedDB",
+      "database": "RepwiseDatabase",
+      "store": "routineItems",
+      "field": "records",
+      "keyPath": "id",
+      "maxEntries": 32,
+      "maxBytes": 65536
+    },
+    "workouts": {
+      "source": "indexedDB",
+      "database": "RepwiseDatabase",
+      "store": "workouts",
+      "field": "records",
+      "keyPath": "id",
+      "maxEntries": 32,
+      "maxBytes": 65536
+    },
+    "workoutExercises": {
+      "source": "indexedDB",
+      "database": "RepwiseDatabase",
+      "store": "workoutExercises",
+      "field": "records",
+      "keyPath": "id",
+      "maxEntries": 32,
+      "maxBytes": 65536
+    },
+    "sets": {
+      "source": "indexedDB",
+      "database": "RepwiseDatabase",
+      "store": "sets",
+      "field": "records",
+      "keyPath": "id",
+      "maxEntries": 32,
+      "maxBytes": 65536
+    },
+    "bodyWeights": {
+      "source": "indexedDB",
+      "database": "RepwiseDatabase",
+      "store": "bodyWeights",
+      "field": "records",
+      "keyPath": "id",
+      "maxEntries": 32,
+      "maxBytes": 65536
+    },
+    "historyTitle": {
+      "source": "count",
+      "target": {
+        "css": "main h3:text-is(\"ACL 合成 Strength 🧱\")"
+      }
+    }
+  },
+  "expected": {
+    "historyTitle": 1
+  },
+  "checks": [
+    "reload"
+  ],
+  "afterReload": [
+    {
+      "action": "expectVisible",
+      "target": {
+        "role": "button",
+        "name": "History"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "History"
+      }
+    }
+  ]
+}

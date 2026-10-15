@@ -1,0 +1,123 @@
+{
+  "upstream": {
+    "repository": "https://github.com/abdulrahmanm-in/repwise",
+    "ownerType": "User",
+    "commit": "40321419374327338960cbcdd99c4529f4b930f6",
+    "sourceFiles": 47,
+    "modified": false,
+    "sourceBundled": false,
+    "license": "MIT",
+    "packageVersion": "1.1.1",
+    "settingsFooterVersion": "1.1.0"
+  },
+  "verifiedAt": "2026-10-16",
+  "environment": {
+    "platform": "macOS arm64",
+    "node": "22.16.0",
+    "next": "14.2.13",
+    "playwright": "1.64.0",
+    "browser": "Chromium",
+    "appMode": "development",
+    "serviceWorkers": "blocked"
+  },
+  "synthetic": true,
+  "independentAuthorUse": false,
+  "nativeDiagnostic": {
+    "exportBytes": 10691,
+    "exportSha256": "0579608cf5f21cb013e9c0c21e9e469b8839b6b35589c3be8dcb461a35ecc15c",
+    "allEightStoresMatch": true,
+    "recordCounts": {
+      "exercises": 47,
+      "routines": 1,
+      "routineItems": 1,
+      "workouts": 1,
+      "workoutExercises": 1,
+      "sets": 1,
+      "bodyWeights": 1,
+      "settings": 1
+    },
+    "historyVisibleBeforeExport": false,
+    "historyVisibleAfterRestoreAndReload": false,
+    "routinePositiveControls": true,
+    "status": "BACKUP_PASS_HISTORY_EXPECTATION_UNMET"
+  },
+  "runner": {
+    "version": "0.9.0",
+    "backup": {
+      "status": "pass",
+      "exitCode": 0,
+      "contractSha256": "bd8b57cfb417491bd18e7146f53ea0de60f3d39943ec5d398fcad698542dc07f",
+      "uploadedOriginalBytes": true,
+      "export": {
+        "format": "utf8-json",
+        "sizeBytes": 10691,
+        "sha256": "df3f687aabb39010ab5f703104a0f0b684ebedd1250945e4d367a59b69c6546c"
+      },
+      "comparisons": {
+        "export": {
+          "matched": true
+        },
+        "sourceAfterExport": {
+          "matched": true
+        },
+        "restoration": {
+          "matched": true,
+          "changedObservations": []
+        },
+        "reload": {
+          "matched": true,
+          "changedObservations": []
+        }
+      },
+      "capture": "metadata-only",
+      "selectedStores": [
+        "routines",
+        "routineItems",
+        "workouts",
+        "workoutExercises",
+        "sets",
+        "bodyWeights"
+      ]
+    },
+    "history": {
+      "status": "inconclusive",
+      "phase": "baseline",
+      "exitCode": 2,
+      "contractSha256": "bece1f860c45d0dcf0635d74ec836a0d630c53cb236d1dce8fae7d617d91271b",
+      "expectedTitleCount": 1,
+      "actualTitleCount": 0,
+      "actualRecordsPerBusinessStore": 1,
+      "completedWorkoutStored": true,
+      "reloadVerdict": null
+    },
+    "generatedStandalone": {
+      "backup": {
+        "status": "pass",
+        "exitCode": 0
+      },
+      "history": {
+        "status": "failed baseline assertion as expected for this pin",
+        "reportedCheckStatus": "inconclusive",
+        "phase": "baseline",
+        "exitCode": 1,
+        "reloadVerdict": null
+      }
+    }
+  },
+  "unselectedGenericStores": [
+    "exercises",
+    "settings"
+  ],
+  "excluded": [
+    "cloud or Drive",
+    "PWA/offline caching",
+    "mobile browsers",
+    "malformed backups",
+    "custom exercises with own undefined fields",
+    "ordering beyond the single-item fixture",
+    "concurrent use",
+    "training or health outcomes",
+    "current deployment parity",
+    "author adoption"
+  ]
+}
