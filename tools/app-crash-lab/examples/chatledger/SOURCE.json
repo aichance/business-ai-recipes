@@ -1,0 +1,43 @@
+{
+  "repo": "https://github.com/tharu200304/ChatLedger",
+  "commit": "aff6741e4e8c71919882217f6a92b0e660cf967d",
+  "repoId": 1420466426,
+  "ownerId": 196878789,
+  "sourceFiles": 28,
+  "originalFilesUnchanged": true,
+  "licenseAtPin": "No license file found; upstream source/assets/sample chats/raw API payload are not redistributed",
+  "ourArtifacts": "Independently authored declarative contracts and guide",
+  "operatorVerificationDateJst": "2026-10-16",
+  "operatorEnvironment": {
+    "os": "macOS",
+    "python": "3.12.4",
+    "appCrashLab": "0.9.0",
+    "playwright": "1.64.0",
+    "engine": "explicit local_english_heuristic; no model inference"
+  },
+  "measured": {
+    "importReload": {
+      "cli": "PASS",
+      "exitCode": 0,
+      "standalone": "PASS"
+    },
+    "confirmationExpectation": {
+      "cli": "INCONCLUSIVE",
+      "phase": "baseline",
+      "exitCode": 2,
+      "standalone": "expected baseline assertion failure",
+      "itemNoteAfter": "",
+      "itemSourcePositionsAfter": []
+    }
+  },
+  "notMeasured": [
+    "author adoption",
+    "upstream fix",
+    "rejected update",
+    "full JSON backup/restore",
+    "model inference or training",
+    "server restart",
+    "Excel exports",
+    "Windows/Linux compatibility"
+  ]
+}
