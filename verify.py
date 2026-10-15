@@ -15,6 +15,11 @@ from tempfile import TemporaryDirectory
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "tools/app-crash-lab/examples/leftover/README.md",
+    "tools/app-crash-lab/examples/leftover/SOURCE.json",
+    "tools/app-crash-lab/examples/leftover/roundtrip.json",
+    "tools/app-crash-lab/examples/leftover/reject-unrelated.json",
+    "tools/app-crash-lab/examples/leftover/reject-future-version.json",
     "tools/app-crash-lab/examples/kaioken/normal-reload.json",
     "tools/app-crash-lab/examples/kaioken/README.md",
     "tools/app-crash-lab/examples/kaioken/SOURCE.json",
