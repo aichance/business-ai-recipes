@@ -548,6 +548,17 @@ export async function executeBackupRoundtrip(browser, contract) {
     result.uploadNameSource = backup.restore.fileName === undefined ? 'download' : 'contract';
     const imported = await waitForState(target, contract, success.observe, success.expected);
     if (!imported.matched) throw backupError('IMPORT_SUCCESS_NOT_OBSERVED', true);
+    if (backup.restore.after?.some(step => step.action === 'goto')) {
+      // Check every selected saved value before view navigation can run code
+      // that repairs an import failure. UI probes may require the next view.
+      result.phase = 'compare-before-navigation';
+      let actual;
+      try { actual = await stableState(target, contract, savedProbes, savedBaseline); }
+      catch { throw backupError('RESTORED_STATE_UNAVAILABLE_BEFORE_NAVIGATION', true); }
+      const changedObservations = storedNames.filter(name => !isDeepStrictEqual(savedBaseline[name], actual.state[name]));
+      result.comparisons.beforeNavigation = { matched: actual.matched, changedObservations };
+      if (!actual.matched) throw backupError('RESTORED_STATE_DIFFERS_BEFORE_NAVIGATION', true);
+    }
     await applySteps(target, contract, backup.restore.after ?? [], 'after-import', result.events);
     for (const { capture } of dialogs) assertSupportedDialogs(capture);
     for (const [phase, steps] of [['restoration', []], ['reload', contract.afterReload ?? []]]) {

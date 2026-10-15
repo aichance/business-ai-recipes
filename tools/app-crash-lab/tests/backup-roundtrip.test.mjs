@@ -47,7 +47,8 @@ test('backup contracts retain old defaults and require actual storage, fresh tar
   invalid(c => c.backupRoundtrip.restore.fileChooser = { css: '#choose' });
   invalid(c => delete c.backupRoundtrip.restore.target);
   invalid(c => c.backupRoundtrip.restore.after = [{ action: 'click', target: { css: '#repair' } }]);
-  for (const hook of ['ready', 'after']) invalid(c => c.backupRoundtrip.restore[hook] = [{ action: 'goto', path: '/repair' }]);
+  invalid(c => c.backupRoundtrip.restore.ready = [{ action: 'goto', path: '/repair' }]);
+  invalid(c => c.backupRoundtrip.restore.after = [{ action: 'goto', path: '/lose' }, { action: 'goto', path: '/repair' }]);
   invalid(c => c.afterReload = [{ action: 'goto', path: '/repair' }]);
   invalid(c => c.afterReload = [{ action: 'setFile', target: { css: '#file' }, file: { name: 'repair.json', mimeType: 'application/json', text: '{}' } }]);
   invalid(c => { delete c.observe.records; delete c.backupRoundtrip.restore.empty.records; });
@@ -56,11 +57,19 @@ test('backup contracts retain old defaults and require actual storage, fresh tar
   invalid(c => c.backupRoundtrip.export.steps = [{ action: 'request', method: 'DELETE', path: '/data', expectStatus: 200 }]);
 });
 
+test('shipped real-app backup contracts remain valid with post-import view navigation', async () => {
+  for (const name of ['devtasks/roundtrip-feature.json', 'devtasks/roundtrip-docs.json', 'price-table/roundtrip.json']) {
+    const c = JSON.parse(await readFile(join(root, 'examples', name), 'utf8'));
+    assert.doesNotThrow(() => validateContract(c), name);
+  }
+});
+
 async function fixture() {
   const uploads = [];
   const html = `<!doctype html><meta charset="utf-8"><button id="save">Save</button><button id="export">Export</button><button id="choose">Import</button><input id="file" type="file"><p id="status">Ready</p><section id="items"></section><script>
   const mode = new URLSearchParams(location.search).get('mode');
   const saved = ${JSON.stringify(records)};
+  if (mode === 'repair-on-navigation' && localStorage.getItem('saved')) localStorage.setItem('saved', JSON.stringify(saved));
   const draw = () => document.querySelector('#items').innerHTML = JSON.parse(localStorage.getItem('saved') || '[]').map(item => '<p class="item">' + item.nested.hidden + '</p>').join('');
   if (mode === 'nonempty-target') localStorage.setItem('saved', JSON.stringify(saved));
   if (mode === 'stale-success') document.querySelector('#status').textContent = 'Restored';
@@ -87,7 +96,7 @@ async function fixture() {
     const file = event.target.files[0]; const bytes = await file.arrayBuffer();
     await fetch('/received', { method: 'POST', headers: { 'x-file-name': encodeURIComponent(file.name), 'x-file-type': file.type }, body: bytes });
     const data = mode === 'wrong-export' ? saved : JSON.parse(new TextDecoder().decode(bytes)).saved;
-    if (mode === 'field-loss') delete data[0].nested.hidden;
+    if (['field-loss', 'loss-before-navigation'].includes(mode)) delete data[0].nested.hidden;
     if (mode !== 'toast-only') localStorage.setItem('saved', JSON.stringify(data));
     draw(); document.querySelector('#status').textContent = mode === 'no-success' ? 'Ready' : 'Restored';
     if (mode === 'chooser-reload') location.reload();
@@ -100,8 +109,9 @@ async function fixture() {
   };
   if (['chooser', 'chooser-reload', 'no-chooser', 'chooser-wrong-button'].includes(mode)) document.querySelector('#file').remove();
   </script>`;
-  const names = [], types = [];
+  const names = [], types = [], visits = [];
   const server = http.createServer(async (req, res) => {
+    visits.push(req.url);
     if (req.url === '/received') {
       const chunks = []; for await (const c of req) chunks.push(c); uploads.push(Buffer.concat(chunks));
       names.push(decodeURIComponent(req.headers['x-file-name'])); types.push(req.headers['x-file-type']);
@@ -110,7 +120,7 @@ async function fixture() {
     res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' }); res.end(html);
   });
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
-  return { baseURL: `http://127.0.0.1:${server.address().port}`, uploads, names, types, close: () => new Promise(resolve => server.close(resolve)) };
+  return { baseURL: `http://127.0.0.1:${server.address().port}`, uploads, names, types, visits, close: () => new Promise(resolve => server.close(resolve)) };
 }
 
 async function filesBelow(path) {
@@ -150,6 +160,17 @@ test('real bytes, fresh contexts, full records, reload and private failure artif
   await t.test('restored state must survive the second reload, including hidden fields', async () => {
     const r = await run('reload-loss'); assert.equal(r.status, 'fail', JSON.stringify(r));
     assert.equal(r.comparisons.restoration.matched, true); assert.equal(r.comparisons.reload.matched, false);
+  });
+  await t.test('view navigation preserves a good import but cannot repair lost fields before comparison', async () => {
+    const good = await run('navigate', c => c.backupRoundtrip.restore.after = [{ action: 'goto', path: '/?mode=fixed' }]);
+    assert.equal(good.status, 'pass', JSON.stringify(good));
+    assert.deepEqual(good.comparisons.beforeNavigation, { matched: true, changedObservations: [] });
+    const before = app.visits.filter(url => url.includes('repair-on-navigation')).length;
+    const bad = await run('loss-before-navigation', c => c.backupRoundtrip.restore.after = [{ action: 'goto', path: '/?mode=repair-on-navigation' }]);
+    assert.equal(bad.status, 'fail', JSON.stringify(bad)); assert.equal(bad.phase, 'compare-before-navigation');
+    assert.equal(bad.error, 'RESTORED_STATE_DIFFERS_BEFORE_NAVIGATION');
+    assert.deepEqual(bad.comparisons.beforeNavigation.changedObservations, ['records']);
+    assert.equal(app.visits.filter(url => url.includes('repair-on-navigation')).length, before);
   });
   await t.test('no download, multiple downloads and oversize are inconclusive before any import', async () => {
     for (const [mode, error] of [['no-download', 'NO_EXPORT_DOWNLOAD'], ['multiple', 'MULTIPLE_EXPORT_DOWNLOADS'], ['oversize', 'DOWNLOAD_SIZE_LIMIT']]) {
@@ -209,7 +230,7 @@ test('real bytes, fresh contexts, full records, reload and private failure artif
     assert.equal((await run('dialog')).error, 'UNEXPECTED_NATIVE_DIALOG');
   });
   await t.test('standalone tests replay the same pass and failure with no runner import or harvested data', async () => {
-    for (const [mode, exit] of [['fixed', 0], ['field-loss', 1], ['no-download', 1], ['chooser', 0], ['chooser-reload', 0]]) {
+    for (const [mode, exit] of [['fixed', 0], ['field-loss', 1], ['no-download', 1], ['chooser', 0], ['chooser-reload', 0], ['navigate', 0], ['loss-before-navigation', 1]]) {
       const r = reports[mode];
       const source = await readFile(join(r.out, 'repro.spec.mjs'), 'utf8');
       assert.ok(!source.includes("from './lib")); assert.ok(!source.includes(sentinel));

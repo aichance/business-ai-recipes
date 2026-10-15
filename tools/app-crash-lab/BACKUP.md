@@ -84,16 +84,25 @@ passed on its pinned unchanged source.
    suggested download filename, or optional declared `restore.fileName`.
    `restore.mimeType` explicitly declares the upload type; download MIME
    sniffing is not provided. Filenames cannot be paths/control characters.
-6. Require a new `success` signal, run optional `restore.after` observation
-   steps, and compare **all** selected values. Reload, run optional top-level
+6. Require a new `success` signal. If `restore.after` navigates to a record
+   view, first compare **all selected saved storage values** with the source;
+   a missing or changed value fails before navigation. Then run the optional
+   view/observation steps and compare **all** selected storage and UI values.
+   Reload, run optional top-level
    `afterReload`, and compare again through bounded stability windows. A toast
    or unchanged record count cannot hide a lost field. Missing completion,
    changed state and failed restoration are FAIL, not success.
 
-Readiness hooks (`restore.ready`, `restore.after`, `afterReload`) permit only
-`expectText`, `expectValue` and `expectVisible`. Since0.6.1, `goto` is also
-rejected: navigation could run code that repairs state before comparison.
-They cannot click a repair button or upload replacement data before comparison.
+Readiness hooks `restore.ready` and `afterReload` permit only `expectText`,
+`expectValue` and `expectVisible`. In0.6.2+, `restore.after` may also contain
+**one** `goto`, after all selected saved storage values have been checked.
+A later view cannot hide fields already lost during import. Multiple view
+navigations are rejected so one route cannot repair another route’s loss.
+Hooks cannot click a repair button or upload replacement data.
+
+Version0.6.1 rejected `goto` in every backup hook, including its shipped
+DevTasks contracts. Use0.6.2+ for those contracts; their configuration error
+in0.6.1 is separate from the app’s measured restore failure.
 
 Existing contracts still default to the original reload/rejected-update pair.
 Backup settings require explicitly selecting `backup-roundtrip`. This does
