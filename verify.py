@@ -15,6 +15,12 @@ from tempfile import TemporaryDirectory
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "tools/app-crash-lab/examples/toeic-tracker/LICENSE.upstream",
+    "tools/app-crash-lab/examples/toeic-tracker/serve-export.mjs",
+    "tools/app-crash-lab/examples/toeic-tracker/README.md",
+    "tools/app-crash-lab/examples/toeic-tracker/SOURCE.json",
+    "tools/app-crash-lab/examples/toeic-tracker/roundtrip.json",
+    "tools/app-crash-lab/tests/backup-dom-commit.test.mjs",
     "tools/app-crash-lab/examples/paisa/README.md",
     "tools/app-crash-lab/examples/paisa/SOURCE.json",
     "tools/app-crash-lab/examples/paisa/roundtrip.json",
