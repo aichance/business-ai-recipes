@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "VoxelDraft — complete selected voxels and layers after reload or malformed import",
+  "baseURL": "http://127.0.0.1:54630",
+  "path": "/ja/edit/",
+  "timeoutMs": 10000,
+  "stabilityMs": 500,
+  "checks": [
+    "reload",
+    "rejected-update"
+  ],
+  "reset": [],
+  "setup": [
+    {
+      "action": "setFile",
+      "target": {
+        "css": "input[type=\"file\"][accept=\".json,.vox,.png,.jpg,.jpeg\"]"
+      },
+      "file": {
+        "name": "acl-synthetic.voxs.json",
+        "mimeType": "application/json",
+        "text": "{\"v\":4,\"p\":[\"#ef4444\",\"#2563eb\"],\"d\":[0,0,0,0,2,0,0,1],\"layers\":[{\"id\":\"acl-ground\",\"name\":\"ACL 土台 🧱\",\"visible\":true,\"locked\":false},{\"id\":\"acl-top\",\"name\":\"ACL 上部 🌱\",\"visible\":true,\"locked\":false}],\"activeLayerId\":\"acl-ground\"}\n"
+      },
+      "save": true
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[value=\"ACL 土台 🧱\"]"
+      },
+      "value": "ACL 土台 🧱"
+    }
+  ],
+  "observe": {
+    "voxels": {
+      "source": "localStorage",
+      "key": "voxel-projects-v1",
+      "parse": "json",
+      "jsonPath": [
+        0,
+        "voxels"
+      ]
+    },
+    "layers": {
+      "source": "localStorage",
+      "key": "voxel-projects-v1",
+      "parse": "json",
+      "jsonPath": [
+        0,
+        "layers"
+      ]
+    },
+    "activeLayerId": {
+      "source": "localStorage",
+      "key": "voxel-projects-v1",
+      "parse": "json",
+      "jsonPath": [
+        0,
+        "activeLayerId"
+      ]
+    }
+  },
+  "expected": {
+    "voxels": [
+      {
+        "id": "0,0,0",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "color": "#ef4444",
+        "layerId": "acl-ground"
+      },
+      {
+        "id": "2,0,0",
+        "x": 2,
+        "y": 0,
+        "z": 0,
+        "color": "#2563eb",
+        "layerId": "acl-ground"
+      }
+    ],
+    "layers": [
+      {
+        "id": "acl-ground",
+        "name": "ACL 土台 🧱",
+        "visible": true,
+        "locked": false
+      },
+      {
+        "id": "acl-top",
+        "name": "ACL 上部 🌱",
+        "visible": true,
+        "locked": false
+      }
+    ],
+    "activeLayerId": "acl-ground"
+  },
+  "afterReload": [
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[value=\"ACL 土台 🧱\"]"
+      },
+      "value": "ACL 土台 🧱"
+    }
+  ],
+  "rejectedUpdate": {
+    "steps": [
+      {
+        "action": "setFile",
+        "target": {
+          "css": "input[type=\"file\"][accept=\".json,.vox,.png,.jpg,.jpeg\"]"
+        },
+        "file": {
+          "name": "acl-invalid.voxs.json",
+          "mimeType": "application/json",
+          "text": "{\"v\":"
+        }
+      }
+    ],
+    "dialog": {
+      "type": "alert",
+      "message": "Invalid file format"
+    }
+  }
+}
