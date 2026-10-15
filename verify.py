@@ -16,6 +16,9 @@ from recipe import Refused, apply_local, approve, prepare, read_json, validate_p
 
 EXPECTED_FILES = {
     "tools/app-crash-lab/BACKUP.md",
+    "tools/app-crash-lab/examples/price-table/README.md",
+    "tools/app-crash-lab/examples/price-table/roundtrip.json",
+    "tools/app-crash-lab/examples/price-table/serve.py",
     "tools/app-crash-lab/examples/devtasks/roundtrip-feature.json",
     "tools/app-crash-lab/examples/devtasks/roundtrip-docs.json",
     "tools/app-crash-lab/tests/backup-roundtrip.test.mjs",
