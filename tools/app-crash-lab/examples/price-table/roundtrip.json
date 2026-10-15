@@ -1,0 +1,211 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "Price Table / own product and price JSON backup",
+  "baseURL": "http://127.0.0.1:54441",
+  "path": "/price-table/",
+  "timeoutMs": 5000,
+  "stabilityMs": 750,
+  "checks": [
+    "backup-roundtrip"
+  ],
+  "reset": [],
+  "setup": [
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "新規追加"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[placeholder=\"例：コシヒカリ 5kg\"]"
+      },
+      "value": "Crash Lab 合成米"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[placeholder=\"例：kg, 本, 袋\"]"
+      },
+      "value": "kg"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "textarea[placeholder=\"商品の詳細説明（任意）\"]"
+      },
+      "value": "合成データ・バックアップ検証"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "登録"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Crash Lab 合成米"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "価格を追加"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[placeholder=\"298\"]"
+      },
+      "value": "1480"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[placeholder=\"5\"]"
+      },
+      "value": "5"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[placeholder=\"例：イオン○○店、業務スーパー\"]"
+      },
+      "value": "Crash Lab 合成スーパー"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "textarea[placeholder=\"例：セール中、タイムセール、会員価格など\"]"
+      },
+      "value": "合成データ・往復検証"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[type=date]"
+      },
+      "value": "2026-10-15"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "登録"
+      },
+      "save": true
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "role": "button",
+        "name": "Crash Lab 合成米 (1件の価格情報) 最安値: 296.0000/kg"
+      }
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "role": "cell",
+        "name": "Crash Lab 合成スーパー"
+      }
+    }
+  ],
+  "observe": {
+    "products": {
+      "source": "localStorage",
+      "key": "price-table-products",
+      "parse": "json"
+    },
+    "prices": {
+      "source": "localStorage",
+      "key": "price-table-price-records",
+      "parse": "json"
+    },
+    "summary": {
+      "source": "count",
+      "target": {
+        "role": "button",
+        "name": "Crash Lab 合成米 (1件の価格情報) 最安値: 296.0000/kg"
+      }
+    }
+  },
+  "expected": {
+    "summary": 1
+  },
+  "backupRoundtrip": {
+    "isolation": "browser-local",
+    "export": {
+      "steps": [
+        {
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "エクスポート"
+          }
+        }
+      ],
+      "maxBytes": 65536,
+      "statePaths": {
+        "products": [
+          "products"
+        ],
+        "prices": [
+          "priceRecords"
+        ]
+      }
+    },
+    "restore": {
+      "path": "/price-table/",
+      "ready": [
+        {
+          "action": "expectVisible",
+          "target": {
+            "role": "button",
+            "name": "インポート"
+          }
+        }
+      ],
+      "empty": {
+        "products": null,
+        "prices": null,
+        "summary": 0
+      },
+      "fileChooser": {
+        "role": "button",
+        "name": "インポート"
+      },
+      "mimeType": "application/json",
+      "success": {
+        "observe": {
+          "summary": {
+            "source": "count",
+            "target": {
+              "role": "button",
+              "name": "Crash Lab 合成米 (1件の価格情報) 最安値: 296.0000/kg"
+            }
+          }
+        },
+        "expected": {
+          "summary": 1
+        }
+      }
+    }
+  },
+  "afterReload": [
+    {
+      "action": "expectVisible",
+      "target": {
+        "role": "button",
+        "name": "Crash Lab 合成米 (1件の価格情報) 最安値: 296.0000/kg"
+      }
+    }
+  ]
+}
