@@ -1,0 +1,78 @@
+{
+  "upstream": {
+    "repository": "https://github.com/supratim58/Paisa",
+    "ownerType": "User",
+    "commit": "e5151a6c7144a836b7d4ec2b2d3508d71b94ba40",
+    "sourceFiles": 6,
+    "modified": false,
+    "sourceBundled": false,
+    "license": "not specified in pinned source"
+  },
+  "verifiedAt": "2026-10-15",
+  "environment": {
+    "platform": "macOS arm64",
+    "node": "22.16.0",
+    "playwright": "1.64.0",
+    "browser": "Chromium"
+  },
+  "synthetic": true,
+  "independentAuthorUse": false,
+  "nativeControl": {
+    "status": "pass",
+    "exportBytes": 273,
+    "exportSha256": "3a3a0f4b35c5660cdd0fd4955b2407a388168e57a735f95b0473652a856c79ec",
+    "confirmationAccepted": 1,
+    "sourceAfterExport": true,
+    "fullRestoration": true,
+    "reload": true,
+    "serviceWorker": "observed active in this direct control only"
+  },
+  "previousRunner": {
+    "version": "0.6.2",
+    "status": "inconclusive",
+    "error": "UNEXPECTED_NATIVE_DIALOG",
+    "exitCode": 2
+  },
+  "scope": [
+    "full paisa.v1 including dynamic transaction IDs",
+    "visible balances and complete rendered history",
+    "real JSON download and unmodified upload",
+    "fresh empty target",
+    "one declared exact native confirm",
+    "reload"
+  ],
+  "excluded": [
+    "PWA/offline caching in runner",
+    "real financial data",
+    "invalid-file rejection",
+    "mobile browsers",
+    "power failure",
+    "unselected data",
+    "author adoption"
+  ],
+  "runner": {
+    "version": "0.7.0",
+    "status": "pass",
+    "cliExitCode": 0,
+    "cliDurationMs": 6593,
+    "generatedExitCode": 0,
+    "generatedDurationMs": 6250,
+    "exportBytes": 273,
+    "exportSha256": "f12e586f1e83f305769b9b6b31218150b75680747b87737195e95f6e9f33a1c9",
+    "uploadedOriginalBytes": true,
+    "uploadTransport": "file-chooser",
+    "confirmation": {
+      "required": true,
+      "observed": true,
+      "acceptedCount": 1
+    },
+    "comparisons": {
+      "export": true,
+      "sourceAfterExport": true,
+      "restoration": true,
+      "reload": true
+    },
+    "serviceWorkers": "blocked",
+    "notes": "IDs/timestamps differ between runs; bytes and hash are from this CLI run, not the separate native control."
+  }
+}

@@ -125,12 +125,16 @@ export function validateContract(input) {
     steps(backup.export.steps, 'backupRoundtrip.export.steps', true);
     requireThat(Number.isInteger(backup.export.maxBytes) && backup.export.maxBytes > 0 && backup.export.maxBytes <= 1048576, 'backupRoundtrip.export.maxBytes must be 1..1048576');
     const restore = backup.restore;
-    keys(restore, ['path', 'ready', 'empty', 'target', 'fileChooser', 'success', 'after', 'fileName', 'mimeType'], 'backupRoundtrip.restore');
+    keys(restore, ['path', 'ready', 'empty', 'target', 'fileChooser', 'success', 'after', 'fileName', 'mimeType', 'confirm'], 'backupRoundtrip.restore');
     path(restore.path, 'backupRoundtrip.restore.path');
     steps(restore.ready, 'backupRoundtrip.restore.ready', true);
     requireThat(own(restore, 'target') !== own(restore, 'fileChooser'), 'backupRoundtrip.restore needs exactly one target input or fileChooser trigger');
     if (restore.target !== undefined) target(restore.target, 'backupRoundtrip.restore.target');
     else target(restore.fileChooser, 'backupRoundtrip.restore.fileChooser');
+    if (restore.confirm !== undefined) {
+      keys(restore.confirm, ['message', 'accept'], 'backupRoundtrip.restore.confirm');
+      requireThat(text(restore.confirm.message) && restore.confirm.accept === true, 'backupRoundtrip.restore.confirm requires an exact nonempty message and accept: true');
+    }
     const observed = Object.keys(input.observe);
     const stored = observed.filter(name => ['localStorage', 'sessionStorage', 'indexedDB'].includes(input.observe[name].source));
     requireThat(object(restore.empty) && Object.keys(restore.empty).length === observed.length && observed.every(k => own(restore.empty, k)), 'backupRoundtrip.restore.empty must declare every selected observation');

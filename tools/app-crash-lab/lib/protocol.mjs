@@ -452,6 +452,27 @@ async function stableState(page, contract, probes, expected) {
 
 // Captured state and download bytes remain internal. Do not add raw exceptions,
 // dialog text, filenames, screenshots or trace snapshots to this result.
+async function deliverBackupFile(capture, confirmation, timeoutMs, action, result) {
+  if (!confirmation) { await action(); return; }
+  const armed = { message: confirmation.message, seen: false, deadline: Date.now() + timeoutMs };
+  const acceptedBefore = capture.accepted.size;
+  capture.confirmation = armed;
+  try {
+    await action();
+    while (!armed.seen && Date.now() < armed.deadline) {
+      assertSupportedDialogs(capture);
+      await new Promise(resolve => setTimeout(resolve, 25));
+    }
+    await Promise.all(capture.pending);
+    assertSupportedDialogs(capture);
+    if (!armed.seen) throw backupError('IMPORT_CONFIRMATION_NOT_OBSERVED');
+  } finally {
+    // Never carry permission into success checks, navigation or reload.
+    capture.confirmation = null;
+    result.importConfirmation = { required: true, observed: armed.seen, acceptedCount: capture.accepted.size - acceptedBefore };
+  }
+}
+
 export async function executeBackupRoundtrip(browser, contract) {
   const result = { check: 'backup-roundtrip', status: 'inconclusive', phase: 'source-setup', before: null, after: null, differences: [], events: [], capture: 'metadata-only', comparisons: {} };
   const contexts = [], dialogs = [];
@@ -521,6 +542,14 @@ export async function executeBackupRoundtrip(browser, contract) {
     const previous = await readState(target, contract, success.observe);
     if (isDeepStrictEqual(selected(previous, success.expected), success.expected)) throw backupError('IMPORT_SUCCESS_ALREADY_TRUE');
 
+    if (backup.restore.confirm) {
+      for (const { capture } of dialogs) {
+        await Promise.all(capture.pending);
+        assertSupportedDialogs(capture);
+      }
+    }
+    const targetDialogs = dialogs.find(entry => entry.page === target).capture;
+
     result.phase = 'import';
     // Upload the actual unedited bytes. Never JSON.stringify the parsed export.
     const fileName = backup.restore.fileName ?? downloads[0].suggestedFilename();
@@ -538,14 +567,25 @@ export async function executeBackupRoundtrip(browser, contract) {
       }
       const { chooser } = await choosing;
       if (!chooser) throw backupError('IMPORT_FILE_CHOOSER_NOT_OBSERVED');
-      await chooser.setFiles(upload, { timeout: contract.timeoutMs });
-      result.uploadTransport = 'file-chooser';
+      // A dialog while opening the chooser is outside the upload permission.
+      if (backup.restore.confirm) {
+        await Promise.all(targetDialogs.pending);
+        assertSupportedDialogs(targetDialogs);
+      }
+      await deliverBackupFile(targetDialogs, backup.restore.confirm, contract.timeoutMs, async () => {
+        await chooser.setFiles(upload, { timeout: contract.timeoutMs });
+        result.uploadTransport = 'file-chooser';
+        result.uploadedOriginalBytes = true;
+        result.uploadNameSource = backup.restore.fileName === undefined ? 'download' : 'contract';
+      }, result);
     } else {
-      await locate(target, backup.restore.target).setInputFiles(upload);
-      result.uploadTransport = 'input';
+      await deliverBackupFile(targetDialogs, backup.restore.confirm, contract.timeoutMs, async () => {
+        await locate(target, backup.restore.target).setInputFiles(upload);
+        result.uploadTransport = 'input';
+        result.uploadedOriginalBytes = true;
+        result.uploadNameSource = backup.restore.fileName === undefined ? 'download' : 'contract';
+      }, result);
     }
-    result.uploadedOriginalBytes = true;
-    result.uploadNameSource = backup.restore.fileName === undefined ? 'download' : 'contract';
     const imported = await waitForState(target, contract, success.observe, success.expected);
     if (!imported.matched) throw backupError('IMPORT_SUCCESS_NOT_OBSERVED', true);
     if (backup.restore.after?.some(step => step.action === 'goto')) {

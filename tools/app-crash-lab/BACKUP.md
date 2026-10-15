@@ -4,7 +4,7 @@ A malformed file can be safely rejected while a valid, self-exported backup
 cannot be restored. This optional check runs the real export/import flow.
 
 For your own app, [copy the backup-specific coding-agent prompt](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#backup-agent).
-It links the pinned 0.6.2 format and asks the agent to inspect your real import,
+It links the pinned 0.7.0 format and asks the agent to inspect your real import,
 configure complete selected records and execute the test. Supply one workflow
 to check. Review the generated contract and actual result; unsupported steps
 must be reported without bypassing them or changing the app to pass.
@@ -68,6 +68,38 @@ Japanese setup, UI-created product and price, full saved-record comparisons,
 and an import that reloads automatically. CLI and generated Playwright both
 passed on its pinned unchanged source.
 
+## Native restore confirmation (0.7+)
+
+If delivering the file opens a native `confirm()`, declare its **exact** text:
+
+```json
+"confirm": {
+  "message": "Replace all current data with this backup?",
+  "accept": true
+}
+```
+
+Put this optional object inside `backupRoundtrip.restore`, alongside `target`
+or `fileChooser`. It accepts at most one matching native confirmation on the
+fresh target, only from actual file delivery until `timeoutMs`. Dialogs observed during source setup, target readiness or the file-chooser
+trigger click are not accepted. Those operations do not grant permission.
+Wrong type/text, repeated or later dialogs are dismissed and INCONCLUSIVE.
+A declared confirmation that never appears is also INCONCLUSIVE
+(`IMPORT_CONFIRMATION_NOT_OBSERVED`), not proof of lost data. Contracts without
+this field keep their existing behavior; they never auto-accept dialogs.
+
+Confirmation alone is not a pass. The new completion signal, full selected
+saved values, and reload comparisons must still match. The
+[Paisa contract and measured scope](examples/paisa/README.md) are a complete
+example. Reports add only `required`, `observed` and `acceptedCount`; captured
+message text is omitted. The declared contract message remains in shared
+configuration, so use synthetic inputs. The browser identifies dialog type
+and text, not its causal operation: an unrelated identical confirm inside the
+window cannot be distinguished, including a delayed dialog scheduled by target
+readiness or the chooser trigger. Dialogs after the check ends remain outside
+coverage. Preview/commit screens, multiple confirmations and non-JSON formats
+are not added by this option.
+
 ## What is actually checked
 
 1. Save through the source UI in a fresh context, confirm the known baseline,
@@ -120,8 +152,9 @@ This first mode supports **browser-local JSON data only**. It requires
 localStorage/sessionStorage/IndexedDB state and rejects `response` state or
 explicit `request` steps. Declaring `browser-local` does not audit the app or
 isolate a shared backend. Do not use accounts or valuable data. Shared server
-records, native confirmation dialogs, encrypted/ZIP/binary backups and
-intentional nondeterministic ID rewrites need another contract. Unexpected
+records, native preview/commit flows, encrypted/ZIP/binary backups and
+intentional nondeterministic ID rewrites need another contract. A single exact
+restore confirmation is opt-in as described above. Unexpected
 native dialogs are dismissed and make the check INCONCLUSIVE.
 
 For this check, observed state, download bytes, dialog messages and suggested

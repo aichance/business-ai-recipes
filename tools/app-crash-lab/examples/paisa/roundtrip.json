@@ -1,0 +1,236 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "Paisa / complete native backup roundtrip",
+  "baseURL": "http://127.0.0.1:54551",
+  "path": "/",
+  "timeoutMs": 3000,
+  "stabilityMs": 250,
+  "reset": [],
+  "setup": [
+    {
+      "action": "click",
+      "target": {
+        "css": "#openingBtn"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "#ob"
+      },
+      "value": "1000.5"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "#oc"
+      },
+      "value": "100.25"
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "#odlg button[type=\"submit\"]"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "button[data-t=\"in\"]"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "#amount"
+      },
+      "value": "42.75"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "#title"
+      },
+      "value": "UPI incoming 10/14"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "#date"
+      },
+      "value": "2026-10-14"
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "#save"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "button[data-t=\"out\"]"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "#amount"
+      },
+      "value": "12.5"
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "#methods label:has(input[name=\"m\"][value=\"cash\"])"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "#title"
+      },
+      "value": "Cash expense 10/15"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "#date"
+      },
+      "value": "2026-10-15"
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "#save"
+      },
+      "save": true
+    }
+  ],
+  "observe": {
+    "db": {
+      "source": "localStorage",
+      "key": "paisa.v1",
+      "parse": "json"
+    },
+    "total": {
+      "source": "text",
+      "target": {
+        "css": "#total"
+      }
+    },
+    "bank": {
+      "source": "text",
+      "target": {
+        "css": "#bank"
+      }
+    },
+    "cash": {
+      "source": "text",
+      "target": {
+        "css": "#cash"
+      }
+    },
+    "todaySpent": {
+      "source": "text",
+      "target": {
+        "css": "#todaySpent"
+      }
+    },
+    "monthSpent": {
+      "source": "text",
+      "target": {
+        "css": "#monthSpent"
+      }
+    },
+    "recordsCount": {
+      "source": "count",
+      "target": {
+        "css": "#list .item"
+      }
+    },
+    "recordsText": {
+      "source": "text",
+      "target": {
+        "css": "#list"
+      }
+    }
+  },
+  "expected": {
+    "recordsCount": 2,
+    "total": "₹1,131",
+    "bank": "₹1,043.25",
+    "cash": "₹87.75"
+  },
+  "checks": [
+    "backup-roundtrip"
+  ],
+  "backupRoundtrip": {
+    "isolation": "browser-local",
+    "export": {
+      "steps": [
+        {
+          "action": "click",
+          "target": {
+            "css": "#backupBtn"
+          }
+        }
+      ],
+      "maxBytes": 65536,
+      "statePaths": {
+        "db": []
+      }
+    },
+    "restore": {
+      "path": "/",
+      "ready": [
+        {
+          "action": "expectText",
+          "target": {
+            "css": "#restoreBtn"
+          },
+          "value": "Restore"
+        }
+      ],
+      "empty": {
+        "db": null,
+        "total": "₹0",
+        "bank": "₹0",
+        "cash": "₹0",
+        "todaySpent": "₹0",
+        "monthSpent": "₹0",
+        "recordsCount": 0,
+        "recordsText": "No entries yet.Tap “Add money” or “Spend money” to log one."
+      },
+      "mimeType": "application/json",
+      "success": {
+        "observe": {
+          "total": {
+            "source": "text",
+            "target": {
+              "css": "#total"
+            }
+          },
+          "recordsCount": {
+            "source": "count",
+            "target": {
+              "css": "#list .item"
+            }
+          }
+        },
+        "expected": {
+          "total": "₹1,131",
+          "recordsCount": 2
+        }
+      },
+      "fileChooser": {
+        "css": "#restoreBtn"
+      },
+      "confirm": {
+        "message": "Replace all current data with this backup?",
+        "accept": true
+      }
+    }
+  }
+}

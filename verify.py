@@ -15,6 +15,9 @@ from tempfile import TemporaryDirectory
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "tools/app-crash-lab/examples/paisa/README.md",
+    "tools/app-crash-lab/examples/paisa/SOURCE.json",
+    "tools/app-crash-lab/examples/paisa/roundtrip.json",
     'tools/app-crash-lab/examples/focus-backup/README.md',
     'tools/app-crash-lab/examples/focus-backup/SOURCE.json',
     'tools/app-crash-lab/examples/focus-backup/playwright.config.mjs',

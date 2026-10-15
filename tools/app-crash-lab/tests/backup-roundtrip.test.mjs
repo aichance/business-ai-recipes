@@ -13,11 +13,12 @@ const root = fileURLToPath(new URL('..', import.meta.url));
 // Generated in the app, absent from the contract. It must not reach reports,
 // failure output, attachment JSON, screenshots or a standalone reproduction.
 const sentinel = 'CAPTURED_PRIVATE_SENTINEL_7d209f';
+const confirmationMessage = 'Replace the disposable test records?';
 const records = [{ title: 'Synthetic café — 合成', nested: { color: 'blue', hidden: sentinel }, flags: [true, false] }];
 const exported = Buffer.from('{\n  "saved" : ' + JSON.stringify(records) + ',\n  "format": 1\n}\n');
 const baseContract = {
   schemaVersion: 1, pack: 'state-preservation@1', name: 'Actual backup roundtrip',
-  baseURL: 'http://127.0.0.1:1', path: '/', reset: [], timeoutMs: 700, stabilityMs: 100,
+  baseURL: 'http://127.0.0.1:1', path: '/', reset: [], timeoutMs: 3000, stabilityMs: 100,
   checks: ['backup-roundtrip'],
   setup: [{ action: 'click', target: { css: '#save' }, save: true }],
   observe: { records: { source: 'localStorage', key: 'saved', parse: 'json' }, count: { source: 'count', target: { css: '.item' } } },
@@ -53,12 +54,18 @@ test('backup contracts retain old defaults and require actual storage, fresh tar
   invalid(c => c.afterReload = [{ action: 'setFile', target: { css: '#file' }, file: { name: 'repair.json', mimeType: 'application/json', text: '{}' } }]);
   invalid(c => { delete c.observe.records; delete c.backupRoundtrip.restore.empty.records; });
   invalid(c => c.backupRoundtrip.restore.ready = []);
+  for (const confirm of [null, {}, { message: '', accept: true }, { message: confirmationMessage, accept: false }, { message: confirmationMessage, accept: true, match: 'partial' }, { message: 42, accept: true }]) {
+    invalid(c => c.backupRoundtrip.restore.confirm = confirm);
+  }
+  const confirmed = structuredClone(baseContract);
+  confirmed.backupRoundtrip.restore.confirm = { message: confirmationMessage, accept: true };
+  assert.deepEqual(validateContract(confirmed).backupRoundtrip.restore.confirm, confirmed.backupRoundtrip.restore.confirm);
   invalid(c => c.backupRoundtrip.restore.success.expected = {});
   invalid(c => c.backupRoundtrip.export.steps = [{ action: 'request', method: 'DELETE', path: '/data', expectStatus: 200 }]);
 });
 
 test('shipped real-app backup contracts remain valid with post-import view navigation', async () => {
-  for (const name of ['devtasks/roundtrip-feature.json', 'devtasks/roundtrip-docs.json', 'price-table/roundtrip.json']) {
+  for (const name of ['devtasks/roundtrip-feature.json', 'devtasks/roundtrip-docs.json', 'price-table/roundtrip.json', 'paisa/roundtrip.json']) {
     const c = JSON.parse(await readFile(join(root, 'examples', name), 'utf8'));
     assert.doesNotThrow(() => validateContract(c), name);
   }
@@ -73,12 +80,14 @@ async function fixture() {
   const draw = () => document.querySelector('#items').innerHTML = JSON.parse(localStorage.getItem('saved') || '[]').map(item => '<p class="item">' + item.nested.hidden + '</p>').join('');
   if (mode === 'nonempty-target') localStorage.setItem('saved', JSON.stringify(saved));
   if (mode === 'stale-success') document.querySelector('#status').textContent = 'Restored';
-  if (mode === 'reload-loss' && localStorage.getItem('saved')) {
+  if (mode === 'confirm-ready') confirm(${JSON.stringify(confirmationMessage)});
+  if (['reload-loss', 'confirm-reload-loss'].includes(mode) && localStorage.getItem('saved')) {
     const existing = JSON.parse(localStorage.getItem('saved')); existing[0].flags[1] = true;
     localStorage.setItem('saved', JSON.stringify(existing));
   }
   draw();
   document.querySelector('#save').onclick = () => {
+    if (mode === 'confirm-source') confirm(${JSON.stringify(confirmationMessage)});
     if (mode === 'empty-source') { document.querySelector('#items').innerHTML = '<p class="item">Only a success-looking UI</p>'; return; }
     localStorage.setItem('saved', JSON.stringify(saved)); draw();
   };
@@ -95,19 +104,27 @@ async function fixture() {
   const importFile = async event => {
     const file = event.target.files[0]; const bytes = await file.arrayBuffer();
     await fetch('/received', { method: 'POST', headers: { 'x-file-name': encodeURIComponent(file.name), 'x-file-type': file.type }, body: bytes });
+    if (mode === 'confirm-wrong') { confirm(${JSON.stringify(sentinel)}); return; }
+    if (mode === 'confirm-alert') { alert(${JSON.stringify(sentinel)}); return; }
+    if (['confirm', 'confirm-chooser', 'confirm-duplicate', 'confirm-late', 'confirm-field-loss', 'confirm-reload-loss'].includes(mode)) {
+      if (!confirm(${JSON.stringify(confirmationMessage)})) return;
+      if (mode === 'confirm-duplicate' && !confirm(${JSON.stringify(confirmationMessage)})) return;
+      if (mode === 'confirm-late') setTimeout(() => confirm(${JSON.stringify(confirmationMessage)}), 30);
+    }
     const data = mode === 'wrong-export' ? saved : JSON.parse(new TextDecoder().decode(bytes)).saved;
-    if (['field-loss', 'loss-before-navigation'].includes(mode)) delete data[0].nested.hidden;
+    if (['field-loss', 'loss-before-navigation', 'confirm-field-loss'].includes(mode)) delete data[0].nested.hidden;
     if (mode !== 'toast-only') localStorage.setItem('saved', JSON.stringify(data));
     draw(); document.querySelector('#status').textContent = mode === 'no-success' ? 'Ready' : 'Restored';
     if (mode === 'chooser-reload') location.reload();
   };
   document.querySelector('#file').onchange = importFile;
   document.querySelector('#choose').onclick = () => {
+    if (mode === 'confirm-trigger') confirm(${JSON.stringify(confirmationMessage)});
     if (mode === 'no-chooser') return;
     const input = document.createElement('input'); input.type = 'file';
     input.onchange = importFile; input.click();
   };
-  if (['chooser', 'chooser-reload', 'no-chooser', 'chooser-wrong-button'].includes(mode)) document.querySelector('#file').remove();
+  if (['chooser', 'chooser-reload', 'no-chooser', 'chooser-wrong-button', 'confirm-chooser', 'confirm-trigger'].includes(mode)) document.querySelector('#file').remove();
   </script>`;
   const names = [], types = [], visits = [];
   const server = http.createServer(async (req, res) => {
@@ -131,7 +148,7 @@ async function filesBelow(path) {
   return paths;
 }
 
-test('real bytes, fresh contexts, full records, reload and private failure artifacts', { timeout: 180000 }, async t => {
+test('real bytes, fresh contexts, full records, reload and private failure artifacts', { timeout: 600000 }, async t => {
   const app = await fixture();
   const temp = await mkdtemp(join(root, '.crash-lab-backup-'));
   t.after(async () => { await app.close(); await rm(temp, { recursive: true, force: true }); });
@@ -216,6 +233,51 @@ test('real bytes, fresh contexts, full records, reload and private failure artif
     });
     assert.equal(r.status, 'pass', JSON.stringify(r)); assert.equal(r.comparisons.reload.matched, true);
   });
+  const confirmed = c => c.backupRoundtrip.restore.confirm = { message: confirmationMessage, accept: true };
+  const chooserConfirmed = c => {
+    confirmed(c); delete c.backupRoundtrip.restore.target;
+    c.backupRoundtrip.restore.fileChooser = { css: '#choose' };
+    c.backupRoundtrip.restore.ready = [{ action: 'expectVisible', target: { css: '#choose' } }];
+  };
+  await t.test('one declared exact confirmation works for direct input and native file chooser', async () => {
+    for (const [mode, change, transport] of [['confirm', confirmed, 'input'], ['confirm-chooser', chooserConfirmed, 'file-chooser']]) {
+      const before = app.uploads.length;
+      const r = await run(mode, change);
+      assert.equal(r.status, 'pass', JSON.stringify(r));
+      assert.deepEqual(r.importConfirmation, { required: true, observed: true, acceptedCount: 1 });
+      assert.equal(r.uploadTransport, transport); assert.deepEqual(app.uploads[before], exported);
+      assert.equal(r.comparisons.restoration.matched, true); assert.equal(r.comparisons.reload.matched, true);
+    }
+  });
+  await t.test('undeclared, wrong, duplicate and post-upload dialogs cannot create a pass', async () => {
+    const undeclared = await run('confirm-undeclared', c => c.path = c.backupRoundtrip.restore.path = '/?mode=confirm');
+    assert.equal(undeclared.status, 'inconclusive'); assert.equal(undeclared.error, 'UNEXPECTED_NATIVE_DIALOG');
+    for (const mode of ['confirm-wrong', 'confirm-alert', 'confirm-duplicate', 'confirm-late']) {
+      const r = await run(mode, confirmed);
+      assert.equal(r.status, 'inconclusive', JSON.stringify(r)); assert.equal(r.error, 'UNEXPECTED_NATIVE_DIALOG', JSON.stringify({ mode, result: r }));
+      assert.ok(r.importConfirmation.acceptedCount <= 1);
+    }
+    const missing = await run('confirm-missing', confirmed);
+    assert.equal(missing.status, 'inconclusive'); assert.equal(missing.error, 'IMPORT_CONFIRMATION_NOT_OBSERVED');
+    assert.deepEqual(missing.importConfirmation, { required: true, observed: false, acceptedCount: 0 });
+    assert.equal(missing.uploadedOriginalBytes, true);
+  });
+  await t.test('source, ready and chooser-trigger confirmations are outside the upload permission', async () => {
+    for (const [mode, change] of [['confirm-source', confirmed], ['confirm-ready', c => { confirmed(c); c.path = '/?mode=fixed'; }], ['confirm-trigger', chooserConfirmed]]) {
+      const r = await run(mode, change);
+      assert.equal(r.status, 'inconclusive', JSON.stringify(r)); assert.equal(r.error, 'UNEXPECTED_NATIVE_DIALOG');
+      assert.equal(r.importConfirmation, undefined);
+    }
+    const stale = await run('confirm-stale', c => { confirmed(c); c.path = c.backupRoundtrip.restore.path = '/?mode=stale-success'; });
+    assert.equal(stale.error, 'IMPORT_SUCCESS_ALREADY_TRUE'); assert.equal(stale.importConfirmation, undefined);
+  });
+  await t.test('an accepted confirmation cannot hide nested field loss or loss after reload', async () => {
+    for (const [mode, phase] of [['confirm-field-loss', 'compare-restoration'], ['confirm-reload-loss', 'compare-reload']]) {
+      const r = await run(mode, confirmed);
+      assert.equal(r.status, 'fail', JSON.stringify(r)); assert.equal(r.phase, phase);
+      assert.deepEqual(r.importConfirmation, { required: true, observed: true, acceptedCount: 1 });
+    }
+  });
   await t.test('fresh context is insufficient when it opens with existing shared data or stale success', async () => {
     const count = app.uploads.length;
     assert.equal((await run('nonempty-target')).error, 'FRESH_TARGET_NOT_EMPTY');
@@ -230,16 +292,30 @@ test('real bytes, fresh contexts, full records, reload and private failure artif
     assert.equal((await run('dialog')).error, 'UNEXPECTED_NATIVE_DIALOG');
   });
   await t.test('standalone tests replay the same pass and failure with no runner import or harvested data', async () => {
-    for (const [mode, exit] of [['fixed', 0], ['field-loss', 1], ['no-download', 1], ['chooser', 0], ['chooser-reload', 0], ['navigate', 0], ['loss-before-navigation', 1]]) {
+    for (const [mode, exit] of [['fixed', 0], ['field-loss', 1], ['no-download', 1], ['chooser', 0], ['chooser-reload', 0], ['navigate', 0], ['loss-before-navigation', 1], ['confirm', 0], ['confirm-chooser', 0], ['confirm-field-loss', 1], ['confirm-missing', 1], ['confirm-wrong', 1], ['confirm-alert', 1], ['confirm-duplicate', 1], ['confirm-late', 1], ['confirm-source', 1], ['confirm-ready', 1], ['confirm-trigger', 1]]) {
       const r = reports[mode];
       const source = await readFile(join(r.out, 'repro.spec.mjs'), 'utf8');
       assert.ok(!source.includes("from './lib")); assert.ok(!source.includes(sentinel));
       const replay = await new Promise((done, reject) => {
-        const child = spawn(process.execPath, [join(root, 'node_modules/@playwright/test/cli.js'), 'test', '--config', join(r.out, 'playwright.config.mjs')], { cwd: root, stdio: ['ignore', 'pipe', 'pipe'] });
-        let output = ''; child.stdout.on('data', c => output += c); child.stderr.on('data', c => output += c);
-        child.on('error', reject); child.on('close', code => done({ code, output }));
+        const child = spawn(process.execPath, [join(root, 'node_modules/@playwright/test/cli.js'), 'test', '--config', join(r.out, 'playwright.config.mjs'), '--reporter=json'], { cwd: root, stdio: ['ignore', 'pipe', 'pipe'] });
+        let output = '', stderr = ''; child.stdout.on('data', c => output += c); child.stderr.on('data', c => stderr += c);
+        child.on('error', reject); child.on('close', code => done({ code, output, stderr }));
       });
       assert.equal(replay.code, exit, replay.output); assert.ok(!replay.output.includes(sentinel));
+      assert.ok(!replay.output.includes(confirmationMessage));
+      assert.ok(!replay.stderr.includes(sentinel)); assert.ok(!replay.stderr.includes(confirmationMessage));
+      const attachments = [];
+      const collect = suite => {
+        for (const spec of suite.specs ?? []) for (const test of spec.tests) for (const result of test.results) attachments.push(...result.attachments);
+        for (const child of suite.suites ?? []) collect(child);
+      };
+      const replayReport = JSON.parse(replay.output); for (const suite of replayReport.suites) collect(suite);
+      const attached = attachments.filter(a => a.name === 'state-diff');
+      assert.equal(attached.length, 1, replay.output);
+      const attachedText = Buffer.from(attached[0].body, 'base64').toString('utf8');
+      assert.ok(!attachedText.includes(sentinel)); assert.ok(!attachedText.includes(confirmationMessage));
+      const actual = JSON.parse(attachedText), expected = r.results[0];
+      for (const field of ['status', 'error', 'phase']) assert.deepEqual(actual[field], expected[field], `${mode}: ${field}`);
       if (mode === 'no-download') { assert.equal(r.exitCode, 2); assert.match(replay.output, /inconclusive/); assert.match(replay.output, /NO_EXPORT_DOWNLOAD/); }
     }
   });
@@ -248,6 +324,9 @@ test('real bytes, fresh contexts, full records, reload and private failure artif
     assert.ok(!files.some(p => /\.(png|webm|zip)$/.test(p)), JSON.stringify(files));
     for (const p of files) assert.ok(!(await readFile(p)).includes(Buffer.from(sentinel)), p);
     for (const r of Object.values(reports)) { assert.equal(r.results[0].before, null); assert.equal(r.results[0].after, null); }
+    for (const mode of ['confirm', 'confirm-chooser', 'confirm-field-loss', 'confirm-missing', 'confirm-wrong', 'confirm-alert', 'confirm-duplicate', 'confirm-late']) {
+      for (const name of ['report.json', 'index.html']) assert.ok(!(await readFile(join(reports[mode].out, name), 'utf8')).includes(confirmationMessage));
+    }
     const html = await readFile(join(reports.fixed.out, 'index.html'), 'utf8');
     assert.ok(html.includes('Export → fresh restore → reload')); assert.ok(!html.includes('backup-roundtrip.trace.zip'));
   });
