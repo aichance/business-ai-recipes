@@ -125,10 +125,12 @@ export function validateContract(input) {
     steps(backup.export.steps, 'backupRoundtrip.export.steps', true);
     requireThat(Number.isInteger(backup.export.maxBytes) && backup.export.maxBytes > 0 && backup.export.maxBytes <= 1048576, 'backupRoundtrip.export.maxBytes must be 1..1048576');
     const restore = backup.restore;
-    keys(restore, ['path', 'ready', 'empty', 'target', 'success', 'after', 'fileName', 'mimeType'], 'backupRoundtrip.restore');
+    keys(restore, ['path', 'ready', 'empty', 'target', 'fileChooser', 'success', 'after', 'fileName', 'mimeType'], 'backupRoundtrip.restore');
     path(restore.path, 'backupRoundtrip.restore.path');
     steps(restore.ready, 'backupRoundtrip.restore.ready', true);
-    target(restore.target, 'backupRoundtrip.restore.target');
+    requireThat(own(restore, 'target') !== own(restore, 'fileChooser'), 'backupRoundtrip.restore needs exactly one target input or fileChooser trigger');
+    if (restore.target !== undefined) target(restore.target, 'backupRoundtrip.restore.target');
+    else target(restore.fileChooser, 'backupRoundtrip.restore.fileChooser');
     const observed = Object.keys(input.observe);
     const stored = observed.filter(name => ['localStorage', 'sessionStorage', 'indexedDB'].includes(input.observe[name].source));
     requireThat(object(restore.empty) && Object.keys(restore.empty).length === observed.length && observed.every(k => own(restore.empty, k)), 'backupRoundtrip.restore.empty must declare every selected observation');
@@ -143,7 +145,7 @@ export function validateContract(input) {
     requireThat(object(restore.success.expected) && Object.keys(restore.success.expected).length > 0 && Object.keys(restore.success.expected).every(k => own(restore.success.observe, k)), 'backupRoundtrip.restore.success.expected must name success observations');
     if (restore.after !== undefined) steps(restore.after, 'backupRoundtrip.restore.after');
     const readiness = [...restore.ready, ...(restore.after ?? []), ...(input.afterReload ?? [])];
-    requireThat(readiness.every(s => ['goto', 'expectText', 'expectValue', 'expectVisible'].includes(s.action)), 'backup-roundtrip readiness hooks must only observe or navigate, never repair saved state');
+    requireThat(readiness.every(s => ['expectText', 'expectValue', 'expectVisible'].includes(s.action)), 'backup-roundtrip readiness hooks must only observe, never navigate or repair saved state');
     const allSteps = [...input.reset, ...input.setup, ...(input.afterReload ?? []), ...backup.export.steps, ...restore.ready, ...(restore.after ?? [])];
     requireThat(!allSteps.some(s => s.action === 'request'), 'backup-roundtrip uses browser-local UI steps, not server mutations');
   }
