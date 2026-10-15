@@ -316,6 +316,15 @@ or out-of-window dialogs are INCONCLUSIVE. New import completion, full selected
 saved state and reload checks remain required. See the backup guide for the
 bounded window, metadata-only output and causal-attribution limits.
 
+Runner0.8 adds optional `backupRoundtrip.restore.commit` for one in-app HTML
+preview/confirmation. Declare a unique `frame`, a frame-relative `target`, and
+nonempty frame-relative, observation-only `ready` steps including a nonblank exact
+text/value assertion. The frame must be absent/hidden before delivery; selected
+saved state must still match `restore.empty` and success must remain absent
+before one commit click. This is mutually exclusive with native `confirm`.
+New completion, full selected records and reload remain required; see
+[the DOM stage and failure classifications](BACKUP.md#in-app-import-preview-and-confirmation-08).
+
 ## Isolation and timing
 
 Each pattern has a fresh, nonpersistent browser context. First navigate to

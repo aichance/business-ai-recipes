@@ -4,7 +4,7 @@ A malformed file can be safely rejected while a valid, self-exported backup
 cannot be restored. This optional check runs the real export/import flow.
 
 For your own app, [copy the backup-specific coding-agent prompt](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#backup-agent).
-It links the pinned 0.7.0 format and asks the agent to inspect your real import,
+It links the pinned 0.8.0 format and asks the agent to inspect your real import,
 configure complete selected records and execute the test. Supply one workflow
 to check. Review the generated contract and actual result; unsupported steps
 must be reported without bypassing them or changing the app to pass.
@@ -53,6 +53,12 @@ the complete saved browser-storage value, `observe.visibleCount` counts
 rendered records, and `expected` proves the source save worked. Select complete
 records, not only IDs/counts: omitted values are outside coverage.
 
+The success observation must also be readable **before** import. The text
+example assumes an existing status node whose text changes to `Restored`.
+For a toast that is absent until success, use a `count` observation selecting
+its exact success text, with expected `1`; it reads `0` before import. A `text`
+probe on an absent node times out and is INCONCLUSIVE.
+
 ## Import buttons that open a file chooser (0.6.1+)
 
 If the app creates its file input only when Import is clicked, replace
@@ -100,6 +106,70 @@ readiness or the chooser trigger. Dialogs after the check ends remain outside
 coverage. Preview/commit screens, multiple confirmations and non-JSON formats
 are not added by this option.
 
+## In-app import preview and confirmation (0.8+)
+
+For an HTML preview followed by one explicit confirmation button, use
+`restore.commit` instead of native `restore.confirm`:
+
+```json
+"commit": {
+  "frame": { "role": "dialog", "name": "Import backup" },
+  "target": { "role": "button", "name": "Restore backup" },
+  "ready": [{
+    "action": "expectText",
+    "target": { "role": "heading", "name": "Import backup" },
+    "value": "Import backup"
+  }]
+}
+```
+
+The preview frame must be absent or hidden before file delivery. Select one
+frame, and one visible/enabled button **inside that frame**. Every `ready`
+selector is also relative to the frame. Readiness permits only `expectText`,
+`expectValue` and `expectVisible`, with at least one nonblank exact text/value assertion.
+The readiness nodes and commit button must be descendants of that frame; a selector
+that resolves outside it cannot satisfy the checks or receive the click.
+Here `frame` means a DOM container, not an iframe document; selecting the container
+itself or controls inside a separate iframe is unsupported.
+It cannot click, navigate, upload, send a request or repair saved data. Native
+`confirm` and DOM `commit` cannot be combined in one contract.
+
+After delivering the original bytes, the runner waits for that preview and its
+exact readiness checks. Before its one click it requires the new success signal
+to remain absent, and compares every selected saved-storage value with the
+fresh target's declared `empty` value. Preview UI may change; selected saved
+records must still be empty at that checkpoint. A stale visible preview,
+ambiguous/disabled control, missing/wrong preview, early success or early saved
+write is INCONCLUSIVE. The runner attempts one click and never retries it.
+
+After the click, new completion, complete selected saved records, the
+pre-navigation comparison and reload are still required. With missing
+completion, unchanged fresh storage or a complete matching restoration is
+INCONCLUSIVE (`IMPORT_COMMIT_COMPLETION_NOT_OBSERVED`); a changed, nonmatching
+saved record is FAIL. A toast or record count cannot conceal a lost field.
+
+Reports add only `importCommit` readiness/attempt/click metadata and
+`comparisons.beforeCommit`, not captured preview text, filenames or values.
+Declared selectors and exact expected text still appear in the contract/spec.
+These checks establish UI ordering and sampled saved-state comparisons, not
+the app's internal causal function. Review that the selected control is the
+app's actual import commit. Unrelated delayed UI with identical selectors/text,
+or writes entirely between observation points, cannot be causally ruled out.
+More than one commit, pre-commit selected-storage writes, ID rewriting and
+mixed native/DOM confirmations remain unsupported.
+
+## Before the first run
+
+Start the disposable app and open the target route once so its first build is ready.
+Choose a bounded `timeoutMs` appropriate to that app (for example, `15000` for
+a development build that needs more than the default 3 seconds). A setup timeout
+is INCONCLUSIVE, not evidence that the app lost data; retain it when correcting
+the startup or contract. Do not add delays that conceal an actual save defect.
+
+[The TOEIC Tracker example](examples/toeic-tracker/README.md) creates a review,
+vocabulary and a score, and keeps all ten exported domains in the comparisons.
+It includes a pinned-app startup and a complete DOM-commit configuration.
+
 ## What is actually checked
 
 1. Save through the source UI in a fresh context, confirm the known baseline,
@@ -122,14 +192,17 @@ are not added by this option.
    suggested download filename, or optional declared `restore.fileName`.
    `restore.mimeType` explicitly declares the upload type; download MIME
    sniffing is not provided. Filenames cannot be paths/control characters.
-6. Require a new `success` signal. If `restore.after` navigates to a record
+6. If `restore.commit` is declared, verify its new preview, unchanged selected
+   empty storage and absent success signal, then click its declared button once.
+7. Require a new `success` signal. If `restore.after` navigates to a record
    view, first compare **all selected saved storage values** with the source;
    a missing or changed value fails before navigation. Then run the optional
    view/observation steps and compare **all** selected storage and UI values.
    Reload, run optional top-level
    `afterReload`, and compare again through bounded stability windows. A toast
-   or unchanged record count cannot hide a lost field. Missing completion,
-   changed state and failed restoration are FAIL, not success.
+   or unchanged record count cannot hide a lost field. Changed state and failed
+   restoration are FAIL. Missing completion follows the DOM rule above when
+   `commit` is selected; the existing direct/native path remains FAIL.
 
 Readiness hooks `restore.ready` and `afterReload` permit only `expectText`,
 `expectValue` and `expectVisible`. In0.6.2+, `restore.after` may also contain
@@ -152,7 +225,7 @@ This first mode supports **browser-local JSON data only**. It requires
 localStorage/sessionStorage/IndexedDB state and rejects `response` state or
 explicit `request` steps. Declaring `browser-local` does not audit the app or
 isolate a shared backend. Do not use accounts or valuable data. Shared server
-records, native preview/commit flows, encrypted/ZIP/binary backups and
+records, multi-step or mixed native/DOM commit flows, encrypted/ZIP/binary backups and
 intentional nondeterministic ID rewrites need another contract. A single exact
 restore confirmation is opt-in as described above. Unexpected
 native dialogs are dismissed and make the check INCONCLUSIVE.
