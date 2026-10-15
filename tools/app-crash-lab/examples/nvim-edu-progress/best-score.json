@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "nvim-edu / a slower second clear keeps the prior best score",
+  "baseURL": "http://127.0.0.1:54512",
+  "path": "/?lang=en#hjkl",
+  "timeoutMs": 6000,
+  "stabilityMs": 400,
+  "checks": [
+    "reload"
+  ],
+  "reset": [],
+  "setup": [
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": "#editor .cm-content"
+      }
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "#editor .cm-content"
+      },
+      "value": "j"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "#editor .cm-content"
+      },
+      "value": "j"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "#editor .cm-content"
+      },
+      "value": "5"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "#editor .cm-content"
+      },
+      "value": "l"
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": "#next"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "#explain-btn"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "#reset"
+      }
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "#editor .cm-content"
+      },
+      "value": "j"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "#editor .cm-content"
+      },
+      "value": "j"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "#editor .cm-content"
+      },
+      "value": "l"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "#editor .cm-content"
+      },
+      "value": "l"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "#editor .cm-content"
+      },
+      "value": "l"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "#editor .cm-content"
+      },
+      "value": "l"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": "#editor .cm-content"
+      },
+      "value": "l",
+      "save": true
+    }
+  ],
+  "observe": {
+    "progress": {
+      "source": "localStorage",
+      "key": "nvim-edu:progress",
+      "parse": "json"
+    },
+    "stars": {
+      "source": "text",
+      "target": {
+        "css": "#nav a[href=\"#hjkl\"] .meta"
+      }
+    },
+    "clearedLessons": {
+      "source": "text",
+      "target": {
+        "css": "#dash-stats"
+      }
+    }
+  },
+  "expected": {
+    "progress": {
+      "hjkl": 3
+    },
+    "stars": "★★★",
+    "clearedLessons": "1 / 41 levels cleared"
+  },
+  "afterReload": [
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": "#editor .cm-content"
+      }
+    }
+  ]
+}
