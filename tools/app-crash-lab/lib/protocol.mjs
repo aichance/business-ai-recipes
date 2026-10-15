@@ -1,5 +1,6 @@
 import { expect } from '@playwright/test';
 import { isDeepStrictEqual } from 'node:util';
+import { createHash } from 'node:crypto';
 
 // Also copied into generated standalone specs: keep helpers self-contained.
 export function differences(before, after, at = '$') {
@@ -397,4 +398,170 @@ export async function executeCheck(page, contract, check) {
       if (dialogs.accepted.size) result.confirmations = [...dialogs.accepted].map(index => dialogs.events[index]);
     }
   }
+}
+
+function backupError(code, violation = false) {
+  return Object.assign(new Error(code), { backupCode: code, violation });
+}
+
+async function bounded(promise, timeoutMs) {
+  let timer;
+  try {
+    return await Promise.race([promise, new Promise((_, reject) => {
+      timer = setTimeout(() => reject(backupError('OPERATION_TIMED_OUT')), timeoutMs);
+    })]);
+  } finally { clearTimeout(timer); }
+}
+
+async function downloadBytes(download, maxBytes, timeoutMs) {
+  const stream = await bounded(download.createReadStream(), timeoutMs);
+  if (!stream) throw backupError('DOWNLOAD_UNAVAILABLE');
+  let size = 0;
+  const chunks = [];
+  try {
+    await bounded((async () => {
+      for await (const chunk of stream) {
+        size += chunk.length;
+        if (size > maxBytes) throw backupError('DOWNLOAD_SIZE_LIMIT');
+        chunks.push(chunk);
+      }
+    })(), timeoutMs);
+  } finally { stream.destroy(); }
+  if (await bounded(download.failure(), timeoutMs)) throw backupError('DOWNLOAD_FAILED');
+  const bytes = Buffer.concat(chunks);
+  let payload;
+  try {
+    payload = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes));
+    if (payload === null || typeof payload !== 'object') throw new Error('not a JSON object or array');
+  } catch { throw backupError('EXPORT_IS_NOT_UTF8_JSON_OBJECT_OR_ARRAY', true); }
+  return { bytes, payload };
+}
+
+async function stableState(page, contract, probes, expected) {
+  const result = await waitForState(page, contract, probes, expected);
+  if (result.matched) {
+    const until = Date.now() + contract.stabilityMs;
+    while (Date.now() < until) {
+      await new Promise(resolve => setTimeout(resolve, Math.min(75, until - Date.now())));
+      result.state = await readState(page, contract, probes);
+      if (!isDeepStrictEqual(selected(result.state, expected), expected)) { result.matched = false; break; }
+    }
+  }
+  return result;
+}
+
+// Captured state and download bytes remain internal. Do not add raw exceptions,
+// dialog text, filenames, screenshots or trace snapshots to this result.
+export async function executeBackupRoundtrip(browser, contract) {
+  const result = { check: 'backup-roundtrip', status: 'inconclusive', phase: 'source-setup', before: null, after: null, differences: [], events: [], capture: 'metadata-only', comparisons: {} };
+  const contexts = [], dialogs = [];
+  const downloads = [];
+  const backup = contract.backupRoundtrip;
+  try {
+    async function localPage() {
+      const context = await browser.newContext({ serviceWorkers: 'block', viewport: { width: 1120, height: 760 }, acceptDownloads: true });
+      contexts.push(context);
+      await confineContext(context, contract.baseURL);
+      const page = await context.newPage();
+      page.setDefaultTimeout(contract.timeoutMs);
+      page.setDefaultNavigationTimeout(contract.timeoutMs);
+      dialogs.push({ page, capture: captureDialogs(page, false) });
+      return page;
+    }
+    const source = await localPage();
+    await source.goto(scopedURL(contract.baseURL, contract.path), { waitUntil: 'domcontentloaded' });
+    await applySteps(source, contract, contract.reset, 'reset', result.events);
+    if (contract.reset.length) await source.reload({ waitUntil: 'domcontentloaded' });
+    await applySteps(source, contract, contract.setup, 'setup', result.events);
+    result.phase = 'source-baseline';
+    const baseline = await waitForState(source, contract, contract.observe, contract.expected);
+    if (!baseline.matched) throw backupError('SOURCE_BASELINE_NOT_CONFIRMED');
+    const sourceStable = await stableState(source, contract, contract.observe, baseline.state);
+    if (!sourceStable.matched) throw backupError('SOURCE_BASELINE_NOT_STABLE');
+    const storedNames = Object.keys(contract.observe).filter(name => ['localStorage', 'sessionStorage', 'indexedDB'].includes(contract.observe[name].source));
+    if (storedNames.every(name => isDeepStrictEqual(baseline.state[name], backup.restore.empty[name]))) throw backupError('SOURCE_HAS_NO_SELECTED_SAVED_DATA');
+
+    result.phase = 'export';
+    source.context().on('page', page => page.on('download', download => downloads.push(download)));
+    source.on('download', download => downloads.push(download));
+    await applySteps(source, contract, backup.export.steps, 'export', result.events);
+    // Observe the full declared window after export steps, then keep listening
+    // through restoration. Later events outside the check are not covered.
+    const deadline = Date.now() + contract.timeoutMs;
+    while (downloads.length <= 1 && Date.now() < deadline) await new Promise(resolve => setTimeout(resolve, 25));
+    if (!downloads.length) throw backupError('NO_EXPORT_DOWNLOAD');
+    if (downloads.length !== 1) throw backupError('MULTIPLE_EXPORT_DOWNLOADS');
+    const { bytes, payload } = await downloadBytes(downloads[0], backup.export.maxBytes, contract.timeoutMs);
+    result.backup = { format: 'utf8-json', sizeBytes: bytes.length, sha256: createHash('sha256').update(bytes).digest('hex') };
+    for (const [name, path] of Object.entries(backup.export.statePaths)) {
+      let value = payload;
+      for (const key of path) {
+        if (value === null || typeof value !== 'object' || !Object.hasOwn(value, key)) throw backupError('EXPORT_STATE_PATH_MISSING', true);
+        value = value[key];
+      }
+      if (!isDeepStrictEqual(value, baseline.state[name])) throw backupError('EXPORT_STATE_DIFFERS', true);
+    }
+    result.comparisons.export = { matched: true };
+    result.phase = 'source-after-export';
+    const savedProbes = Object.fromEntries(storedNames.map(name => [name, contract.observe[name]]));
+    const savedBaseline = Object.fromEntries(storedNames.map(name => [name, baseline.state[name]]));
+    let preserved;
+    try { preserved = await stableState(source, contract, savedProbes, savedBaseline); }
+    catch { throw backupError('SOURCE_STATE_UNAVAILABLE_AFTER_EXPORT', true); }
+    if (!preserved.matched) throw backupError('SOURCE_CHANGED_DURING_EXPORT', true);
+    result.comparisons.sourceAfterExport = { matched: true };
+
+    result.phase = 'target-empty';
+    const target = await localPage();
+    await target.goto(scopedURL(contract.baseURL, backup.restore.path), { waitUntil: 'domcontentloaded' });
+    await applySteps(target, contract, backup.restore.ready, 'target-ready', result.events);
+    const empty = await stableState(target, contract, contract.observe, backup.restore.empty);
+    if (!empty.matched) throw backupError('FRESH_TARGET_NOT_EMPTY');
+    const success = backup.restore.success;
+    const previous = await readState(target, contract, success.observe);
+    if (isDeepStrictEqual(selected(previous, success.expected), success.expected)) throw backupError('IMPORT_SUCCESS_ALREADY_TRUE');
+
+    result.phase = 'import';
+    // Upload the actual unedited bytes. Never JSON.stringify the parsed export.
+    const fileName = backup.restore.fileName ?? downloads[0].suggestedFilename();
+    if (!fileName || fileName.length > 255 || /[\\/\x00-\x1f\x7f]/.test(fileName) || ['.', '..'].includes(fileName)) throw backupError('DOWNLOAD_FILENAME_UNSUPPORTED');
+    await locate(target, backup.restore.target).setInputFiles({ name: fileName, mimeType: backup.restore.mimeType, buffer: bytes });
+    result.uploadedOriginalBytes = true;
+    result.uploadNameSource = backup.restore.fileName === undefined ? 'download' : 'contract';
+    const imported = await waitForState(target, contract, success.observe, success.expected);
+    if (!imported.matched) throw backupError('IMPORT_SUCCESS_NOT_OBSERVED', true);
+    await applySteps(target, contract, backup.restore.after ?? [], 'after-import', result.events);
+    for (const { capture } of dialogs) assertSupportedDialogs(capture);
+    for (const [phase, steps] of [['restoration', []], ['reload', contract.afterReload ?? []]]) {
+      result.phase = `compare-${phase}`;
+      if (phase === 'reload') {
+        await target.reload({ waitUntil: 'domcontentloaded' });
+        await applySteps(target, contract, steps, 'after-reload', result.events);
+      }
+      let actual;
+      try { actual = await stableState(target, contract, contract.observe, baseline.state); }
+      catch { throw backupError('RESTORED_STATE_UNAVAILABLE', true); }
+      const changedObservations = Object.keys(contract.observe).filter(name => !isDeepStrictEqual(baseline.state[name], actual.state[name]));
+      result.comparisons[phase] = { matched: actual.matched, changedObservations };
+      if (!actual.matched) throw backupError(phase === 'reload' ? 'STATE_CHANGED_AFTER_RELOAD' : 'RESTORED_STATE_DIFFERS', true);
+    }
+    result.phase = 'complete';
+    if (downloads.length !== 1) throw backupError('MULTIPLE_EXPORT_DOWNLOADS');
+    result.status = 'pass';
+  } catch (error) {
+    result.status = error.violation ? 'fail' : 'inconclusive';
+    result.error = error.backupCode ?? 'CHECK_COULD_NOT_BE_COMPLETED';
+  } finally {
+    for (const { page, capture } of dialogs) {
+      page.off('dialog', capture.listener);
+      await Promise.all(capture.pending);
+      try { assertSupportedDialogs(capture); }
+      catch { result.status = 'inconclusive'; result.error = 'UNEXPECTED_NATIVE_DIALOG'; }
+    }
+    const cleanup = await Promise.allSettled(contexts.map(context => context.close()));
+    if (cleanup.some(r => r.status === 'rejected')) { result.status = 'inconclusive'; result.error = 'CONTEXT_CLEANUP_FAILED'; }
+    result.downloadCount = downloads.length;
+    if (result.status === 'pass' && downloads.length !== 1) { result.status = 'inconclusive'; result.error = 'MULTIPLE_EXPORT_DOWNLOADS'; }
+  }
+  return result;
 }
