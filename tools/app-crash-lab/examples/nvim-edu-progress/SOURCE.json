@@ -1,0 +1,14 @@
+{
+  "url": "https://codeload.github.com/s3onghyun/nvim-edu/zip/5ecf0758ed02d2c5b5bc5c10a598242393ccdbba",
+  "archive_sha256": "b26de4b345f0db4400be9e7e199a0b0313dad1622f1b40fbfa286178e4933fff",
+  "archive_commit": "5ecf0758ed02d2c5b5bc5c10a598242393ccdbba",
+  "source_files": 37,
+  "executed": true,
+  "files_unchanged": 37,
+  "article": "https://qiita.com/s3onghyun/items/7966ac7e6a534a84f9db",
+  "app_crash_lab": "0.6.2",
+  "verified_date": "2026-10-15",
+  "upstream_source_included": false,
+  "author_execution_confirmed": false,
+  "scope": "Local production build, emulator mode, one synthetic hjkl lesson and a slower second clear. No JSON export/import, real Vim/WASM, drills, streak or browser-storage eviction certification."
+}
