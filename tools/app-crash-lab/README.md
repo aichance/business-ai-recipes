@@ -214,6 +214,11 @@ Both paths passed the same two normal-case Glypha checks. This does not prove
 faster setup or better bug detection. The comparison is available in the
 current checkout; the original v0.1.0 source ZIP predates these extra examples.
 
+A save-time metadata case: the [ChatLedger example](examples/chatledger/README.md)
+keeps imported order fields through reload, but catches missing icing instructions
+and source positions at the confirmation baseline. It includes a passing import
+control and an explicitly inconclusive confirmation check on pinned unchanged source.
+
 A real-app timing case: the [Chalky note-close diagnostic](examples/chalky-notes-close/README.md)
 compares a rapid keyboard edit/close with a delayed control. The last edit was
 lost on the pinned source; the original CLI correctly stopped at its failed
