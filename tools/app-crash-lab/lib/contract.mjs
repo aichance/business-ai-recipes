@@ -34,7 +34,7 @@ function target(value, where) {
 }
 
 function probe(value, where) {
-  keys(value, ['source', 'target', 'attribute', 'key', 'keyFrom', 'keyPrefix', 'parse', 'url', 'field', 'header', 'jsonPath', 'database', 'store', 'keyPath', 'maxEntries', 'maxBytes'], where);
+  keys(value, ['source', 'target', 'attribute', 'key', 'keyFrom', 'keyPrefix', 'parse', 'url', 'field', 'header', 'jsonPath', 'database', 'store', 'keyPath', 'keyMode', 'maxEntries', 'maxBytes'], where);
   requireThat(['text', 'value', 'attribute', 'count', 'localStorage', 'sessionStorage', 'indexedDB', 'response'].includes(value.source), `${where}: unsupported source`);
   if (['text', 'value', 'attribute', 'count'].includes(value.source)) target(value.target, `${where}.target`);
   if (value.source === 'attribute') requireThat(text(value.attribute), `${where}.attribute required`);
@@ -49,16 +49,17 @@ function probe(value, where) {
     requireThat(value.field === undefined || ['entry', 'value', 'exists', 'records'].includes(value.field), `${where}.field must be entry/value/exists/records`);
     if (value.field === 'records') {
       requireThat(!own(value, 'key') && value.parse === undefined && value.jsonPath === undefined, `${where}: records cannot select, parse or project individual values`);
-      requireThat(typeof value.keyPath === 'string' && /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(value.keyPath) && !['__proto__', 'constructor', 'prototype'].includes(value.keyPath), `${where}.keyPath must be one explicit inline property`);
+      requireThat(typeof value.keyPath === 'string' && /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(value.keyPath) && !['__proto__', 'constructor', 'prototype'].includes(value.keyPath), `${where}.keyPath must be one explicit record identity property`);
+      requireThat(value.keyMode === undefined || ['inline', 'out-of-line'].includes(value.keyMode), `${where}.keyMode must be inline/out-of-line`);
       requireThat(Number.isInteger(value.maxEntries) && value.maxEntries >= 1 && value.maxEntries <= 4096, `${where}.maxEntries must be 1..4096`);
       requireThat(Number.isInteger(value.maxBytes) && value.maxBytes >= 2 && value.maxBytes <= 1048576, `${where}.maxBytes must be 2..1048576`);
     } else {
       requireThat(own(value, 'key') && indexedKey(value.key), `${where}.key must be a string, finite number or array of keys (at most 16 array levels)`);
-      requireThat(value.keyPath === undefined && value.maxEntries === undefined && value.maxBytes === undefined, `${where}: bounds/keyPath require records`);
+      requireThat(value.keyPath === undefined && value.keyMode === undefined && value.maxEntries === undefined && value.maxBytes === undefined, `${where}: bounds/keyPath/keyMode require records`);
     }
     requireThat(value.field !== 'exists' || (value.parse === undefined && value.jsonPath === undefined), `${where}: exists cannot be parsed or traversed`);
   } else requireThat(value.database === undefined && value.store === undefined, `${where}: database/store only apply to indexedDB`);
-  if (value.source !== 'indexedDB') requireThat(value.keyPath === undefined && value.maxEntries === undefined && value.maxBytes === undefined, `${where}: bounds/keyPath require indexedDB records`);
+  if (value.source !== 'indexedDB') requireThat(value.keyPath === undefined && value.keyMode === undefined && value.maxEntries === undefined && value.maxBytes === undefined, `${where}: bounds/keyPath/keyMode require indexedDB records`);
   if (value.source === 'response') {
     path(value.url, `${where}.url`);
     requireThat(['json', 'text', 'status', 'header'].includes(value.field), `${where}.field required (json/text/status/header)`);

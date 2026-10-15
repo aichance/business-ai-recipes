@@ -1,0 +1,61 @@
+{
+  "app": "My Ideals",
+  "repository": "https://github.com/monaka-ikonoi/my-ideals",
+  "commit": "a65fb102204fac7c4691cc8ba2119ff6f0d61798",
+  "license": "MIT",
+  "source_modified": false,
+  "source_files": 162,
+  "runtime": "unchanged Vite development source; pinned .env.development selects IndexedDB",
+  "tested_runner": "App Crash Lab 0.10.0",
+  "tested_at_jst": "2026-10-16",
+  "environment": {
+    "os": "macOS",
+    "node": "22.16.0",
+    "pnpm": "12.13.0",
+    "playwright": "1.64.0"
+  },
+  "store": {
+    "database": "my-ideals",
+    "name": "profiles",
+    "keyPath": null,
+    "autoIncrement": false,
+    "complete_record_identity": "id",
+    "external_key_must_equal_record_identity": true
+  },
+  "native_diagnostic": {
+    "profile_count": 1,
+    "item_states": 13,
+    "checked_items": 2,
+    "empty_target_before_import": true,
+    "empty_target_before_commit": true,
+    "full_records_and_keys_retained_after_import": true,
+    "full_records_and_keys_retained_after_reload": true
+  },
+  "generic_workflow": {
+    "created_profiles": 2,
+    "source_selected_checked_items": 2,
+    "checks": ["backup-roundtrip"],
+    "cli_exit_code": 0,
+    "standalone_playwright": "1 passed",
+    "recorded_download_bytes": 1965,
+    "recorded_download_sha256": "a31cb6403eb889f03c8604cbbf01daabb5214755fd098b2a458c4ecf9db2ea88",
+    "contract_hash_in_report": "e84cedd150a0c5a7fa84f7115a7481d131f8773a0b8a1b5f9abd6ea9b01014d1",
+    "bytes_and_hash_vary_on_rerun": true,
+    "all_selected_comparisons_matched": true,
+    "source_stability": "Normal profile switching flushes app debounce; no fixed sleep or app patch",
+    "captured_records_in_report": false
+  },
+  "earlier_attempts": [
+    "Invalid contract field afterReload under restore; corrected to top-level before browser execution",
+    "Single-profile source pending debounce: SOURCE_BASELINE_NOT_STABLE, not a reload/data-loss verdict"
+  ],
+  "excluded": [
+    "localStorage backend",
+    "active-profile preference and other settings",
+    "existing-profile overwrite and ID conflicts",
+    "version-1 migration and custom mode",
+    "service workers and external template images",
+    "production sites and real user records",
+    "author execution and third-party adoption"
+  ]
+}

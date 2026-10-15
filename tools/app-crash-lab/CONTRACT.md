@@ -309,8 +309,8 @@ For generated IDs, opt into an entire existing store instead of guessing keys:
 
 `keyPath` must be one explicit property (for example `id`), and must exactly
 match the store's inline keyPath. Each cursor primary key must match that
-record's own inline ID, including its type. Out-of-line, nested and compound
-keyPaths are unsupported. String, finite number and array keys are supported;
+record's own ID, including its type. Out-of-line keys require the explicit
+0.10 opt-in below; nested and compound store keyPaths remain unsupported. String, finite number and array keys are supported;
 Date/binary keys and negative zero are unsupported. A `records` observation
 cannot share its database/store with another observation or use `key`, `parse`
 or `jsonPath` to omit fields.
@@ -320,7 +320,7 @@ set**. IDs, nested arrays, field presence and every value remain significant;
 duplicate, missing and extra IDs are not ignored. Only the outer record order
 is canonicalized, including in explicit expected arrays and export state paths.
 This does not certify an application-specific ordering contract. The export
-path must contain the full plain record array with the declared inline IDs.
+path must contain the full plain record array with the declared record IDs.
 
 Both bounds are required: `maxEntries` is 1..4096, and `maxBytes` is 2..1048576
 UTF-8 bytes for the serialized array including brackets and commas. A missing
@@ -335,6 +335,28 @@ For backup checks, captured records and keys remain excluded from reports and
 standalone result attachments. Declared synthetic contract inputs remain in
 the output. Ordinary reload/rejected-update checks retain their documented
 state diffs, screenshots and traces.
+
+### Out-of-line keys with an in-record identity (runner 0.10+)
+
+For an existing store created without a keyPath, declare `keyMode` explicitly:
+
+```json
+{"source":"indexedDB","database":"my-app","store":"profiles","field":"records","keyMode":"out-of-line","keyPath":"id","maxEntries":128,"maxBytes":262144}
+```
+
+Here `keyPath` names the identity property **inside each complete record**.
+The real store must have `keyPath === null` and `autoIncrement === false`.
+Every cursor primary key must equal the record's own declared identity,
+including its type. Anonymous values, generated external keys, mismatched keys,
+unsupported values and limits remain INCONCLUSIVE. No keys or record fields
+are rewritten or inferred. Empty stores alone do not prove an app's identity
+convention; establish a nonempty source through its normal UI.
+
+Omitted `keyMode` and `keyMode: "inline"` retain the earlier inline requirement.
+The out-of-line option is only valid for IndexedDB `records`, and cannot be
+combined with single-key reads or field projections. The same complete-record,
+readonly transaction, bounds and private-capture rules above apply to CLI and
+exported standalone tests. Older runners reject this option.
 
 ## Actual backup and restore (runner 0.6+)
 

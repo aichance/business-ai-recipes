@@ -45,18 +45,23 @@ async function fixture() {
   // Authored controls; no third-party app or saved user data is modified.
   const html = `<!doctype html><meta charset="utf-8"><button id="open">Open settings</button><button id="seed">Save full records</button><button id="export">Export</button><input id="file" type="file" hidden><p id="status">Loading</p><script>
     const mode = new URLSearchParams(location.search).get('mode');
+    const outOfLine = mode?.startsWith('out-of-line');
+    const behavior = outOfLine ? mode.slice('out-of-line-'.length) : mode;
     const done = tx => new Promise((resolve,reject) => {tx.oncomplete=resolve;tx.onerror=tx.onabort=()=>reject(tx.error)});
     const get = r => new Promise((resolve,reject)=>{r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)});
     const ready = mode === 'missing-db' ? Promise.resolve(null) : new Promise((resolve,reject)=>{
       const r=indexedDB.open('record-vault',1);
-      r.onupgradeneeded=()=>{r.result.createObjectStore('records',mode==='out-of-line'?undefined:{keyPath:'id'});r.result.createObjectStore('details',{keyPath:'id'});r.result.createObjectStore('settings',{keyPath:'key'})};
+      r.onupgradeneeded=()=>{r.result.createObjectStore('records',outOfLine?{autoIncrement:behavior==='auto-increment'}:{keyPath:'id'});r.result.createObjectStore('details',{keyPath:'id'});r.result.createObjectStore('settings',{keyPath:'key'})};
       r.onsuccess=()=>{r.result.onversionchange=()=>r.result.close();resolve(r.result)};r.onerror=()=>reject(r.error);
     });
     async function save(data) {
       const db=await ready;if(!db)return;
       const tx=db.transaction(['records','details','settings'],'readwrite');
       tx.objectStore('records').clear();tx.objectStore('details').clear();
-      for(const value of data.records)mode==='out-of-line'?tx.objectStore('records').put(value,value.id):tx.objectStore('records').put(value);
+      for(const value of data.records) {
+        const externalKey=behavior==='key-mismatch'?String(value.id)+'-wrong':behavior==='key-type-mismatch'?['external',value.id]:value.id??'missing-identity-key';
+        outOfLine?tx.objectStore('records').put(value,externalKey):tx.objectStore('records').put(value);
+      }
       for(const value of data.details)tx.objectStore('details').put(value);
       tx.objectStore('settings').put({key:'app_settings',value:data.settings});await done(tx);
     }
@@ -67,24 +72,25 @@ async function fixture() {
       return {records,details,settings:settings?.value??null};
     }
     document.querySelector('#open').onclick=async()=>{
-      if(mode==='prepare-dialog')confirm('PRIVATE_UNEXPECTED_DIALOG');
+      if(behavior==='prepare-dialog')confirm('PRIVATE_UNEXPECTED_DIALOG');
       const db=await ready;
       if(db){const tx=db.transaction('settings','readwrite');tx.objectStore('settings').put({key:'app_settings',value:{theme:'system'}});await done(tx)}
       document.querySelector('#file').hidden=false;document.querySelector('#status').textContent='Ready';
     };
     document.querySelector('#seed').onclick=async()=>{
       const data={records:${JSON.stringify(records)},details:${JSON.stringify(details)},settings:{theme:'dark'}};
-      if(mode==='undefined')data.records[0].optional=undefined;
-      if(mode==='negative-zero')data.records[0].special=-0;
-      if(mode==='date')data.records[0].special=new Date();
-      if(mode==='cycle')data.records[0].cycle=data.records[0];
-      if(mode==='binary')data.records[0].special=new Uint8Array([1]).buffer;
-      if(mode==='mixed-keys')data.records=[{id:2,title:'number'},{id:'2',title:'string'},{id:['a',2],title:'array'}];
-      if(mode==='unicode')data.records[0].title='日本語🍵';
-      if(mode==='empty-records'){data.records=[];data.details=[]}
-      if(mode==='atomic-race'){data.records=[{id:'one',epoch:1}];data.details=[{id:'meta',epoch:1}]}
+      if(behavior==='undefined')data.records[0].optional=undefined;
+      if(behavior==='negative-zero')data.records[0].special=-0;
+      if(behavior==='date')data.records[0].special=new Date();
+      if(behavior==='cycle')data.records[0].cycle=data.records[0];
+      if(behavior==='binary')data.records[0].special=new Uint8Array([1]).buffer;
+      if(behavior==='mixed-keys')data.records=[{id:2,title:'number'},{id:'2',title:'string'},{id:['a',2],title:'array'}];
+      if(behavior==='unicode')data.records[0].title='日本語🍵';
+      if(behavior==='empty-records'){data.records=[];data.details=[]}
+      if(behavior==='atomic-race'){data.records=[{id:'one',epoch:1}];data.details=[{id:'meta',epoch:1}]}
+      if(behavior==='missing-identity')delete data.records[0].id;
       await save(data);
-      if(mode==='atomic-race'){
+      if(behavior==='atomic-race'){
         const open=IDBObjectStore.prototype.openCursor;let queued=false;
         IDBObjectStore.prototype.openCursor=function(...args){
           const r=open.apply(this,args);
@@ -95,17 +101,17 @@ async function fixture() {
           return r;
         };
       }
-      if(['cursor-error','cursor-abort','cursor-stall'].includes(mode)){
+      if(['cursor-error','cursor-abort','cursor-stall'].includes(behavior)){
         const open=IDBObjectStore.prototype.openCursor;
         IDBObjectStore.prototype.openCursor=function(...args){
-          if(mode==='cursor-stall')return {};
+          if(behavior==='cursor-stall')return {};
           const r=open.apply(this,args),tx=this.transaction;
-          if(mode==='cursor-error')queueMicrotask(()=>r.dispatchEvent(new Event('error')));
-          if(mode==='cursor-abort')r.addEventListener('success',()=>{try{tx.abort()}catch{}});
+          if(behavior==='cursor-error')queueMicrotask(()=>r.dispatchEvent(new Event('error')));
+          if(behavior==='cursor-abort')r.addEventListener('success',()=>{try{tx.abort()}catch{}});
           return r;
         };
       }
-      if(mode==='wrong-inline-key'){
+      if(behavior==='wrong-inline-key'){
         const original=Object.getOwnPropertyDescriptor(IDBCursorWithValue.prototype,'value').get;
         Object.defineProperty(IDBCursorWithValue.prototype,'value',{get(){return {...original.call(this),id:'wrong'}}});
       }
@@ -113,22 +119,22 @@ async function fixture() {
     };
     document.querySelector('#export').onclick=async()=>{
       const data=await snapshot();data.records.reverse();
-      if(mode==='duplicate-export')data.records.push(data.records[0]);
-      if(mode==='missing-export')data.records.pop();
-      if(mode==='extra-export')data.records.push({id:'extra',title:'PRIVATE_EXTRA'});
+      if(behavior==='duplicate-export')data.records.push(data.records[0]);
+      if(behavior==='missing-export')data.records.pop();
+      if(behavior==='extra-export')data.records.push({id:'extra',title:'PRIVATE_EXTRA'});
       const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data)],{type:'application/json'}));a.download='PRIVATE_FILENAME.json';a.click();
     };
     document.querySelector('#file').onchange=async event=>{
       const data=JSON.parse(await event.target.files[0].text());
-      if(mode==='drop-import')data.records.pop();
-      if(mode==='rewrite-id')data.records[0].id='rewritten';
-      if(mode==='drift-import')data.records[0].nested.amount++;
-      if(mode==='field-loss')delete data.records[0].nested.tags;
-      if(mode==='field-extra')data.records[0].unexpected=true;
+      if(behavior==='drop-import')data.records.pop();
+      if(behavior==='rewrite-id')data.records[0].id='rewritten';
+      if(behavior==='drift-import')data.records[0].nested.amount++;
+      if(behavior==='field-loss')delete data.records[0].nested.tags;
+      if(behavior==='field-extra')data.records[0].unexpected=true;
       await save(data);sessionStorage.setItem('restored','yes');document.querySelector('#status').textContent='Restored';
     };
     ready.then(async db=>{
-      if(mode==='broken-reload'&&sessionStorage.getItem('restored')){const data=await snapshot();data.records.pop();await save(data)}
+      if(behavior==='broken-reload'&&sessionStorage.getItem('restored')){const data=await snapshot();data.records.pop();await save(data)}
       document.querySelector('#status').textContent='Ready';
     });
   </script>`;
@@ -141,14 +147,16 @@ test('records contract bounds and fresh preparation are explicit opt-ins', () =>
   assert.doesNotThrow(() => validateContract(base));
   const bad = change => { const c = structuredClone(base); change(c); assert.throws(() => validateContract(c), /Invalid contract/); };
   for (const field of ['keyPath', 'maxEntries', 'maxBytes']) bad(c => delete c.observe.records[field]);
-  for (const [key, value] of [['key', 'a'], ['parse', 'json'], ['jsonPath', ['title']], ['keyPath', 'nested.id'], ['maxEntries', 0], ['maxEntries', 4097], ['maxBytes', 1], ['maxBytes', 1048577]]) bad(c => { c.observe.records[key] = value; });
+  for (const [key, value] of [['key', 'a'], ['parse', 'json'], ['jsonPath', ['title']], ['keyPath', 'nested.id'], ['maxEntries', 0], ['maxEntries', 4097], ['maxBytes', 1], ['maxBytes', 1048577], ['keyMode', 'mixed'], ['keyMode', null]]) bad(c => { c.observe.records[key] = value; });
+  bad(c => { c.observe.setting.keyMode = 'out-of-line'; });
+  bad(c => { c.backupRoundtrip.restore.success.observe.status.keyMode = 'out-of-line'; });
   bad(c => { c.observe.duplicate = structuredClone(c.observe.records); });
   bad(c => { c.observe.oneRecord = { source: 'indexedDB', database: 'record-vault', store: 'records', key: 'a' }; });
   for (const action of ['goto', 'request', 'setFile']) bad(c => { c.backupRoundtrip.restore.prepare = [{ action, path: '/', target: { css: '#file' }, file: { name: 'a', mimeType: 'text/plain', text: '' } }]; });
   bad(c => { c.backupRoundtrip.restore.prepare = Array.from({ length: 33 }, () => ({ action: 'click', target: { css: '#open' } })); });
 });
 
-test('whole records preserve IDs, values and fresh preparation through real backup flow', { timeout: 180000 }, async t => {
+test('whole records preserve IDs, values and fresh preparation through real backup flow', { timeout: 300000 }, async t => {
   const app = await fixture();
   const browser = await chromium.launch();
   await mkdir(join(root, '.crash-lab'), { recursive: true });
@@ -164,8 +172,28 @@ test('whole records preserve IDs, values and fresh preparation through real back
       const serialized = JSON.stringify(r);
       for (const privateValue of ['PRIVATE_RECORD', 'PRIVATE_DETAIL', 'PRIVATE_FILENAME', 'PRIVATE_UNEXPECTED']) assert.equal(serialized.includes(privateValue), false);
     });
-    await t.test('expected record sets use the same declared identity semantics', async () => {
-      const r = await run('', c => { c.expected.records = records; }); assert.equal(r.status, 'pass', JSON.stringify(r));
+    const external = change => c => { c.observe.records.keyMode = 'out-of-line'; change?.(c); };
+    await t.test('out-of-line keys require explicit mode and retain full typed identities', async () => {
+      for (const mode of ['out-of-line', 'out-of-line-mixed-keys']) {
+        const r = await run(mode, external()); assert.equal(r.status, 'pass', JSON.stringify(r));
+      }
+      for (const mode of ['out-of-line-key-mismatch', 'out-of-line-key-type-mismatch', 'out-of-line-missing-identity', 'out-of-line-auto-increment', 'out-of-line-undefined', 'out-of-line-date', 'out-of-line-binary']) {
+        const r = await run(mode, external()); assert.equal(r.status, 'inconclusive', JSON.stringify(r));
+        for (const marker of ['PRIVATE_RECORD', 'PRIVATE_DETAIL', 'PRIVATE_FILENAME', 'b-wrong', 'a-wrong']) assert.equal(JSON.stringify(r).includes(marker), false);
+      }
+      const inline = await run('', external()); assert.equal(inline.status, 'inconclusive');
+      const wrongMode = await run('out-of-line', c => { c.observe.records.keyMode = 'inline'; }); assert.equal(wrongMode.status, 'inconclusive');
+    });
+    await t.test('out-of-line import and reload losses still fail', async () => {
+      for (const mode of ['drop-import', 'rewrite-id', 'drift-import', 'field-loss', 'field-extra', 'broken-reload', 'duplicate-export', 'missing-export', 'extra-export']) {
+        const r = await run(`out-of-line-${mode}`, external()); assert.equal(r.status, 'fail', JSON.stringify(r));
+      }
+      for (const change of [c => { c.observe.records.maxEntries = 1; }, c => { c.observe.records.maxBytes = 20; }, c => { c.observe.records.keyPath = 'absent'; }]) {
+        const r = await run('out-of-line', external(change)); assert.equal(r.status, 'inconclusive', JSON.stringify(r));
+      }
+    });
+    await t.test('explicit inline mode and expected record sets retain the same identity semantics', async () => {
+      const r = await run('', c => { c.expected.records = records; c.observe.records.keyMode = 'inline'; }); assert.equal(r.status, 'pass', JSON.stringify(r));
     });
     await t.test('numeric/string/array keys remain distinct and empty existing stores remain readable', async () => {
       for (const mode of ['mixed-keys', 'empty-records']) { const r = await run(mode); assert.equal(r.status, 'pass', JSON.stringify(r)); }
@@ -216,21 +244,24 @@ test('whole records preserve IDs, values and fresh preparation through real back
       } finally { await context.close(); }
     });
     await t.test('CLI report and actual standalone spec share protocol and omit captured records', async () => {
-      const c = contract(); const out = join(dir, 'pack');
-      const r = await runContract(c, { out }); assert.equal(r.exitCode, 0, JSON.stringify(r));
-      for (const name of ['report.json', 'index.html']) {
-        const body = await readFile(join(out, name), 'utf8');
-        assert.equal(body.includes('PRIVATE_RECORD'), false); assert.equal(body.includes('PRIVATE_DETAIL'), false); assert.equal(body.includes('PRIVATE_FILENAME'), false);
+      for (const mode of ['', 'out-of-line']) {
+        const c = contract(mode, mode ? external() : () => {}); const out = join(dir, mode || 'pack');
+        const r = await runContract(c, { out }); assert.equal(r.exitCode, 0, JSON.stringify(r));
+        for (const name of ['report.json', 'index.html']) {
+          const body = await readFile(join(out, name), 'utf8');
+          assert.equal(body.includes('PRIVATE_RECORD'), false); assert.equal(body.includes('PRIVATE_DETAIL'), false); assert.equal(body.includes('PRIVATE_FILENAME'), false);
+        }
+        const result = await new Promise((resolve, reject) => {
+          const child = spawn(process.execPath, [join(root, 'node_modules/@playwright/test/cli.js'), 'test', '--config', join(out, 'playwright.config.mjs')], { cwd: root, stdio: ['ignore', 'pipe', 'pipe'] });
+          let output = ''; child.stdout.on('data', c => { output += c; }); child.stderr.on('data', c => { output += c; });
+          const timer = setTimeout(() => { child.kill('SIGKILL'); reject(new Error('Standalone spec timed out')); }, 60000);
+          child.on('error', reject); child.on('close', code => { clearTimeout(timer); resolve({ code, output }); });
+        });
+        assert.equal(result.code, 0, result.output);
+        const spec = await readFile(join(out, 'repro.spec.mjs'), 'utf8');
+        assert.ok(spec.includes("backup?.restore.prepare?.length")); assert.ok(spec.includes('function canonicalRecords'));
+        assert.ok(spec.includes("probe.keyMode === 'out-of-line'"));
       }
-      const result = await new Promise((resolve, reject) => {
-        const child = spawn(process.execPath, [join(root, 'node_modules/@playwright/test/cli.js'), 'test', '--config', join(out, 'playwright.config.mjs')], { cwd: root, stdio: ['ignore', 'pipe', 'pipe'] });
-        let output = ''; child.stdout.on('data', c => { output += c; }); child.stderr.on('data', c => { output += c; });
-        const timer = setTimeout(() => { child.kill('SIGKILL'); reject(new Error('Standalone spec timed out')); }, 60000);
-        child.on('error', reject); child.on('close', code => { clearTimeout(timer); resolve({ code, output }); });
-      });
-      assert.equal(result.code, 0, result.output);
-      const spec = await readFile(join(out, 'repro.spec.mjs'), 'utf8');
-      assert.ok(spec.includes("backup?.restore.prepare?.length")); assert.ok(spec.includes('function canonicalRecords'));
     });
   } finally { await browser.close(); await app.close(); await rm(dir, { recursive: true, force: true }); }
 });

@@ -1,0 +1,314 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "My Ideals — two complete out-of-line profiles through real backup and reload",
+  "baseURL": "http://127.0.0.1:54660",
+  "path": "/",
+  "timeoutMs": 10000,
+  "stabilityMs": 500,
+  "reset": [],
+  "setup": [
+    {
+      "action": "check",
+      "target": {
+        "role": "checkbox",
+        "name": "I have read and understood the above"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Confirm"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "New Profile"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "role": "textbox",
+        "name": "Paste template link here..."
+      },
+      "value": "http://127.0.0.1:54660/sample/template.json"
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": "input[type=\"text\"]:not([placeholder])"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[type=\"text\"]:not([placeholder])"
+      },
+      "value": "ACL 合成 Collection 🧪"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Create"
+      }
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "role": "heading",
+        "name": "ACL 合成 Collection 🧪"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "div.cursor-pointer:has(input#dummy-2026-new-year-nanaka-hiki)"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "div.cursor-pointer:has(input#dummy-2026-new-year-nanaka-yori)"
+      },
+      "save": true
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": "input#dummy-2026-new-year-nanaka-hiki:checked"
+      }
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": "input#dummy-2026-new-year-nanaka-yori:checked"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "ACL 合成 Collection 🧪"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "New Profile"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "role": "textbox",
+        "name": "Paste template link here..."
+      },
+      "value": "http://127.0.0.1:54660/sample/template.json"
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": "input[type=\"text\"]:not([placeholder])"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[type=\"text\"]:not([placeholder])"
+      },
+      "value": "ACL 合成 Empty Control"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Create"
+      }
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "role": "heading",
+        "name": "ACL 合成 Empty Control"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "ACL 合成 Empty Control"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "button.pr-safe-3:has(div.truncate:text-is(\"ACL 合成 Collection 🧪\"))"
+      }
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "role": "heading",
+        "name": "ACL 合成 Collection 🧪"
+      }
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": "input#dummy-2026-new-year-nanaka-hiki:checked"
+      }
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": "input#dummy-2026-new-year-nanaka-yori:checked"
+      }
+    }
+  ],
+  "observe": {
+    "profiles": {
+      "source": "indexedDB",
+      "database": "my-ideals",
+      "store": "profiles",
+      "field": "records",
+      "keyMode": "out-of-line",
+      "keyPath": "id",
+      "maxEntries": 16,
+      "maxBytes": 65536
+    },
+    "profileView": {
+      "source": "count",
+      "target": {
+        "css": "main h1"
+      }
+    }
+  },
+  "expected": {
+    "profileView": 1
+  },
+  "checks": [
+    "backup-roundtrip"
+  ],
+  "backupRoundtrip": {
+    "isolation": "browser-local",
+    "export": {
+      "steps": [
+        {
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "ACL 合成 Collection 🧪"
+          }
+        },
+        {
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "Export All Profiles"
+          }
+        }
+      ],
+      "maxBytes": 65536,
+      "statePaths": {
+        "profiles": [
+          "profiles"
+        ]
+      }
+    },
+    "restore": {
+      "path": "/",
+      "prepare": [
+        {
+          "action": "check",
+          "target": {
+            "role": "checkbox",
+            "name": "I have read and understood the above"
+          }
+        },
+        {
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "Confirm"
+          }
+        },
+        {
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "Import Profile"
+          }
+        }
+      ],
+      "ready": [
+        {
+          "action": "expectVisible",
+          "target": {
+            "role": "heading",
+            "name": "Import Profile"
+          }
+        }
+      ],
+      "empty": {
+        "profiles": [],
+        "profileView": 0
+      },
+      "target": {
+        "css": "input[type=\"file\"][accept=\".json\"]"
+      },
+      "mimeType": "application/json",
+      "commit": {
+        "frame": {
+          "css": "div.max-w-lg:has(input[type=\"checkbox\"])"
+        },
+        "target": {
+          "role": "button",
+          "name": "Import"
+        },
+        "ready": [
+          {
+            "action": "expectText",
+            "target": {
+              "css": "h2"
+            },
+            "value": "Import Profile"
+          },
+          {
+            "action": "expectText",
+            "target": {
+              "css": "div:text-is(\"2 / 2 profile(s) to import\")"
+            },
+            "value": "2 / 2 profile(s) to import"
+          }
+        ]
+      },
+      "success": {
+        "observe": {
+          "loaded": {
+            "source": "count",
+            "target": {
+              "css": "main h1"
+            }
+          }
+        },
+        "expected": {
+          "loaded": 1
+        }
+      }
+    }
+  },
+  "afterReload": [
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": "main h1"
+      }
+    }
+  ]
+}
