@@ -47,6 +47,21 @@ the complete saved browser-storage value, `observe.visibleCount` counts
 rendered records, and `expected` proves the source save worked. Select complete
 records, not only IDs/counts: omitted values are outside coverage.
 
+## Import buttons that open a file chooser (0.6.1+)
+
+If the app creates its file input only when Import is clicked, replace
+`restore.target` with `restore.fileChooser`, for example
+`{ "role": "button", "name": "Import" }`. Exactly one is required. The runner
+registers for the **real** file chooser before clicking that trigger, then gives
+it the unchanged download. It does not create or append an input to the app.
+A missing trigger or chooser is INCONCLUSIVE; it is not proof of an app defect.
+The original `target` input path remains supported.
+
+The [Price Table example](examples/price-table/README.md) includes a complete
+Japanese setup, UI-created product and price, full saved-record comparisons,
+and an import that reloads automatically. CLI and generated Playwright both
+passed on its pinned unchanged source.
+
 ## What is actually checked
 
 1. Save through the source UI in a fresh context, confirm the known baseline,
@@ -69,16 +84,16 @@ records, not only IDs/counts: omitted values are outside coverage.
    suggested download filename, or optional declared `restore.fileName`.
    `restore.mimeType` explicitly declares the upload type; download MIME
    sniffing is not provided. Filenames cannot be paths/control characters.
-6. Require a new `success` signal, run optional `restore.after` UI/navigation
+6. Require a new `success` signal, run optional `restore.after` observation
    steps, and compare **all** selected values. Reload, run optional top-level
    `afterReload`, and compare again through bounded stability windows. A toast
    or unchanged record count cannot hide a lost field. Missing completion,
    changed state and failed restoration are FAIL, not success.
 
 Readiness hooks (`restore.ready`, `restore.after`, `afterReload`) permit only
-`goto`, `expectText`, `expectValue` and `expectVisible`. They cannot click a
-repair button or upload replacement data before comparison. Normal app code
-still runs on navigation; this does not audit everything that route does.
+`expectText`, `expectValue` and `expectVisible`. Since0.6.1, `goto` is also
+rejected: navigation could run code that repairs state before comparison.
+They cannot click a repair button or upload replacement data before comparison.
 
 Existing contracts still default to the original reload/rejected-update pair.
 Backup settings require explicitly selecting `backup-roundtrip`. This does
