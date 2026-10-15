@@ -15,6 +15,10 @@ from tempfile import TemporaryDirectory
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "tools/app-crash-lab/examples/kaioken/normal-reload.json",
+    "tools/app-crash-lab/examples/kaioken/README.md",
+    "tools/app-crash-lab/examples/kaioken/SOURCE.json",
+    "tools/app-crash-lab/examples/kaioken/import-identity.spec.mjs",
     "tools/app-crash-lab/examples/my-ideals/README.md",
     "tools/app-crash-lab/examples/my-ideals/SOURCE.json",
     "tools/app-crash-lab/examples/my-ideals/roundtrip.json",

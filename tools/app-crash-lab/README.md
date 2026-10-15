@@ -236,6 +236,15 @@ keeps imported order fields through reload, but catches missing icing instructio
 and source positions at the confirmation baseline. It includes a passing import
 control and an explicitly inconclusive confirmation check on pinned unchanged source.
 
+A usable-record case: [Kaioken](examples/kaioken/README.md) retains a numeric
+IndexedDB identity across reload, yet the imported entry cannot open. An
+independent Playwright check has one valid control and two real ID-validation
+failures on the pinned app. It permits explicit rejection or a usable repaired
+ID, and needs no App Crash Lab runtime. An included CLI control passes normal
+save/reload, with its generated standalone reproduction also passing. The
+JSON-text import test is separate from that control and actual-file backup
+round trips.
+
 A display-baseline case: [Repwise](examples/repwise/README.md) preserves complete
 workout records through a real JSON backup, fresh restore and reload, while a
 completed workout is already absent from History. Its backup check passes and

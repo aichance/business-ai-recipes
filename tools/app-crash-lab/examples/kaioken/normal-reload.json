@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "Kaioken — a normally saved routine survives reload",
+  "baseURL": "http://127.0.0.1:54670",
+  "path": "/",
+  "timeoutMs": 10000,
+  "stabilityMs": 500,
+  "reset": [],
+  "setup": [
+    { "action": "click", "target": { "css": "#act-new" } },
+    { "action": "fill", "target": { "css": "#in-name" }, "value": "ACL 合成 Kaioken 🧪" },
+    { "action": "click", "target": { "css": "#act-create" }, "save": true },
+    { "action": "expectVisible", "target": { "css": "#act-back" } },
+    { "action": "click", "target": { "css": "#act-back" } }
+  ],
+  "observe": {
+    "routines": {
+      "source": "indexedDB", "database": "gymlog", "store": "routines",
+      "field": "records", "keyPath": "id", "maxEntries": 16, "maxBytes": 65536
+    },
+    "settings": {
+      "source": "indexedDB", "database": "gymlog", "store": "settings",
+      "field": "records", "keyPath": "key", "maxEntries": 32, "maxBytes": 65536
+    },
+    "routineCount": { "source": "count", "target": { "css": ".item-name" } },
+    "routineName": { "source": "text", "target": { "css": ".item-name" } }
+  },
+  "expected": { "routineCount": 1, "routineName": "ACL 合成 Kaioken 🧪" },
+  "checks": ["reload"]
+}
