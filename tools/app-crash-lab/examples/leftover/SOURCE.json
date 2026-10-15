@@ -1,0 +1,66 @@
+{
+  "app": "Leftover",
+  "official_web": "https://leftover-budget.netlify.app/",
+  "official_listing": "https://play.google.com/store/apps/details?id=leftover.app.budget&hl=en",
+  "creator_backup_explanation": "https://www.reddit.com/r/SideProject/comments/1x16lk5/i_built_a_budget_app_thats_a_single_230kb_html/",
+  "snapshot": {
+    "acquired_at": "2026-10-15T23:13:58.517285+00:00",
+    "build": "1.5.7 · 9 Oct",
+    "file": "index.html",
+    "bytes": 244232,
+    "sha256": "1d92a5296bad9ab1e5dfe24ad4039840269ed488206753533dc4725f2348a839",
+    "modified": false,
+    "redistributed": false,
+    "git_commit": null
+  },
+  "tested_at_jst": "2026-10-16",
+  "tested_runner": "App Crash Lab 0.10.0",
+  "environment": {
+    "os": "macOS",
+    "node": "22.16.0",
+    "playwright": "1.64.0",
+    "origin": "http://127.0.0.1:54680",
+    "service_workers": "blocked",
+    "external_requests": "blocked"
+  },
+  "storage": {
+    "source": "localStorage",
+    "key": "leftover:v2",
+    "selection": "complete JSON value; no fields/IDs/timestamps removed",
+    "export_payload_path": []
+  },
+  "results": {
+    "actual_file_roundtrip": {
+      "status": "PASS",
+      "exit_code": 0,
+      "download_count": 1,
+      "bytes": 3136,
+      "sha256": "02a0abac991ec6b48657f6fafd2bfb091091f4bf2a81611332a301cc7f552c22",
+      "unchanged_bytes_uploaded": true,
+      "generated_standalone": "PASS / 1 test / 0 skipped"
+    },
+    "unrelated_json_rejection": {
+      "status": "PASS",
+      "exit_code": 0,
+      "generated_standalone": "PASS / 1 test / 0 skipped"
+    },
+    "proposed_future_version_rejection": {
+      "status": "FAIL",
+      "exit_code": 1,
+      "requested_policy": "Reject unimplemented v999 before replacing existing state; this is a proposed contract, not a cited product guarantee",
+      "cli_observation": "Expected rejection absent; selected state changed; balance -$25.50 to $0 and history 1 to 0",
+      "separate_normal_ui_observation": "Real file chooser shows Backup restored; balance $0 and zero Undo buttons persist after reload",
+      "generated_standalone": "FAIL / 1 regression failure / 0 skipped / exit 1"
+    }
+  },
+  "initial_setup_boundary": "An initial run before the normal Saved on this device UI returned was INCONCLUSIVE / SOURCE_BASELINE_NOT_STABLE. Final setup waits for that real status after the expense flash, then checks full-state stability. No fixed delay or source patch.",
+  "not_tested": [
+    "Android/TWA/Play Billing",
+    "exchange-rate fetch or currency conversion",
+    "v1-to-v2 migration",
+    "actual future-version backup",
+    "crash or immediate-close durability",
+    "private user budgets",
+    "creator execution/adoption"
+  ]
+}

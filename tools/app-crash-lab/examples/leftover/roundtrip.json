@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "Leftover 1.5.7 — real JSON backup retains full state and expense balance",
+  "baseURL": "http://127.0.0.1:54680",
+  "path": "/",
+  "timeoutMs": 5000,
+  "stabilityMs": 750,
+  "checks": [
+    "backup-roundtrip"
+  ],
+  "reset": [],
+  "setup": [
+    {
+      "action": "click",
+      "target": {
+        "css": "#tourSkip"
+      }
+    },
+    {
+      "action": "select",
+      "target": {
+        "css": "#lang"
+      },
+      "value": "en-US"
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "#addExpense"
+      }
+    },
+    {
+      "action": "select",
+      "target": {
+        "css": "#nfCat"
+      },
+      "value": "food"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "#nfAmt"
+      },
+      "value": "25.50"
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "#nfAdd"
+      },
+      "save": true
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": "#sBal"
+      },
+      "value": "-$25.50"
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": "#saveNote"
+      },
+      "value": "Saved on this device"
+    }
+  ],
+  "observe": {
+    "state": {
+      "source": "localStorage",
+      "key": "leftover:v2",
+      "parse": "json"
+    },
+    "balance": {
+      "source": "text",
+      "target": {
+        "css": "#sBal"
+      }
+    },
+    "historyCount": {
+      "source": "count",
+      "target": {
+        "role": "button",
+        "name": "Undo"
+      }
+    }
+  },
+  "expected": {
+    "balance": "-$25.50",
+    "historyCount": 1
+  },
+  "backupRoundtrip": {
+    "isolation": "browser-local",
+    "export": {
+      "steps": [
+        {
+          "action": "click",
+          "target": {
+            "css": "#backup"
+          }
+        }
+      ],
+      "maxBytes": 65536,
+      "statePaths": {
+        "state": []
+      }
+    },
+    "restore": {
+      "path": "/",
+      "ready": [
+        {
+          "action": "expectVisible",
+          "target": {
+            "css": "#restoreBtn"
+          }
+        }
+      ],
+      "empty": {
+        "state": null,
+        "balance": "$0",
+        "historyCount": 0
+      },
+      "target": {
+        "css": "#restoreFile"
+      },
+      "mimeType": "application/json",
+      "success": {
+        "observe": {
+          "balance": {
+            "source": "text",
+            "target": {
+              "css": "#sBal"
+            }
+          },
+          "historyCount": {
+            "source": "count",
+            "target": {
+              "role": "button",
+              "name": "Undo"
+            }
+          }
+        },
+        "expected": {
+          "balance": "-$25.50",
+          "historyCount": 1
+        }
+      }
+    }
+  },
+  "afterReload": [
+    {
+      "action": "expectText",
+      "target": {
+        "css": "#sBal"
+      },
+      "value": "-$25.50"
+    }
+  ]
+}
