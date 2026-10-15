@@ -15,6 +15,10 @@ from tempfile import TemporaryDirectory
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "tools/app-crash-lab/BACKUP.md",
+    "tools/app-crash-lab/examples/devtasks/roundtrip-feature.json",
+    "tools/app-crash-lab/examples/devtasks/roundtrip-docs.json",
+    "tools/app-crash-lab/tests/backup-roundtrip.test.mjs",
     "docs/test-the-test.html",
     "docs/test-the-test-ja.html",
     "docs/test-the-test.js",
