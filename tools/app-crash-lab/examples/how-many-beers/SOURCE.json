@@ -1,0 +1,30 @@
+{
+  "repository": "https://github.com/Warconn/how-many-beers",
+  "owner_id": 8713708,
+  "repository_id": 1421556858,
+  "commit": "2822b6cd1b2c675bb524dab674c59a13e7f3b263",
+  "license": "No license selected in upstream README at the tested pin; no upstream source or recipe content redistributed",
+  "source_file_count": 23,
+  "source_archive_sha256": "330bcce0f6a8fe90077db9bb487308f6727702005c19508ef7a65f9ede956a2e",
+  "source_files": {
+    "package.json": "dc6e312bc6c274279ab543fddcdd99231a2e624b",
+    "src/app/page.tsx": "2599c4f24e8751e1d593b79d4a7a126595dc029f",
+    "src/domain/cookHistory.ts": "eb1935ebe64d446c1260b385fb52aaefce82b485",
+    "src/domain/cookState.ts": "e9f47d24e44eab913d2d3e92c5a503d69b5e0ced"
+  },
+  "tested_source_identity": {
+    "application_logic_css_and_configuration": "22 tracked source files unchanged",
+    "generated_exception": "Next 15.5.28 regenerated next-env.d.ts with .next/types/routes.d.ts and a generated-file comment; original archive and diff retained privately"
+  },
+  "tested_runtime": {
+    "node": "22.16.0",
+    "next": "15.5.28",
+    "vitest": "3.2.7",
+    "playwright": "1.64.0",
+    "mode": "next dev --hostname 127.0.0.1 --port 60291",
+    "dependency_install": "Official npm registry, --ignore-scripts, no upstream lockfile; dependency versions are not lockfile-reproducible"
+  },
+  "data": "Only original synthetic custom checklist tasks, notes, outcome and metadata; both dishes arrays empty; no built-in recipe payload",
+  "source_not_redistributed": true,
+  "operator_test_not_author_adoption": true
+}
