@@ -10,6 +10,13 @@ Turn one successful save workflow into two repeatable checks: **reload without l
 
 [**Check your own app**](#check-your-own-app) · [**See the broken vs fixed results**](https://aichance.github.io/business-ai-recipes/app-crash-lab.html) · [**Contract format**](tools/app-crash-lab/CONTRACT.md)
 
+**A successful restore can still lose data.** In the pinned local
+[WA-archiver case](tools/app-crash-lab/examples/wa-archiver/README.md), all three
+message bodies restore and the API reports success, but the reply relationship
+disappears. Ordinary preservation checks pass. The separate server-mode
+diagnostic includes the unchanged backup, raw before/after screenshots and
+a full-record control; it is our reproduction, separate from author adoption.
+
 ## Check your own app
 
 Use a disposable **local copy of your app**, with **Node 22+ and npm**.
