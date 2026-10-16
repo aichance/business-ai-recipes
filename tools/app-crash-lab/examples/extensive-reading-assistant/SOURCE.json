@@ -1,0 +1,27 @@
+{
+  "upstream": "https://github.com/pomodorozhong/extensive-reading-assistant",
+  "upstreamCommit": "e1b39449b0f5ae04d83dc650f7b1397bdbcc61b9",
+  "upstreamLicense": "MIT",
+  "issue": "https://github.com/pomodorozhong/extensive-reading-assistant/issues/26",
+  "upstreamArchiveSha256": "370cf7f534dc2e8141fe37992cedb189854b15e251bfb90ee6c9bf1d6bf9eca2",
+  "appCrashLabVersion": "0.10.0",
+  "playwrightVersion": "1.64.0",
+  "sourceIncluded": false,
+  "sourceModified": false,
+  "scope": [
+    "complete saved settings record with empty API key",
+    "complete built-in debug fixture annotation record",
+    "selected rendered annotation state after reload",
+    "separate known-unimplemented New Story draft regression"
+  ],
+  "notTested": [
+    "live story generation",
+    "Gemini/provider quality",
+    "real credentials or credential exclusion from a future draft",
+    "successful-generation draft clearing",
+    "saved generated-story/vocabulary migration",
+    "offline PWA/install",
+    "JSON export/restore",
+    "Windows/mobile"
+  ]
+}
