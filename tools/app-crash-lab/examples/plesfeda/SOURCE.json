@@ -1,0 +1,29 @@
+{
+  "repository": "https://github.com/cuculhart/plesfeda",
+  "commit": "ed409f6e349e4c683b5965c81fa4ab78311ddb8f",
+  "source_url": "https://github.com/cuculhart/plesfeda/tree/ed409f6e349e4c683b5965c81fa4ab78311ddb8f",
+  "package_version": "0.2.0",
+  "license": "MIT",
+  "owner_gate": {
+    "type": "User",
+    "company": null,
+    "user_id": 332349660,
+    "repository_id": 1418740653,
+    "observed_at": "2026-10-16T12:24:44.744237+00:00"
+  },
+  "source_modifications": false,
+  "verified_app_source_files": 18,
+  "verified_app_source_bytes": 145367,
+  "app_source_included_here": false,
+  "contract_sha256": "d1e98b7a2b2b155c8ec3cbb6ddd20383a1587b0c2193f46f21808d4ed98c8a46",
+  "measurement_date": "2026-10-16",
+  "environment": {
+    "os": "macOS",
+    "node": "22.16.0",
+    "playwright": "1.64.0",
+    "browser": "Playwright Chromium",
+    "runner": "App Crash Lab0.10.0"
+  },
+  "test_data": "Four authored synthetic tasks and six authored calendar fields; no real project data",
+  "scope": "Independent operator compatibility check; not author execution, all-input validation or production behavior"
+}

@@ -1,0 +1,65 @@
+{
+  "measured_at": "2026-10-16T12:29:32.996039+00:00",
+  "source_commit": "ed409f6e349e4c683b5965c81fa4ab78311ddb8f",
+  "app_version": "0.2.0",
+  "runner_version": "0.10.0",
+  "contract_sha256": "d1e98b7a2b2b155c8ec3cbb6ddd20383a1587b0c2193f46f21808d4ed98c8a46",
+  "checks": [
+    {
+      "check": "reload",
+      "status": "pass"
+    },
+    {
+      "check": "rejected-update",
+      "status": "pass"
+    },
+    {
+      "check": "backup-roundtrip",
+      "status": "pass"
+    }
+  ],
+  "cli_exit_code": 0,
+  "cli_wall_seconds": 18.576401,
+  "standalone": {
+    "expected": 3,
+    "unexpected": 0,
+    "skipped": 0,
+    "flaky": 0,
+    "exit_code": 0,
+    "wall_seconds": 20.11556,
+    "framework_duration_ms": 19563.127
+  },
+  "backup": {
+    "format": "utf8-json",
+    "sizeBytes": 973,
+    "sha256": "ebed3277fb47fda8265620ac55ff2f9bc14bedbc0f715282f1c2e1b01aba05e0"
+  },
+  "backup_original_bytes_uploaded": true,
+  "backup_download_count": 1,
+  "backup_comparisons": {
+    "export": {
+      "matched": true
+    },
+    "sourceAfterExport": {
+      "matched": true
+    },
+    "restoration": {
+      "matched": true,
+      "changedObservations": []
+    },
+    "reload": {
+      "matched": true,
+      "changedObservations": []
+    }
+  },
+  "selected_storage_observations": [
+    "complete tasks array",
+    "complete gantt configuration object"
+  ],
+  "synthetic_task_count": 4,
+  "calendar_field_count": 6,
+  "verified_source_file_count": 18,
+  "upstream_source_unchanged": true,
+  "author_execution_verified": false,
+  "new_distinct_user_credit": 0
+}

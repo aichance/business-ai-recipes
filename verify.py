@@ -16,6 +16,10 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "tools/app-crash-lab/examples/plesfeda/README.md",
+    "tools/app-crash-lab/examples/plesfeda/SOURCE.json",
+    "tools/app-crash-lab/examples/plesfeda/preservation.json",
+    "tools/app-crash-lab/examples/plesfeda/results-summary.json",
     "tools/app-crash-lab/examples/extensive-reading-assistant/LICENSE",
     "tools/app-crash-lab/examples/extensive-reading-assistant/README.md",
     "tools/app-crash-lab/examples/extensive-reading-assistant/SOURCE.json",

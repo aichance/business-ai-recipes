@@ -40,6 +40,11 @@ These are deliberately seeded defects in the included demo, not claims of
 new bugs discovered in someone else's software. The same contract runs on
 the broken and fixed versions.
 
+The [Plesfeda WBS contract](examples/plesfeda/README.md) preserves complete
+task records, dependencies and six calendar fields through reload, malformed-JSON
+rejection and an actual Save → fresh Open → reload. The pinned unmodified app
+passed all three checks; this is an operator test, separate from author adoption.
+
 ## Try it
 
 You need **Node 22+** and npm. In an empty folder, run these two commands.

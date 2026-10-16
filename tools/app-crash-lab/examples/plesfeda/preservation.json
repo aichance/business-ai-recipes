@@ -1,0 +1,260 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "Plesfeda0.2 / WBS tree dependencies and calendar roundtrip",
+  "baseURL": "http://127.0.0.1:54671",
+  "path": "/",
+  "timeoutMs": 12000,
+  "stabilityMs": 500,
+  "checks": [
+    "reload",
+    "rejected-update",
+    "backup-roundtrip"
+  ],
+  "reset": [],
+  "setup": [
+    {
+      "action": "setFile",
+      "target": {
+        "css": "input[type=\"file\"]"
+      },
+      "file": {
+        "name": "acl-synthetic.plesfeda.json",
+        "mimeType": "application/json",
+        "text": "{\"app\":\"plesfeda\",\"version\":1,\"tasks\":[{\"id\":\"acl-root\",\"parentId\":null,\"order\":1,\"name\":\"ACL synthetic release\",\"effort\":0,\"open\":false},{\"id\":\"acl-design\",\"parentId\":\"acl-root\",\"order\":1,\"name\":\"ACL synthetic design\",\"effort\":1.5,\"open\":false},{\"id\":\"acl-build\",\"parentId\":\"acl-root\",\"order\":2,\"name\":\"ACL synthetic build\",\"effort\":2.5,\"open\":false,\"deps\":[\"acl-design\"]},{\"id\":\"acl-milestone\",\"parentId\":\"acl-root\",\"order\":3,\"name\":\"ACL synthetic milestone\",\"effort\":0,\"open\":false,\"deps\":[\"acl-build\"]}],\"gantt\":{\"base\":\"2026-11-02\",\"startHour\":11,\"hoursPerDay\":6,\"exSat\":false,\"exSun\":true,\"holidays\":[\"2026-11-04\"]}}"
+      },
+      "save": true
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": ".task-name[title=\"ACL synthetic release\"]"
+      }
+    }
+  ],
+  "observe": {
+    "tasks": {
+      "source": "localStorage",
+      "key": "plesfeda.tasks.v1",
+      "parse": "json"
+    },
+    "gantt": {
+      "source": "localStorage",
+      "key": "plesfeda.ui.v1",
+      "parse": "json",
+      "jsonPath": [
+        "gantt"
+      ]
+    },
+    "taskCount": {
+      "source": "count",
+      "target": {
+        "css": ".task-name"
+      }
+    },
+    "sourceLabel": {
+      "source": "count",
+      "target": {
+        "css": ".task-name[title=\"ACL synthetic release\"]"
+      }
+    }
+  },
+  "expected": {
+    "tasks": [
+      {
+        "id": "acl-root",
+        "parentId": null,
+        "order": 1,
+        "name": "ACL synthetic release",
+        "effort": 0,
+        "open": false
+      },
+      {
+        "id": "acl-design",
+        "parentId": "acl-root",
+        "order": 1,
+        "name": "ACL synthetic design",
+        "effort": 1.5,
+        "open": false
+      },
+      {
+        "id": "acl-build",
+        "parentId": "acl-root",
+        "order": 2,
+        "name": "ACL synthetic build",
+        "effort": 2.5,
+        "open": false,
+        "deps": [
+          "acl-design"
+        ]
+      },
+      {
+        "id": "acl-milestone",
+        "parentId": "acl-root",
+        "order": 3,
+        "name": "ACL synthetic milestone",
+        "effort": 0,
+        "open": false,
+        "deps": [
+          "acl-build"
+        ]
+      }
+    ],
+    "gantt": {
+      "base": "2026-11-02",
+      "startHour": 11,
+      "hoursPerDay": 6,
+      "exSat": false,
+      "exSun": true,
+      "holidays": [
+        "2026-11-04"
+      ]
+    },
+    "taskCount": 4,
+    "sourceLabel": 1
+  },
+  "rejectedUpdate": {
+    "steps": [
+      {
+        "action": "setFile",
+        "target": {
+          "css": "input[type=\"file\"]"
+        },
+        "file": {
+          "name": "broken.plesfeda.json",
+          "mimeType": "application/json",
+          "text": "{\"tasks\":["
+        }
+      }
+    ],
+    "dialog": {
+      "type": "alert",
+      "message": "Invalid file"
+    }
+  },
+  "backupRoundtrip": {
+    "isolation": "browser-local",
+    "export": {
+      "steps": [
+        {
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "Save"
+          }
+        }
+      ],
+      "maxBytes": 65536,
+      "statePaths": {
+        "tasks": [
+          "tasks"
+        ],
+        "gantt": [
+          "gantt"
+        ]
+      }
+    },
+    "restore": {
+      "path": "/",
+      "prepare": [
+        {
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "Clear"
+          }
+        },
+        {
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "Clear all"
+          }
+        },
+        {
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "Gantt"
+          }
+        },
+        {
+          "action": "fill",
+          "target": {
+            "css": ".modal input[type=\"date\"]"
+          },
+          "value": "2026-10-19"
+        },
+        {
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "OK"
+          }
+        },
+        {
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "Close"
+          }
+        }
+      ],
+      "ready": [
+        {
+          "action": "expectVisible",
+          "target": {
+            "role": "button",
+            "name": "Open"
+          }
+        }
+      ],
+      "empty": {
+        "tasks": [],
+        "gantt": {
+          "base": "2026-10-19",
+          "startHour": 9,
+          "hoursPerDay": 8,
+          "exSat": true,
+          "exSun": true,
+          "holidays": []
+        },
+        "taskCount": 0,
+        "sourceLabel": 0
+      },
+      "target": {
+        "css": "input[type=\"file\"]"
+      },
+      "mimeType": "application/json",
+      "success": {
+        "observe": {
+          "imported": {
+            "source": "count",
+            "target": {
+              "css": ".task-name[title=\"ACL synthetic release\"]"
+            }
+          }
+        },
+        "expected": {
+          "imported": 1
+        }
+      },
+      "after": [
+        {
+          "action": "expectVisible",
+          "target": {
+            "css": ".task-name[title=\"ACL synthetic release\"]"
+          }
+        }
+      ]
+    }
+  },
+  "afterReload": [
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": ".task-name[title=\"ACL synthetic release\"]"
+      }
+    }
+  ]
+}
