@@ -16,6 +16,13 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "tools/app-crash-lab/examples/how-many-beers/README.md",
+    "tools/app-crash-lab/examples/how-many-beers/SOURCE.json",
+    "tools/app-crash-lab/examples/how-many-beers/results-summary.json",
+    "tools/app-crash-lab/examples/how-many-beers/backup.spec.mjs",
+    "tools/app-crash-lab/examples/how-many-beers/playwright.config.mjs",
+    "tools/app-crash-lab/examples/how-many-beers/reload.json",
+    "tools/app-crash-lab/examples/how-many-beers/wrong-baseline.json",
     ".agents/skills/app-crash-lab/SKILL.md",
     ".agents/skills/app-crash-lab/LICENSE",
     ".agents/skills/app-crash-lab/references/runner.md",
