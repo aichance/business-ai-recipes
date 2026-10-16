@@ -1,0 +1,61 @@
+{
+  "measured_at": "2026-10-16T05:43:16.091Z",
+  "upstream_pin": "2822b6cd1b2c675bb524dab674c59a13e7f3b263",
+  "operator_trial_not_third_party_adoption": true,
+  "upstream_unit": {
+    "passed": 30,
+    "files": 3
+  },
+  "cli_reload": {
+    "status": "PASS",
+    "version": "0.10.0",
+    "full_keys": [
+      "how-many-beers:meal:v1",
+      "how-many-beers:history:v1"
+    ],
+    "generated_standalone": "1 passed, 0 failed, 0 skipped"
+  },
+  "wrong_baseline": {
+    "status": "INCONCLUSIVE",
+    "exit_code": 2,
+    "reason": "SOURCE_BASELINE_NOT_CONFIRMED",
+    "not_app_failure": true
+  },
+  "independent_playwright": {
+    "passed": 1,
+    "failed": 1,
+    "skipped": 0,
+    "positive": {
+      "status": "PASS",
+      "backup_bytes": 3356,
+      "backup_sha256": "d4dbdde9cbc1b9e5449b4114529bb51886fc527be70a999a802a8566fbd93509",
+      "complete_active_and_history_preserved_after_fresh_restore_and_reload": true,
+      "archive_cooks": 1,
+      "archive_events": [
+        "started",
+        "temperature",
+        "completed"
+      ],
+      "native_confirm_accepted_once": true
+    },
+    "invalid_null_task": {
+      "status": "FAIL",
+      "expected": "Explicit refusal; both full saved values unchanged; UI remains usable after reload",
+      "mutation": "append one null at /active/customTasks/-; all other exported values unchanged",
+      "source_backup_bytes": 3356,
+      "source_backup_sha256": "b7a54c3117379ff835116ebd4c42f878d0bfeedb4942f700c802d91328156e34",
+      "rejection_observed": false,
+      "active_preserved_after_import": false,
+      "history_preserved_after_import": true,
+      "active_preserved_after_reload": false,
+      "history_preserved_after_reload": true,
+      "only_saved_difference": "One appended null in active.customTasks; every other selected value unchanged",
+      "native_confirm_accepted_once": true,
+      "page_errors": [
+        "Cannot read properties of null (reading 'id')",
+        "Cannot read properties of null (reading 'id')"
+      ],
+      "ui_after_import_and_reload": "Application error: a client-side exception has occurred"
+    }
+  }
+}

@@ -1,0 +1,243 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "How Many Beers — deliberately wrong source baseline",
+  "baseURL": "http://127.0.0.1:60291",
+  "path": "/how-many-beers/",
+  "timeoutMs": 15000,
+  "stabilityMs": 500,
+  "checks": [
+    "reload"
+  ],
+  "reset": [],
+  "setup": [
+    {
+      "action": "fill",
+      "target": {
+        "css": "#meal-name"
+      },
+      "value": "ACL synthetic archived cook"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "+ Add a checklist step"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "role": "textbox",
+        "name": "Step title"
+      },
+      "value": "ACL synthetic archived step"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "role": "textbox",
+        "name": "Instructions (optional)"
+      },
+      "value": "ACL synthetic archived instructions"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Add step"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "🔥 Start the cook"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "role": "textbox",
+        "name": "Quick notes"
+      },
+      "value": "ACL synthetic note"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "+ Log temperature"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[id^=\"reading-temp-\"]"
+      },
+      "value": "169"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "role": "textbox",
+        "name": "Location / details (optional)"
+      },
+      "value": "ACL synthetic reading"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Save timestamped reading"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "checkbox",
+        "name": "Complete ACL synthetic archived step"
+      }
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "role": "heading",
+        "name": "That's a wrap!"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "✓ Finish & Save Cook"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "role": "textbox",
+        "name": "How did it turn out? (optional)"
+      },
+      "value": "ACL synthetic outcome"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Save Cook & Start Fresh"
+      }
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "#meal-name"
+      },
+      "value": "Next cook"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "#meal-name"
+      },
+      "value": "ACL synthetic active cook"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "+ Add a checklist step"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "role": "textbox",
+        "name": "Step title"
+      },
+      "value": "ACL synthetic active checkpoint"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "role": "textbox",
+        "name": "Instructions (optional)"
+      },
+      "value": "ACL synthetic active instructions"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Add step"
+      },
+      "save": true
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "role": "article",
+        "name": "ACL synthetic active checkpoint"
+      }
+    }
+  ],
+  "observe": {
+    "active": {
+      "source": "localStorage",
+      "key": "how-many-beers:meal:v1",
+      "parse": "json"
+    },
+    "history": {
+      "source": "localStorage",
+      "key": "how-many-beers:history:v1",
+      "parse": "json"
+    },
+    "mealName": {
+      "source": "value",
+      "target": {
+        "css": "#meal-name"
+      }
+    },
+    "archiveName": {
+      "source": "text",
+      "target": {
+        "css": ".history-item strong"
+      }
+    },
+    "archiveCount": {
+      "source": "count",
+      "target": {
+        "css": ".history-item"
+      }
+    },
+    "activeTask": {
+      "source": "count",
+      "target": {
+        "role": "article",
+        "name": "ACL synthetic active checkpoint"
+      }
+    }
+  },
+  "expected": {
+    "mealName": "ACL synthetic active cook",
+    "archiveName": "ACL deliberately wrong archived cook",
+    "archiveCount": 1,
+    "activeTask": 1
+  },
+  "afterReload": [
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "#meal-name"
+      },
+      "value": "ACL synthetic active cook"
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "role": "article",
+        "name": "ACL synthetic active checkpoint"
+      }
+    }
+  ]
+}
