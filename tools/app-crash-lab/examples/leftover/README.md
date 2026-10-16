@@ -18,6 +18,26 @@ its empty balance and History persisted after a separate manual reload.
 The CLI rejection check itself compares the immediate post-import state;
 that separate UI check supplies the after-reload observation.
 
+## Watch the normal-file and proposed-rejection controls
+
+[![Edited local replay: a real backup restores the saved budget; a synthetic v999 import replaces it](../../../../docs/leftover-version-boundary.gif)](https://aichance.github.io/business-ai-recipes/leftover-version-boundary.mp4)
+
+[Watch the 14-second MP4](https://aichance.github.io/business-ai-recipes/leftover-version-boundary.mp4).
+Chapter 1 restores the app's real downloaded JSON in a new browser context and
+reloads with the complete original state, `-$25.50` balance and one History entry.
+Chapter 2 imports the declared synthetic `v: 999` fixture into the saved budget;
+the app reports restoration and the replaced `$0`/empty-History state survives reload.
+
+This is a separate **maintainer-operated Playwright re-capture**, not a recording
+of the CLI, an upstream fix or a third-party trial. It uses the unchanged source
+hash below, real download/file-chooser events and synthetic data only. The new
+browser starts without stored origins/cookies; its tour and language preferences
+are then set through the normal UI before import. Full state is compared in the
+recording assertions; a video alone cannot prove every field. The two clips are
+trimmed, joined and labelled; no app pixels or source are rewritten. Viewer holds
+follow semantic assertions and do not substitute for persistence readiness.
+[Recording scope, asset hashes and results](MEDIA.json).
+
 ## Run on the same official HTML snapshot
 
 Use Node 22+, npm and Python 3. Keep everything in a disposable directory;

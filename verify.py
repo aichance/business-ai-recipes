@@ -15,6 +15,9 @@ from tempfile import TemporaryDirectory
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "docs/leftover-version-boundary.gif",
+    "docs/leftover-version-boundary.mp4",
+    "tools/app-crash-lab/examples/leftover/MEDIA.json",
     "tools/app-crash-lab/examples/leftover/README.md",
     "tools/app-crash-lab/examples/leftover/SOURCE.json",
     "tools/app-crash-lab/examples/leftover/roundtrip.json",
