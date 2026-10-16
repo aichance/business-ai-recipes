@@ -40,6 +40,13 @@ These are deliberately seeded defects in the included demo, not claims of
 new bugs discovered in someone else's software. The same contract runs on
 the broken and fixed versions.
 
+**Three messages restored; one reply relationship lost.** The
+[WA-archiver case](examples/wa-archiver/README.md) passes reload and rejected-JSON
+checks, yet its native backup loses a reply's parent on a separate new server
+DB. It includes a passing full-record control, raw screenshots and a runnable
+server-mode Playwright diagnostic, separate from the built-in browser-local
+backup protocol.
+
 The [Plesfeda WBS contract](examples/plesfeda/README.md) preserves complete
 task records, dependencies and six calendar fields through reload, malformed-JSON
 rejection and an actual Save → fresh Open → reload. The pinned unmodified app
