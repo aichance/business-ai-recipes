@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "Reading assistant: real fixture annotation survives reload",
+  "baseURL": "http://127.0.0.1:30092",
+  "path": "/#/settings",
+  "timeoutMs": 4000,
+  "stabilityMs": 300,
+  "checks": [
+    "reload"
+  ],
+  "reset": [],
+  "setup": [
+    {
+      "action": "click",
+      "target": {
+        "role": "radio",
+        "name": "B1"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "switch",
+        "name": "Show CEFR fixture articles in My Stories"
+      }
+    },
+    {
+      "action": "goto",
+      "path": "/#/stories/debug-cefr-a1"
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": "#word-0[aria-label=\"Look up I\"]"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "#word-0[aria-label=\"Look up I\"]"
+      },
+      "save": true
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": ".glossary-definition"
+      },
+      "value": "The person who is speaking."
+    }
+  ],
+  "observe": {
+    "fixtureState": {
+      "source": "localStorage",
+      "key": "era.v1.debug-fixtures",
+      "parse": "json"
+    },
+    "settings": {
+      "source": "localStorage",
+      "key": "era.v1.settings",
+      "parse": "json"
+    },
+    "wordClass": {
+      "source": "attribute",
+      "target": {
+        "css": "#word-0"
+      },
+      "attribute": "class"
+    },
+    "savedDefinitionCount": {
+      "source": "count",
+      "target": {
+        "css": ".glossary-definition:text-is(\"The person who is speaking.\")"
+      }
+    }
+  },
+  "expected": {
+    "fixtureState": {
+      "debug-cefr-a1": {
+        "wordMarks": {
+          "i": "unknown"
+        },
+        "explanations": {
+          "i": "The person who is speaking."
+        }
+      }
+    },
+    "settings": {
+      "cefrLevel": "B1",
+      "apiKey": "",
+      "showDebugFixtures": true,
+      "showVocabularyReport": false,
+      "apiBaseUrl": "https://generativelanguage.googleapis.com/v1beta",
+      "model": "gemini-3.1-flash-lite"
+    },
+    "wordClass": "story-word unknown",
+    "savedDefinitionCount": 1
+  },
+  "afterReload": [
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": "#word-0[aria-label=\"Look up I\"]"
+      }
+    }
+  ]
+}
