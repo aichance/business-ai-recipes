@@ -1,0 +1,1351 @@
+{
+  "acquired_at": "2026-10-16T13:23:33.491075+00:00",
+  "upstream_sha": "7983cd4e73c6f34b23773be10872060d1e7efb0f",
+  "tree_truncated": false,
+  "archive_bytes": 1522565,
+  "archive_sha256": "c0e082de1818830e103ab299de17b25af35920bf79288d738fb0058f1e26a068",
+  "selected_file_count": 222,
+  "selected_bytes": 2116025,
+  "all_git_blobs_verified": true,
+  "excluded": [
+    "android",
+    "signing",
+    "website",
+    "docs",
+    "other scripts"
+  ],
+  "files": [
+    {
+      "path": ".env.example",
+      "bytes": 93,
+      "git_blob": "c2c2c61ad245015579eb90b3270ccd5bb5c5e88b",
+      "sha256": "e76c5aff62eb652d5ec9cfd008c279d2f4032b7ba250c1b164c8530ac4093b3c"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 1307,
+      "git_blob": "d06819434a5550168acb4186b477927ddb134c47",
+      "sha256": "f39952d7877ad42f85963d3747aca816b5ff50c548993d636ffe30baa1ba8a00"
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 1085,
+      "git_blob": "a027654b74803a963ffb5f511fd73634d9c2228b",
+      "sha256": "684e5e93f3785eab1ab36ed94bbc8b9dda5a23414d8495a4f7cc3abd271f7e1a"
+    },
+    {
+      "path": "README.md",
+      "bytes": 9708,
+      "git_blob": "fe7fb12939ad2bcf44e0864525f272aeb00ad482",
+      "sha256": "c3386426cd2bc7f93db10fb9f2fbe7bba4d5bd0ecabd2411eec3fc2cd09c0c96"
+    },
+    {
+      "path": "bun.lock",
+      "bytes": 264570,
+      "git_blob": "85981061535dad719b153e762008d65e9cbde603",
+      "sha256": "f9f2e439f236d5519ec560baa3606e4b569925dfc49f114279fc780d51c83763"
+    },
+    {
+      "path": "capacitor.config.ts",
+      "bytes": 752,
+      "git_blob": "de49e8002453436c4bc76fc65685dff83e08b6e0",
+      "sha256": "1d42ccd2483c1a0996b40f9278eab0c5331d9b4db1519b9562b16b48ccc289d2"
+    },
+    {
+      "path": "components.json",
+      "bytes": 430,
+      "git_blob": "ffe928f5b6dfe484f57a5fd47d0487f21e164fa3",
+      "sha256": "b8be06c49cf44d97a973a6f7ad38a6bc78ab04f78a2614d407738de9aa900983"
+    },
+    {
+      "path": "eslint.config.mjs",
+      "bytes": 2132,
+      "git_blob": "a0741d267674c403e215e5f6381cb6c67763bb1c",
+      "sha256": "ee21d978329ef2b142435e45453ebd26d01025af8f575d8d153662b56cbf6162"
+    },
+    {
+      "path": "next.config.ts",
+      "bytes": 2036,
+      "git_blob": "eba139b7385327a3445abeafee9023fac4a504e9",
+      "sha256": "f80fd0a1c4a9478770e9f50002ea4a6a0afe9ef6f5980038a7b6109c79728fd1"
+    },
+    {
+      "path": "package.json",
+      "bytes": 3396,
+      "git_blob": "590ff47a1c33369d2160b9e320145b15ba58cac4",
+      "sha256": "179de1d5c2c9d6bd21f52da792d3858fb37bea353c2f783c8c47a20319eb78d3"
+    },
+    {
+      "path": "postcss.config.mjs",
+      "bytes": 81,
+      "git_blob": "c7bcb4b1ee14cd5e25078c2c934529afdd2a7df9",
+      "sha256": "141ef24ca27a99d08962210fdf20212d3435fdcfa21b46cd88b44d22f751dfae"
+    },
+    {
+      "path": "prisma/schema.prisma",
+      "bytes": 1814,
+      "git_blob": "3f256146977d380e4c4bce2841c5124f22cfdbc0",
+      "sha256": "9d9985d886a4b5a98a1acb58de7040b1d2eda23a566c0a7cd60a5e06531611be"
+    },
+    {
+      "path": "public/icon.svg",
+      "bytes": 495,
+      "git_blob": "606a19231f2d888fb4fd5f0fe7c427045b0b614f",
+      "sha256": "d4b7cf68bc2d41f15f532fbc5f3af44a2f1ba38a337b62fc3af2ef5c0a25cd3e"
+    },
+    {
+      "path": "public/icons/icon-192.png",
+      "bytes": 6979,
+      "git_blob": "3f4752513cfd565b97efd14c76088a7a1a630bd1",
+      "sha256": "8c2bb0852a340dad79adf8cc66cde26a9575c970b392dbf963fd23c8fea746c1"
+    },
+    {
+      "path": "public/icons/icon-512.png",
+      "bytes": 23846,
+      "git_blob": "2fb63fb6ed4db1426e82fa8a06d2955d4d8ad3dd",
+      "sha256": "787ac6bf8d7fd55b806994e8b77b9f1ef30479407374361fceccfab315d8af24"
+    },
+    {
+      "path": "public/logo.svg",
+      "bytes": 1065,
+      "git_blob": "d93ac8f66e41897acac0185396d5b91c32856c9a",
+      "sha256": "8506450e8ef647695d218c4b3245ef573f9c6473783f372eef87fdba9bd47eac"
+    },
+    {
+      "path": "public/manifest.json",
+      "bytes": 677,
+      "git_blob": "86e30ac439b8f768a9b9dfa424217b1a8af90f44",
+      "sha256": "36627091a96bf983eb7679092b45992f93fb278ff8336019f1e71d3e561b09e5"
+    },
+    {
+      "path": "public/manifest.webmanifest",
+      "bytes": 1134,
+      "git_blob": "cdee32c4efe1d8ea4ba80140770ed98f4ce67d0d",
+      "sha256": "d24a2e0c8f7a43bd89f304457b96df0170c97cdc820586125591fc7106d5d879"
+    },
+    {
+      "path": "public/robots.txt",
+      "bytes": 160,
+      "git_blob": "6018e701fc7dd0317cda9eceea390524322e8a05",
+      "sha256": "a3d27b3ca5ce32341fa9f96f01169b521b1657c05d1860c45d1e53a6258e9e8b"
+    },
+    {
+      "path": "public/sw.js",
+      "bytes": 5167,
+      "git_blob": "58431d6a11a33ccfe25c8337234bead338e8f033",
+      "sha256": "0e15734e7283488efe952f13cdae99fb5b87aaccae03388b40a48cab2cdf5393"
+    },
+    {
+      "path": "scripts/copy-sql-wasm.mjs",
+      "bytes": 1020,
+      "git_blob": "0d8b6c6ca4d412579098b6636ffedf398bbb0910",
+      "sha256": "a77fe239b0acf21c5b9baf469b7682dc0b7bf1e46d1f854b610d312775e5e7d1"
+    },
+    {
+      "path": "scripts/copy-whisper.mjs",
+      "bytes": 1630,
+      "git_blob": "c9659cbe1de3404d1d8834246852538fc8e1a6e4",
+      "sha256": "810471d6c89b206fba0a35c16feffdd5bee72536e55f02a55bd13c56cdfb343f"
+    },
+    {
+      "path": "src/app/api/ai/route.ts",
+      "bytes": 9650,
+      "git_blob": "b5c7cbac9d1b45ed7a5cf6155c7a5278d69169a6",
+      "sha256": "506597084765b1507e9504fb45bcc202bc6e75a46364cc6179cc661ef6bf7ab5"
+    },
+    {
+      "path": "src/app/api/auth/lock/route.ts",
+      "bytes": 6657,
+      "git_blob": "2d9a3669168effe0227ca447f14d0032c454823a",
+      "sha256": "606fd7bdd9afedcfc079fa12290430a1d5eefeb13da12c132e0df4780515a24e"
+    },
+    {
+      "path": "src/app/api/backup/route.ts",
+      "bytes": 10648,
+      "git_blob": "8d21b1e6d041a3b991e959389b200b46eb1d1612",
+      "sha256": "99e7675f3546e4f66c43d7a84d47348cb0da9ec90462676d93dc1604bfd999c5"
+    },
+    {
+      "path": "src/app/api/chats/[id]/export/route.ts",
+      "bytes": 10379,
+      "git_blob": "60b5489df9d0500b275935f10a95411465bdb951",
+      "sha256": "d7864551afc1eb2a138ff1a0dd2eb20cfbd0b8639ab4ab8ff5ec698f6164277b"
+    },
+    {
+      "path": "src/app/api/chats/[id]/media-zip/route.ts",
+      "bytes": 5655,
+      "git_blob": "d97ca6b40411b4096b9fb265f615e532ec3f4a76",
+      "sha256": "72d6c52de5387bf1c267f99a9e77612a26942776e5b12fc0f9c4745e2dbbcf64"
+    },
+    {
+      "path": "src/app/api/chats/[id]/media/route.ts",
+      "bytes": 1504,
+      "git_blob": "4ad38ef30d1fbc40224f8fbd7a0447faabc6cf86",
+      "sha256": "9634714ad81c7f0cfd770bf28cf163c30dc28a331dca4cb1128ded3f67912058"
+    },
+    {
+      "path": "src/app/api/chats/[id]/messages/delete/route.ts",
+      "bytes": 2222,
+      "git_blob": "8b4bd4f693cc66986c1422a14a6d11bd85ddde83",
+      "sha256": "bf4b7a826ee01aab15eb84827bab0199a4454fa7f81dd8602b38ca6da77f0fb0"
+    },
+    {
+      "path": "src/app/api/chats/[id]/messages/route.ts",
+      "bytes": 10426,
+      "git_blob": "7463eed143d8c635c857e6b9065bd0193429d0e0",
+      "sha256": "e7fbb3fb8099b6dac56b0cd9295ffe4eb7473e4a3dae2dee9ff9cd10e5c6d228"
+    },
+    {
+      "path": "src/app/api/chats/[id]/route.ts",
+      "bytes": 2355,
+      "git_blob": "26f4ee383eedb3e60f66abcfd9caba89bc2499d3",
+      "sha256": "89acf80f0b7058b94e380fd49dbd7d9e76b88eacc37c71f662145d1977cce4e2"
+    },
+    {
+      "path": "src/app/api/chats/[id]/starred/route.ts",
+      "bytes": 1000,
+      "git_blob": "5328f939cefef13a1bcec88f3620fe60359acf4b",
+      "sha256": "c0c1a10de3a918a5567a6f50c96a25d47872ca3d42dbde33f2943a655f80a4d6"
+    },
+    {
+      "path": "src/app/api/chats/[id]/wordcloud/route.ts",
+      "bytes": 1156,
+      "git_blob": "941ee9644dc6baa63a19712974722a9df8ae9a8d",
+      "sha256": "307094b8fa5e736906382fc336a3c7239fdbc3ad2d252d0b1cd484b59bc94c4b"
+    },
+    {
+      "path": "src/app/api/chats/route.ts",
+      "bytes": 2146,
+      "git_blob": "c2e85a3043d4c03613dc6d6dbaa08ca7ce7163df",
+      "sha256": "e3388b7e897524151abc80d12095bba85a5c664e39fc9d84bb526c14be06eb93"
+    },
+    {
+      "path": "src/app/api/demo/route.ts",
+      "bytes": 3990,
+      "git_blob": "238b3f80c5bb9a1f183d694046141aac7d1e047e",
+      "sha256": "e16ae33748d8f1e74c3a5427b795f972ebf104dd2ae60b9471c6f0811b3bf37b"
+    },
+    {
+      "path": "src/app/api/import/route.ts",
+      "bytes": 7835,
+      "git_blob": "3c56bf170e5b27d610b50d44e1bcbb784876ae1f",
+      "sha256": "fc6e6d80675a99bc70eb8c624490e7e23e47228ee7540877782304d9081310d1"
+    },
+    {
+      "path": "src/app/api/import/stream/route.ts",
+      "bytes": 11574,
+      "git_blob": "e14d94be9bf842c57c724409c4521c07336e6507",
+      "sha256": "ff43572c0fea4bc86ddf7d3fe733118ebfa067e80bec839b880ea71053f8fd88"
+    },
+    {
+      "path": "src/app/api/link-preview/route.ts",
+      "bytes": 11760,
+      "git_blob": "6559a9ed810746adf7139a488cb397d366d636a4",
+      "sha256": "46fe108faa782691e83fc5d65fd3966c310fa51b48b252e32a16c60a00bb43e2"
+    },
+    {
+      "path": "src/app/api/media-index/route.ts",
+      "bytes": 2275,
+      "git_blob": "d939dc72c10f3e74d9c7921bc9681e45217b820d",
+      "sha256": "420a9a1a0b2f987d77e9ae660826f40e5e5f59d6a17414be2cc8c334d436c2b4"
+    },
+    {
+      "path": "src/app/api/media/[chatId]/[name]/route.ts",
+      "bytes": 3959,
+      "git_blob": "a746259caf5b4ed32dbc14a2df7688c242e44af2",
+      "sha256": "7456a656fb53e0b73488c50b52e80d9870b17988124c1721dfad3477e9e5e993"
+    },
+    {
+      "path": "src/app/api/memories/route.ts",
+      "bytes": 4939,
+      "git_blob": "b35dd371fb9100dc3b28979b2b5be21a306bb076",
+      "sha256": "643a04be00e99be6bdc058a74a9a4b1405ebe917274eb811cd19e98f5c3d90f8"
+    },
+    {
+      "path": "src/app/api/messages/[id]/forward/route.ts",
+      "bytes": 3361,
+      "git_blob": "21cd1ca382aa87a8983e63cb19f4a358d3fab56e",
+      "sha256": "ef6070205dc7fbee4571040eadad8687ca05a847c00565fcdc40a14afd429631"
+    },
+    {
+      "path": "src/app/api/messages/[id]/reactions/route.ts",
+      "bytes": 2837,
+      "git_blob": "17a7c98a3a6f662ffcb78b9eb5e21dbe4e699435",
+      "sha256": "e39ae7fc05a029d9eae91daaae6bd0f79eec71ce46da5c1fca7e436be342ccd1"
+    },
+    {
+      "path": "src/app/api/messages/[id]/route.ts",
+      "bytes": 3353,
+      "git_blob": "80a1ec7600103e7db492f99bc88f21467c0e14c7",
+      "sha256": "bac38888c4219e04b5ffd4fc1e5eaf91ca596dbf8a569023c33e6d0d394142c3"
+    },
+    {
+      "path": "src/app/api/messages/delete-media/route.ts",
+      "bytes": 2907,
+      "git_blob": "6a494e418ab62eac25f1d7cb51fd6d02d1bac8ca",
+      "sha256": "b6f55d213fd97a4ff759f5eeb4edb089d10fc652f528baf3e0c2b5bb35ed544f"
+    },
+    {
+      "path": "src/app/api/scheduled/[id]/route.ts",
+      "bytes": 1157,
+      "git_blob": "71cca2d938e80f489cfab7c0566b00a1ea94a9af",
+      "sha256": "54abc43f21471b5573263803b68f800c122b290210016742ae7b6dba0ff5251b"
+    },
+    {
+      "path": "src/app/api/scheduled/dispatch/route.ts",
+      "bytes": 2921,
+      "git_blob": "909af6e3e72200d711b0e3c5881970245d1fadbe",
+      "sha256": "a5264a37741c580b8e942332a25853a7ee3ca731950fe8c2c16a5cf47660cc97"
+    },
+    {
+      "path": "src/app/api/scheduled/route.ts",
+      "bytes": 3738,
+      "git_blob": "98f681649ed12d8af4eb77a37133b015ef69d8f2",
+      "sha256": "1e158a84aa1242280050c950ba6d6289bfd77dac0445c27be612aebc1a89b42f"
+    },
+    {
+      "path": "src/app/api/search/route.ts",
+      "bytes": 2592,
+      "git_blob": "65d9abd63f35ed988a42ee776c19ff6742734c61",
+      "sha256": "b892ddb437c73147612a452f2987897c0f5184730bd77d0301645be8b1f8c6d6"
+    },
+    {
+      "path": "src/app/api/stats/route.ts",
+      "bytes": 3169,
+      "git_blob": "d093484fedeab2c15b90210f7e6f67faf4ceda82",
+      "sha256": "94f0ba0cff738bb8d52919cc69150d48f27c2f0f93fbce3b2c9fe88a3977d7e2"
+    },
+    {
+      "path": "src/app/api/storage/route.ts",
+      "bytes": 6726,
+      "git_blob": "676459a414ae64d5b1dfe7869eeb98495b71dd87",
+      "sha256": "6685c0f72be111cf791156cce65e9b44afc1cf5530d6eb9b3d0a7c5d505044f6"
+    },
+    {
+      "path": "src/app/api/transcribe/route.ts",
+      "bytes": 6332,
+      "git_blob": "f03d906d54dee50e2616df766e515b1c392c3670",
+      "sha256": "756859740af94a9e4f2c8208fd5baa70a4f0239bef0965093ac705e8c4d834e3"
+    },
+    {
+      "path": "src/app/api/wallpaper/[name]/route.ts",
+      "bytes": 1346,
+      "git_blob": "0685b39b9b19e7d2be35933e75ef3a2a5dbf97cd",
+      "sha256": "a505b108e03a0919efe31cc52c268ec274f16fcac292fa367aec3bcedfcc50c9"
+    },
+    {
+      "path": "src/app/api/wallpaper/generate/route.ts",
+      "bytes": 4750,
+      "git_blob": "ee69ff0c2fbaab2bb73a1b6872c386bfc7db63a2",
+      "sha256": "ee3fc7e7f43be636c14ea3980590f0ab8e522adcfd544f37e3414ea9c76adb00"
+    },
+    {
+      "path": "src/app/api/wallpaper/route.ts",
+      "bytes": 1776,
+      "git_blob": "3138ee0cd24a1d9d663b2deea3f378f1c82ab661",
+      "sha256": "9f4cb321be1bc73d2eef5648f5826baf321fd5fd4a9f449695524d847cb3d3d4"
+    },
+    {
+      "path": "src/app/globals.css",
+      "bytes": 25206,
+      "git_blob": "da989988b397118d09e38f595e93b6aa051807c7",
+      "sha256": "e24ff4bc149f721021bb3ed64d01d1c07e8aa106b0fef42aff2dea44aca0bdbf"
+    },
+    {
+      "path": "src/app/layout.tsx",
+      "bytes": 2150,
+      "git_blob": "409f1c74180ce9e03712b147871c9aeb9046301f",
+      "sha256": "9fb028e6ab096aecedac0a86ca77ff8426d90e679acfe79b20fbe11901c90058"
+    },
+    {
+      "path": "src/app/page.tsx",
+      "bytes": 125,
+      "git_blob": "e9ce4a3c3d9aeea0712c42b751f4a0e16694e4b5",
+      "sha256": "1ace39825052b2dff096af59ee2e43855945d369a92818e8ae2f800806f3af6c"
+    },
+    {
+      "path": "src/components/pwa-register.tsx",
+      "bytes": 687,
+      "git_blob": "84ac2bf420ad33bb4fe7a4a066900a6294e27853",
+      "sha256": "b4a0bc422f9d341caa57c936fed539857abd41e7dfc919e01eb5e7fa236dc99b"
+    },
+    {
+      "path": "src/components/theme-provider.tsx",
+      "bytes": 356,
+      "git_blob": "dc7c38a8eb45212cf4b9406f605cfd54b7724632",
+      "sha256": "fc30a782a6ce2bf817fc3225cd59abc995ae9d69eef4becd1c0253550a37b99a"
+    },
+    {
+      "path": "src/components/ui/accordion.tsx",
+      "bytes": 2053,
+      "git_blob": "4a8cca46b9c10394f5710a35892b36407ee70fc4",
+      "sha256": "7251e973cc6896411e3348c1e9cd10bb359934b0e766055c9a3439b07b775edc"
+    },
+    {
+      "path": "src/components/ui/alert-dialog.tsx",
+      "bytes": 3864,
+      "git_blob": "0863e40d92fe36ed1dd34d3a555f4947eff03af4",
+      "sha256": "59967c334f56dd44100e49b1fc18db428e7f15f5a28b9c2c4f9a3b7dcb4db4b7"
+    },
+    {
+      "path": "src/components/ui/alert.tsx",
+      "bytes": 1614,
+      "git_blob": "14213546e5ac051dd33c8359f261f9f76051d66f",
+      "sha256": "49d8311589b810b106aada8ef7b13f70b2b1f68cfce4e1458b7f31a191f420e9"
+    },
+    {
+      "path": "src/components/ui/aspect-ratio.tsx",
+      "bytes": 280,
+      "git_blob": "3df3fd02a6a30b60b6e1474664065b0d3437bf48",
+      "sha256": "6a75117416aa89200cf31e8d61643b428e812f479caea857c80004b26d893e79"
+    },
+    {
+      "path": "src/components/ui/avatar.tsx",
+      "bytes": 1097,
+      "git_blob": "71e428b4ca6154811e8f569d5fdd971ead095996",
+      "sha256": "e8672934f1c315f36cdae39380454ba8c2da62aca420dfb827d96693091419c4"
+    },
+    {
+      "path": "src/components/ui/badge.tsx",
+      "bytes": 1631,
+      "git_blob": "02054139a9a72f2ce2c4defd14861b4129312950",
+      "sha256": "f41c11fc13e9a1f1b849349cb51b137ddd27de0a17c5339675c789d58f556cc4"
+    },
+    {
+      "path": "src/components/ui/breadcrumb.tsx",
+      "bytes": 2357,
+      "git_blob": "eb88f32122082ae2dac61dd033939459215347f4",
+      "sha256": "22f3f4c13ed1085c4131379bfccc6fb173a474f861636bc2736506820153aa08"
+    },
+    {
+      "path": "src/components/ui/button.tsx",
+      "bytes": 2123,
+      "git_blob": "a2df8dce675fed0712d021fa45245289ecd26c88",
+      "sha256": "82403231e33fd3d45b111e5e819df194cdfa7cef9a726770185724a60bd20932"
+    },
+    {
+      "path": "src/components/ui/calendar.tsx",
+      "bytes": 7660,
+      "git_blob": "4d7c46afb52b047267c94d60b1a16ed5d3d2400b",
+      "sha256": "fe832b1ba33bd42a41cd2b66c7e156f5f421af87f8ceb799eea5db48bab6d294"
+    },
+    {
+      "path": "src/components/ui/card.tsx",
+      "bytes": 1989,
+      "git_blob": "d05bbc6c74cd8dbc699562cef917bb4267865aed",
+      "sha256": "78cdb63dff3ec7ef074ada630ff20a5d8004768b6cbe24ed134a8bfba12bafbb"
+    },
+    {
+      "path": "src/components/ui/carousel.tsx",
+      "bytes": 5556,
+      "git_blob": "0e05a77ea155fde6af5d9a4848b1d3953df6ea5a",
+      "sha256": "b7ea0dda3903d972c186f739e23da61f547bc83b5a0bf13b16856577846d5fc3"
+    },
+    {
+      "path": "src/components/ui/chart.tsx",
+      "bytes": 9781,
+      "git_blob": "97cc2807f6d74ca79a5dc61f76c7796d9de19930",
+      "sha256": "670849399b33fecf7e46aa222c52f6a7c294faac079f5227f8c01c594822fd5d"
+    },
+    {
+      "path": "src/components/ui/checkbox.tsx",
+      "bytes": 1226,
+      "git_blob": "fa0e4b59fa859bf5bdf1f3f4d24f1e71926f481f",
+      "sha256": "4c395ef15549e46068eb3b32a2a10fb5bfdb01f6834a3c0231a218a529015c83"
+    },
+    {
+      "path": "src/components/ui/collapsible.tsx",
+      "bytes": 800,
+      "git_blob": "ae9fad04a3716b5d6f6c957b75841737eb8ed7a8",
+      "sha256": "c2c74dc3e99482d00a57de673b56920860c2ff4b330373d783843f505dc11dae"
+    },
+    {
+      "path": "src/components/ui/command.tsx",
+      "bytes": 5291,
+      "git_blob": "e9feafe700e01de2d92be44cdc194b7b807b80d3",
+      "sha256": "4d539aba5344828598ef2739bd35dcff6c29dacf77c380f36c02e7cbc92f6aac"
+    },
+    {
+      "path": "src/components/ui/context-menu.tsx",
+      "bytes": 8222,
+      "git_blob": "e29ad05f96a328c7c6eca4641e550ff748805fa0",
+      "sha256": "6573f8ed4232ae9801a3098a5cd4549b43a1e0ac1fd2c495e552a862d81fba22"
+    },
+    {
+      "path": "src/components/ui/dialog.tsx",
+      "bytes": 3982,
+      "git_blob": "d9ccec91d22fab844bd04340c2b07e8677955350",
+      "sha256": "491a87bfae8f28773624d353bf56b9288d0852413e814d508e0d086dc7b06edb"
+    },
+    {
+      "path": "src/components/ui/drawer.tsx",
+      "bytes": 4255,
+      "git_blob": "8aa69230a087be1fb8efe2067d1cf793de87acd4",
+      "sha256": "0c9464ed4f95207ff6ec0b8f433f550388ea0fe57fecd36bbe100b084ee46a3e"
+    },
+    {
+      "path": "src/components/ui/dropdown-menu.tsx",
+      "bytes": 8284,
+      "git_blob": "ec51e9cc9f824a0b067d4a66a37caa63bbdce5f5",
+      "sha256": "9b346378821ba06f9501e4571fd7678cd8819d6833f833daff72bec699565c06"
+    },
+    {
+      "path": "src/components/ui/form.tsx",
+      "bytes": 3759,
+      "git_blob": "524b986b3ceea3e50204597e5ad38d04f93ffb5d",
+      "sha256": "b41b4b10f5e11b2acc1accb7b027eba0581b5cdd549d3ccef92e30d1f4efcf54"
+    },
+    {
+      "path": "src/components/ui/hover-card.tsx",
+      "bytes": 1532,
+      "git_blob": "e7541864c7dee7bf024ad96e7b6d0234e0b49f8b",
+      "sha256": "031f6a309d87c8e42a2282fccc277dde75e373de8c93dad881582c9dc13e05d0"
+    },
+    {
+      "path": "src/components/ui/input-otp.tsx",
+      "bytes": 2254,
+      "git_blob": "614f70e383bf47886ddb3d71581ccd27c8b5739d",
+      "sha256": "35d561c352fde4e34fc3481839649728300c01cfadac62aa84c375d6d812f4de"
+    },
+    {
+      "path": "src/components/ui/input.tsx",
+      "bytes": 967,
+      "git_blob": "03295ca6ac617de95b78b09e5e3a6de897a204f0",
+      "sha256": "6628e8fde207857b9ba08910d386eeea8213d7d745b4e0ae8b95332b52730db9"
+    },
+    {
+      "path": "src/components/ui/label.tsx",
+      "bytes": 611,
+      "git_blob": "fb5fbc3eee891a5c118bb00fd153273c16959c9e",
+      "sha256": "9ec42c8a57e82311118b794318409ee02b2cebfa49ba6cce8457cff6448cd471"
+    },
+    {
+      "path": "src/components/ui/menubar.tsx",
+      "bytes": 8394,
+      "git_blob": "8480f0aac115338b73311343a80062c77476bf2f",
+      "sha256": "d3c5b6060323b78aef1b32650e22d3d951d1b125404f76ffb967ed80446a3ddd"
+    },
+    {
+      "path": "src/components/ui/navigation-menu.tsx",
+      "bytes": 6664,
+      "git_blob": "1199945c49485cc3fb9f86c0372ac550fe01cce5",
+      "sha256": "d71f57fe0f365541fbf5d00196b0b78a461d8c4f38d35293e5754680d93b9245"
+    },
+    {
+      "path": "src/components/ui/pagination.tsx",
+      "bytes": 2712,
+      "git_blob": "0d185410e7bbf2a1326d7af4b55f1b4b8e14d16a",
+      "sha256": "53ffa0474d07dbfe1fb67f043a0ad7e7d24feecf950e65da8b929a90179c6ad4"
+    },
+    {
+      "path": "src/components/ui/popover.tsx",
+      "bytes": 1635,
+      "git_blob": "01e468b6783992d04775aa52376221b8fa4b0f95",
+      "sha256": "29a217781737bbf5c430859b3de46097a44ada81c4143c2d05543d2167de0ee1"
+    },
+    {
+      "path": "src/components/ui/progress.tsx",
+      "bytes": 740,
+      "git_blob": "e7a416c375109c29e844f0ecee7e0645a03ec301",
+      "sha256": "e7a89220fb49e18d6613956781cfd5eb38d5da36379e93f5fc90ccec127dc871"
+    },
+    {
+      "path": "src/components/ui/radio-group.tsx",
+      "bytes": 1466,
+      "git_blob": "5e6778cb48d88b52f09ef333e1dd5df7c30f72d2",
+      "sha256": "b12ca5cef859dd75b274337234bae66e413b0f97845243254a1dedcb2d7a7237"
+    },
+    {
+      "path": "src/components/ui/resizable.tsx",
+      "bytes": 2028,
+      "git_blob": "12bbd0b8b04e6ec83bde5b9fa8a3e29a166581da",
+      "sha256": "41043c0f3dec3a41e163fcfbba4ed8138eeafcedd1aa40c007c3e195f34d37df"
+    },
+    {
+      "path": "src/components/ui/scroll-area.tsx",
+      "bytes": 1645,
+      "git_blob": "8e4fa13f668a62de3a4b8eaebf23eba1b0421e7d",
+      "sha256": "1c5d0b242d0513848f4bfa9b57ba7f438d9b1120617029941bfaa137196ecead"
+    },
+    {
+      "path": "src/components/ui/select.tsx",
+      "bytes": 6253,
+      "git_blob": "dcbbc0ca0c781dfa6d2fe4ee6f1c9c2cad905a9b",
+      "sha256": "8795c9fac7c48d565ff6c47cbf4cca8bfefe25d8cb3d7e7aeba36855739a76ab"
+    },
+    {
+      "path": "src/components/ui/separator.tsx",
+      "bytes": 699,
+      "git_blob": "275381cab0adbc778ea634e7c46fbf80db821bf3",
+      "sha256": "e9dddbd8dbbc0eccd683306481b0f0bbc8e2b60ea97817416ebb9fe7fbbbdca8"
+    },
+    {
+      "path": "src/components/ui/sheet.tsx",
+      "bytes": 4090,
+      "git_blob": "84649ad0ffd80bdd74dac8bcced074cf63e43233",
+      "sha256": "3d6a560c635fd91094e43191ecf73b124ccb2537e6060f85d5d31fcf68150e74"
+    },
+    {
+      "path": "src/components/ui/sidebar.tsx",
+      "bytes": 21633,
+      "git_blob": "1ee5a457ea2b67b750e93d6be8311c7645a5cc6f",
+      "sha256": "73561977bb06800b7d7700d844e4219b8dc4d14ac732c7a448e807005286d9f7"
+    },
+    {
+      "path": "src/components/ui/skeleton.tsx",
+      "bytes": 276,
+      "git_blob": "32ea0ef7fb4d4f7cb0affa7a3b329533b5f2af23",
+      "sha256": "f2aea81d8baf2b621945382aabac150e3db40f20d19ac1abea7aff805f1dc33c"
+    },
+    {
+      "path": "src/components/ui/slider.tsx",
+      "bytes": 2001,
+      "git_blob": "09391e86b31eb47649e419a28b6ccf20e80aa4ef",
+      "sha256": "55140ef92c201c82d530dede076603611fbfb2cdc899e4d8459b58f6cbb2b235"
+    },
+    {
+      "path": "src/components/ui/sonner.tsx",
+      "bytes": 564,
+      "git_blob": "957524edbd237ae3dce705e8f916f4d6ee2dbdd0",
+      "sha256": "958d33cd8a85293728acad21c1f3881da56b805bc11a3ec862d6aa355c152d90"
+    },
+    {
+      "path": "src/components/ui/switch.tsx",
+      "bytes": 1177,
+      "git_blob": "6a2b5241d8c0b3df98dec769e9999df4978975bf",
+      "sha256": "17f2390d98e8ce4d9e90155eac1918266914d6a9ada7c276b5d1c917cef0e969"
+    },
+    {
+      "path": "src/components/ui/table.tsx",
+      "bytes": 2448,
+      "git_blob": "51b74dd52570a0268d78870be270dd460cef41db",
+      "sha256": "7b8c7a952cf49e78aafe5f628c3bd90f7e01bd5602eb5d3650bef5727a8186d7"
+    },
+    {
+      "path": "src/components/ui/tabs.tsx",
+      "bytes": 1969,
+      "git_blob": "497ba5ea34247f6843e0c58ccd7da61b7c8edb46",
+      "sha256": "e8469e599381cf021ce751c27cca3d8cb06440a45665ca9c2ef2efb0acef1fd9"
+    },
+    {
+      "path": "src/components/ui/textarea.tsx",
+      "bytes": 759,
+      "git_blob": "7f21b5e78a4c1c23bf41b6be206f3f81dc84fe99",
+      "sha256": "de4e9fb0fd8e8ed10ea2e475ffe202a922ffe77e3f3edb2c517b0781447ad1b4"
+    },
+    {
+      "path": "src/components/ui/toast.tsx",
+      "bytes": 4829,
+      "git_blob": "2d96b40eb11bd1eb26b659404f69e73a02fcfe78",
+      "sha256": "45d3d86ddb0b098a2bbbdca8458369d4a1fb046f77d9e106b690727ff6658afd"
+    },
+    {
+      "path": "src/components/ui/toaster.tsx",
+      "bytes": 785,
+      "git_blob": "3f3c878962026b2912d1e3df67c3859fccaa6ad7",
+      "sha256": "e4957974d6393d08f8237e6660a522e4f314610c6743b21c28f256efdb7fff7c"
+    },
+    {
+      "path": "src/components/ui/toggle-group.tsx",
+      "bytes": 1925,
+      "git_blob": "5eed401b6c9c19f7b6f88e90d3cbe38783ef198b",
+      "sha256": "09eebce0dcbac76f860d4b6df5261c4f385f5ba233f88a0cd8dde91b1772abeb"
+    },
+    {
+      "path": "src/components/ui/toggle.tsx",
+      "bytes": 1570,
+      "git_blob": "94ec8f589b345a8c33b165463dfda393c7255967",
+      "sha256": "b201563ea8cdef3680a3d9bf272cfc5918a5ab6e1079d7ff8d6273df7fce2849"
+    },
+    {
+      "path": "src/components/ui/tooltip.tsx",
+      "bytes": 1891,
+      "git_blob": "4ee26b38a595862a5a082013d564d1ccf8452a7c",
+      "sha256": "8d8a3645f547334b759341daf94a20b12a8ba17e8de4ad6e4e1c64b38842c1e3"
+    },
+    {
+      "path": "src/components/whatsapp/AIToolsDialog.tsx",
+      "bytes": 20653,
+      "git_blob": "a36837f55b2e46b4df103149653e6a92c42edfb6",
+      "sha256": "540fefe2885f98c717f3223dbdd28327dd097e261e0bf519ee60caf6d3d3b8e9"
+    },
+    {
+      "path": "src/components/whatsapp/AppLock.tsx",
+      "bytes": 9583,
+      "git_blob": "19cd7ea3c85311c9ac246a32b0ae5a94f630089d",
+      "sha256": "d71b53c88e685b754ffd5ce52d708aafbc6f70ab2a322c9d08bb10ac3eec7e56"
+    },
+    {
+      "path": "src/components/whatsapp/AudioDock.tsx",
+      "bytes": 7833,
+      "git_blob": "62ac0d6a434fa400b2210411408777eeff11d987",
+      "sha256": "26ef84765dee5352c3d9addb3175cbb4ac36ee06d924a5808bac909bfa14977b"
+    },
+    {
+      "path": "src/components/whatsapp/Avatar.tsx",
+      "bytes": 1271,
+      "git_blob": "2c09e007837c7dc7fccd6c5d951efad435427df1",
+      "sha256": "aa0bf6375b3822256e5deacc298ebb83898ff2bb64c33092b3acdd3f711e1ed6"
+    },
+    {
+      "path": "src/components/whatsapp/ChatInfo.tsx",
+      "bytes": 25373,
+      "git_blob": "57a1783306fdd5b86b2c03287d5d5dc69fc158c8",
+      "sha256": "39af3864478c8bf4ec2e7639fe014cb52a0323494b2089b79fcc3c7853a94fbd"
+    },
+    {
+      "path": "src/components/whatsapp/ChatList.tsx",
+      "bytes": 46279,
+      "git_blob": "6ec68f745ddc04940bb63a1d86eb846252e33e1c",
+      "sha256": "9a26eb3a18ea3d54f60017df24cd836c99dda9dff9445a63c164b67cb44a69f5"
+    },
+    {
+      "path": "src/components/whatsapp/ChatView.tsx",
+      "bytes": 136714,
+      "git_blob": "5603837334bafb19e8bec5ab4748403354235cd6",
+      "sha256": "141dd99f5797b328dc8a73b1fc329e261b5a263033d98f82260b1d10f21d75f8"
+    },
+    {
+      "path": "src/components/whatsapp/CommandPalette.tsx",
+      "bytes": 5547,
+      "git_blob": "aa165db212d5886c29a650e732070cfaef43951f",
+      "sha256": "3fbe83ba3145c8d0c34759870d7c82aec0418466597ccad4ed3871caa0fad29f"
+    },
+    {
+      "path": "src/components/whatsapp/Composer.tsx",
+      "bytes": 27346,
+      "git_blob": "99fa3babec77218b952a4527b6cf6dcdd8cd91f3",
+      "sha256": "232b7c1f8d1660ae404bcc7b6a3f17a397ea4bee3616edbbda5883da38444eb2"
+    },
+    {
+      "path": "src/components/whatsapp/ContactDialog.tsx",
+      "bytes": 7279,
+      "git_blob": "40eaafa4f4bdbe1b2358c996738aac8ac1d2386d",
+      "sha256": "612dc009cdb988ca33126645273cb27f0c3fe49a1b7b098de73ddc8e92d921a0"
+    },
+    {
+      "path": "src/components/whatsapp/DemoPickerDialog.tsx",
+      "bytes": 9856,
+      "git_blob": "a81e1203bce6f3503159806548bc6f126ecdba7e",
+      "sha256": "99a73e247e16971da396df100b0eca611117e1144a9c87fa765169096286edf3"
+    },
+    {
+      "path": "src/components/whatsapp/DeviceStorageSection.tsx",
+      "bytes": 19908,
+      "git_blob": "bd35954507c2650f85a5dc646b0ef3d43e6699bb",
+      "sha256": "522598343128f2f77d29aa566480bba8d37f9dd884038f58177e7d3ef57c2719"
+    },
+    {
+      "path": "src/components/whatsapp/FolderManagerDialog.tsx",
+      "bytes": 14594,
+      "git_blob": "92a2a03b670d4703bcf16e83a9a049af69db3163",
+      "sha256": "dba28d41d86d21b92ae42bd9a781206ae9110053cd1fb4b70c12babe1c514886"
+    },
+    {
+      "path": "src/components/whatsapp/ForwardDialog.tsx",
+      "bytes": 8959,
+      "git_blob": "0ddb14ca1f1fd011cfa60f16c519bb87a1bfbf60",
+      "sha256": "e8528976c9f27a39d8cad7475400bf4edfe6ca255c102778f6820c4399bff20c"
+    },
+    {
+      "path": "src/components/whatsapp/GettingStartedDialog.tsx",
+      "bytes": 8534,
+      "git_blob": "6513e54acaae936cb4aae2d5f858d725e38b23bd",
+      "sha256": "3d2e20bc36632046f8f3b201908945fd01f0f5812d01d8b7ed3b1806943a374b"
+    },
+    {
+      "path": "src/components/whatsapp/GlobalSearch.tsx",
+      "bytes": 15686,
+      "git_blob": "a145ede0eb6e3706bd831468906820026b233572",
+      "sha256": "d778d0826e55ce56fe853ee1f2f7cd7613a99ed001095046a8c340b4c712afcf"
+    },
+    {
+      "path": "src/components/whatsapp/GuideDialog.tsx",
+      "bytes": 21741,
+      "git_blob": "9abb6bd39f15cd1e92607946d49e243e6ff6b5ae",
+      "sha256": "8e63574ce862817a8dff8201253c02b673d8f0d0ebd72abcf610de8c11524539"
+    },
+    {
+      "path": "src/components/whatsapp/ImportPanel.tsx",
+      "bytes": 24129,
+      "git_blob": "634edce508bef3160df5b364be23ad92fe21757b",
+      "sha256": "6864e3ad78d17eb187c093c55df2760e5a6ae189077d67baca353e99c105a764"
+    },
+    {
+      "path": "src/components/whatsapp/ImportPreviewStep.tsx",
+      "bytes": 13782,
+      "git_blob": "708180c4c84949a72dd66aa72defdf84671eae57",
+      "sha256": "a1c3a3bad926372d0223792fef79878b145d85b7d9b1fbd2fd6477d538c68da3"
+    },
+    {
+      "path": "src/components/whatsapp/Lightbox.tsx",
+      "bytes": 13813,
+      "git_blob": "b19c18c99c79348823bc6115fe1428b9a3a70a25",
+      "sha256": "07fd8c7c0e9b6f212ecd3fb2297a8d81d09e3a47a8c4cd6c5bc29dfc7fa66e64"
+    },
+    {
+      "path": "src/components/whatsapp/LocationDialog.tsx",
+      "bytes": 16873,
+      "git_blob": "35c57d89e0ffdb741e92c68b0c153359876fbbfd",
+      "sha256": "94f43f364d785f5da04cbf9a6d303e6857db1dcc890cb664683e9c4dbae6124c"
+    },
+    {
+      "path": "src/components/whatsapp/MediaGallery.tsx",
+      "bytes": 37500,
+      "git_blob": "f5804fdc945770873b73699c14b6c3a30321136d",
+      "sha256": "9b2b923a7a0cc7e99fc17cb818a425e86057eac69261a37a96cb57e605f7e296"
+    },
+    {
+      "path": "src/components/whatsapp/MediaHub.tsx",
+      "bytes": 39141,
+      "git_blob": "a4871d8dbae87b783596f37cb75f20b58ecec431",
+      "sha256": "100c382d06310e3f8e324cad8270dd15f9c38477e77eac24f2904a1f1ed1198c"
+    },
+    {
+      "path": "src/components/whatsapp/MemoriesDialog.tsx",
+      "bytes": 10126,
+      "git_blob": "60d91d18a98e262ea84c20a81e23b0fec77155a5",
+      "sha256": "b5e2ceaf77ca026347863c51f8f9459c84106704addd7cb0374a109b323d0d06"
+    },
+    {
+      "path": "src/components/whatsapp/MessageActionSheet.tsx",
+      "bytes": 12805,
+      "git_blob": "f66034f80549375356bf0d8f53d518b88d244350",
+      "sha256": "753f0f6905c12b33a2ae786776e6597e65e9e55b12362ebf3f891f1bcef13b9e"
+    },
+    {
+      "path": "src/components/whatsapp/MessageBubble.tsx",
+      "bytes": 76377,
+      "git_blob": "eb58d7bf7f25edc259845f7ff4456cf6c409c83e",
+      "sha256": "98087884626f224944b383e7a9552889914485b3ad8a2d80b5b8f0e71f0734c9"
+    },
+    {
+      "path": "src/components/whatsapp/MovieMode.tsx",
+      "bytes": 6965,
+      "git_blob": "3b7759db1d7612f954919093058969f571aaf688",
+      "sha256": "eb715c1b922b65b34c56d2e7c65656b4e811e0d970b1eb023968b397f9f93078"
+    },
+    {
+      "path": "src/components/whatsapp/NotifToasts.tsx",
+      "bytes": 8092,
+      "git_blob": "3292192da0c2737abebc13cfbcc5cc399255c0b1",
+      "sha256": "73a15b5229b6ec695eb7b967dfa0cfffae73d06508759d6421185fb7ece07f72"
+    },
+    {
+      "path": "src/components/whatsapp/PollBubble.tsx",
+      "bytes": 5052,
+      "git_blob": "c81210957bc5f359bacb9853f52344ced9115d59",
+      "sha256": "e5c94ae970b42de35542b3b49f1e8e47357f6270ab700e5e441e5e6920b71e7a"
+    },
+    {
+      "path": "src/components/whatsapp/PollDialog.tsx",
+      "bytes": 5528,
+      "git_blob": "47018aec9a2f89ac8f454c8fd9577e61bd824510",
+      "sha256": "8f23895ea915c4227c73ddc9a0aabaf19ba5732e4cbe4ec76a955b09c67a84ea"
+    },
+    {
+      "path": "src/components/whatsapp/PwaInstallBanner.tsx",
+      "bytes": 7349,
+      "git_blob": "8c4c819cfb2a7925af40da05af2067383bf0d591",
+      "sha256": "d735475e0d11b5bd9b96ff64cf278b2245cb67eaf4ce60a79ad75d57ab051369"
+    },
+    {
+      "path": "src/components/whatsapp/ReadingMode.tsx",
+      "bytes": 17862,
+      "git_blob": "32efb10f93dcf8a2d7e82849545843969525b34a",
+      "sha256": "0162fef0c2f4e65d1f93fd6b962676772f2cd03d67558fed1a12ab6c007453b9"
+    },
+    {
+      "path": "src/components/whatsapp/RelationshipPanel.tsx",
+      "bytes": 14879,
+      "git_blob": "c527784a812963115dbd1c3dc877a14dfa2bbb1f",
+      "sha256": "4b72fa33341fd7a424c1e7686bb30a40305ebf7499b1c8fa13731f880264e24b"
+    },
+    {
+      "path": "src/components/whatsapp/ScheduleDialog.tsx",
+      "bytes": 7989,
+      "git_blob": "6c283b75c0f2a9b93edb1ca7e418a7363fb4b73a",
+      "sha256": "cd3765c5d83ae6e177b93d45db86ee557f57510a6a2b5a4c5eabde461067f076"
+    },
+    {
+      "path": "src/components/whatsapp/ScheduledDispatchPoller.tsx",
+      "bytes": 2374,
+      "git_blob": "d0f7bca27c43e697674d14a73b8ee595f194f9a8",
+      "sha256": "77871761ae049b3baaa2ea594311ab93f49c1ab1f94034f08a412ebec463aa00"
+    },
+    {
+      "path": "src/components/whatsapp/SettingsDialog.tsx",
+      "bytes": 50385,
+      "git_blob": "27888af725eda45e53c42c90723015e38fef9faf",
+      "sha256": "4585cc1480138cdb92465e9483fa3165750456ea8044dba46f14d0de3a817a54"
+    },
+    {
+      "path": "src/components/whatsapp/ShortcutsDialog.tsx",
+      "bytes": 3641,
+      "git_blob": "c30c1440fdb5b1b39de396a2fbd0a9b582ab6f4c",
+      "sha256": "5c92b9663144c8acef92824e1955373016a37f4878f7a0a50749ad69d9b716cb"
+    },
+    {
+      "path": "src/components/whatsapp/SnapshotsCard.tsx",
+      "bytes": 8110,
+      "git_blob": "0f48cff67c6a449f2fc259280f6434896115d306",
+      "sha256": "93eb3266e1930418f5ea43e9fd89bfed9756e5c81bf16ef37aa0708656dc2ad9"
+    },
+    {
+      "path": "src/components/whatsapp/StarredMessages.tsx",
+      "bytes": 9861,
+      "git_blob": "2e6162c435cad87cc6fbae31fe04aa1c355d31a4",
+      "sha256": "236596573186f1d0abdcf2cd493705e02409e0de0d076a77325ee442b6472ebf"
+    },
+    {
+      "path": "src/components/whatsapp/StatsDashboard.tsx",
+      "bytes": 49316,
+      "git_blob": "1008bf2eebf6f055f1ce9ad9afe2e9817e4b148d",
+      "sha256": "d52bff5e74a3361d6704329230b1f070ec299b014b8e73fef11b4f851438d248"
+    },
+    {
+      "path": "src/components/whatsapp/StorageDialog.tsx",
+      "bytes": 18042,
+      "git_blob": "a9ce8ff4ae53a529143b01eef8fa5eb3cc4feae4",
+      "sha256": "579246352c951e6acbb6af4924da4fd44092efa50c9dd4f6a0396931d805000e"
+    },
+    {
+      "path": "src/components/whatsapp/SyncVaultCard.tsx",
+      "bytes": 9059,
+      "git_blob": "20630f53fe02e4a4acf8a935aad3de198a0b4324",
+      "sha256": "9f6d5e801088d7c515d501d0e2ff6147fcc943952dbb10c64f36d39b5583f2cc"
+    },
+    {
+      "path": "src/components/whatsapp/TimelineScrubber.tsx",
+      "bytes": 10080,
+      "git_blob": "d138f873b301033275c80e81f4ab8daefa34abb6",
+      "sha256": "3489b6b692668993677039009fa6bbc4818ff8c923c31144edb69031a47079de"
+    },
+    {
+      "path": "src/components/whatsapp/TldrDialog.tsx",
+      "bytes": 9746,
+      "git_blob": "c943757e4dfa0e923007a8d1b176d2c2cc66ff38",
+      "sha256": "9fed7ad806c852dc07aea4e36881242225338c4a809a00c2cf7077c73740857e"
+    },
+    {
+      "path": "src/components/whatsapp/VoicePlayer.tsx",
+      "bytes": 16636,
+      "git_blob": "48d3b21c9f4801319241f2b6557313c5ad741ccf",
+      "sha256": "fbc90166a03dccccb6b8155f9d1721a7670653c9403500ca899674e678587df9"
+    },
+    {
+      "path": "src/components/whatsapp/WallpaperPicker.tsx",
+      "bytes": 32494,
+      "git_blob": "e60e17c741c2b81aaccf3164a3a3731e551d85ff",
+      "sha256": "c767a06dff0cd6a262410658f41b7b1f2aa3f8ff075a71baeeed883a653186fd"
+    },
+    {
+      "path": "src/components/whatsapp/WhatsAppApp.tsx",
+      "bytes": 51661,
+      "git_blob": "e222d3ee9137122ac94664e68ccd1a7867c5ebfd",
+      "sha256": "001734f2ddd06367942dd41f2d3d30fd8c4f8cae34de417bfc3e4c05a9f03810"
+    },
+    {
+      "path": "src/components/whatsapp/WordCloudDialog.tsx",
+      "bytes": 8079,
+      "git_blob": "7576a56c3e2cc4579f254eb170983ea390a38080",
+      "sha256": "f32651c9c40e83f9e8f535efb5f25e4cd6875756add400d18b5d3fd3a0e96abd"
+    },
+    {
+      "path": "src/components/whatsapp/ai-tools.css",
+      "bytes": 2776,
+      "git_blob": "54ef53ae5012ae50eab946b52da31c1a0eb27558",
+      "sha256": "f13b80cff9020d2063f044fd353a092fe5152c76cc660829fce5dbfde975a060"
+    },
+    {
+      "path": "src/components/whatsapp/app-extras.css",
+      "bytes": 1546,
+      "git_blob": "6dc968d63570dbe8723eef15ebbbb0cc6a96e689",
+      "sha256": "9735567860e123ea1c5751e6cdb1e5ec4c00dfedd5837b75e60a2323e876aea0"
+    },
+    {
+      "path": "src/components/whatsapp/app-theme.ts",
+      "bytes": 2752,
+      "git_blob": "d6cda03073ecfdf135f4509f14baa82a3251d415",
+      "sha256": "6433c233ec8ef08e8a4a95b23c82b7aea229de43120d510142ceaaea65c6e843"
+    },
+    {
+      "path": "src/components/whatsapp/audio-engine.ts",
+      "bytes": 11338,
+      "git_blob": "abf9f35a65b2142d49f8095a04fff6c97475550a",
+      "sha256": "cc0085f07dc62eea71f551038f557344dc189c56ac40fca3e9f594330aa7fdb8"
+    },
+    {
+      "path": "src/components/whatsapp/backup-reminder.ts",
+      "bytes": 7088,
+      "git_blob": "f4023c6dcd0141219e3c104828fd121f3f86a758",
+      "sha256": "94192ef860c2c142938b098e6d63b9bb381b0df977a81398716600e7b893dda0"
+    },
+    {
+      "path": "src/components/whatsapp/bubble-extras.css",
+      "bytes": 7813,
+      "git_blob": "2b2664f5c3b48cddf78cac6d894f410e7592e39d",
+      "sha256": "1f432d18530cd79f89c352977f63715bcaf754dc477141bc761b7aca1dc0e98a"
+    },
+    {
+      "path": "src/components/whatsapp/chat-extras.css",
+      "bytes": 10633,
+      "git_blob": "a1f47277384833b530f74f7386519ed8d30159f1",
+      "sha256": "a8c087ae422a21f5c57208030c1be0df6df2be4116d98e87b6bce2de7210ee7d"
+    },
+    {
+      "path": "src/components/whatsapp/chat-folders.css",
+      "bytes": 865,
+      "git_blob": "d9761a9eb7fdce0a280e35e537743423f0783605",
+      "sha256": "84195ac66ca3d2f8ef790c7a2ec0678af9f6fa28a2089ecaa7501ac715add977"
+    },
+    {
+      "path": "src/components/whatsapp/chat-folders.ts",
+      "bytes": 11197,
+      "git_blob": "e03ae43231f42318f09d586f3d619c79e4307ca5",
+      "sha256": "d082c53f8d36a69671c87e98983de609ad7a122bbac09ad5565b9471966466a4"
+    },
+    {
+      "path": "src/components/whatsapp/chat-theme.ts",
+      "bytes": 6689,
+      "git_blob": "03cd4a883b338da5a9a55cec3fa87f70842d8ff0",
+      "sha256": "8500890d436f46625f9e1620751c4c891aa52ee09d40217f25205753cb6a1678"
+    },
+    {
+      "path": "src/components/whatsapp/composer-extras.css",
+      "bytes": 1729,
+      "git_blob": "91f360b0ee3ffe0e48096af422bf4fd157a5d47d",
+      "sha256": "058a9f4cd19d9679f5b1dc9962a6e22a9889f4ae82d5d3160b324a910691d1aa"
+    },
+    {
+      "path": "src/components/whatsapp/data-provider.tsx",
+      "bytes": 4336,
+      "git_blob": "9b7e4d606530e9c3d353a05fa5fff9f94848a823",
+      "sha256": "26b08734708ef1a9d321eb561976c38e5fe3d898694d486ff334162491dab1c4"
+    },
+    {
+      "path": "src/components/whatsapp/dock-extras.css",
+      "bytes": 1829,
+      "git_blob": "650599fe0e9c64cc979d4f88a373b064978cb923",
+      "sha256": "b2589c65bec157478c2654a1334eb2a168e449339f804c4b2ee83d18e5e4db12"
+    },
+    {
+      "path": "src/components/whatsapp/font-family.ts",
+      "bytes": 2470,
+      "git_blob": "c5deb1b2091e64f7ad901203e58eebd6996f55cd",
+      "sha256": "3aed26baf19bc07edf55ebe66c6b1705ab98bb571c6ac5c7150eebf5e737e243"
+    },
+    {
+      "path": "src/components/whatsapp/icons.tsx",
+      "bytes": 6121,
+      "git_blob": "7d1acd4b7ed8f41a2b3b56944e5df5d603885132",
+      "sha256": "42e78ef4ae7658500b04f85392f4116bfa86dd07423b600439742024f7db7273"
+    },
+    {
+      "path": "src/components/whatsapp/media-src.ts",
+      "bytes": 713,
+      "git_blob": "5f18c1ffc535544fc908007c111dd7ee1f0fd06f",
+      "sha256": "2023e591dbd8e0322cac889ad55d52720f2c4a050ac6c63d7c70e2b2af883d7e"
+    },
+    {
+      "path": "src/components/whatsapp/rolling-backups.ts",
+      "bytes": 7351,
+      "git_blob": "a4c329370a7154853730d53115fc17bd5cc939e6",
+      "sha256": "af54d34e159c9291f41142c5a415b917399a00f0794a6fb81c37d695ec2fa41a"
+    },
+    {
+      "path": "src/components/whatsapp/stats-extras.css",
+      "bytes": 4684,
+      "git_blob": "c718c9e384d7d3335003ebd84c8836993788a98d",
+      "sha256": "1b16e2e70ee64f44f490be8ce0277fd9099bc69e5f330ad7ac0124874f3e3156"
+    },
+    {
+      "path": "src/components/whatsapp/storage-mode.ts",
+      "bytes": 3060,
+      "git_blob": "fa2d897eb1ef39fc61412f19637bf113999e7a16",
+      "sha256": "369d19601d06de7a310809d1a5e933a628bda393342eea292ae7d2a68f593ac3"
+    },
+    {
+      "path": "src/components/whatsapp/text-size.ts",
+      "bytes": 1144,
+      "git_blob": "567f5eae3e5db56f76dab9308c6caae82405ff8b",
+      "sha256": "4a405b5e8565aaff086f06253360f6bb49a2e015f5be4dc48b5af6d565245d72"
+    },
+    {
+      "path": "src/components/whatsapp/types.ts",
+      "bytes": 3620,
+      "git_blob": "c9bd030c76d627b5f5780dc344953bd8383c8234",
+      "sha256": "338333b9c8af58d90a1abd2594ea6b3332bc04457ee4556777911db47a48b039"
+    },
+    {
+      "path": "src/components/whatsapp/unplayed-voice.ts",
+      "bytes": 3320,
+      "git_blob": "a547d4710e03a405cb0e4eb4c58546ad78d5d4f4",
+      "sha256": "eced0c2d3d35dbae53a40f2e4e2475d5c509862342b6b1c77ad38f2c90494a7a"
+    },
+    {
+      "path": "src/components/whatsapp/useShortcuts.ts",
+      "bytes": 2597,
+      "git_blob": "db782279d6844c288886e96a6ec752110539b6b4",
+      "sha256": "4939fdc4c67a625783b65731ac815bc6d3e3cf66b31a30cc7b4fd934986ac167"
+    },
+    {
+      "path": "src/components/whatsapp/voice-progress.ts",
+      "bytes": 2718,
+      "git_blob": "992c1a0231f4fa51a3a86ade03c5012f5441621e",
+      "sha256": "760d8543ff638bca416bfc323e425b9d400f05e299ecaefc3840e7d48530bb53"
+    },
+    {
+      "path": "src/components/whatsapp/wallpaper.ts",
+      "bytes": 15342,
+      "git_blob": "559783e28308bde9288f91b0c47861b57a8aab81",
+      "sha256": "ae93af37b1b084f52202b9282eede3ba182d7b9029ed20d21d35024a03605b12"
+    },
+    {
+      "path": "src/hooks/use-mobile.ts",
+      "bytes": 565,
+      "git_blob": "2b0fe1dfef3b17850bbac040665f514a8ffd0f15",
+      "sha256": "ad0936f84f1df79d3697bfbff9c18f8ad58431c1cbaf2359c6a853b0fcc9f28b"
+    },
+    {
+      "path": "src/hooks/use-toast.ts",
+      "bytes": 3917,
+      "git_blob": "b559959226c5b17b8a719d29a2cafe1ff5f935ef",
+      "sha256": "12f8fcd1101acdd4a1cf6952d85aa8997d2a53aa9956d3cb77a85d441e54b1a9"
+    },
+    {
+      "path": "src/lib/ai-client.ts",
+      "bytes": 1394,
+      "git_blob": "6fe6a1effd2524bcbd1fe7b8f970f175a9896236",
+      "sha256": "4ffaa8c2bf2b99230d8527bcbfd451c7b60ae6a850daec550e9f0600e5f87fd1"
+    },
+    {
+      "path": "src/lib/ai-prompts.ts",
+      "bytes": 10705,
+      "git_blob": "ca65e8aac683061dd72f8a8d7ba5f098882603b7",
+      "sha256": "8af5870a6902a08328f6d56edd5f2dfb52783104159d88a80eed855313338be1"
+    },
+    {
+      "path": "src/lib/chat-analytics.ts",
+      "bytes": 3714,
+      "git_blob": "547cb68fe3b9f970b75008263f92b4f46d81d88e",
+      "sha256": "53593f4c1556ba6406e8c64d56b66742bd634877916cb8b256843be900e9c1c9"
+    },
+    {
+      "path": "src/lib/chat-service.ts",
+      "bytes": 8688,
+      "git_blob": "3a9e2d18c12556487f143b3cf6f28a23711eb25e",
+      "sha256": "f6936f1e869819b4df79038934e464449f2d8f7dcf670cb910f9aa63b2f1db06"
+    },
+    {
+      "path": "src/lib/data/index.ts",
+      "bytes": 1958,
+      "git_blob": "0e641cd1fbea4cef21f144b78fba3842f0a5b62b",
+      "sha256": "f24b7d5352ed6359cadfb89a01d625b48d2fa9dabb055a6ca0c80f716d9c84cb"
+    },
+    {
+      "path": "src/lib/data/local/client.ts",
+      "bytes": 50130,
+      "git_blob": "d7628b30c8d8f5f78aa769638f47c9cd9d459f11",
+      "sha256": "b73575bcd6c5984445a4b6c5a41d9f777836bfb7a6e5fed85269ce0f267b6462"
+    },
+    {
+      "path": "src/lib/data/local/engine.ts",
+      "bytes": 17360,
+      "git_blob": "f9d1deb96bd94fe5bf52d6ce265d87fbe7ea95b7",
+      "sha256": "8594e3a52ec73befff8fb310fff9fd8103c8b763cef16d846789e9bb63a5103d"
+    },
+    {
+      "path": "src/lib/data/local/import.ts",
+      "bytes": 15827,
+      "git_blob": "c6be9c875fbfde86c50ec4cfc036c00a989532d3",
+      "sha256": "ef12004f876f927d849b58aa5bfddbde830242689fe7fa0a31e682afee6ab4f5"
+    },
+    {
+      "path": "src/lib/data/local/media.ts",
+      "bytes": 7831,
+      "git_blob": "72f04592d85a42332d804b0e8ca0744d9d3a96ab",
+      "sha256": "b0c7d73660465b06dbc3e6986b94dc4703b9a73c857ec4c253551912414182a4"
+    },
+    {
+      "path": "src/lib/data/local/native-driver.ts",
+      "bytes": 8766,
+      "git_blob": "3e4e0cd6f4d5a5318d27a7938c4fb6d8a11b7413",
+      "sha256": "fff472561ffd998224108d0f79d979d59e2d999aab76d90943753ffb3d9e68a2"
+    },
+    {
+      "path": "src/lib/data/local/preview.ts",
+      "bytes": 3434,
+      "git_blob": "d3f38d099e4218eebc39122608469326f31bd895",
+      "sha256": "16eff16adb91f07fb50d01fadfcb43f72ce1989b257dc6e7234b69528d2c2037"
+    },
+    {
+      "path": "src/lib/data/local/schema.ts",
+      "bytes": 2791,
+      "git_blob": "b4520d96f26db4497c02ad356ece8755e45f0a78",
+      "sha256": "e2227309de5fe26352b03b259de0ecfd479da98919930717ff0381f92afd7524"
+    },
+    {
+      "path": "src/lib/data/lock-client.ts",
+      "bytes": 6754,
+      "git_blob": "419403037c31d426bc586c37ad9c3b41b3ac6c50",
+      "sha256": "1d8dd999385166c2e1d0ca13a17a0fc309debbd6c2f9af483d92cc6db73a3854"
+    },
+    {
+      "path": "src/lib/data/server.ts",
+      "bytes": 12881,
+      "git_blob": "17190e9ffc21e54ea650194799f3a77363f2b5b2",
+      "sha256": "d6b79de94720b851912af462b6133f4cea9f91ac51c3c9fda96eae373397adb1"
+    },
+    {
+      "path": "src/lib/data/types.ts",
+      "bytes": 10353,
+      "git_blob": "81083f53d67ca5fde79b7c757d293f3372abad6b",
+      "sha256": "a35fc878c646d8b37429dcbe0b1580accc75606d1ed81cdbc19fa7914c695e13"
+    },
+    {
+      "path": "src/lib/db.ts",
+      "bytes": 299,
+      "git_blob": "7dfb80c4c07e35547d16aa4a3f91d75b43c5494c",
+      "sha256": "ce5d51390121a452bc0a4d5208deaff71c583177773bcbbcd15b0af8ab48e2fc"
+    },
+    {
+      "path": "src/lib/demo-catalog.ts",
+      "bytes": 2138,
+      "git_blob": "85d8c34880f661ac8d73ffb10a1cabf982a9f49c",
+      "sha256": "2288406ea6b6ac527550d718f2b8adf7b7a95eaf3fd9a822074f2f99322a2e98"
+    },
+    {
+      "path": "src/lib/demo-scripts.ts",
+      "bytes": 38552,
+      "git_blob": "d56af98258151933d6498c49a4884dcf2660c968",
+      "sha256": "9b68d30a4aea90a2639aac6b8bafa4c749639ced5cbd56c84014e9844899450b"
+    },
+    {
+      "path": "src/lib/device-ai.ts",
+      "bytes": 4548,
+      "git_blob": "5e18a79d95f3727e99fb3d83bc3a771e040ed5d4",
+      "sha256": "fc5c799139dbc57d43706d6534149596e69975dcf802b3f7d447f2fc5864b66d"
+    },
+    {
+      "path": "src/lib/export-html.ts",
+      "bytes": 17166,
+      "git_blob": "58553ed8412611121df2916f15cedd1c95c6abd9",
+      "sha256": "7afadb0a6a25ef99b531a4e5f4fb1932990f3fb64f9262dd867e31d841bff76d"
+    },
+    {
+      "path": "src/lib/export-text.ts",
+      "bytes": 1741,
+      "git_blob": "d80705c72c86529177e86fd44817d22889f49265",
+      "sha256": "ff413822d097edd3e627f882cc72f708bf0e48e5f0a67cf38f65a6032b65d668"
+    },
+    {
+      "path": "src/lib/media-kinds.ts",
+      "bytes": 1147,
+      "git_blob": "659338c2729fc1c6d6bb1fe884ebd488a9a13d80",
+      "sha256": "322e16e29db16301f9b5f4ed011164db84522efeaf91c890eb029c44d3b0d2ef"
+    },
+    {
+      "path": "src/lib/media-store.ts",
+      "bytes": 6845,
+      "git_blob": "4f0903450be925fb01743375f0d3e93d173bfb8e",
+      "sha256": "b62a3de6251b47a7f2f32b974a55b1cca6f3a374f1f0303d8225d6e8ba184466"
+    },
+    {
+      "path": "src/lib/message-dto.ts",
+      "bytes": 4789,
+      "git_blob": "4220b2348d3e99da076c953102f06a98321a2d65",
+      "sha256": "ce531702aa7e1fd50273897040383f35916c5f24b42ab54292be159cde19ffa0"
+    },
+    {
+      "path": "src/lib/online.ts",
+      "bytes": 1809,
+      "git_blob": "4e0e44fc5b33fb49010892dc676f1a4094858615",
+      "sha256": "cd537ab7076d78d49f803f9528df0988bb1df2ad481d3b857bda8665835a56fd"
+    },
+    {
+      "path": "src/lib/persona-engine.ts",
+      "bytes": 10059,
+      "git_blob": "8879791780d21a60e93b103ae642b490aca2b1fd",
+      "sha256": "eb66b6a9e19f7e7079238c22e97339c0a0fdfe6cdc7691aefdf54006c444fcbb"
+    },
+    {
+      "path": "src/lib/rate-limit.ts",
+      "bytes": 1096,
+      "git_blob": "c58d7c47c4b9cf7dc5de75eb58effb7f7d75a60f",
+      "sha256": "fc965d2e9b043041f7154f0306463bc262ed39640c6197c9883db63594bd7e38"
+    },
+    {
+      "path": "src/lib/relationship-insights.ts",
+      "bytes": 9862,
+      "git_blob": "2c4c449615404c75573775124181f395eaaabbc6",
+      "sha256": "2f5ba43496d470d8cc15ef5ae42cad30237c9c17a03e260c90e63ccf72509032"
+    },
+    {
+      "path": "src/lib/server-lock.ts",
+      "bytes": 4849,
+      "git_blob": "63accb29506789ad650e5dfbbd97c6d4dfb825cf",
+      "sha256": "cc153219bb0ab44cc0d6223090b542e63c3d5fb1354b40f1d40a6a63c8a65cbf"
+    },
+    {
+      "path": "src/lib/smart-replies.ts",
+      "bytes": 8985,
+      "git_blob": "46ffb72e26b8995e106dd1e9a37cd7fdd555ae9c",
+      "sha256": "52b4e70b01e200d5b749a50055e2a28eeb89e061796e375710487598e86302db"
+    },
+    {
+      "path": "src/lib/stats-compute.ts",
+      "bytes": 15390,
+      "git_blob": "458eeb8bb3d949d66eb926790775353213d07f31",
+      "sha256": "0855effca242b4ca42aad8bbba2231d9019c5b0c9ed0d426d41ba74be1d2f997"
+    },
+    {
+      "path": "src/lib/sync-crypto.ts",
+      "bytes": 4915,
+      "git_blob": "163d06e5ebd91470df431e8308a83988e304ee3f",
+      "sha256": "5eb72ce250cf25db8f7e36860a9998af6a9136c68af345033d35ea00994f4f23"
+    },
+    {
+      "path": "src/lib/utils.ts",
+      "bytes": 166,
+      "git_blob": "bd0c391ddd1088e9067844c48835bf4abcd61783",
+      "sha256": "7c8c3dfc0cdd370d44932828eb067ef771c8fe7996693221d5d4b90af6d54f2d"
+    },
+    {
+      "path": "src/lib/whatsapp-parser.ts",
+      "bytes": 10443,
+      "git_blob": "5828b5940d24d6572ad1e023f2709dd1c1a4aca2",
+      "sha256": "0c2e023c2373cb6a6feea728d3b9ef5fe759250b0f812aab2205191aab2900ac"
+    },
+    {
+      "path": "src/lib/whisper-asr.ts",
+      "bytes": 13657,
+      "git_blob": "31655f4aeaa2b2db2c691182133e0aa3370c84e4",
+      "sha256": "0ab50e99e96e9e4e919a347d710518580dd0b59340b9ed8e4aa3595463fdaa77"
+    },
+    {
+      "path": "src/lib/wordcloud.ts",
+      "bytes": 3442,
+      "git_blob": "5c4bf09851d1e0bf4d53c1a5d8cc531adbc3bd8b",
+      "sha256": "ea819ef93021bf502bc9c1f53ae312e93c069dfe315f8ac3388f059480983388"
+    },
+    {
+      "path": "src/proxy.ts",
+      "bytes": 1355,
+      "git_blob": "f3c5760bff3898a71f3a0be71b77b9f1cc4ba509",
+      "sha256": "e2b733690b33361ea9dcf7d39ec481eeb4d8e91f6e4b2141a00bfdc1bf8b1243"
+    },
+    {
+      "path": "tailwind.config.ts",
+      "bytes": 1696,
+      "git_blob": "fc48e48832707aaaff6bd9b8cbba76358adf2e83",
+      "sha256": "ade682235e52f45b1c1dfc020f0bdb9f27b94fcff60afaa3272fae22fe5c0c54"
+    },
+    {
+      "path": "tsconfig.json",
+      "bytes": 838,
+      "git_blob": "321cef7b4a2f6e36a0a675ece4e34f02339e191f",
+      "sha256": "d084a99ad83cbaf01fd0f12c26424fcfd19a5006f96b77f7c4b2b037e7c5c9a9"
+    }
+  ]
+}

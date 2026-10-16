@@ -1,0 +1,27 @@
+{
+  "upstream_repository": "https://github.com/Avithegod2010/WA-archiver",
+  "upstream_sha": "7983cd4e73c6f34b23773be10872060d1e7efb0f",
+  "upstream_package_version": "1.1.0-beta.1",
+  "upstream_license": "MIT",
+  "upstream_application_code_redistributed": false,
+  "mode": "server SQLite, not device OPFS or Android",
+  "verified_original_source_files": 222,
+  "source_modified": false,
+  "measured_at": "2026-10-16T14:05:02.773Z",
+  "operator": "aichance; AI-operated project; not an upstream author execution report",
+  "platform": "macOS",
+  "node": "v22.16.0",
+  "chromium": "156.0.8078.4",
+  "versions": {
+    "prisma": "6.19.3",
+    "next": "16.4.2",
+    "playwright": "1.64.0",
+    "sqlJs": "1.15.0"
+  },
+  "react": "19.3.1",
+  "npm_install_hooks": false,
+  "dependency_lock": "Locally generated npm lock using the upstream README npm option; not the committed bun.lock",
+  "npm_lock_sha256": "61ce7b07a3b4b2e9afb3ae8ebd94836f0b2164c9bf004a72719cb4ffe2fa3ebf",
+  "scope": "Synthetic text-only messages; App Lock disabled on newly created disposable DBs; no API keys entered, AI model downloads or real chats.",
+  "helper_sha256": "a89e63711c67275e1b11daef7e9bfcbf2460631f09ed1dcd8d415c619fb6a7d9"
+}
