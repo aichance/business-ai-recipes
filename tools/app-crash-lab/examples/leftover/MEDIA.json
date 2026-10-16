@@ -1,0 +1,68 @@
+{
+  "recorded_at": "2026-10-16T01:33:02.252Z",
+  "source": {
+    "url": "https://leftover-budget.netlify.app/",
+    "build": "1.5.7 · 9 Oct",
+    "sha256": "1d92a5296bad9ab1e5dfe24ad4039840269ed488206753533dc4725f2348a839",
+    "unchanged_private_local_copy": true,
+    "upstream_html_redistributed": false
+  },
+  "capture": "Two separate real Playwright video recordings, trimmed and joined with captions. Independent normal-UI replay, not a CLI recording.",
+  "synthetic_data_only": true,
+  "real_file_chooser_events": true,
+  "no_direct_storage_writes_or_source_patches": true,
+  "destination": "Fresh context starts without stored origins or cookies, then normal tour/language UI updates its app preferences before real-file import.",
+  "normal_control": {
+    "downloaded_bytes": 3136,
+    "download_sha256": "36c391748725a6383e6f87007bc82d2aef06c8b4b7b4046e2ab10e801f4bc349",
+    "whole_payload_equals_whole_saved_state": true,
+    "complete_state_after_restore_and_reload_equals_source": true,
+    "balance": "-$25.50",
+    "history_entries": 1
+  },
+  "synthetic_fixture": {
+    "value": {
+      "v": 999,
+      "currency": "USD",
+      "schedules": [],
+      "tx": [],
+      "cats": []
+    },
+    "rejection_is_proposed_policy": true,
+    "not_a_creator_stated_guarantee_or_actual_future_backup": true,
+    "success_text": "Backup restored",
+    "prior_state_replaced": true,
+    "after_reload_balance": "$0",
+    "after_reload_history_entries": 0,
+    "state_unchanged_between_post_import_and_post_reload": true
+  },
+  "editing": "Chapter trims and text-only caption overlays outside the original app viewport. No app pixels rewritten. Holds are for viewing, after assertions.",
+  "video": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "width": 1280,
+        "height": 1064,
+        "r_frame_rate": "25/1"
+      }
+    ],
+    "format": {
+      "duration": "13.960000"
+    }
+  },
+  "assets": [
+    {
+      "name": "leftover-version-boundary.mp4",
+      "bytes": 501152,
+      "sha256": "4a184a98e65fdf967c148e4a8678220abe23caf4ed76e1c4da189be795084f82"
+    },
+    {
+      "name": "leftover-version-boundary.gif",
+      "bytes": 1337039,
+      "sha256": "8ab361c83633bbfdafea9b13b89379a8372c8b050a67d74e2f307b89c9b6a2bb"
+    }
+  ],
+  "boundary": "Visible frames illustrate the outcome; full-state assertions are a separate measurement. No third-party execution or upstream fix claimed."
+}
