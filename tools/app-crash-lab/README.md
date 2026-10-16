@@ -22,6 +22,13 @@ the ordinary save/rejection prompt does not select backup mode.
 Local Node CLI. No account, LLM call or API key during a test run. MIT licensed.
 Built for disposable local web apps, including apps made with coding agents.
 
+**Codex can draft and run the contract for your app.**
+Use the [repo-local skill and installation steps](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#codex-skill)
+or review its [source](../../.agents/skills/app-crash-lab/SKILL.md).
+Describe the save workflow; it inspects your source, explains the selected
+observations, writes the JSON and invokes this existing runner. Review the
+contract and actual result. A local test does not cover every input or failure.
+
 ```text
 Synthetic Notes         Save → reload       Reject empty note
 Deliberate reload bug   FAIL: "Buy coffee"→"" PASS
