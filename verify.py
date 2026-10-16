@@ -16,6 +16,15 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "tools/app-crash-lab/examples/extensive-reading-assistant/LICENSE",
+    "tools/app-crash-lab/examples/extensive-reading-assistant/README.md",
+    "tools/app-crash-lab/examples/extensive-reading-assistant/SOURCE.json",
+    "tools/app-crash-lab/examples/extensive-reading-assistant/annotation.json",
+    "tools/app-crash-lab/examples/extensive-reading-assistant/annotation-known-control.json",
+    "tools/app-crash-lab/examples/extensive-reading-assistant/drafts.spec.mjs",
+    "tools/app-crash-lab/examples/extensive-reading-assistant/playwright.config.mjs",
+    "docs/app-crash-lab-reading-assistant-pack-v0.1.0.zip",
+    "docs/app-crash-lab-reading-assistant-pack-v0.1.0.zip.sha256",
     "tools/app-crash-lab/examples/how-many-beers/README.md",
     "tools/app-crash-lab/examples/how-many-beers/SOURCE.json",
     "tools/app-crash-lab/examples/how-many-beers/results-summary.json",
@@ -57,10 +66,10 @@ EXPECTED_FILES = {
     "tools/app-crash-lab/examples/voxeldraft/reload-rejection.json",
     "tools/app-crash-lab/examples/voxeldraft/roundtrip.spec.mjs",
     "tools/app-crash-lab/examples/voxeldraft/playwright.config.mjs",
-    'tools/app-crash-lab/examples/bujo/README.md',
-    'tools/app-crash-lab/examples/bujo/SOURCE.json',
-    'tools/app-crash-lab/examples/bujo/roundtrip.json',
-    'tools/app-crash-lab/examples/bujo/LICENSE.upstream',
+    "tools/app-crash-lab/examples/bujo/README.md",
+    "tools/app-crash-lab/examples/bujo/SOURCE.json",
+    "tools/app-crash-lab/examples/bujo/roundtrip.json",
+    "tools/app-crash-lab/examples/bujo/LICENSE.upstream",
     "tools/app-crash-lab/examples/nestsave/initial-balance.png",
     "tools/app-crash-lab/examples/nestsave/initial-deposit.spec.mjs",
     "tools/app-crash-lab/examples/nestsave/playwright.config.mjs",
@@ -81,11 +90,11 @@ EXPECTED_FILES = {
     "tools/app-crash-lab/examples/bamifitlog/README.md",
     "tools/app-crash-lab/examples/bamifitlog/SOURCE.json",
     "tools/app-crash-lab/examples/bamifitlog/roundtrip.json",
-    'tools/app-crash-lab/examples/focus-backup/README.md',
-    'tools/app-crash-lab/examples/focus-backup/SOURCE.json',
-    'tools/app-crash-lab/examples/focus-backup/playwright.config.mjs',
-    'tools/app-crash-lab/examples/focus-backup/results-summary.json',
-    'tools/app-crash-lab/examples/focus-backup/roundtrip.spec.mjs',
+    "tools/app-crash-lab/examples/focus-backup/README.md",
+    "tools/app-crash-lab/examples/focus-backup/SOURCE.json",
+    "tools/app-crash-lab/examples/focus-backup/playwright.config.mjs",
+    "tools/app-crash-lab/examples/focus-backup/results-summary.json",
+    "tools/app-crash-lab/examples/focus-backup/roundtrip.spec.mjs",
     "tools/app-crash-lab/examples/nvim-edu-progress/progress.json",
     "tools/app-crash-lab/examples/nvim-edu-progress/best-score.json",
     "tools/app-crash-lab/examples/nvim-edu-progress/README.md",
@@ -383,6 +392,30 @@ def _assert_candidate_boundary(root: Path) -> None:
         for fragment in forbidden:
             if fragment in content:
                 raise AssertionError(f"forbidden content in {relative}")
+
+
+def _verify_reading_assistant_pack(root: Path) -> None:
+    name = "app-crash-lab-reading-assistant-pack-v0.1.0.zip"
+    path = root / "docs" / name
+    checksum = path.with_name(name + ".sha256").read_text().split()
+    if checksum != [hashlib.sha256(path.read_bytes()).hexdigest(), name]:
+        raise AssertionError("reading assistant kit checksum mismatch")
+    expected = {
+        "LICENSE",
+        "README.md",
+        "SOURCE.json",
+        "annotation.json",
+        "annotation-known-control.json",
+        "drafts.spec.mjs",
+        "playwright.config.mjs",
+    }
+    source = root / "tools/app-crash-lab/examples/extensive-reading-assistant"
+    with ZipFile(path) as archive:
+        if len(archive.namelist()) != len(expected) or set(archive.namelist()) != expected:
+            raise AssertionError("reading assistant kit file set mismatch")
+        for entry in expected:
+            if archive.read(entry) != (source / entry).read_bytes():
+                raise AssertionError(f"reading assistant kit source differs: {entry}")
 
 
 def _must_refuse(action) -> None:
@@ -993,6 +1026,7 @@ def verify(
     jev_summary = _verify_jev_recipe(root)
     jev_csv_exception_summary = _verify_jev_csv_exception_recipe(root)
     _verify_app_crash_lab_skill(root)
+    _verify_reading_assistant_pack(root)
     demo_forge_summary = _verify_demo_forge(root)
 
     supplied_inputs = (
