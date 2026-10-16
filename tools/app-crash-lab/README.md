@@ -259,6 +259,12 @@ with empty data and shows “Backup restored”; rejecting unknown versions is a
 explicit proposed contract, not a quoted product guarantee. Three configs keep
 these checks separate.
 
+A malformed-task case: [How Many Beers](examples/how-many-beers/README.md)
+passes a complete CLI reload and an independent real-file backup restore.
+Appending one null custom task instead persists an unusable active cook and
+crashes again on reload; its archive stays intact. The dedicated Playwright
+backup tests are separate from the CLI's generic backup capability.
+
 A display-baseline case: [Repwise](examples/repwise/README.md) preserves complete
 workout records through a real JSON backup, fresh restore and reload, while a
 completed workout is already absent from History. Its backup check passes and
