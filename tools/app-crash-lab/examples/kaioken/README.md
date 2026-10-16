@@ -18,6 +18,30 @@ The two failures are real regression assertions against the unfixed app, so
 the command exits **1**. They are not hidden with `test.fail()` or converted
 into an all-green report. A fixed implementation should pass all three.
 
+## The same checks on v1.7.2
+
+After the [author reported a fix](https://github.com/rabocse/kaioken-gym-log/issues/32#issuecomment-6211357922),
+we reran the **unchanged** spec on unchanged
+[Kaioken v1.7.2 `15ef9f23`](https://github.com/rabocse/kaioken-gym-log/tree/15ef9f239c9bdfa754f98c2980d123e8c0f0296f)
+on 2026-10-16. All **3 tests passed / 0 failed / 0 skipped / exit 0**, in about
+33 seconds on the same operator's Mac with Playwright 1.64.0.
+
+The string-ID control retained its identity. The numeric and object IDs were
+repaired into usable nonempty string identities; their complete incoming fields
+and the original saved routine were preserved. Each imported routine opened
+before and after reload, the complete records and typed keys survived reload,
+and no page errors were observed. The spec SHA-256 is unchanged:
+`25e8256cf218ae4149d13177fa8e3145659e9bcdfee22a2e49a72d4ac9fd9142`.
+
+The existing App Crash Lab **0.10.0** normal-save/reload control also passed
+again, and its freshly generated standalone Playwright test passed **1/1**.
+These are separate from the three import tests. Neither test file nor the
+17 upstream app files was changed for this recheck. The original v1.7.1
+failures above remain the historical result; use the v1.7.2 pin for the fixed
+result. We did not rerun duplicate-ID cases or the author's nine-routine
+diagnostic, and this is our own measurement rather than a report that the
+author ran our tools.
+
 ## Run against a disposable app
 
 Use Node 22+, npm, Chromium and a separate local Kaioken copy. At the pinned
@@ -92,7 +116,9 @@ The valid string-ID control must import successfully with its identity unchanged
 prescribe a particular ID-generation algorithm or require an invalid ID to
 be preserved. If a future UI uses a different explicit error title, update
 that declared selector; an unsupported UI/setup failure is not evidence of
-an application regression. No fixed app was tested in this measurement.
+an application regression. The v1.7.1 measurement exercised the failures;
+the v1.7.2 follow-up exercised the accepted-repair branch for both invalid IDs.
+The explicit-rejection branch has not been observed on a fixed app.
 
 ## What we did not reproduce
 

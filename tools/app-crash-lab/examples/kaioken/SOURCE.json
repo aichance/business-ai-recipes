@@ -106,7 +106,7 @@
     }
   },
   "notVerified": [
-    "A fixed upstream build or either invalid-ID acceptance branch on a fixed app",
+    "Explicit-rejection branch on a fixed app; the accepted-repair branch was measured in fixedVersionFollowup",
     "OS clipboard and complete real export/import roundtrip",
     "iOS eviction, storage pressure, service workers, all browsers/operating systems",
     "live production behavior, author execution or third-party adoption"
@@ -115,5 +115,65 @@
   "specSha256": "25e8256cf218ae4149d13177fa8e3145659e9bcdfee22a2e49a72d4ac9fd9142",
   "appCrashLabRuntimeChange": false,
   "adoptionCredit": 0,
-  "normalReloadSha256": "37b884331d005ddb8886bc8986ff5fb8ea88b54b9d5b16a1099565987d21e1c6"
+  "normalReloadSha256": "37b884331d005ddb8886bc8986ff5fb8ea88b54b9d5b16a1099565987d21e1c6",
+  "fixedVersionFollowup": {
+    "sourceCommit": "15ef9f239c9bdfa754f98c2980d123e8c0f0296f",
+    "sourceUrl": "https://github.com/rabocse/kaioken-gym-log/tree/15ef9f239c9bdfa754f98c2980d123e8c0f0296f",
+    "sourceVersionConstant": "1.7.2",
+    "authorFixReport": "https://github.com/rabocse/kaioken-gym-log/issues/32#issuecomment-6211357922",
+    "measuredAt": "2026-10-16T11:12:07.189538+00:00",
+    "environment": {
+      "os": "macOS",
+      "node": "v22.16.0",
+      "playwright": "1.64.0",
+      "browser": "Chromium",
+      "serviceWorkers": "blocked",
+      "network": "declared loopback origin only; data/blob URLs permitted"
+    },
+    "sourceIntegrity": {
+      "files": 17,
+      "unchangedAfterTests": true,
+      "upstreamSourceOrAssetsRedistributed": false,
+      "archiveSha256": "10a8c466df5e5a8adf0f00dcba36ed44c415bdddb1fa46f3a4c95a67f31aa4bb"
+    },
+    "sameUnchangedSpec": {
+      "sha256": "25e8256cf218ae4149d13177fa8e3145659e9bcdfee22a2e49a72d4ac9fd9142",
+      "tests": 3,
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "flaky": 0,
+      "exitCode": 0,
+      "durationMs": 33097.597
+    },
+    "measured": {
+      "validStringIdentityUnchanged": true,
+      "numericAndObjectIdsRepairedIntoUsableNonemptyStrings": true,
+      "allDeclaredIncomingFieldsAndOriginalRoutinePreserved": true,
+      "allImportedRoutinesOpenBeforeAndAfterReload": true,
+      "completeObservedRecordsAndTypedKeysSurviveReload": true,
+      "unhandledPageErrors": 0,
+      "appCrashLabControl": {
+        "version": "0.10.0",
+        "cliStatus": "PASS",
+        "cliExit": 0,
+        "generatedStandalonePassed": 1,
+        "generatedStandaloneFailed": 0,
+        "generatedStandaloneSkipped": 0,
+        "generatedStandaloneExit": 0,
+        "normalReloadContractSha256": "37b884331d005ddb8886bc8986ff5fb8ea88b54b9d5b16a1099565987d21e1c6",
+        "scope": "normal UI save/reload only; separate from invalid-ID import tests, not backup roundtrip"
+      }
+    },
+    "notVerified": [
+      "duplicate-ID cases and author nine-routine diagnostic not rerun",
+      "explicit rejection on a fixed app",
+      "OS clipboard, complete export/import roundtrip, iOS eviction, service workers, storage pressure, other browsers/operating systems and production behavior",
+      "author execution of these tests or App Crash Lab"
+    ],
+    "historicalMeasurementPreserved": true,
+    "specOrContractChanged": false,
+    "runtimeChange": false,
+    "adoptionCredit": 0
+  }
 }
