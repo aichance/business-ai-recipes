@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "chats": [
+    {
+      "id": "app-crash-lab-wa-reply-fixture-v1",
+      "title": "App Crash Lab — synthetic replies",
+      "isGroup": false,
+      "messageCount": 2,
+      "mediaCount": 0,
+      "firstAt": "2026-10-16T09:00:00.000Z",
+      "lastAt": "2026-10-16T09:00:00.000Z",
+      "lastPreview": "Synthetic ordinary control",
+      "lastSender": "Synthetic Tester",
+      "lastType": "text",
+      "sourceFile": "app-crash-lab-synthetic-replies.txt",
+      "pinned": false,
+      "archived": false,
+      "createdAt": "2026-10-16T09:00:00.000Z",
+      "messages": [
+        {
+          "id": "acl-wa-parent-v1",
+          "idx": 0,
+          "ts": "2026-10-16T09:00:00.000Z",
+          "sender": "Synthetic Tester",
+          "body": "Synthetic parent: meet at the library.",
+          "type": "text",
+          "mediaPath": null,
+          "mediaName": null,
+          "starred": false,
+          "edited": false,
+          "forwardedFrom": null,
+          "pollOptions": null,
+          "pinned": false,
+          "reactions": null
+        },
+        {
+          "id": "acl-wa-control-v1",
+          "idx": 1,
+          "ts": "2026-10-16T09:00:00.000Z",
+          "sender": "Synthetic Tester",
+          "body": "Synthetic ordinary control",
+          "type": "text",
+          "mediaPath": null,
+          "mediaName": null,
+          "starred": false,
+          "edited": false,
+          "forwardedFrom": null,
+          "pollOptions": null,
+          "pinned": false,
+          "reactions": null
+        }
+      ]
+    }
+  ]
+}

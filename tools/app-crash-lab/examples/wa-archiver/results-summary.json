@@ -1,0 +1,86 @@
+{
+  "measured_at": "2026-10-16T14:05:02.773Z",
+  "source_sha": "7983cd4e73c6f34b23773be10872060d1e7efb0f",
+  "operator_measurement": true,
+  "author_execution_confirmed": false,
+  "app_crash_lab": {
+    "version": "0.10.0",
+    "reload": "PASS",
+    "rejected_update": "PASS",
+    "wall_seconds": 29.947801625356078,
+    "scope": "complete selected normal messages DTO; requires malformed JSON HTTP400"
+  },
+  "generated_standalone": {
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0,
+    "flaky": 0,
+    "wall_seconds": 19.987489790655673,
+    "spec_and_config_unmodified": true
+  },
+  "native_server_backup": {
+    "helper": "native-backup.mjs",
+    "status": "preservation_failure",
+    "measurement_status": "preservation_failure",
+    "execution_status": "completed",
+    "exit_code": 1,
+    "wall_seconds": 170.487,
+    "initial_prototype_reproduced_same_loss": true,
+    "independently_empty_target_db": true,
+    "downloaded_backup_bytes": 1783,
+    "downloaded_backup_sha256": "95d213bdf7118c55af1e124c81fae6041bdde537aa7032bd55cdb2825892d854",
+    "downloads": 1,
+    "original_bytes_restored": true,
+    "restore_http_status": 200,
+    "restore_result": {
+      "ok": true,
+      "chatsCreated": 1,
+      "chatsSkipped": 1,
+      "messagesImported": 3
+    },
+    "selected_message_count": 3,
+    "ordinary_fields_equal": true,
+    "full_message_dtos_equal": false,
+    "source_reply_to": {
+      "id": "acl-wa-parent-v1",
+      "sender": "Synthetic Tester",
+      "body": "Synthetic parent: meet at the library.",
+      "type": "text"
+    },
+    "target_reply_to": null,
+    "source_quote_visible": true,
+    "target_quote_visible": false,
+    "target_ui_status": "verified",
+    "helper_sha256": "a89e63711c67275e1b11daef7e9bfcbf2460631f09ed1dcd8d415c619fb6a7d9",
+    "own_processes_stopped": true,
+    "next_lock_absent": true,
+    "prior_packaged_reproduction_wall_seconds": 74.532
+  },
+  "artifacts": {
+    "before.png": {
+      "bytes": 123517,
+      "sha256": "27d311df35d7e1d8d9f3d52ad1c8c392d001b7ad1b7c3042503feec0b2a81910"
+    },
+    "after.png": {
+      "bytes": 117628,
+      "sha256": "743fe2dd32cef14f4b724a8d3120064ab9e2a3cab7a2810e05659d898717902c"
+    },
+    "sample-backup.json": {
+      "bytes": 1783,
+      "sha256": "95d213bdf7118c55af1e124c81fae6041bdde537aa7032bd55cdb2825892d854"
+    }
+  },
+  "not_tested": [
+    "Android/APK",
+    "device SQLite OPFS mode",
+    "real WhatsApp imports",
+    "whole database fidelity",
+    "chat createdAt",
+    "media bytes",
+    "ScheduledMessage",
+    "AppSetting",
+    "App Lock",
+    "AI",
+    "jump-to-original interaction"
+  ]
+}

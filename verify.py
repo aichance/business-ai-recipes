@@ -16,6 +16,16 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "tools/app-crash-lab/examples/wa-archiver/README.md",
+    "tools/app-crash-lab/examples/wa-archiver/SOURCE.json",
+    "tools/app-crash-lab/examples/wa-archiver/results-summary.json",
+    "tools/app-crash-lab/examples/wa-archiver/preservation.json",
+    "tools/app-crash-lab/examples/wa-archiver/synthetic-seed.json",
+    "tools/app-crash-lab/examples/wa-archiver/source-files.json",
+    "tools/app-crash-lab/examples/wa-archiver/native-backup.mjs",
+    "tools/app-crash-lab/examples/wa-archiver/before.png",
+    "tools/app-crash-lab/examples/wa-archiver/after.png",
+    "tools/app-crash-lab/examples/wa-archiver/sample-backup.json",
     "tools/app-crash-lab/examples/plesfeda/README.md",
     "tools/app-crash-lab/examples/plesfeda/SOURCE.json",
     "tools/app-crash-lab/examples/plesfeda/preservation.json",
