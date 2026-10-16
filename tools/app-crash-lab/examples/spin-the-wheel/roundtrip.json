@@ -1,0 +1,161 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "Spin the Wheel pinned source \u2014 complete real backup and one spin history",
+  "baseURL": "http://127.0.0.1:54681",
+  "path": "/",
+  "timeoutMs": 15000,
+  "stabilityMs": 500,
+  "checks": [
+    "backup-roundtrip"
+  ],
+  "reset": [],
+  "setup": [
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[aria-label=\"Entry 1\"]"
+      },
+      "value": "ACL synthetic wheel entry"
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[aria-label=\"Entry 1\"]"
+      },
+      "value": "ACL synthetic wheel entry"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Spin"
+      },
+      "save": true
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": "button[aria-label=\"Show history\"] > span"
+      },
+      "value": "1"
+    }
+  ],
+  "observe": {
+    "state": {
+      "source": "localStorage",
+      "key": "spin-the-wheel:v2",
+      "parse": "json"
+    },
+    "entry": {
+      "source": "value",
+      "target": {
+        "css": "input[aria-label=\"Entry 1\"]"
+      }
+    },
+    "historyCount": {
+      "source": "text",
+      "target": {
+        "css": "button[aria-label=\"Show history\"] > span"
+      }
+    }
+  },
+  "expected": {
+    "entry": "ACL synthetic wheel entry",
+    "historyCount": "1"
+  },
+  "backupRoundtrip": {
+    "isolation": "browser-local",
+    "export": {
+      "steps": [
+        {
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "Export data"
+          }
+        }
+      ],
+      "maxBytes": 131072,
+      "statePaths": {
+        "state": []
+      }
+    },
+    "restore": {
+      "path": "/",
+      "ready": [
+        {
+          "action": "expectVisible",
+          "target": {
+            "css": "input[aria-label=\"Entry 1\"]"
+          }
+        }
+      ],
+      "empty": {
+        "state": null,
+        "entry": "Option 1",
+        "historyCount": "0"
+      },
+      "fileChooser": {
+        "role": "button",
+        "name": "Import data"
+      },
+      "mimeType": "application/json",
+      "commit": {
+        "frame": {
+          "css": "div.fixed:has(> div > h2:text-is(\"Import wheel data?\"))"
+        },
+        "target": {
+          "role": "button",
+          "name": "Import"
+        },
+        "ready": [
+          {
+            "action": "expectText",
+            "target": {
+              "role": "heading",
+              "name": "Import wheel data?"
+            },
+            "value": "Import wheel data?"
+          }
+        ]
+      },
+      "success": {
+        "observe": {
+          "entry": {
+            "source": "value",
+            "target": {
+              "css": "input[aria-label=\"Entry 1\"]"
+            }
+          },
+          "historyCount": {
+            "source": "text",
+            "target": {
+              "css": "button[aria-label=\"Show history\"] > span"
+            }
+          }
+        },
+        "expected": {
+          "entry": "ACL synthetic wheel entry",
+          "historyCount": "1"
+        }
+      }
+    }
+  },
+  "afterReload": [
+    {
+      "action": "expectValue",
+      "target": {
+        "css": "input[aria-label=\"Entry 1\"]"
+      },
+      "value": "ACL synthetic wheel entry"
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": "button[aria-label=\"Show history\"] > span"
+      },
+      "value": "1"
+    }
+  ]
+}

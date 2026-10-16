@@ -15,6 +15,10 @@ from tempfile import TemporaryDirectory
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "tools/app-crash-lab/examples/spin-the-wheel/README.md",
+    "tools/app-crash-lab/examples/spin-the-wheel/SOURCE.json",
+    "tools/app-crash-lab/examples/spin-the-wheel/roundtrip.json",
+    "tools/app-crash-lab/examples/spin-the-wheel/wrong-baseline.json",
     "docs/leftover-version-boundary.gif",
     "docs/leftover-version-boundary.mp4",
     "tools/app-crash-lab/examples/leftover/MEDIA.json",
