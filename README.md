@@ -84,6 +84,8 @@ An importer asks “Replace the current document?” before parsing? The [FloorP
 
 If these checks are useful, [star the repository](https://github.com/aichance/business-ai-recipes) to find them again before your next release. Starring is optional.
 
+[Saved annotation versus unfinished draft](tools/app-crash-lab/examples/extensive-reading-assistant): one real save passes; two dedicated draft regressions reproduce an already-open issue without an API key.
+
 Already have a Playwright suite? [Compare the two routes on the same app](tools/app-crash-lab/examples/direct-playwright/README.md), including a runnable direct test and the tradeoffs.
 
 **Another real-app finding:** while checking an unchanged local Chalky build, the normal-save baseline failed before reload. A separate keyboard diagnostic lost the last edit with immediate close and kept it with a 350ms delayed control. [See the measured result and runnable reproduction](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#note-close). This is our local finding, not author confirmation or a verified fix.
