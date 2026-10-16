@@ -1,0 +1,191 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "Taglio / deliberate control removes the selected Japanese tag (not a plugin defect)",
+  "baseURL": "http://127.0.0.1:54814",
+  "path": "/wp-admin/post.php?post=100&action=edit",
+  "timeoutMs": 12000,
+  "stabilityMs": 500,
+  "checks": [
+    "reload"
+  ],
+  "reset": [
+    {
+      "action": "request",
+      "method": "POST",
+      "path": "/wp-content/aclf-reset.php",
+      "data": {
+        "fixture": "aclf-taglio-v1"
+      },
+      "expectStatus": 200
+    },
+    {
+      "action": "goto",
+      "path": "/wp-admin/post.php?post=100&action=edit"
+    }
+  ],
+  "setup": [
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Find Tags in Article"
+      }
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": "#tmsf-results input[value=\"2\"]"
+      }
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": "#tmsf-results input[value=\"3\"]"
+      }
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": "#tmsf-results input[value=\"4\"]"
+      }
+    },
+    {
+      "action": "check",
+      "target": {
+        "css": "#tmsf-results input[value=\"2\"]"
+      }
+    },
+    {
+      "action": "check",
+      "target": {
+        "css": "#tmsf-results input[value=\"4\"]"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Add Selected Tags"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Update"
+      },
+      "save": true
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": "#message:has-text(\"Post updated.\")"
+      }
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "role": "button",
+        "name": "Remove term: WordPress"
+      }
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "role": "button",
+        "name": "Remove term: 日本語"
+      }
+    }
+  ],
+  "observe": {
+    "persistedTagIds": {
+      "source": "response",
+      "url": "/?rest_route=/wp/v2/posts/100",
+      "field": "json",
+      "jsonPath": [
+        "tags"
+      ]
+    },
+    "visibleTagCount": {
+      "source": "count",
+      "target": {
+        "css": "#tagsdiv-post_tag .tagchecklist li"
+      }
+    },
+    "wordPressTag": {
+      "source": "count",
+      "target": {
+        "role": "button",
+        "name": "Remove term: WordPress"
+      }
+    },
+    "japaneseTag": {
+      "source": "count",
+      "target": {
+        "role": "button",
+        "name": "Remove term: 日本語"
+      }
+    },
+    "unselectedJavaScript": {
+      "source": "count",
+      "target": {
+        "role": "button",
+        "name": "Remove term: JavaScript"
+      }
+    },
+    "postTitle": {
+      "source": "value",
+      "target": {
+        "css": "#title"
+      }
+    }
+  },
+  "expected": {
+    "persistedTagIds": [
+      2,
+      4
+    ],
+    "visibleTagCount": 2,
+    "wordPressTag": 1,
+    "japaneseTag": 1,
+    "unselectedJavaScript": 0,
+    "postTitle": "App Crash Lab synthetic tagging"
+  },
+  "afterReload": [
+    {
+      "action": "expectVisible",
+      "target": {
+        "role": "button",
+        "name": "Update"
+      }
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "role": "button",
+        "name": "Remove term: WordPress"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Remove term: 日本語"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Update"
+      }
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": "#message:has-text(\"Post updated.\")"
+      }
+    }
+  ]
+}
