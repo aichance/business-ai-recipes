@@ -72,6 +72,12 @@ task records, dependencies and six calendar fields through reload, malformed-JSO
 rejection and an actual Save → fresh Open → reload. The pinned unmodified app
 passed all three checks; this is an operator test, separate from author adoption.
 
+The [Taglio WordPress setup](examples/taglio/README.md) starts a disposable
+WordPress site and checks selected tags in both the saved post REST response
+and the classic editor after Update → reload. The unmodified plugin passed;
+a deliberate tag-removal control failed. Adapt the fixture to your own
+plugin without using a production WordPress site.
+
 ## Try it
 
 You need **Node 22+** and npm. In an empty folder, run these two commands.
