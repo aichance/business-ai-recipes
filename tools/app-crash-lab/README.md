@@ -29,6 +29,26 @@ Describe the save workflow; it inspects your source, explains the selected
 observations, writes the JSON and invokes this existing runner. Review the
 contract and actual result. A local test does not cover every input or failure.
 
+### Install the Codex skill with one command
+
+Use **Node 22.20+** for the Skills CLI. In **your app project's directory**,
+first review the [skill source](../../.agents/skills/app-crash-lab/SKILL.md).
+If `.agents/skills/app-crash-lab` already exists, keep and review it instead of
+running this installation over it.
+
+```sh
+npx --yes skills@1.7.2 add https://github.com/aichance/business-ai-recipes --skill app-crash-lab --agent codex --copy --yes --json
+```
+
+This copies only `app-crash-lab` into `.agents/skills/`, with its reference and
+license, and creates the project's `skills-lock.json`. The installer also
+maintains its own user-level metadata. We verified this fresh-project install
+on macOS with Node 24.19.0 and Skills CLI 1.7.2; installation alone does not test
+your app. Open the project in Codex and describe the save workflow as above.
+For an older Node 22 runtime, use the existing
+[manual ZIP installation](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#codex-skill).
+The test runner's requirement remains Node 22+.
+
 ```text
 Synthetic Notes         Save → reload       Reject empty note
 Deliberate reload bug   FAIL: "Buy coffee"→"" PASS

@@ -28,7 +28,21 @@ Use a disposable **local copy of your app**, with **Node 22+ and npm**.
 The runner makes no LLM calls; optional agent setup uses your existing agent. Prefer manual setup? [Create, adapt and run a config](tools/app-crash-lab/README.md). [日本語の導入手順](tools/app-crash-lab/README.md#japanese-setup).
 
 **Want a reusable Codex workflow instead of writing the JSON?**
-[Download the repo-local skill](https://aichance.github.io/business-ai-recipes/app-crash-lab-skill-v0.1.0.zip)
+With **Node 22.20+**, open **your app project's directory**, review the
+[skill source](.agents/skills/app-crash-lab/SKILL.md), and install it with:
+
+```sh
+npx --yes skills@1.7.2 add https://github.com/aichance/business-ai-recipes --skill app-crash-lab --agent codex --copy --yes --json
+```
+
+Use this only when `.agents/skills/app-crash-lab` does not already exist; keep
+and review an existing folder instead of reinstalling. This copies the skill's
+three files into that project and adds `skills-lock.json`. The installer also
+keeps its own user-level metadata. Verified on macOS with Node 24.19.0;
+[Skills CLI documentation](https://www.skills.sh/docs/cli).
+
+For manual installation or an older Node 22 runtime,
+[download the repo-local skill](https://aichance.github.io/business-ai-recipes/app-crash-lab-skill-v0.1.0.zip)
 and [checksum](https://aichance.github.io/business-ai-recipes/app-crash-lab-skill-v0.1.0.zip.sha256).
 Review it, then place the whole `app-crash-lab` folder in **your app project's**
 `.agents/skills/` without overwriting an existing skill. In Codex, ask:
