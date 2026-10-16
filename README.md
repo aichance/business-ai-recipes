@@ -20,6 +20,23 @@ Use a disposable **local copy of your app**, with **Node 22+ and npm**.
 
 The runner makes no LLM calls; optional agent setup uses your existing agent. Prefer manual setup? [Create, adapt and run a config](tools/app-crash-lab/README.md). [日本語の導入手順](tools/app-crash-lab/README.md#japanese-setup).
 
+**Want a reusable Codex workflow instead of writing the JSON?**
+[Download the repo-local skill](https://aichance.github.io/business-ai-recipes/app-crash-lab-skill-v0.1.0.zip)
+and [checksum](https://aichance.github.io/business-ai-recipes/app-crash-lab-skill-v0.1.0.zip.sha256).
+Review it, then place the whole `app-crash-lab` folder in **your app project's**
+`.agents/skills/` without overwriting an existing skill. In Codex, ask:
+
+```text
+$app-crash-lab Check my app's save workflow with synthetic data.
+Inspect the source, explain what you will observe, create the contract and run it.
+Check reload and the actual JSON backup restore if the app supports it.
+Keep the app unchanged and tell me the result and exact rerun command.
+```
+
+[Skill source](.agents/skills/app-crash-lab/SKILL.md) · [Installation and scope](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#codex-skill).
+The skill uses the existing 0.10.0 runner. Review the proposed observations and
+actual report; installing instructions alone does not test an app.
+
 **It exported a backup it could not restore.** In an unchanged local [DevTasks build](tools/app-crash-lab/examples/devtasks/README.md), a synthetic task with a custom `DOCS` category exported successfully, then the same file was rejected in a fresh browser context. The built-in `FEATURE` control restored.
 
 [![21-second actual DevTasks flow: export a synthetic DOCS task, reject its backup in a fresh context, then restore a FEATURE control](docs/devtasks-backup-roundtrip.gif)](https://aichance.github.io/business-ai-recipes/devtasks-backup-roundtrip.mp4)

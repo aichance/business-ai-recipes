@@ -11,10 +11,16 @@ import sys
 from copy import deepcopy
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from zipfile import ZipFile
 
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    ".agents/skills/app-crash-lab/SKILL.md",
+    ".agents/skills/app-crash-lab/LICENSE",
+    ".agents/skills/app-crash-lab/references/runner.md",
+    "docs/app-crash-lab-skill-v0.1.0.zip",
+    "docs/app-crash-lab-skill-v0.1.0.zip.sha256",
     "tools/app-crash-lab/examples/spin-the-wheel/README.md",
     "tools/app-crash-lab/examples/spin-the-wheel/SOURCE.json",
     "tools/app-crash-lab/examples/spin-the-wheel/roundtrip.json",
@@ -418,6 +424,24 @@ def _load_line_judgment_recipe(root: Path):
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+
+def _verify_app_crash_lab_skill(root: Path) -> None:
+    skill = root / ".agents" / "skills" / "app-crash-lab"
+    archive = root / "docs" / "app-crash-lab-skill-v0.1.0.zip"
+    relative_files = ("SKILL.md", "LICENSE", "references/runner.md")
+    if (skill / "LICENSE").read_bytes() != (root / "LICENSE").read_bytes():
+        raise AssertionError("App Crash Lab skill must include the root MIT license")
+    with ZipFile(archive) as bundle:
+        expected_names = {f"app-crash-lab/{name}" for name in relative_files}
+        if set(bundle.namelist()) != expected_names or len(bundle.namelist()) != 3:
+            raise AssertionError("App Crash Lab skill ZIP contains unexpected or duplicate paths")
+        for relative in relative_files:
+            if bundle.read(f"app-crash-lab/{relative}") != (skill / relative).read_bytes():
+                raise AssertionError(f"App Crash Lab skill ZIP differs from source: {relative}")
+    checksum = archive.with_suffix(archive.suffix + ".sha256").read_text().split()
+    if checksum != [hashlib.sha256(archive.read_bytes()).hexdigest(), archive.name]:
+        raise AssertionError("App Crash Lab skill ZIP checksum differs from published bytes")
 
 
 def _verify_demo_forge(root: Path) -> dict:
@@ -961,6 +985,7 @@ def verify(
     line_judgment_summary = _verify_meeting_line_judgment(root)
     jev_summary = _verify_jev_recipe(root)
     jev_csv_exception_summary = _verify_jev_csv_exception_recipe(root)
+    _verify_app_crash_lab_skill(root)
     demo_forge_summary = _verify_demo_forge(root)
 
     supplied_inputs = (
