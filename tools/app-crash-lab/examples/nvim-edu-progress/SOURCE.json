@@ -9,6 +9,14 @@
   "app_crash_lab": "0.6.2",
   "verified_date": "2026-10-15",
   "upstream_source_included": false,
-  "author_execution_confirmed": false,
-  "scope": "Local production build, emulator mode, one synthetic hjkl lesson and a slower second clear. No JSON export/import, real Vim/WASM, drills, streak or browser-storage eviction certification."
+  "author_execution_confirmed": true,
+  "scope": "Local production build, emulator mode, one synthetic hjkl lesson and a slower second clear. No JSON export/import, real Vim/WASM, drills, streak or browser-storage eviction certification.",
+  "author_report": {
+    "url": "https://qiita.com/s3onghyun/items/7966ac7e6a534a84f9db#comment-2d25dc275d61b168ee4a",
+    "reported_at": "2026-10-15T15:45:33+09:00",
+    "observed_on": "2026-10-16",
+    "tool_version": "0.6.2",
+    "scope": "Two CLI reload contracts and two generated standalone tests on the author's own pinned app. Public author report; raw logs not reviewed. Applies to the original Oct15 contracts before the Oct16 second-completion guard.",
+    "revised_contract_author_execution_confirmed": false
+  }
 }

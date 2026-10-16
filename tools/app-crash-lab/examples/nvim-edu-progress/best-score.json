@@ -112,6 +112,12 @@
       },
       "value": "l",
       "save": true
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": "#next"
+      }
     }
   ],
   "observe": {
