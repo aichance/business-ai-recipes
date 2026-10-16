@@ -6,16 +6,17 @@
 
 Turn one successful save workflow into two repeatable checks: **reload without losing data** and **reject an invalid update without corrupting the previous value**. Keep the state diff, browser trace and standalone Playwright tests.
 
-**Test the actual backup, too.** Export the app's real JSON, verify it matches saved records, restore the unchanged file in an empty browser context, and compare every selected field after reload. [Run the backup check](tools/app-crash-lab/BACKUP.md) · [0.9: complete generated-ID NestSave records](tools/app-crash-lab/examples/nestsave/README.md) · [0.8: preview/commit with full TOEIC review, vocabulary and score](tools/app-crash-lab/examples/toeic-tracker/README.md) · [0.7: native restore confirmation, full Paisa transactions and balances](tools/app-crash-lab/examples/paisa/README.md) · [Price Table: real file chooser + auto-reload PASS](tools/app-crash-lab/examples/price-table/README.md) · [Normal PASS / custom-category FAIL on unchanged DevTasks](tools/app-crash-lab/examples/devtasks/README.md#run-the-same-real-file-roundtrip-with-app-crash-lab06).
+[**Check your own app**](#check-your-own-app) · [**Try a no-install example**](https://aichance.github.io/business-ai-recipes/test-the-test.html) · [**Contract format**](tools/app-crash-lab/CONTRACT.md)
 
-[**Check your own app**](#check-your-own-app) · [**See the broken vs fixed results**](https://aichance.github.io/business-ai-recipes/app-crash-lab.html) · [**Contract format**](tools/app-crash-lab/CONTRACT.md)
+**It exported a backup it could not restore.** In an unchanged local [DevTasks build](tools/app-crash-lab/examples/devtasks/README.md), a synthetic task with a custom `DOCS` category exported successfully, then the same file was rejected in a fresh browser context. The built-in `FEATURE` control restored.
 
-**A successful restore can still lose data.** In the pinned local
-[WA-archiver case](tools/app-crash-lab/examples/wa-archiver/README.md), all three
-message bodies restore and the API reports success, but the reply relationship
-disappears. Ordinary preservation checks pass. The separate server-mode
-diagnostic includes the unchanged backup, raw before/after screenshots and
-a full-record control; it is our reproduction, separate from author adoption.
+[![21-second actual DevTasks flow: export a synthetic DOCS task, reject its backup in a fresh context, then restore a FEATURE control](docs/devtasks-backup-roundtrip.gif)](https://aichance.github.io/business-ai-recipes/devtasks-backup-roundtrip.mp4)
+
+*[Watch the 21-second MP4](https://aichance.github.io/business-ai-recipes/devtasks-backup-roundtrip.mp4) · [Run the separate Playwright round-trip test](tools/app-crash-lab/examples/devtasks/README.md). This recording uses synthetic records on pinned local source, not the public service. The recording uses the historical separate test; the same real-file checks now run in CLI0.6+. Operator testing is separate from author adoption.*
+
+**Independently run on two authors’ own apps:** [Sethera](https://qiita.com/cuculhart/items/f020080b2ef1331222d0#comment-79c9c450f3a54f3ba6ac) and [nvim-edu](https://qiita.com/s3onghyun/items/7966ac7e6a534a84f9db#comment-2d25dc275d61b168ee4a). [Reported environments and scope](#independent-author-reports).
+
+If these checks are useful, [star the repository](https://github.com/aichance/business-ai-recipes) to find them again before your next release. Starring is optional.
 
 ## Check your own app
 
@@ -58,15 +59,11 @@ Keep the app unchanged and tell me the result and exact rerun command.
 The skill uses the existing 0.10.0 runner. Review the proposed observations and
 actual report; installing instructions alone does not test an app.
 
-**It exported a backup it could not restore.** In an unchanged local [DevTasks build](tools/app-crash-lab/examples/devtasks/README.md), a synthetic task with a custom `DOCS` category exported successfully, then the same file was rejected in a fresh browser context. The built-in `FEATURE` control restored.
-
-[![21-second actual DevTasks flow: export a synthetic DOCS task, reject its backup in a fresh context, then restore a FEATURE control](docs/devtasks-backup-roundtrip.gif)](https://aichance.github.io/business-ai-recipes/devtasks-backup-roundtrip.mp4)
-
-*[Watch the 21-second MP4](https://aichance.github.io/business-ai-recipes/devtasks-backup-roundtrip.mp4) · [Run the separate Playwright round-trip test](tools/app-crash-lab/examples/devtasks/README.md). This recording uses synthetic records on pinned local source, not the public service. The recording uses the historical separate test; the same real-file checks now run in CLI0.6+. Operator testing is separate from author adoption.*
-
 [**Try App Crash Lab 0.10.0 without cloning**](#try-the-seeded-demo) · [**Source ZIP & checksums**](https://github.com/aichance/business-ai-recipes/releases/tag/app-crash-lab-v0.10.0)
 
 **No install:** [**Would your test catch this?**](https://aichance.github.io/business-ai-recipes/test-the-test.html) Save English, reload a deliberately broken UI, then add a text observation to turn a misleading PASS into a detected failure. This interactive browser example links to the matching CLI checks.
+
+## Independent author reports
 
 **Used on a developer's own app:** [Sethera's author reports](https://qiita.com/cuculhart/items/f020080b2ef1331222d0#comment-79c9c450f3a54f3ba6ac) testing an unchanged Sethera v1.0.0 on Windows with App Crash Lab 0.4.1, Node 22.16.0 and Playwright 1.64.0. Both preservation checks and both exported tests passed. The intentional negative controls correctly returned FAIL for a changed filter (300 → 900) and INCONCLUSIVE for a wrong baseline. [Download the six-file setup pack](https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.4.1/app-crash-lab-sethera-v1-pack.zip) · [Reported scope and earlier use](tools/app-crash-lab/examples/SETHERA.md#independent-author-report). These are the author's public results for that app and runner version, separate from our compatibility runs.
 
@@ -95,6 +92,17 @@ Node 22+. Local test runs need no account, LLM or API key. The demo contains del
 | Deliberately corrupts rejected saves | PASS | FAIL |
 | Fixed version | PASS | PASS |
 
+## More measured examples
+
+**Test the actual backup, too.** Export the app's real JSON, verify it matches saved records, restore the unchanged file in an empty browser context, and compare every selected field after reload. [Run the backup check](tools/app-crash-lab/BACKUP.md) · [0.9: complete generated-ID NestSave records](tools/app-crash-lab/examples/nestsave/README.md) · [0.8: preview/commit with full TOEIC review, vocabulary and score](tools/app-crash-lab/examples/toeic-tracker/README.md) · [0.7: native restore confirmation, full Paisa transactions and balances](tools/app-crash-lab/examples/paisa/README.md) · [Price Table: real file chooser + auto-reload PASS](tools/app-crash-lab/examples/price-table/README.md) · [Normal PASS / custom-category FAIL on unchanged DevTasks](tools/app-crash-lab/examples/devtasks/README.md#run-the-same-real-file-roundtrip-with-app-crash-lab06).
+
+**A successful restore can still lose data.** In the pinned local
+[WA-archiver case](tools/app-crash-lab/examples/wa-archiver/README.md), all three
+message bodies restore and the API reports success, but the reply relationship
+disappears. Ordinary preservation checks pass. The separate server-mode
+diagnostic includes the unchanged backup, raw before/after screenshots and
+a full-record control; it is our reproduction, separate from author adoption.
+
 Also exercised against an unchanged local [Glypha](https://github.com/kuny/glypha) build: saved scene and ETag survive reload and a 422-rejected update. This is our compatibility test, not third-party adoption. [Adapter and scope](tools/app-crash-lab/examples/GLYPHA.md).
 
 Browser-only JSON importer? The [Tunoron example](tools/app-crash-lab/examples/TUNORON.md) imports a synthetic song and checks the complete saved record after reload and malformed JSON rejection. Requires App Crash Lab 0.2+.
@@ -102,8 +110,6 @@ Browser-only JSON importer? The [Tunoron example](tools/app-crash-lab/examples/T
 Your app rejects input with a native `alert()`? The [Sethera example](tools/app-crash-lab/examples/SETHERA.md) checks both reload and saved-state preservation after a malformed JSON import. Exact alert text and state are checked separately. Requires App Crash Lab 0.3+.
 
 An importer asks “Replace the current document?” before parsing? The [FloorPlanner example](tools/app-crash-lab/examples/FLOORPLANNER.md) accepts one declared confirmation, then separately checks the parse error and unchanged saved data. Requires App Crash Lab 0.4+.
-
-If these checks are useful, [star the repository](https://github.com/aichance/business-ai-recipes) to find them again before your next release. Starring is optional.
 
 [Saved annotation versus unfinished draft](tools/app-crash-lab/examples/extensive-reading-assistant): one real save passes; two dedicated draft regressions reproduce an already-open issue without an API key.
 
