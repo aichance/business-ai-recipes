@@ -1,0 +1,24 @@
+{
+  "repository": "https://github.com/Franklindot04/spin-the-wheel",
+  "owner_id": 244808567,
+  "repository_id": 1400088851,
+  "commit": "39b29aab913ba6a508a911a02ea2c9ca6b27a529",
+  "license": "MIT",
+  "source_files": {
+    "README.md": "8543593575be321774e218a667122560339fb855",
+    "package.json": "989e9f7fcc2fd43031e45e331d82fe5b14cb3544",
+    "app/lib/wheel-storage.ts": "0ee8b01a18d85a0552db8e9ef2daa0f23168f703",
+    "app/page.tsx": "c9955007af2cb2076a4593989b089c853916c5de",
+    "app/components/EntryList.tsx": "c394e55ef53eebc78ffab8950ef93ab14100c9ba"
+  },
+  "source_file_count": 36,
+  "source_archive_sha256": "a84a7534130de4f245a6f378a77debc56fdf8c045e7f393418eaecc9b6ca71e6",
+  "tested_runtime": {
+    "node": "22.16.0",
+    "next": "16.3.7",
+    "mode": "next build --webpack, next start --hostname127.0.0.1 --port54681"
+  },
+  "data": "Synthetic entry label and one normal Standard Mode spin; no images/audio/private records",
+  "source_not_redistributed": true,
+  "operator_test_not_author_adoption": true
+}
