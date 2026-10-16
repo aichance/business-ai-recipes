@@ -1,0 +1,83 @@
+{
+  "measured_at": "2026-10-16T16:42:14.459090+00:00",
+  "environment": {
+    "os": "macOS",
+    "runner_node": "22.16.0",
+    "server_node": "24.19.0",
+    "server_npm": "11.21.1",
+    "playground_cli": "3.1.58",
+    "wordpress": "7.1.3",
+    "php": "8.3",
+    "editor": "WordPress classic editor via explicit fixture-only filters",
+    "database": "Playground SQLite",
+    "runner": "App Crash Lab0.10.0",
+    "playwright": "1.64.0"
+  },
+  "normal": {
+    "status": "pass",
+    "exit_code": 0,
+    "elapsed_seconds": 16.24829962477088,
+    "before": {
+      "persistedTagIds": [
+        2,
+        4
+      ],
+      "visibleTagCount": 2,
+      "wordPressTag": 1,
+      "japaneseTag": 1,
+      "unselectedJavaScript": 0,
+      "postTitle": "App Crash Lab synthetic tagging"
+    },
+    "after": {
+      "persistedTagIds": [
+        2,
+        4
+      ],
+      "visibleTagCount": 2,
+      "wordPressTag": 1,
+      "japaneseTag": 1,
+      "unselectedJavaScript": 0,
+      "postTitle": "App Crash Lab synthetic tagging"
+    },
+    "differences": []
+  },
+  "deliberate_control": {
+    "not_a_plugin_defect": true,
+    "operation": "After initial reload, remove the selected Japanese tag through the normal UI, Update, and compare against the unchanged original baseline",
+    "status": "fail",
+    "exit_code": 1,
+    "elapsed_seconds": 25.00787179172039,
+    "differences": [
+      {
+        "path": "$[\"persistedTagIds\"][\"1\"]",
+        "before": 4,
+        "after": null,
+        "change": "removed"
+      },
+      {
+        "path": "$[\"visibleTagCount\"]",
+        "before": 2,
+        "after": 1,
+        "change": "changed"
+      },
+      {
+        "path": "$[\"japaneseTag\"]",
+        "before": 1,
+        "after": 0,
+        "change": "changed"
+      }
+    ]
+  },
+  "unchanged_standalone": {
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0,
+    "flaky": 0,
+    "elapsed_seconds": 12.228285416960716,
+    "spec_sha256": "e63d1194ef4166e5c354560d2166092393c5e3b25424adf0e49494d711108abc"
+  },
+  "authored_synthetic_post_count": 1,
+  "author_execution_verified": false,
+  "third_party_adoption_credit": 0,
+  "benchmark": false
+}

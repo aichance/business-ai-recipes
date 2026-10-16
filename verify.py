@@ -16,6 +16,22 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "docs/app-crash-lab-taglio-pack-v0.1.0.zip",
+    "docs/app-crash-lab-taglio-pack-v0.1.0.zip.sha256",
+    "tools/app-crash-lab/examples/taglio/LICENSE",
+    "tools/app-crash-lab/examples/taglio/README.md",
+    "tools/app-crash-lab/examples/taglio/SOURCE.json",
+    "tools/app-crash-lab/examples/taglio/classic-editor.php",
+    "tools/app-crash-lab/examples/taglio/fixture-reset.php",
+    "tools/app-crash-lab/examples/taglio/loopback-only.mjs",
+    "tools/app-crash-lab/examples/taglio/normal-reload.png",
+    "tools/app-crash-lab/examples/taglio/package-lock.json",
+    "tools/app-crash-lab/examples/taglio/package.json",
+    "tools/app-crash-lab/examples/taglio/results-summary.json",
+    "tools/app-crash-lab/examples/taglio/seed.php",
+    "tools/app-crash-lab/examples/taglio/start.py",
+    "tools/app-crash-lab/examples/taglio/tag-save-known-control.json",
+    "tools/app-crash-lab/examples/taglio/tag-save.json",
     "tools/app-crash-lab/examples/wa-archiver/README.md",
     "tools/app-crash-lab/examples/wa-archiver/SOURCE.json",
     "tools/app-crash-lab/examples/wa-archiver/results-summary.json",
@@ -406,6 +422,37 @@ def _assert_candidate_boundary(root: Path) -> None:
         for fragment in forbidden:
             if fragment in content:
                 raise AssertionError(f"forbidden content in {relative}")
+
+
+def _verify_taglio_pack(root: Path) -> None:
+    name = "app-crash-lab-taglio-pack-v0.1.0.zip"
+    path = root / "docs" / name
+    checksum = path.with_name(name + ".sha256").read_text().split()
+    if checksum != [hashlib.sha256(path.read_bytes()).hexdigest(), name]:
+        raise AssertionError("Taglio fixture pack checksum mismatch")
+    expected = {
+        "LICENSE",
+        "README.md",
+        "SOURCE.json",
+        "classic-editor.php",
+        "fixture-reset.php",
+        "loopback-only.mjs",
+        "normal-reload.png",
+        "package-lock.json",
+        "package.json",
+        "results-summary.json",
+        "seed.php",
+        "start.py",
+        "tag-save-known-control.json",
+        "tag-save.json",
+    }
+    source = root / "tools/app-crash-lab/examples/taglio"
+    with ZipFile(path) as archive:
+        if len(archive.namelist()) != len(expected) or set(archive.namelist()) != {"taglio/" + entry for entry in expected}:
+            raise AssertionError("Taglio fixture pack file set mismatch")
+        for entry in expected:
+            if archive.read("taglio/" + entry) != (source / entry).read_bytes():
+                raise AssertionError(f"Taglio fixture pack source differs: {entry}")
 
 
 def _verify_reading_assistant_pack(root: Path) -> None:
@@ -1041,6 +1088,7 @@ def verify(
     jev_csv_exception_summary = _verify_jev_csv_exception_recipe(root)
     _verify_app_crash_lab_skill(root)
     _verify_reading_assistant_pack(root)
+    _verify_taglio_pack(root)
     demo_forge_summary = _verify_demo_forge(root)
 
     supplied_inputs = (
