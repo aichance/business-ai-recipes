@@ -1,0 +1,318 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "Teoria musicale: real backup with native completion alert",
+  "baseURL": "http://127.0.0.1:59812",
+  "path": "/#/impostazioni",
+  "timeoutMs": 5000,
+  "stabilityMs": 250,
+  "checks": [
+    "backup-roundtrip"
+  ],
+  "reset": [],
+  "setup": [
+    {
+      "action": "expectText",
+      "target": {
+        "role": "heading",
+        "name": "Impostazioni"
+      },
+      "value": "Impostazioni"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "C D E"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Aspetta che premo Avanti"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "10 minuti"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "input[type=\"date\"]"
+      },
+      "value": "2026-10-01"
+    },
+    {
+      "action": "goto",
+      "path": "/#/scale"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Cosa allenare"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Trova il grado"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Che grado è"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Da armatura a tonalità"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Relative"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Scrivi la scala"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "minore naturale"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "minore armonica"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "minore melodica"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "pentatonica maggiore"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "pentatonica minore"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "css": "fieldset:has(legend:text-is(\"Alterazioni in chiave fino a\")) button:text-is(\"0\")"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Cosa allenare"
+      }
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": ".question .prompt"
+      },
+      "value": "Quali alterazioni ha in chiave C maggiore?"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "1♯"
+      },
+      "save": true
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": ".fb-wrong"
+      }
+    },
+    {
+      "action": "goto",
+      "path": "/#/impostazioni"
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "role": "heading",
+        "name": "Impostazioni"
+      },
+      "value": "Impostazioni"
+    }
+  ],
+  "observe": {
+    "settings": {
+      "source": "localStorage",
+      "key": "tm.settings",
+      "parse": "json"
+    },
+    "srs": {
+      "source": "localStorage",
+      "key": "tm.srs",
+      "parse": "json"
+    },
+    "exerciseConfig": {
+      "source": "localStorage",
+      "key": "tm.cfg.scale",
+      "parse": "json"
+    },
+    "program": {
+      "source": "localStorage",
+      "key": "tm.program",
+      "parse": "json"
+    }
+  },
+  "expected": {
+    "settings": {
+      "naming": "en",
+      "autoAdvance": false,
+      "sessionMinutes": 10
+    },
+    "exerciseConfig": {
+      "kinds": [
+        "sig"
+      ],
+      "scales": [
+        "major"
+      ],
+      "maxAcc": 0
+    },
+    "program": {
+      "start": "2026-10-01",
+      "done": []
+    }
+  },
+  "afterReload": [
+    {
+      "action": "expectText",
+      "target": {
+        "role": "heading",
+        "name": "Impostazioni"
+      },
+      "value": "Impostazioni"
+    }
+  ],
+  "backupRoundtrip": {
+    "isolation": "browser-local",
+    "export": {
+      "steps": [
+        {
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "Salva backup"
+          }
+        }
+      ],
+      "maxBytes": 65536,
+      "statePaths": {
+        "settings": [
+          "settings"
+        ],
+        "srs": [
+          "srs"
+        ],
+        "exerciseConfig": [
+          "cfg.scale"
+        ],
+        "program": [
+          "program"
+        ]
+      }
+    },
+    "restore": {
+      "path": "/#/impostazioni",
+      "ready": [
+        {
+          "action": "expectText",
+          "target": {
+            "role": "heading",
+            "name": "Impostazioni"
+          },
+          "value": "Impostazioni"
+        }
+      ],
+      "empty": {
+        "settings": null,
+        "srs": null,
+        "exerciseConfig": null,
+        "program": null
+      },
+      "target": {
+        "css": "input[type=\"file\"][accept=\"application/json\"]"
+      },
+      "mimeType": "application/json",
+      "success": {
+        "dialog": {
+          "type": "alert",
+          "message": "Progressi ripristinati."
+        }
+      }
+    },
+    "sourceReady": {
+      "observe": {
+        "answerSeen": {
+          "observation": "srs",
+          "jsonPath": [
+            "sq:sig:major:0",
+            "seen"
+          ]
+        },
+        "answerCorrect": {
+          "observation": "srs",
+          "jsonPath": [
+            "sq:sig:major:0",
+            "correct"
+          ]
+        },
+        "answerBox": {
+          "observation": "srs",
+          "jsonPath": [
+            "sq:sig:major:0",
+            "box"
+          ]
+        }
+      },
+      "expected": {
+        "answerSeen": 1,
+        "answerCorrect": 0,
+        "answerBox": 0
+      }
+    }
+  }
+}

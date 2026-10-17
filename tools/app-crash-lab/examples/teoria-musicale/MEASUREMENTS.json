@@ -1,0 +1,86 @@
+{
+  "measured_at": "2026-10-17T10:31:19.515Z",
+  "environment": {
+    "system": "Darwin",
+    "node": "22.16.0",
+    "npm": "11.21.1",
+    "playwright": "1.64.0",
+    "app_mode": "Vite development; service workers blocked"
+  },
+  "reload": {
+    "tool_version": "0.11.0",
+    "cli_exit_code": 0,
+    "status": "pass",
+    "full_record_differences": 0
+  },
+  "backup_roundtrip": {
+    "tool_version": "0.12.0-dev.1",
+    "source_candidate": "local source candidate; publication is a separate checkpoint",
+    "cli_exit_code": 0,
+    "status": "pass",
+    "phase": "complete",
+    "download": {
+      "format": "utf8-json",
+      "sizeBytes": 400,
+      "sha256": "10da5ae875805ccd34a1e0d8b1c2b91f5c31f18d535dbb80d285ba3b7013f2db"
+    },
+    "original_bytes_uploaded": true,
+    "completion": {
+      "required": true,
+      "observed": true,
+      "matchedCount": 1,
+      "dismissedCount": 1
+    },
+    "comparisons": {
+      "export": {
+        "matched": true
+      },
+      "sourceAfterExport": {
+        "matched": true
+      },
+      "restoration": {
+        "matched": true,
+        "changedObservations": []
+      },
+      "reload": {
+        "matched": true,
+        "changedObservations": []
+      }
+    },
+    "unchanged_generated_standalone": {
+      "exit_code": 0,
+      "tests_passed": 1
+    }
+  },
+  "selected_storage_keys": [
+    "tm.settings",
+    "tm.cfg.scale",
+    "tm.program",
+    "tm.srs"
+  ],
+  "srs_record": {
+    "id": "sq:sig:major:0",
+    "seen": 1,
+    "correct": 0,
+    "box": 0,
+    "all_fields_compared": [
+      "box",
+      "due",
+      "seen",
+      "correct",
+      "totalMs",
+      "last"
+    ]
+  },
+  "stable_011_boundary": {
+    "backup_native_alert_field": "configuration rejected before app execution",
+    "exit_code": 2,
+    "is_app_defect": false
+  },
+  "setup_correction": {
+    "initial_reload": "INCONCLUSIVE: exact combined label did not locate the date input",
+    "correction": "unique input[type=date] from actual app markup",
+    "app_changed": false
+  },
+  "interpretation": "The selected synthetic flow survived these local checks. No app defect or author execution is claimed."
+}
