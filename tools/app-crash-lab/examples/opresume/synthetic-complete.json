@@ -1,0 +1,50 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jsonresume/resume-schema/master/schema.json",
+  "basics": {
+    "name": "Crash Lab Synthetic",
+    "label": "Synthetic tester",
+    "email": "nobody@example.invalid",
+    "location": {
+      "city": "Synthetic City"
+    },
+    "summary": "Test fixture only — 日本語 42"
+  },
+  "work": [
+    {
+      "name": "Synthetic Laboratory",
+      "position": "Test engineer",
+      "startDate": "2024-01-01",
+      "endDate": "2025-01-01",
+      "summary": "Synthetic work history",
+      "highlights": [
+        "Preserve every supplied field"
+      ]
+    }
+  ],
+  "education": [],
+  "projects": [],
+  "skills": [
+    {
+      "name": "Testing",
+      "level": "Synthetic",
+      "keywords": [
+        "Playwright",
+        "日本語"
+      ]
+    }
+  ],
+  "awards": [],
+  "x-op-avatar": {
+    "width": 90,
+    "height": 126,
+    "borderRadius": 0,
+    "hidden": true,
+    "src": "/api/avatar?t=1773238453169"
+  },
+  "x-op-birthday": "2000-01-01",
+  "x-op-ageHidden": true,
+  "x-op-workExpYear": "1",
+  "x-op-customFields": [],
+  "x-op-aboutmeHtml": "<p>Synthetic applicant only.</p>",
+  "opresumeVersion": "1.6.0"
+}
