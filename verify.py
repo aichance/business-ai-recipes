@@ -16,6 +16,13 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "tools/app-crash-lab/examples/pomoflow/README.md",
+    "tools/app-crash-lab/examples/pomoflow/tasks-reload.json",
+    "tools/app-crash-lab/examples/pomoflow/serve-metadata-control.py",
+    "tools/app-crash-lab/examples/trazo/README.md",
+    "tools/app-crash-lab/examples/trazo/MEASUREMENTS.json",
+    "tools/app-crash-lab/examples/trazo/roundtrip.json",
+    "tools/app-crash-lab/examples/trazo/reload.json",
     "docs/app-crash-lab-taglio-pack-v0.1.0.zip",
     "docs/app-crash-lab-taglio-pack-v0.1.0.zip.sha256",
     "tools/app-crash-lab/examples/taglio/LICENSE",
