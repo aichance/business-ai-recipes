@@ -201,16 +201,16 @@ dialogs invalidate the check. See the
 [button-triggered chooser contract](CONTRACT.md#button-triggered-file-chooser-setup-0120-dev0-prerelease).
 The stable installation commands above remain pinned to 0.11.0.
 
-Experimental **0.12.0-dev.1** also supports a direct JSON import ending with one
+Experimental **0.12.0-dev.2** also supports a direct JSON import ending with one
 exact native success alert. It still compares the complete exported records,
 fresh restoration and reload; an alert alone cannot pass. Earlier, wrong or
 repeated dialogs remain inconclusive. This first alert form does not combine
 with a native confirmation or DOM preview/commit.
-[Configure the completion alert](BACKUP.md#native-completion-alert-0120-dev1-prerelease)
+[Configure the completion alert](BACKUP.md#native-completion-alert-012-prerelease)
 and review the contract before running the prerelease against a disposable app:
 
 ```sh
-npx --yes --package=https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.12.0-dev.1/app-crash-lab-0.12.0-dev.1.tgz app-crash-lab run my-backup.json
+npx --yes --package=https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.12.0-dev.2/app-crash-lab-0.12.0-dev.2.tgz app-crash-lab run my-backup.json
 ```
 
 Stable 0.11.0 intentionally rejects this new field. Existing stable setup and

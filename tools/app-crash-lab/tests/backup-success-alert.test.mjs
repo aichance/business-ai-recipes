@@ -120,6 +120,48 @@ async function replay(out) {
   return { ...result, result: JSON.parse(Buffer.from(value.body, 'base64').toString('utf8')) };
 }
 
+test('completion observation window ends before target reload can cancel delayed alerts', { timeout: 15000 }, async t => {
+  const app = await fixture();
+  t.after(() => app.close());
+  const browser = await chromium.launch();
+  t.after(() => browser.close());
+  let contexts = 0, deliveredAt, reloadedAt;
+  const wrapped = { newContext: async options => {
+    const context = await browser.newContext(options);
+    const targetContext = ++contexts === 2;
+    const newPage = context.newPage.bind(context);
+    context.newPage = async () => {
+      const page = await newPage();
+      if (targetContext) {
+        const locator = page.locator.bind(page), reload = page.reload.bind(page);
+        page.locator = (selector, ...args) => {
+          const target = locator(selector, ...args);
+          if (selector === '#file') {
+            const deliver = target.setInputFiles.bind(target);
+            target.setInputFiles = async (...files) => { deliveredAt = performance.now(); return deliver(...files); };
+          }
+          return target;
+        };
+        page.reload = async (...args) => { reloadedAt = performance.now(); return reload(...args); };
+      }
+      return page;
+    };
+    return context;
+  } };
+  const c = structuredClone(base);
+  c.baseURL = app.baseURL;
+  c.path = '/?mode=source&case=observation-window';
+  c.backupRoundtrip.restore.path = '/?mode=sync&case=observation-window';
+  c.stabilityMs = 0;
+  const r = await executeBackupRoundtrip(wrapped, validateContract(c));
+  assert.equal(r.status, 'pass', JSON.stringify(r));
+  assert.equal(contexts, 2);
+  assert.ok(Number.isFinite(deliveredAt) && Number.isFinite(reloadedAt));
+  const elapsed = reloadedAt - deliveredAt;
+  assert.ok(elapsed >= c.timeoutMs - 50, `target reloaded after ${elapsed}ms, before the ${c.timeoutMs}ms completion observation window`);
+  assert.ok(r.comparisons.restoration.matched && r.comparisons.reload.matched);
+});
+
 test('exact completion alerts retain complete data, phase boundaries and portable metadata-only verdicts', { timeout: 180000 }, async t => {
   const app = await fixture(), temp = await mkdtemp(join(root, '.test-backup-alert-'));
   t.after(async () => { await app.close(); await rm(temp, { recursive: true, force: true }); });
@@ -212,7 +254,7 @@ test('exact completion alerts retain complete data, phase boundaries and portabl
     } finally { await browser.close(); }
   });
   await t.test('standalone tests reproduce pass/fail/inconclusive without captured text or changed specs', async () => {
-    for (const mode of ['async', 'chooser', 'field-loss', 'reload-loss', 'wrong', 'double', 'missing']) {
+    for (const mode of ['async', 'chooser', 'field-loss', 'reload-loss', 'wrong', 'double', 'late-double', 'missing']) {
       const { report, r } = results.get(mode), value = await replay(report.out);
       assert.equal(value.code, r.status === 'pass' ? 0 : 1, value.stdout + value.stderr);
       for (const key of ['status', 'phase', 'error', 'importCompletion', 'comparisons']) assert.deepEqual(value.result[key], r[key], `${mode}/${key}`);

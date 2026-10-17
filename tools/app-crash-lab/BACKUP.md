@@ -59,7 +59,7 @@ For a toast that is absent until success, use a `count` observation selecting
 its exact success text, with expected `1`; it reads `0` before import. A `text`
 probe on an absent node times out and is INCONCLUSIVE.
 
-## Native completion alert (0.12.0-dev.1 prerelease)
+## Native completion alert (0.12 prerelease)
 
 Some apps report a completed JSON import with a native `alert()` rather than a
 DOM status. For a **direct import**, replace `restore.success` with:
@@ -70,7 +70,7 @@ DOM status. For a **direct import**, replace `restore.success` with:
 }
 ```
 
-This requires the **0.12.0-dev.1 prerelease**. Stable 0.11.0 rejects this field;
+Use the **0.12.0-dev.2 prerelease**. Stable 0.11.0 rejects this field;
 that configuration error does not indicate an app defect. The alert form and
 the existing `observe`/`expected` form are mutually exclusive. Declare a
 nonblank exact message. Matching keeps all whitespace and case; substring,
@@ -82,8 +82,13 @@ Only the target page's first matching alert is allowed, starting immediately
 before the actual file delivery. The same `timeoutMs` deadline includes an
 asynchronous import callback after `setFiles` returns. The runner dismisses the
 alert; it does not accept a confirm or replace `window.alert`. Permission ends
-at the first match, expiry or action failure. A missing alert is FAIL
-(`IMPORT_SUCCESS_NOT_OBSERVED`). Source-page, earlier, wrong, repeated or expired
+at the first match, expiry or action failure. Observation continues through the
+original file-delivery deadline before later navigation or reload, so those
+steps cannot cancel a duplicate alert scheduled inside that window. This full
+window is retained even if the first alert is synchronous. The dev.1 prerelease
+could end this observation early; dev.2 corrects that boundary.
+A missing alert is FAIL (`IMPORT_SUCCESS_NOT_OBSERVED`). Source-page, earlier,
+wrong, repeated or expired
 dialogs observed before the check ends are dismissed and INCONCLUSIVE. Opening
 a chooser does not open this permission. Events after contexts close are
 outside coverage. A delayed, unrelated identical target alert inside the

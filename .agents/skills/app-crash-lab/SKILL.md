@@ -55,6 +55,13 @@ one relevant example rather than guessing fields. Derive selectors, storage
 keys, expected values and readiness from the app. `init` contains Notes demo
 selectors and is not an automatic adapter.
 
+Check input selectors again after editing their values. In a measured
+Playwright 1.64.0 nested-label textarea, the exact `Notes` label stopped matching
+after input while the exact `textbox` role and accessible name still matched.
+If a selector changes this way, use a verified stable role/name or test ID for
+both actions and observations. Preserve the first INCONCLUSIVE report and all
+expected saved values; fix the selector without changing the app or adding waits.
+
 Put the contract and evidence in a new local output folder, such as
 `.crash-lab/my-flow/`, without overwriting earlier runs. Use a Node 22+
 environment and the user's approved startup method; reuse a confirmed running

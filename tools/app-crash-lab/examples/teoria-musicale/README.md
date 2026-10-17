@@ -52,7 +52,7 @@ node cli.mjs run examples/teoria-musicale/roundtrip.json
 ```
 
 The reload contract works with stable0.11.0. **The roundtrip contract requires
-prerelease0.12.0-dev.1** because this app finishes import with the native alert
+prerelease0.12.0-dev.2** because this app finishes import with the native alert
 `Progressi ripristinati.` Stable0.11.0 rejects that new field before execution;
 that is a tool-support boundary, not an app failure.
 
@@ -76,6 +76,9 @@ standalone test passed. The download was400 bytes; export, source preservation,
 full restoration and reload all matched. [MEASUREMENTS.json](MEASUREMENTS.json)
 preserves the tested conditions and initial locator correction. The versioned
 package's public download and fresh installation are separate release checks.
+That measurement remains a dev.1 result. For new runs, use dev.2: it keeps the
+full completion observation window before navigating or reloading, so a fast
+reload cannot cancel a duplicate alert queued inside that window.
 
 This is a passing control for one real workflow. Deliberate test fixtures in
 the tool's test suite separately prove that hidden-field, identity, timestamp
