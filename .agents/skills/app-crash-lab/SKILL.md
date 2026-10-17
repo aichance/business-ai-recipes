@@ -6,7 +6,7 @@ description: Test a local web app's saved data across reload, rejected input, or
 # App Crash Lab
 
 Turn the user's save workflow into a small, runnable test of **their app**. Use
-the existing App Crash Lab 0.10.0 runner; do not implement another runner or
+the existing App Crash Lab 0.11.0 runner; do not implement another runner or
 silently substitute its bundled demo.
 
 ## Establish what the test means

@@ -43,8 +43,8 @@ keeps its own user-level metadata. Verified on macOS with Node 24.19.0;
 [Skills CLI documentation](https://www.skills.sh/docs/cli).
 
 For manual installation or an older Node 22 runtime,
-[download the repo-local skill](https://aichance.github.io/business-ai-recipes/app-crash-lab-skill-v0.1.0.zip)
-and [checksum](https://aichance.github.io/business-ai-recipes/app-crash-lab-skill-v0.1.0.zip.sha256).
+[download the repo-local skill](https://aichance.github.io/business-ai-recipes/app-crash-lab-skill-v0.1.1.zip)
+and [checksum](https://aichance.github.io/business-ai-recipes/app-crash-lab-skill-v0.1.1.zip.sha256).
 Review it, then place the whole `app-crash-lab` folder in **your app project's**
 `.agents/skills/` without overwriting an existing skill. In Codex, ask:
 
@@ -56,10 +56,10 @@ Keep the app unchanged and tell me the result and exact rerun command.
 ```
 
 [Skill source](.agents/skills/app-crash-lab/SKILL.md) · [Installation and scope](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#codex-skill).
-The skill uses the existing 0.10.0 runner. Review the proposed observations and
+The skill uses the existing 0.11.0 runner. Review the proposed observations and
 actual report; installing instructions alone does not test an app.
 
-[**Try App Crash Lab 0.10.0 without cloning**](#try-the-seeded-demo) · [**Source ZIP & checksums**](https://github.com/aichance/business-ai-recipes/releases/tag/app-crash-lab-v0.10.0)
+[**Try App Crash Lab 0.11.0 without cloning**](#try-the-seeded-demo) · [**Release package & checksums**](https://github.com/aichance/business-ai-recipes/releases/tag/app-crash-lab-v0.11.0)
 
 **No install:** [**Would your test catch this?**](https://aichance.github.io/business-ai-recipes/test-the-test.html) Save English, reload a deliberately broken UI, then add a text observation to turn a misleading PASS into a detected failure. This interactive browser example links to the matching CLI checks.
 
@@ -77,7 +77,7 @@ In any writable working directory, with **Node 22+ and npm**:
 
 ```sh
 npx --yes --package=@playwright/test@1.64.0 playwright install chromium
-npx --yes --package=https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.10.0/aichance-app-crash-lab-0.10.0.tgz app-crash-lab demo
+npx --yes --package=https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.11.0/app-crash-lab-0.11.0.tgz app-crash-lab demo
 ```
 
 Open the printed absolute `index.html` path. Reports are saved in your working directory. For Linux browser dependencies, a source checkout, or **your own app's JSON config**, use the [setup and own-app guide](tools/app-crash-lab/README.md).

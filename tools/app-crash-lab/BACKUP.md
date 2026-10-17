@@ -4,7 +4,7 @@ A malformed file can be safely rejected while a valid, self-exported backup
 cannot be restored. This optional check runs the real export/import flow.
 
 For your own app, [copy the backup-specific coding-agent prompt](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#backup-agent).
-It links the pinned 0.10.0 format and asks the agent to inspect your real import,
+It links the pinned 0.11.0 format and asks the agent to inspect your real import,
 configure complete selected records and execute the test. Supply one workflow
 to check. Review the generated contract and actual result; unsupported steps
 must be reported without bypassing them or changing the app to pass.
