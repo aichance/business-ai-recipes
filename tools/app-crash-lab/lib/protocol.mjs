@@ -316,7 +316,22 @@ async function readState(page, contract, probes) {
 
 function selected(state, expected) { return Object.fromEntries(Object.keys(expected).map(key => [key, state[key]])); }
 
-async function waitForState(page, contract, probes, expected) {
+function sourceReadyMatches(state, ready) {
+  if (!ready) return true;
+  // Project from the exact full state being considered as the baseline. A
+  // separate storage read could approve a transient value, then capture an old
+  // but stable baseline. The existing full-state stability check stays intact.
+  return Object.entries(ready.observe).every(([name, projection]) => {
+    let value = state[projection.observation];
+    for (const key of projection.jsonPath) {
+      if (value === null || typeof value !== 'object' || !Object.hasOwn(value, key)) return false;
+      value = value[key];
+    }
+    return isDeepStrictEqual(value, ready.expected[name]);
+  });
+}
+
+async function waitForState(page, contract, probes, expected, ready = null) {
   expected = comparisonExpected(probes, expected);
   const deadline = Date.now() + contract.timeoutMs;
   let state, pending;
@@ -324,7 +339,7 @@ async function waitForState(page, contract, probes, expected) {
     try {
       state = await readState(page, contract, probes);
       pending = null;
-      if (isDeepStrictEqual(selected(state, expected), expected)) return { state, matched: true };
+      if (isDeepStrictEqual(selected(state, expected), expected) && sourceReadyMatches(state, ready)) return { state, matched: true };
     } catch (error) {
       if (!error.observationPending) throw error;
       pending = error;
@@ -626,9 +641,15 @@ export async function executeBackupRoundtrip(browser, contract) {
     await applySteps(source, contract, contract.reset, 'reset', result.events);
     if (contract.reset.length) await source.reload({ waitUntil: 'domcontentloaded' });
     await applySteps(source, contract, contract.setup, 'setup', result.events);
+    result.phase = backup.sourceReady ? 'source-ready' : 'source-baseline';
+    let baseline;
+    try { baseline = await waitForState(source, contract, contract.observe, contract.expected, backup.sourceReady); }
+    catch (error) {
+      if (backup.sourceReady) throw backupError('SOURCE_READY_UNAVAILABLE');
+      throw error;
+    }
+    if (!baseline.matched) throw backupError(backup.sourceReady ? 'SOURCE_READY_NOT_CONFIRMED' : 'SOURCE_BASELINE_NOT_CONFIRMED');
     result.phase = 'source-baseline';
-    const baseline = await waitForState(source, contract, contract.observe, contract.expected);
-    if (!baseline.matched) throw backupError('SOURCE_BASELINE_NOT_CONFIRMED');
     const sourceStable = await stableState(source, contract, contract.observe, baseline.state);
     if (!sourceStable.matched) throw backupError('SOURCE_BASELINE_NOT_STABLE');
     const storedNames = Object.keys(contract.observe).filter(name => ['localStorage', 'sessionStorage', 'indexedDB'].includes(contract.observe[name].source));
