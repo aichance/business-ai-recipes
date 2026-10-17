@@ -16,6 +16,17 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "tools/app-crash-lab/examples/bazkia/LICENSE",
+    "tools/app-crash-lab/examples/bazkia/README.md",
+    "tools/app-crash-lab/examples/bazkia/empty-after.png",
+    "tools/app-crash-lab/examples/bazkia/empty-before.png",
+    "tools/app-crash-lab/examples/bazkia/reload-branch.json",
+    "tools/app-crash-lab/examples/bazkia/reload-empty.json",
+    "tools/app-crash-lab/examples/bazkia/results-summary.json",
+    "tools/app-crash-lab/examples/bazkia/roundtrip-branch.json",
+    "tools/app-crash-lab/examples/bazkia/roundtrip-empty.json",
+    "docs/app-crash-lab-bazkia-trial-v0.1.0.zip",
+    "docs/app-crash-lab-bazkia-trial-v0.1.0.zip.sha256",
     "tools/app-crash-lab/examples/rejboard/LICENSE",
     "tools/app-crash-lab/examples/rejboard/README.md",
     "tools/app-crash-lab/examples/rejboard/RESULTS.json",
