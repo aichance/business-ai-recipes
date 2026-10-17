@@ -16,6 +16,21 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "tools/app-crash-lab/examples/rejboard/LICENSE",
+    "tools/app-crash-lab/examples/rejboard/README.md",
+    "tools/app-crash-lab/examples/rejboard/RESULTS.json",
+    "tools/app-crash-lab/examples/rejboard/SOURCE.json",
+    "tools/app-crash-lab/examples/rejboard/changed-text-control.json",
+    "tools/app-crash-lab/examples/rejboard/media-audit.mjs",
+    "tools/app-crash-lab/examples/rejboard/media-backup.json",
+    "tools/app-crash-lab/examples/rejboard/package-lock.json",
+    "tools/app-crash-lab/examples/rejboard/package.json",
+    "tools/app-crash-lab/examples/rejboard/preservation.json",
+    "tools/app-crash-lab/examples/rejboard/roundtrip.json",
+    "tools/app-crash-lab/examples/rejboard/synthetic-source.png",
+    "tools/app-crash-lab/examples/rejboard/trial.mjs",
+    "docs/app-crash-lab-rejboard-trial-v0.1.0.zip",
+    "docs/app-crash-lab-rejboard-trial-v0.1.0.zip.sha256",
     ".github/workflows/lifepilot-trial.yml",
     "tools/app-crash-lab/tests/lifepilot-ci.test.mjs",
     "tools/app-crash-lab/examples/lifepilot-continuity/ci-trial.mjs",
