@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "operator": "aichance (AI-operated under human ownership)",
+  "operator_verification_only": true,
+  "author_execution_confirmed": false,
+  "source_commit": "4710a5ec56dccd9436fec48369d513144306d7de",
+  "source_modified": false,
+  "tool_version": "0.12.0-dev.2",
+  "node_version": "v22.16.0",
+  "playwright_version": "1.64.0",
+  "measured_at": "2026-10-17T15:28:24.223Z",
+  "normal_checks_passed": 3,
+  "controls": {
+    "changed_goal_same_count": "fail as expected",
+    "incorrect_baseline": "inconclusive as expected"
+  },
+  "checks": [
+    {
+      "contract": "preservation.json",
+      "contract_sha256": "062395a35ab94e28538395930224caa20a723a7fc514212f85eb3f5c70312be9",
+      "check": "reload",
+      "status": "pass",
+      "phase": "compare",
+      "exit_code": 0,
+      "differences": [],
+      "comparisons": null,
+      "backup": null,
+      "error": null
+    },
+    {
+      "contract": "preservation.json",
+      "contract_sha256": "062395a35ab94e28538395930224caa20a723a7fc514212f85eb3f5c70312be9",
+      "check": "rejected-update",
+      "status": "pass",
+      "phase": "compare",
+      "exit_code": 0,
+      "differences": [],
+      "comparisons": null,
+      "backup": null,
+      "error": null
+    },
+    {
+      "contract": "roundtrip.json",
+      "contract_sha256": "47d7679dfdc2dbb2b60d2f88598d179bbf529d6f4199515bccef080141b6b984",
+      "check": "backup-roundtrip",
+      "status": "pass",
+      "phase": "complete",
+      "exit_code": 0,
+      "differences": [],
+      "comparisons": {
+        "export": {
+          "matched": true
+        },
+        "sourceAfterExport": {
+          "matched": true
+        },
+        "restoration": {
+          "matched": true,
+          "changedObservations": []
+        },
+        "reload": {
+          "matched": true,
+          "changedObservations": []
+        }
+      },
+      "backup": {
+        "format": "utf8-json",
+        "sizeBytes": 3178,
+        "sha256": "010924f0949592f359052342490200cc9908ec3bcace37bf1fefbf4a2562bd3e"
+      },
+      "error": null
+    },
+    {
+      "contract": "changed-goal-control.json",
+      "contract_sha256": "47e4f42fea2584c3b2f12a2ca7a5477e771fb0d01b34c41eb2af6b07dbb8e97e",
+      "check": "reload",
+      "status": "fail",
+      "phase": "compare",
+      "exit_code": 1,
+      "differences": [
+        {
+          "path": "$[\"profile\"][\"goals\"][\"1\"][\"status\"]",
+          "before": "active",
+          "after": "paused",
+          "change": "changed"
+        },
+        {
+          "path": "$[\"goals\"][\"1\"][\"status\"]",
+          "before": "active",
+          "after": "paused",
+          "change": "changed"
+        }
+      ],
+      "comparisons": null,
+      "backup": null,
+      "error": "Selected saved state changed"
+    },
+    {
+      "contract": "wrong-baseline-control.json",
+      "contract_sha256": "23a0999f0b9ac590174a1917d0001d59279e46e34b4f9a43bdd458857fef50bb",
+      "check": "reload",
+      "status": "inconclusive",
+      "phase": "baseline",
+      "exit_code": 2,
+      "differences": [],
+      "comparisons": null,
+      "backup": null,
+      "error": "Known-good baseline did not match expected values; no preservation verdict"
+    }
+  ],
+  "generated_standalone": {
+    "normal_tests_passed": 3,
+    "expected_failing_tests": 2,
+    "spec_and_config_bytes_unchanged": true,
+    "dependency_install": "Existing Playwright 1.64.0 installation reused; not a fresh dependency install."
+  },
+  "public_package_run": {
+    "at": "2026-10-17T15:30:55.943304+00:00",
+    "package_url": "https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.12.0-dev.2/app-crash-lab-0.12.0-dev.2.tgz",
+    "contract": "roundtrip.json",
+    "contract_sha256": "47d7679dfdc2dbb2b60d2f88598d179bbf529d6f4199515bccef080141b6b984",
+    "exit_code": 0,
+    "verdict": "pass",
+    "wall_seconds": 15.019,
+    "fresh_task_npm_cache": true,
+    "existing_chromium_cache_reused": true,
+    "new_browser_download_verified": false
+  },
+  "independent_ui_check": {
+    "at": "2026-10-17T15:27:21.122Z",
+    "sourcePin": "4710a5ec56dccd9436fec48369d513144306d7de",
+    "sourceModified": false,
+    "scenario": "Import canonical synthetic profile; actual UI correction; reload; real JSON export; empty-context restore; reload; invalid-shape import",
+    "goals": 2,
+    "tasks": 2,
+    "completedTasks": 1,
+    "corrections": 2,
+    "fullProfileEqualAcrossAllStages": true,
+    "allGeneratedIdsAndTimesRetained": true,
+    "backup": {
+      "filename": "LifePilot_Profile_Backup.json",
+      "bytes": 3178,
+      "sha256": "125196d9572101106e7469a481994e704f17759ac51a1ea71100560c82a89715"
+    },
+    "exactNativeRejection": {
+      "type": "alert",
+      "message": "Could not import this file: Missing goals array"
+    },
+    "postRestoreVisibleCorrectionAndPrerequisiteVerified": true,
+    "unexpectedNetworkRequests": []
+  },
+  "configuration_correction": {
+    "initial_roundtrip": "inconclusive at target-empty because nested observations could not traverse absent localStorage",
+    "final_roundtrip": "Observe full profile as null in the empty target; retain all 11 known nested expectations in sourceReady; compare complete profile after export/restore/reload.",
+    "engine_or_app_changed": false
+  },
+  "limits": [
+    "One pinned LifePilot source and Chromium environment; not a cross-version, mobile, SaaS, voice or all-feature evaluation.",
+    "The completed prerequisite and planned follow-up are imported synthetic records; the new correction is saved through the normal UI.",
+    "The rejected import is syntactically valid JSON with invalid shape ({}), not a JSON syntax-error test.",
+    "Backup hashes vary between independent runs because new correction IDs and timestamps are generated and retained.",
+    "No private profile, credentials or live model/API calls used in the local test.",
+    "Operator measurements do not establish author adoption or causal effectiveness."
+  ]
+}

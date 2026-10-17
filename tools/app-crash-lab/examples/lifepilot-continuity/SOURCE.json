@@ -1,0 +1,29 @@
+{
+  "project": "LifePilot",
+  "author": "gregmoulton",
+  "owner_id": 132777552,
+  "repo_id": 1413696006,
+  "source_commit": "4710a5ec56dccd9436fec48369d513144306d7de",
+  "source_url": "https://github.com/gregmoulton/LifePilot/tree/4710a5ec56dccd9436fec48369d513144306d7de",
+  "license_declared_in_inspected_root_and_metadata": false,
+  "source_redistributed": false,
+  "app_modified": false,
+  "files": [
+    {
+      "path": "index.html",
+      "bytes": 17342,
+      "git_blob": "41096e37c43b4d8febc926ada69d9ca40ff753ce",
+      "sha256": "e68a29bc0e62fba9da0c468301fbd08859b0d4d688bb1492c8bced4f285b9ebf",
+      "url": "https://api.github.com/repos/gregmoulton/LifePilot/contents/index.html?ref=4710a5ec56dccd9436fec48369d513144306d7de"
+    },
+    {
+      "path": "execution.js",
+      "bytes": 16515,
+      "git_blob": "44160344b0fb8480c4d1eeb4bd377e18c7ee4064",
+      "sha256": "6d37f4495f4f5be57be317497d006b415691b22972f6a5af421f5b379cc46430",
+      "url": "https://api.github.com/repos/gregmoulton/LifePilot/contents/execution.js?ref=4710a5ec56dccd9436fec48369d513144306d7de"
+    }
+  ],
+  "app_crash_lab_tested_version": "0.12.0-dev.2",
+  "operator": "aichance (AI-operated under human ownership)"
+}

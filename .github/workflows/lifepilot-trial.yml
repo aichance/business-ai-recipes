@@ -1,0 +1,106 @@
+name: LifePilot continuity trial
+
+on:
+  workflow_dispatch:
+    inputs:
+      app_ref:
+        description: 'LifePilot public commit SHA (40 lowercase hex characters); downloads only index.html and execution.js'
+        required: true
+        default: '4710a5ec56dccd9436fec48369d513144306d7de'
+        type: string
+  pull_request:
+    paths:
+      - '.github/workflows/lifepilot-trial.yml'
+      - 'tools/app-crash-lab/examples/lifepilot-continuity/**'
+      - 'tools/app-crash-lab/tests/lifepilot-ci.test.mjs'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lifepilot-trial-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  continuity:
+    runs-on: ubuntu-24.04
+    container: node:22.16.0-bookworm
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: tools/app-crash-lab
+    env:
+      LIFEPILOT_APP_REF: ${{ inputs.app_ref || '4710a5ec56dccd9436fec48369d513144306d7de' }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Verify source guards and process cleanup
+        run: node --test tests/lifepilot-ci.test.mjs
+      - run: npx playwright install --with-deps chromium
+      - name: Verify the public LifePilot scenario and controls
+        run: |
+          node examples/lifepilot-continuity/ci-trial.mjs \
+            --fetch-source --app-ref "$LIFEPILOT_APP_REF" \
+            --out "$RUNNER_TEMP/lifepilot-trial"
+      - name: Show the measured result
+        if: always()
+        env:
+          TRIAL_OUTPUT: ${{ runner.temp }}/lifepilot-trial
+        run: |
+          node --input-type=module <<'JS'
+          import { readFile, appendFile } from 'node:fs/promises';
+          try {
+            const report = JSON.parse(await readFile(`${process.env.TRIAL_OUTPUT}/trial-summary.json`, 'utf8'));
+            const text = JSON.stringify(report, null, 2).replaceAll('```', "'''");
+            await appendFile(process.env.GITHUB_STEP_SUMMARY,
+              '## LifePilot continuity trial\n\nSource: public LifePilot static files; fresh local browser contexts and synthetic data.\n\n' +
+              'Expected normal checks: 3 PASS. Deliberate changed-goal control: FAIL; wrong-baseline control: INCONCLUSIVE. A green job means these expected outcomes were verified.\n\n' +
+              '```json\n' + text + '\n```\n\n' +
+              'This run alone does not establish third-party adoption. Inspect the actual run actor and app ownership.\n');
+          } catch (error) {
+            await appendFile(process.env.GITHUB_STEP_SUMMARY,
+              `## Trial incomplete\n\nNo complete summary could be read: ${error.code ?? 'invalid summary'}. Inspect the job log; do not infer a preservation verdict.\n`);
+          }
+          JS
+      - name: Prepare an exact shareable artifact
+        if: always()
+        env:
+          TRIAL_OUTPUT: ${{ runner.temp }}/lifepilot-trial
+          ARTIFACT_OUTPUT: ${{ runner.temp }}/lifepilot-trial-share
+        run: |
+          node --input-type=module <<'JS'
+          import { readFile, writeFile, mkdir, appendFile } from 'node:fs/promises';
+          import { createHash } from 'node:crypto';
+          import { dirname, join } from 'node:path';
+          import { CASES } from './examples/lifepilot-continuity/ci-trial.mjs';
+          const expected = ['trial-summary.json', 'source-check.json', ...CASES.flatMap(item =>
+            ['report.json', 'index.html', 'repro.spec.mjs', 'playwright.config.mjs'].map(file => `${item.file.replace('.json', '')}/${file}`))];
+          const manifest = { schemaVersion: 1, expectedFiles: expected.length, files: [], missing: [] };
+          await mkdir(process.env.ARTIFACT_OUTPUT, { recursive: false });
+          for (const relative of expected) {
+            let bytes;
+            try { bytes = await readFile(join(process.env.TRIAL_OUTPUT, relative)); }
+            catch (error) { if (error.code === 'ENOENT') { manifest.missing.push(relative); continue; } throw error; }
+            const target = join(process.env.ARTIFACT_OUTPUT, relative);
+            await mkdir(dirname(target), { recursive: true });
+            await writeFile(target, bytes, { flag: 'wx' });
+            manifest.files.push({ path: relative, bytes: bytes.length, sha256: createHash('sha256').update(bytes).digest('hex') });
+          }
+          await writeFile(join(process.env.ARTIFACT_OUTPUT, 'artifact-manifest.json'), JSON.stringify(manifest, null, 2) + '\n', { flag: 'wx' });
+          await appendFile(process.env.GITHUB_STEP_SUMMARY,
+            `\n## Shareable artifact\n\n${manifest.files.length}/${expected.length} expected files, plus artifact-manifest.json. Raw app source, traces and screenshots are excluded.\n\n` +
+            '```json\n' + JSON.stringify(manifest, null, 2) + '\n```\n');
+          if (manifest.missing.length) process.exitCode = 2;
+          JS
+      - name: Save synthetic results and repeatable tests
+        if: always()
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        with:
+          name: lifepilot-continuity-${{ github.run_id }}
+          retention-days: 7
+          if-no-files-found: error
+          # A single path is translated correctly into the job container. A
+          # multiline absolute input can translate only its first path.
+          path: ${{ runner.temp }}/lifepilot-trial-share
