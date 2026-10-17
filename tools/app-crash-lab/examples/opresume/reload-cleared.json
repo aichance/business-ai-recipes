@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "OpResume / cleared / complete saved resume reload",
+  "baseURL": "http://127.0.0.1:54192",
+  "path": "/editor.html?lng=en-US",
+  "timeoutMs": 8000,
+  "stabilityMs": 800,
+  "reset": [],
+  "setup": [
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Data"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "menuitem",
+        "name": "Clear Data"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Confirm Clear"
+      },
+      "save": true
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": "[data-sonner-toast]:has-text(\"Data cleared\")"
+      }
+    }
+  ],
+  "afterReload": [
+    {
+      "action": "expectVisible",
+      "target": {
+        "role": "button",
+        "name": "Data"
+      }
+    }
+  ],
+  "observe": {
+    "resume": {
+      "source": "localStorage",
+      "key": "opresume-resumes",
+      "parse": "json",
+      "jsonPath": [
+        "resumes",
+        0,
+        "data"
+      ]
+    },
+    "workItems": {
+      "source": "count",
+      "target": {
+        "css": "[data-module-key=\"workExpList\"] [data-item-index]"
+      }
+    }
+  },
+  "expected": {
+    "resume": {
+      "basics": {
+        "name": ""
+      }
+    },
+    "workItems": 0
+  },
+  "checks": [
+    "reload"
+  ]
+}

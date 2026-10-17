@@ -1,0 +1,165 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "OpResume / cleared / backup roundtrip",
+  "baseURL": "http://127.0.0.1:54192",
+  "path": "/editor.html?lng=en-US",
+  "timeoutMs": 8000,
+  "stabilityMs": 800,
+  "reset": [],
+  "setup": [
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Data"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "menuitem",
+        "name": "Clear Data"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Confirm Clear"
+      },
+      "save": true
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": "[data-sonner-toast]:has-text(\"Data cleared\")"
+      }
+    }
+  ],
+  "afterReload": [
+    {
+      "action": "expectVisible",
+      "target": {
+        "role": "button",
+        "name": "Data"
+      }
+    }
+  ],
+  "observe": {
+    "basics": {
+      "source": "localStorage",
+      "key": "opresume-resumes",
+      "parse": "json",
+      "jsonPath": [
+        "resumes",
+        0,
+        "data",
+        "basics"
+      ]
+    },
+    "workItems": {
+      "source": "count",
+      "target": {
+        "css": "[data-module-key=\"workExpList\"] [data-item-index]"
+      }
+    }
+  },
+  "expected": {
+    "basics": {
+      "name": ""
+    },
+    "workItems": 0
+  },
+  "checks": [
+    "backup-roundtrip"
+  ],
+  "backupRoundtrip": {
+    "isolation": "browser-local",
+    "export": {
+      "steps": [
+        {
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "Data"
+          }
+        },
+        {
+          "action": "click",
+          "target": {
+            "role": "menuitem",
+            "name": "Export JSON"
+          }
+        }
+      ],
+      "maxBytes": 65536,
+      "statePaths": {
+        "basics": [
+          "basics"
+        ]
+      }
+    },
+    "restore": {
+      "path": "/editor.html?lng=en-US",
+      "ready": [
+        {
+          "action": "expectVisible",
+          "target": {
+            "role": "button",
+            "name": "Data"
+          }
+        }
+      ],
+      "empty": {
+        "basics": {
+          "name": "张三",
+          "label": "高级前端工程师",
+          "image": "/api/avatar?t=1773238453169",
+          "email": "zhangsan@example.com",
+          "phone": "13800000000",
+          "summary": "5 年前端开发经验，专注于 React 技术栈和前端工程化方向。具备从 0 到 1 搭建中大型前端项目的能力，对富文本编辑器、可视化搭建、性能优化等领域有深入实践。注重代码质量和团队协作，热爱开源社区，持续学习和分享技术心得。"
+        },
+        "workItems": 3
+      },
+      "target": {
+        "label": "Import JSON"
+      },
+      "mimeType": "application/json",
+      "fileName": "unchanged-opresume-export.json",
+      "commit": {
+        "frame": {
+          "role": "alertdialog",
+          "name": "Overwrite current resume data?"
+        },
+        "target": {
+          "role": "button",
+          "name": "Confirm Overwrite"
+        },
+        "ready": [
+          {
+            "action": "expectText",
+            "target": {
+              "role": "heading",
+              "name": "Overwrite current resume data?"
+            },
+            "value": "Overwrite current resume data?"
+          }
+        ]
+      },
+      "success": {
+        "observe": {
+          "imported": {
+            "source": "count",
+            "target": {
+              "css": "[data-sonner-toast]:has-text(\"Imported successfully\")"
+            }
+          }
+        },
+        "expected": {
+          "imported": 1
+        }
+      }
+    }
+  }
+}
