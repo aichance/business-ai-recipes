@@ -365,6 +365,14 @@ in [BACKUP.md](BACKUP.md). This is distinct from supplying a literal invalid
 file to `rejectedUpdate.steps`. It downloads the real JSON and imports the
 unchanged bytes in an empty browser context.
 
+Runner0.11 adds optional `backupRoundtrip.sourceReady`, with `observe` projections
+of the form `{ "observation": "saved", "jsonPath": [0, "title"] }` and an
+`expected` value for every projection. Only already selected main browser-storage
+observations may be referenced. Readiness uses the same full baseline sample;
+it does not read/write another store, add actions, normalize records, relax the
+full stability comparison or run on the fresh target. See
+[persisted source readiness](BACKUP.md#wait-for-persisted-source-values-011).
+
 Runner0.7 adds optional `backupRoundtrip.restore.confirm` with exactly
 `{"message":"Exact native restore question","accept":true}`. It applies only
 to one native confirm observed while delivering the actual backup to the target.

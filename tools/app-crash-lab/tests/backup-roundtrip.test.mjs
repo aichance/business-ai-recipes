@@ -33,6 +33,29 @@ const baseContract = {
     },
   },
 };
+const sourceReady = {
+  observe: { color: { observation: 'records', jsonPath: [0, 'nested', 'color'] } },
+  expected: { color: 'blue' },
+};
+
+test('source-ready contracts project only selected saved observations, with bounded paths and complete expectations', () => {
+  const c = structuredClone(baseContract); c.backupRoundtrip.sourceReady = sourceReady;
+  assert.deepEqual(validateContract(c).backupRoundtrip.sourceReady, sourceReady);
+  const invalid = change => { const copy = structuredClone(c); change(copy); assert.throws(() => validateContract(copy), /Invalid contract/); };
+  invalid(c => c.backupRoundtrip.sourceReady = {});
+  invalid(c => c.backupRoundtrip.sourceReady.observe = {});
+  invalid(c => c.backupRoundtrip.sourceReady.observe.color.observation = 'count');
+  invalid(c => c.backupRoundtrip.sourceReady.observe.color.observation = 'notSelected');
+  invalid(c => c.backupRoundtrip.sourceReady.observe.color.jsonPath = Array(65).fill('nested'));
+  invalid(c => c.backupRoundtrip.sourceReady.observe.color.jsonPath = [-1]);
+  invalid(c => c.backupRoundtrip.sourceReady.expected = {});
+  invalid(c => c.backupRoundtrip.sourceReady.steps = [{ action: 'click', target: { css: '#save' } }]);
+  invalid(c => c.backupRoundtrip.sourceReady.observe.color.source = 'localStorage');
+  invalid(c => { c.checks = ['reload']; });
+  invalid(c => {
+    c.backupRoundtrip.sourceReady.observe = Object.fromEntries(Array.from({ length: 101 }, (_, i) => ['value' + i, { observation: 'records', jsonPath: [] }]));
+  });
+});
 
 test('backup contracts retain old defaults and require actual storage, fresh target and explicit export limits', () => {
   assert.deepEqual(validateContract(baseContract).checks, ['backup-roundtrip']);
@@ -89,12 +112,43 @@ async function fixture() {
   document.querySelector('#save').onclick = () => {
     if (mode === 'confirm-source') confirm(${JSON.stringify(confirmationMessage)});
     if (mode === 'empty-source') { document.querySelector('#items').innerHTML = '<p class="item">Only a success-looking UI</p>'; return; }
+    if (mode === 'source-unavailable') {
+      localStorage.setItem('saved', ${JSON.stringify(sentinel)});
+      document.querySelector('#items').innerHTML = '<p class="item">Visible before durable save</p>'; return;
+    }
+    if (['source-delayed', 'source-missing-delayed', 'source-null-delayed', 'source-never', 'source-missing', 'source-null'].includes(mode)) {
+      const old = structuredClone(saved); old[0].nested.color = 'red';
+      if (mode.includes('missing')) delete old[0].nested.color;
+      if (mode.includes('null')) old[0].nested.color = null;
+      localStorage.setItem('saved', JSON.stringify(old)); draw();
+      if (mode.endsWith('delayed')) setTimeout(() => { localStorage.setItem('saved', JSON.stringify(saved)); draw(); }, 150);
+      return;
+    }
     localStorage.setItem('saved', JSON.stringify(saved)); draw();
+    if (['source-revert', 'source-other-change'].includes(mode)) {
+      // An adversarial fixture changes storage immediately after its first full
+      // record sample. No timer race can accidentally skip the transient ready
+      // state; a separately read predicate must not bless a later old baseline.
+      const original = Storage.prototype.getItem; let sampled = false;
+      Storage.prototype.getItem = function(key) {
+        const raw = original.call(this, key);
+        if (this === localStorage && key === 'saved' && !sampled) {
+          sampled = true;
+          queueMicrotask(() => {
+            const changed = JSON.parse(raw);
+            if (mode === 'source-revert') changed[0].nested.color = 'red';
+            else changed[0].flags[1] = true;
+            localStorage.setItem('saved', JSON.stringify(changed));
+          });
+        }
+        return raw;
+      };
+    }
   };
   document.querySelector('#export').onclick = () => {
     if (mode === 'no-download') return;
     if (mode === 'dialog') { confirm(${JSON.stringify(sentinel)}); return; }
-    const raw = mode === 'bad-json' ? '{' : mode === 'wrong-export' ? '{"saved":[]}' : mode === 'oversize' ? JSON.stringify({ value: 'x'.repeat(65536) }) : ${JSON.stringify(exported.toString('utf8'))};
+    const raw = mode === 'source-null' ? JSON.stringify({ saved: JSON.parse(localStorage.getItem('saved')), format: 1 }) : mode === 'bad-json' ? '{' : mode === 'wrong-export' ? '{"saved":[]}' : mode === 'oversize' ? JSON.stringify({ value: 'x'.repeat(65536) }) : ${JSON.stringify(exported.toString('utf8'))};
     const blob = new Blob(mode === 'bad-utf8' ? [new Uint8Array([123, 255, 125])] : [raw], { type: 'application/json' });
     const download = () => { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'private-' + ${JSON.stringify(sentinel)} + '.json'; a.click(); };
     download(); if (mode === 'multiple') setTimeout(download, 75);
@@ -147,6 +201,83 @@ async function filesBelow(path) {
   }
   return paths;
 }
+
+test('source-ready waits for durable values without weakening full-state, fresh-target or privacy checks', { timeout: 120000 }, async t => {
+  const app = await fixture();
+  const temp = await mkdtemp(join(root, '.crash-lab-source-ready-'));
+  t.after(async () => { await app.close(); await rm(temp, { recursive: true, force: true }); });
+  const reports = {};
+  const run = async (mode, change = () => {}) => {
+    const c = structuredClone(baseContract);
+    c.baseURL = app.baseURL; c.path = c.backupRoundtrip.restore.path = '/?mode=' + mode;
+    c.timeoutMs = 600; c.backupRoundtrip.sourceReady = structuredClone(sourceReady); change(c);
+    const r = await runContract(c, { out: join(temp, mode) }); reports[mode] = r; return r.results[0];
+  };
+  await t.test('durable field may appear after UI counts, while the fresh target lacks that nested field', async () => {
+    const r = await run('source-delayed');
+    assert.equal(r.status, 'pass', JSON.stringify(r));
+    assert.equal(r.comparisons.export.matched, true); assert.equal(r.comparisons.reload.matched, true);
+    assert.deepEqual(app.uploads.at(-1), exported);
+  });
+  await t.test('missing paths can become ready; an absent property is different from an explicit saved null', async () => {
+    for (const mode of ['source-missing-delayed', 'source-null-delayed']) assert.equal((await run(mode)).status, 'pass');
+    const expectNull = c => { c.backupRoundtrip.sourceReady.expected.color = null; };
+    const absent = await run('source-missing', expectNull);
+    assert.equal(absent.status, 'inconclusive'); assert.equal(absent.error, 'SOURCE_READY_NOT_CONFIRMED');
+    assert.equal(absent.downloadCount, 0);
+    assert.equal((await run('source-null', expectNull)).status, 'pass');
+    assert.equal(JSON.parse(app.uploads.at(-1)).saved[0].nested.color, null);
+  });
+  await t.test('never-ready or unavailable source stops before any export/import and remains inconclusive', async () => {
+    const count = app.uploads.length;
+    for (const [mode, error] of [['source-never', 'SOURCE_READY_NOT_CONFIRMED'], ['source-unavailable', 'SOURCE_READY_UNAVAILABLE']]) {
+      const r = await run(mode);
+      assert.equal(r.status, 'inconclusive'); assert.equal(r.error, error); assert.equal(r.phase, 'source-ready');
+      assert.equal(r.downloadCount, 0); assert.ok(!r.events.some(e => e.phase === 'export'));
+    }
+    assert.equal(app.uploads.length, count);
+  });
+  await t.test('transient readiness and changes outside the predicate cannot replace the complete baseline', async () => {
+    const count = app.uploads.length;
+    for (const mode of ['source-revert', 'source-other-change']) {
+      const r = await run(mode);
+      assert.equal(r.status, 'inconclusive'); assert.equal(r.error, 'SOURCE_BASELINE_NOT_STABLE');
+      assert.equal(r.downloadCount, 0); assert.ok(!r.events.some(e => e.phase === 'export'));
+    }
+    assert.equal(app.uploads.length, count);
+  });
+  await t.test('hidden-field and second-reload losses still fail the whole-record comparison', async () => {
+    assert.equal((await run('field-loss')).status, 'fail');
+    const r = await run('reload-loss'); assert.equal(r.status, 'fail');
+    assert.equal(r.comparisons.restoration.matched, true); assert.equal(r.comparisons.reload.matched, false);
+  });
+  await t.test('unchanged generated specs preserve pass/inconclusive verdicts and private artifacts', async () => {
+    for (const [mode, exit] of [['source-delayed', 0], ['source-never', 1], ['source-revert', 1]]) {
+      const report = reports[mode];
+      const replay = await new Promise((done, reject) => {
+        const child = spawn(process.execPath, [join(root, 'node_modules/@playwright/test/cli.js'), 'test', '--config', join(report.out, 'playwright.config.mjs'), '--reporter=json'], { cwd: root, stdio: ['ignore', 'pipe', 'pipe'] });
+        let output = '', stderr = ''; child.stdout.on('data', c => output += c); child.stderr.on('data', c => stderr += c);
+        child.on('error', reject); child.on('close', code => done({ code, output, stderr }));
+      });
+      assert.equal(replay.code, exit, replay.output); assert.ok(!replay.output.includes(sentinel)); assert.ok(!replay.stderr.includes(sentinel));
+      const attachments = [];
+      const collect = suite => {
+        for (const spec of suite.specs ?? []) for (const test of spec.tests) for (const result of test.results) attachments.push(...result.attachments);
+        for (const child of suite.suites ?? []) collect(child);
+      };
+      for (const suite of JSON.parse(replay.output).suites) collect(suite);
+      const attached = attachments.filter(a => a.name === 'state-diff'); assert.equal(attached.length, 1);
+      const actual = JSON.parse(Buffer.from(attached[0].body, 'base64').toString('utf8'));
+      for (const key of ['status', 'phase', 'error']) assert.deepEqual(actual[key], report.results[0][key], mode + ': ' + key);
+    }
+    const paths = await filesBelow(temp);
+    assert.ok(!paths.some(p => /\.(png|webm|zip)$/.test(p)));
+    for (const p of paths) assert.ok(!(await readFile(p)).includes(Buffer.from(sentinel)), p);
+    for (const report of Object.values(reports)) {
+      assert.equal(report.results[0].before, null); assert.equal(report.results[0].after, null);
+    }
+  });
+});
 
 test('real bytes, fresh contexts, full records, reload and private failure artifacts', { timeout: 600000 }, async t => {
   const app = await fixture();

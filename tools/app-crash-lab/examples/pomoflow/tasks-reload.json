@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "Pomoflow / edited, completed and deleted task records survive reload",
+  "baseURL": "http://127.0.0.1:3000",
+  "path": "/",
+  "timeoutMs": 7000,
+  "stabilityMs": 500,
+  "checks": ["reload"],
+  "reset": [],
+  "setup": [
+    {"action": "fill", "target": {"css": "input[name=\"new-task\"]"}, "value": "ACL pending draft"},
+    {"action": "click", "target": {"role": "button", "name": "Add task"}},
+    {"action": "fill", "target": {"css": "input[name=\"new-task\"]"}, "value": "ACL completed task"},
+    {"action": "click", "target": {"role": "button", "name": "Add task"}},
+    {"action": "fill", "target": {"css": "input[name=\"new-task\"]"}, "value": "ACL deleted task"},
+    {"action": "click", "target": {"role": "button", "name": "Add task"}},
+    {"action": "click", "target": {"role": "checkbox", "name": "Mark \"ACL completed task\" as completed"}},
+    {"action": "click", "target": {"role": "button", "name": "Delete \"ACL deleted task\""}},
+    {"action": "click", "target": {"role": "button", "name": "Edit \"ACL pending draft\""}},
+    {"action": "fill", "target": {"role": "textbox", "name": "Edit task title"}, "value": "ACL pending edited"},
+    {"action": "click", "target": {"role": "button", "name": "Save task edit"}, "save": true}
+  ],
+  "observe": {
+    "completeTaskRecords": {"source": "localStorage", "key": "pomodoro_tasks", "parse": "json"},
+    "pendingTitle": {"source": "localStorage", "key": "pomodoro_tasks", "parse": "json", "jsonPath": [2, "title"]},
+    "pendingCompleted": {"source": "localStorage", "key": "pomodoro_tasks", "parse": "json", "jsonPath": [2, "completed"]},
+    "completedTitle": {"source": "localStorage", "key": "pomodoro_tasks", "parse": "json", "jsonPath": [1, "title"]},
+    "completedFlag": {"source": "localStorage", "key": "pomodoro_tasks", "parse": "json", "jsonPath": [1, "completed"]},
+    "deletedTitle": {"source": "localStorage", "key": "pomodoro_tasks", "parse": "json", "jsonPath": [0, "title"]},
+    "tombstoneTimestamp": {"source": "localStorage", "key": "pomodoro_tasks", "parse": "json", "jsonPath": [0, "deletedAt"]},
+    "pendingRows": {"source": "count", "target": {"css": ".list-row:not(.is-done)"}},
+    "completedRows": {"source": "count", "target": {"css": ".list-row.is-done"}},
+    "pendingUiTitle": {"source": "text", "target": {"css": ".list-row:not(.is-done) .list-title"}},
+    "completedUiTitle": {"source": "text", "target": {"css": ".list-row.is-done .list-title"}},
+    "syncSetupLabel": {"source": "text", "target": {"role": "button", "name": "Open sync settings: Set up sync"}}
+  },
+  "expected": {
+    "pendingTitle": "ACL pending edited",
+    "pendingCompleted": false,
+    "completedTitle": "ACL completed task",
+    "completedFlag": true,
+    "deletedTitle": "ACL deleted task",
+    "pendingRows": 1,
+    "completedRows": 1,
+    "pendingUiTitle": "ACL pending edited",
+    "completedUiTitle": "ACL completed task",
+    "syncSetupLabel": "Set up sync"
+  },
+  "afterReload": [
+    {"action": "expectVisible", "target": {"role": "checkbox", "name": "Mark \"ACL pending edited\" as completed"}},
+    {"action": "expectVisible", "target": {"role": "checkbox", "name": "Mark \"ACL completed task\" as incomplete"}}
+  ]
+}

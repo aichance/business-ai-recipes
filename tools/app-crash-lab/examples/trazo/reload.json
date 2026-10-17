@@ -1,0 +1,281 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "Trazo: two-slide caption, script, timing and correspondence survive reload",
+  "baseURL": "http://127.0.0.1:3000",
+  "path": "/",
+  "timeoutMs": 30000,
+  "stabilityMs": 750,
+  "reset": [],
+  "setup": [
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "\ud83c\udf9e Animation"
+      }
+    },
+    {
+      "action": "setFile",
+      "target": {
+        "css": "input[type=\"file\"][accept=\".excalidraw,application/json\"]"
+      },
+      "file": {
+        "name": "synthetic-slide.excalidraw",
+        "mimeType": "application/json",
+        "text": "{\n  \"type\": \"excalidraw\",\n  \"version\": 2,\n  \"source\": \"App Crash Lab synthetic two-slide preservation trial\",\n  \"elements\": [\n    {\n      \"angle\": 0,\n      \"strokeColor\": \"#1e1e1e\",\n      \"backgroundColor\": \"transparent\",\n      \"fillStyle\": \"solid\",\n      \"strokeWidth\": 2,\n      \"strokeStyle\": \"solid\",\n      \"roughness\": 0,\n      \"opacity\": 100,\n      \"groupIds\": [],\n      \"roundness\": null,\n      \"seed\": 4242,\n      \"version\": 1,\n      \"versionNonce\": 1919,\n      \"isDeleted\": false,\n      \"boundElements\": null,\n      \"updated\": 1792100000000,\n      \"link\": null,\n      \"locked\": false,\n      \"id\": \"acl-slide-a\",\n      \"type\": \"frame\",\n      \"x\": 40,\n      \"y\": 40,\n      \"width\": 720,\n      \"height\": 405,\n      \"index\": \"a0\",\n      \"frameId\": null,\n      \"name\": \"Checkpoint A\",\n      \"customData\": {\n        \"caption\": \"Seed caption\",\n        \"script\": \"Synthetic seed script; no audio is recorded.\",\n        \"holdMs\": 1100,\n        \"transition\": \"fade\"\n      }\n    },\n    {\n      \"angle\": 0,\n      \"strokeColor\": \"#1e1e1e\",\n      \"backgroundColor\": \"#a5d8ff\",\n      \"fillStyle\": \"solid\",\n      \"strokeWidth\": 2,\n      \"strokeStyle\": \"solid\",\n      \"roughness\": 0,\n      \"opacity\": 100,\n      \"groupIds\": [],\n      \"roundness\": null,\n      \"seed\": 4242,\n      \"version\": 1,\n      \"versionNonce\": 1919,\n      \"isDeleted\": false,\n      \"boundElements\": null,\n      \"updated\": 1792100000000,\n      \"link\": null,\n      \"locked\": false,\n      \"id\": \"acl-shape-a\",\n      \"type\": \"rectangle\",\n      \"x\": 180,\n      \"y\": 160,\n      \"width\": 240,\n      \"height\": 120,\n      \"index\": \"a1\",\n      \"frameId\": \"acl-slide-a\",\n      \"customData\": {}\n    }\n  ],\n  \"appState\": {\n    \"viewBackgroundColor\": \"#ffffff\"\n  },\n  \"files\": {}\n}\n"
+      }
+    },
+    {
+      "action": "expectValue",
+      "target": {
+        "css": ":nth-match([placeholder=\"Caption (optional)\"], 1)"
+      },
+      "value": "Seed caption"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": ":nth-match([placeholder=\"Caption (optional)\"], 1)"
+      },
+      "value": "Checkpoint A: request enters"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": ":nth-match([placeholder=\"Caption (optional)\"], 1)"
+      },
+      "value": "Enter"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": ":nth-match([placeholder=\"Narration script (what to say, optional)\"], 1)"
+      },
+      "value": "Synthetic A: a request enters the system."
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": ":nth-match([placeholder=\"Narration script (what to say, optional)\"], 1)"
+      },
+      "value": "Tab"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": ":nth-match([title=\"Hold for this slide (ms). Empty = default Hold.\"], 1)"
+      },
+      "value": "700"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": ":nth-match([title=\"Hold for this slide (ms). Empty = default Hold.\"], 1)"
+      },
+      "value": "Enter"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Duplicate slide"
+      }
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": ":nth-match([placeholder=\"Caption (optional)\"], 2)"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": ":nth-match([placeholder=\"Caption (optional)\"], 2)"
+      },
+      "value": "Checkpoint B: response returns"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": ":nth-match([placeholder=\"Caption (optional)\"], 2)"
+      },
+      "value": "Enter"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": ":nth-match([placeholder=\"Narration script (what to say, optional)\"], 2)"
+      },
+      "value": "Synthetic B: the response returns without losing slide metadata."
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": ":nth-match([placeholder=\"Narration script (what to say, optional)\"], 2)"
+      },
+      "value": "Tab"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": ":nth-match([title=\"Hold for this slide (ms). Empty = default Hold.\"], 2)"
+      },
+      "value": "1900"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": ":nth-match([title=\"Hold for this slide (ms). Empty = default Hold.\"], 2)"
+      },
+      "value": "Enter"
+    },
+    {
+      "action": "select",
+      "target": {
+        "css": "select[title^=\"How this slide is entered.\"]"
+      },
+      "value": "build",
+      "save": true
+    }
+  ],
+  "observe": {
+    "savedElements": {
+      "source": "localStorage",
+      "key": "excalidraw",
+      "parse": "json"
+    },
+    "frameA": {
+      "source": "count",
+      "target": {
+        "css": ".frame-name:text-is(\"Checkpoint A\")"
+      }
+    },
+    "frameB": {
+      "source": "count",
+      "target": {
+        "css": ".frame-name:text-is(\"Checkpoint A 2\")"
+      }
+    },
+    "captionA": {
+      "source": "localStorage",
+      "key": "excalidraw",
+      "parse": "json",
+      "jsonPath": [
+        0,
+        "customData",
+        "caption"
+      ]
+    },
+    "captionB": {
+      "source": "localStorage",
+      "key": "excalidraw",
+      "parse": "json",
+      "jsonPath": [
+        2,
+        "customData",
+        "caption"
+      ]
+    },
+    "scriptA": {
+      "source": "localStorage",
+      "key": "excalidraw",
+      "parse": "json",
+      "jsonPath": [
+        0,
+        "customData",
+        "script"
+      ]
+    },
+    "scriptB": {
+      "source": "localStorage",
+      "key": "excalidraw",
+      "parse": "json",
+      "jsonPath": [
+        2,
+        "customData",
+        "script"
+      ]
+    },
+    "holdA": {
+      "source": "localStorage",
+      "key": "excalidraw",
+      "parse": "json",
+      "jsonPath": [
+        0,
+        "customData",
+        "holdMs"
+      ]
+    },
+    "holdB": {
+      "source": "localStorage",
+      "key": "excalidraw",
+      "parse": "json",
+      "jsonPath": [
+        2,
+        "customData",
+        "holdMs"
+      ]
+    },
+    "transitionB": {
+      "source": "localStorage",
+      "key": "excalidraw",
+      "parse": "json",
+      "jsonPath": [
+        2,
+        "customData",
+        "transition"
+      ]
+    },
+    "cloneFrameSource": {
+      "source": "localStorage",
+      "key": "excalidraw",
+      "parse": "json",
+      "jsonPath": [
+        2,
+        "customData",
+        "animKey"
+      ]
+    },
+    "cloneShapeSource": {
+      "source": "localStorage",
+      "key": "excalidraw",
+      "parse": "json",
+      "jsonPath": [
+        3,
+        "customData",
+        "animKey"
+      ]
+    }
+  },
+  "expected": {
+    "frameA": 1,
+    "frameB": 1,
+    "captionA": "Checkpoint A: request enters",
+    "captionB": "Checkpoint B: response returns",
+    "scriptA": "Synthetic A: a request enters the system.",
+    "scriptB": "Synthetic B: the response returns without losing slide metadata.",
+    "holdA": 700,
+    "holdB": 1900,
+    "transitionB": "build",
+    "cloneFrameSource": "acl-slide-a",
+    "cloneShapeSource": "acl-shape-a"
+  },
+  "afterReload": [
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": ".frame-name:text-is(\"Checkpoint A\")"
+      }
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": ".frame-name:text-is(\"Checkpoint A 2\")"
+      }
+    }
+  ],
+  "checks": [
+    "reload"
+  ]
+}
