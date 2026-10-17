@@ -1,0 +1,145 @@
+{
+  "observed_at": "2026-10-17T20:40:32.328847+00:00",
+  "source": {
+    "repository": "https://github.com/avestura/bazkia",
+    "commit": "e949745ab58c01eef8534274e6625537d236ece6",
+    "version": "0.1.0",
+    "mode": "Pinned disposable local browser dev build; no desktop or public-hosted-service claim"
+  },
+  "runner": {
+    "version": "0.12.0-dev.2",
+    "node": "24.19.0",
+    "playwright": "1.64.0",
+    "chromium": "156.0.8078.4"
+  },
+  "results": [
+    {
+      "case": "reload-empty",
+      "cli_verdict": "FAIL",
+      "cli_exit_code": 1,
+      "phase": "compare",
+      "error": "Selected saved state changed",
+      "standalone_verdict": "FAIL",
+      "standalone_exit_code": 1,
+      "skipped": 0,
+      "flaky": 0,
+      "contract_sha256": "46e3d7a2f12883b7131c8030bf8df14d2cd1058cf2e6093dbaf9ab34049806d3",
+      "backup": null,
+      "comparisons": null,
+      "same_download_bytes_uploaded": null
+    },
+    {
+      "case": "reload-branch",
+      "cli_verdict": "PASS",
+      "cli_exit_code": 0,
+      "phase": "compare",
+      "error": null,
+      "standalone_verdict": "PASS",
+      "standalone_exit_code": 0,
+      "skipped": 0,
+      "flaky": 0,
+      "contract_sha256": "7a369f2d5756b9a3a89a612fe611840de370b6f5d074172af5c88a172ecbc853",
+      "backup": null,
+      "comparisons": null,
+      "same_download_bytes_uploaded": null
+    },
+    {
+      "case": "roundtrip-empty",
+      "cli_verdict": "FAIL",
+      "cli_exit_code": 1,
+      "phase": "compare-reload",
+      "error": "STATE_CHANGED_AFTER_RELOAD",
+      "standalone_verdict": "FAIL",
+      "standalone_exit_code": 1,
+      "skipped": 0,
+      "flaky": 0,
+      "contract_sha256": "06b5fbab8243311eb00343589451e8d44168589b03fd23f475a7e432761b0c14",
+      "backup": {
+        "format": "utf8-json",
+        "sizeBytes": 113,
+        "sha256": "ebe76186de6f9c407fba0dfdf39323d0b16ff16e9d5d60822c7c1a112e0f7ee2"
+      },
+      "comparisons": {
+        "export": {
+          "matched": true
+        },
+        "sourceAfterExport": {
+          "matched": true
+        },
+        "restoration": {
+          "matched": true,
+          "changedObservations": []
+        },
+        "reload": {
+          "matched": false,
+          "changedObservations": [
+            "project",
+            "name",
+            "nodes",
+            "links"
+          ]
+        }
+      },
+      "same_download_bytes_uploaded": true
+    },
+    {
+      "case": "roundtrip-branch",
+      "cli_verdict": "PASS",
+      "cli_exit_code": 0,
+      "phase": "complete",
+      "error": null,
+      "standalone_verdict": "PASS",
+      "standalone_exit_code": 0,
+      "skipped": 0,
+      "flaky": 0,
+      "contract_sha256": "bec70bde1d72d4e2626aab5d5b3d0075e42d1d5ab3fd651ef4d3841f9d76453e",
+      "backup": {
+        "format": "utf8-json",
+        "sizeBytes": 977,
+        "sha256": "b0878b7fc15e94d435ade3f6c283bbdb722e544ac4d36505639613f43b88af08"
+      },
+      "comparisons": {
+        "export": {
+          "matched": true
+        },
+        "sourceAfterExport": {
+          "matched": true
+        },
+        "restoration": {
+          "matched": true,
+          "changedObservations": []
+        },
+        "reload": {
+          "matched": true,
+          "changedObservations": []
+        }
+      },
+      "same_download_bytes_uploaded": true
+    }
+  ],
+  "coverage": {
+    "full_serialized_project": true,
+    "name_and_node_and_link_counts": true,
+    "export_unchanged_buffer_and_fresh_context": true,
+    "unicode_output_display_checked_separately": true,
+    "unicode_output_display_is_cli_assertion": false,
+    "desktop_tauri": false,
+    "all_252_tools": false,
+    "edits_closed_before_autosave": false,
+    "newer_app_versions": false
+  },
+  "fixture": {
+    "branch_nodes": 3,
+    "branch_links": 2,
+    "named_empty_nodes": 0,
+    "named_empty_links": 0,
+    "fresh_target": "The app creates its own deterministic5-node4-link default; all selected fields are explicitly declared, with no forced clearing"
+  },
+  "initial_contract_correction": {
+    "issue": "First backup contracts selected the parent toast instead of its exact message span; both stopped at IMPORT_SUCCESS_NOT_OBSERVED",
+    "resolved": "The exact visible childspan selector was corrected before these final results; initial reports were retained separately and not counted as app failures"
+  },
+  "independent_author_execution": false,
+  "new_use_credit": 0,
+  "new_star_credit": 0
+}

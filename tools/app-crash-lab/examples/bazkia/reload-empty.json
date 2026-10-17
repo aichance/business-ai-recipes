@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "Bazkia / named empty project / reload",
+  "baseURL": "http://127.0.0.1:54191",
+  "path": "/",
+  "timeoutMs": 8000,
+  "stabilityMs": 800,
+  "reset": [],
+  "setup": [
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "New project"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "label": "Project name"
+      },
+      "value": "Crash Lab named empty project",
+      "save": true
+    }
+  ],
+  "observe": {
+    "project": {
+      "source": "localStorage",
+      "key": "bazkia:autosave",
+      "parse": "json"
+    },
+    "name": {
+      "source": "value",
+      "target": {
+        "label": "Project name"
+      }
+    },
+    "nodes": {
+      "source": "count",
+      "target": {
+        "css": ".react-flow__node"
+      }
+    },
+    "links": {
+      "source": "count",
+      "target": {
+        "css": ".react-flow__edge"
+      }
+    }
+  },
+  "expected": {
+    "project": {
+      "format": "bazkia",
+      "version": 1,
+      "name": "Crash Lab named empty project",
+      "nodes": [],
+      "edges": []
+    },
+    "name": "Crash Lab named empty project",
+    "nodes": 0,
+    "links": 0
+  },
+  "afterReload": [
+    {
+      "action": "expectVisible",
+      "target": {
+        "label": "Project name"
+      }
+    }
+  ],
+  "checks": [
+    "reload"
+  ]
+}
