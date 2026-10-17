@@ -185,6 +185,7 @@ EXPECTED_FILES = {
     "docs/chalky-delayed-close.png",
     "tools/app-crash-lab/.gitignore",
     "tools/app-crash-lab/CONTRACT.md",
+    "tools/app-crash-lab/PERSISTENCE-CHECKLIST.md",
     "tools/app-crash-lab/LICENSE",
     "tools/app-crash-lab/README.md",
     "tools/app-crash-lab/cli.mjs",
