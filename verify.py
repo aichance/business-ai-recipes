@@ -16,6 +16,18 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    ".github/workflows/lifepilot-trial.yml",
+    "tools/app-crash-lab/tests/lifepilot-ci.test.mjs",
+    "tools/app-crash-lab/examples/lifepilot-continuity/ci-trial.mjs",
+    "tools/app-crash-lab/examples/lifepilot-continuity/LICENSE",
+    "tools/app-crash-lab/examples/lifepilot-continuity/README.md",
+    "tools/app-crash-lab/examples/lifepilot-continuity/RESULTS.json",
+    "tools/app-crash-lab/examples/lifepilot-continuity/SOURCE.json",
+    "tools/app-crash-lab/examples/lifepilot-continuity/changed-goal-control.json",
+    "tools/app-crash-lab/examples/lifepilot-continuity/preservation.json",
+    "tools/app-crash-lab/examples/lifepilot-continuity/profile.json",
+    "tools/app-crash-lab/examples/lifepilot-continuity/roundtrip.json",
+    "tools/app-crash-lab/examples/lifepilot-continuity/wrong-baseline-control.json",
     "tools/app-crash-lab/examples/pomoflow/README.md",
     "tools/app-crash-lab/examples/pomoflow/tasks-reload.json",
     "tools/app-crash-lab/examples/pomoflow/serve-metadata-control.py",
