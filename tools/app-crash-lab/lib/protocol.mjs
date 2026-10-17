@@ -66,7 +66,21 @@ async function applySteps(page, contract, steps, phase, events, dialogs = null, 
       else if (step.action === 'select') await locator.selectOption(step.value);
       else if (step.action === 'check') await locator.check();
       else if (step.action === 'uncheck') await locator.uncheck();
-      else if (step.action === 'setFile') await locator.setInputFiles({ name: step.file.name, mimeType: step.file.mimeType, buffer: Buffer.from(step.file.text, 'utf8') });
+      else if (step.action === 'setFile') {
+        const upload = { name: step.file.name, mimeType: step.file.mimeType, buffer: Buffer.from(step.file.text, 'utf8') };
+        if (step.fileChooser) {
+          // Detached inputs are reachable only through the native chooser.
+          // Attach first; upload only if both the trigger and event succeed.
+          const [chooser] = await Promise.all([
+            page.waitForEvent('filechooser', { timeout: contract.timeoutMs }),
+            locator.click({ timeout: contract.timeoutMs }),
+          ]);
+          if (!dialogs) throw new Error('Native file chooser setup requires dialog monitoring');
+          await Promise.all(dialogs.pending);
+          assertSupportedDialogs(dialogs);
+          await chooser.setFiles(upload, { timeout: contract.timeoutMs });
+        } else await locator.setInputFiles(upload);
+      }
       else if (step.action === 'expectText') await expect(locator).toHaveText(step.value, { timeout: contract.timeoutMs });
       else if (step.action === 'expectValue') await expect(locator).toHaveValue(step.value, { timeout: contract.timeoutMs });
       else if (step.action === 'expectVisible') await expect(locator).toBeVisible({ timeout: contract.timeoutMs });
@@ -389,18 +403,20 @@ function dialogRejection(capture, start, expected) {
 
 export async function executeCheck(page, contract, check) {
   const result = { check, status: 'inconclusive', phase: 'reset', before: null, after: null, differences: [], events: [] };
-  const dialogs = check === 'rejected-update' && (contract.rejectedUpdate.dialog || contract.rejectedUpdate.steps.some(step => step.confirm)) ? captureDialogs(page, Boolean(contract.rejectedUpdate.dialog)) : null;
+  const chooserSetup = contract.setup.some(step => step.fileChooser);
+  const rejectionDialogs = check === 'rejected-update' && (contract.rejectedUpdate.dialog || contract.rejectedUpdate.steps.some(step => step.confirm));
+  const dialogs = chooserSetup || rejectionDialogs ? captureDialogs(page, !chooserSetup && Boolean(contract.rejectedUpdate?.dialog)) : null;
   let dialogStart;
   if (dialogs) result.dialogs = dialogs.events;
   page.setDefaultTimeout(contract.timeoutMs);
   page.setDefaultNavigationTimeout(contract.timeoutMs);
   try {
     await page.goto(scopedURL(contract.baseURL, contract.path), { waitUntil: 'domcontentloaded' });
-    await applySteps(page, contract, contract.reset, 'reset', result.events);
+    await applySteps(page, contract, contract.reset, 'reset', result.events, dialogs);
     // Reset may change server state. Reload so setup starts from its current view.
     if (contract.reset.length) await page.reload({ waitUntil: 'domcontentloaded' });
     result.phase = 'baseline';
-    await applySteps(page, contract, contract.setup, 'setup', result.events);
+    await applySteps(page, contract, contract.setup, 'setup', result.events, dialogs);
     const baseline = await waitForState(page, contract, contract.observe, contract.expected);
     result.before = baseline.state;
     if (!baseline.matched) throw new Error('Known-good baseline did not match expected values; no preservation verdict');
@@ -411,6 +427,11 @@ export async function executeCheck(page, contract, check) {
     } else {
       result.phase = 'rejection-precondition';
       const invalid = contract.rejectedUpdate;
+      if (dialogs) {
+        await Promise.all(dialogs.pending);
+        assertSupportedDialogs(dialogs);
+        dialogs.allowAlerts = Boolean(invalid.dialog);
+      }
       if (invalid.observe) {
         const previous = await readState(page, contract, invalid.observe);
         if (isDeepStrictEqual(selected(previous, invalid.expected), invalid.expected)) throw new Error('Rejection condition was already true before the invalid update');
@@ -458,7 +479,7 @@ export async function executeCheck(page, contract, check) {
     if (dialogs) {
       await Promise.all(dialogs.pending);
       assertSupportedDialogs(dialogs);
-      if (contract.rejectedUpdate.dialog) {
+      if (check === 'rejected-update' && contract.rejectedUpdate.dialog) {
         result.rejection = dialogRejection(dialogs, dialogStart, contract.rejectedUpdate.dialog);
         if (!result.rejection.confirmed) { result.status = 'fail'; result.error = 'Expected exactly one matching rejection alert'; }
       }
@@ -637,10 +658,11 @@ export async function executeBackupRoundtrip(browser, contract) {
       return page;
     }
     const source = await localPage();
+    const sourceDialogs = dialogs[0].capture;
     await source.goto(scopedURL(contract.baseURL, contract.path), { waitUntil: 'domcontentloaded' });
-    await applySteps(source, contract, contract.reset, 'reset', result.events);
+    await applySteps(source, contract, contract.reset, 'reset', result.events, sourceDialogs);
     if (contract.reset.length) await source.reload({ waitUntil: 'domcontentloaded' });
-    await applySteps(source, contract, contract.setup, 'setup', result.events);
+    await applySteps(source, contract, contract.setup, 'setup', result.events, sourceDialogs);
     result.phase = backup.sourceReady ? 'source-ready' : 'source-baseline';
     let baseline;
     try { baseline = await waitForState(source, contract, contract.observe, contract.expected, backup.sourceReady); }

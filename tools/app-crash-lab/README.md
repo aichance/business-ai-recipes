@@ -194,6 +194,13 @@ JSON-value limits and why an unavailable database is inconclusive. A preferences
 key in localStorage is not a substitute for the actual saved checkpoint.
 For a native `confirm()` before invalid-file parsing, the [FloorPlanner example](examples/FLOORPLANNER.md) includes two ready-to-run contracts. They require one exact replacement confirmation, a separate parse/schema error and preserved state. Only one invalid `setFile` step may accept a confirmation; use synthetic records. Requires runner 0.4 or later.
 
+Experimental **0.12.0-dev.0** adds `fileChooser: true` to a `setup` `setFile` step
+for Import buttons that create detached inputs. It is opt-in and setup-only;
+unexpected dialogs observed before fixture upload prevent upload, and later
+dialogs invalidate the check. See the
+[button-triggered chooser contract](CONTRACT.md#button-triggered-file-chooser-setup-0120-dev0-prerelease).
+The stable installation commands above remain pinned to 0.11.0.
+
 The [DevTasks backup example](examples/devtasks/README.md) shows a different gap:
 invalid backups are safely rejected, yet a custom-category backup exported by
 the app itself cannot be restored. It includes three passing preservation

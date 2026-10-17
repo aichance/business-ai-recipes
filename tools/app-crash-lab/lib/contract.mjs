@@ -84,7 +84,7 @@ function steps(value, where, nonempty = false) {
   requireThat(Array.isArray(value) && (!nonempty || value.length > 0) && value.length <= 100, `${where} must be an array of up to 100 steps`);
   for (const [i, step] of value.entries()) {
     const at = `${where}[${i}]`;
-    keys(step, ['action', 'target', 'value', 'file', 'path', 'method', 'data', 'expectStatus', 'headers', 'save', 'confirm'], at);
+    keys(step, ['action', 'target', 'value', 'file', 'fileChooser', 'path', 'method', 'data', 'expectStatus', 'headers', 'save', 'confirm'], at);
     requireThat(['click', 'fill', 'press', 'select', 'check', 'uncheck', 'setFile', 'expectText', 'expectValue', 'expectVisible', 'goto', 'request'].includes(step.action), `${at}: unsupported action`);
     if (['goto', 'request'].includes(step.action)) path(step.path, `${at}.path`);
     else target(step.target, `${at}.target`);
@@ -95,6 +95,9 @@ function steps(value, where, nonempty = false) {
       requireThat(typeof step.file.mimeType === 'string' && /^[a-zA-Z0-9.+-]+\/[a-zA-Z0-9.+-]+$/.test(step.file.mimeType), `${at}.file.mimeType required`);
       requireThat(typeof step.file.text === 'string' && Buffer.byteLength(step.file.text, 'utf8') <= 65536, `${at}.file.text must be UTF-8 text of at most 65536 bytes`);
     } else requireThat(step.file === undefined, `${at}.file only applies to setFile`);
+    if (step.fileChooser !== undefined) {
+      requireThat(where === 'setup' && step.action === 'setFile' && step.fileChooser === true, `${at}.fileChooser requires a setup setFile step and true`);
+    }
     if (step.action === 'request') {
       requireThat(['GET', 'POST', 'PUT', 'PATCH', 'DELETE'].includes(step.method), `${at}.method required`);
       requireThat(Number.isInteger(step.expectStatus) && step.expectStatus >= 100 && step.expectStatus <= 599, `${at}.expectStatus required`);
