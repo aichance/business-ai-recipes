@@ -10,6 +10,8 @@ Turn one successful save workflow into two repeatable checks: **reload without l
 
 [**Pick a regression for your test suite:** four real persistence failures, the missing assertions and copyable tests](tools/app-crash-lab/PERSISTENCE-CHECKLIST.md).
 
+**A valid empty project is still saved work.** [The Bazkia replay](tools/app-crash-lab/examples/bazkia/README.md) restores its actual JSON successfully, then replaces the named empty project with a sample after reload. Four prepared checks include a passing 3-node/2-link control.
+
 **It exported a backup it could not restore.** In an unchanged local [DevTasks build](tools/app-crash-lab/examples/devtasks/README.md), a synthetic task with a custom `DOCS` category exported successfully, then the same file was rejected in a fresh browser context. The built-in `FEATURE` control restored.
 
 [![21-second actual DevTasks flow: export a synthetic DOCS task, reject its backup in a fresh context, then restore a FEATURE control](docs/devtasks-backup-roundtrip.gif)](https://aichance.github.io/business-ai-recipes/devtasks-backup-roundtrip.mp4)
