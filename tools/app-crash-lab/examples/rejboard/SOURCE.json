@@ -1,0 +1,39 @@
+{
+  "repository": "https://github.com/RejwanShafi25/RejBoard",
+  "ownerID": 196472099,
+  "repositoryID": 1402407502,
+  "visibility": "public",
+  "sourceCommit": "14d63180e4cb932db39793050992ff406f8a3165",
+  "entryFile": {
+    "path": "index.html",
+    "bytes": 496196,
+    "sha256": "af289841ee78c711bf08122fad9e34f38abefe33c4586d8129ff6dc8c8037039"
+  },
+  "request": "https://github.com/RejwanShafi25/RejBoard/issues/2",
+  "fixtureProvenance": {
+    "kind": "Synthetic original app UI output, prepared by aichance with AI",
+    "source": "Unchanged pinned index.html in disposable loopback Chromium",
+    "pdf": "Generated one-page synthetic PDF imported through original picker and import modal; its raster page is included in the board record",
+    "inkTextTags": "Created with original text editor, pointer stroke and tag input",
+    "recording": "Original MediaRecorder with Chromium fake audio device; no real microphone/user audio",
+    "fixtureRawSHA256": "378ae69048008cb779766c4015e0c1442b12cd38caa69a9efd8866f1648e979b",
+    "recordingBytes": 3567,
+    "recordingOriginalBlobType": "audio/webm;codecs=opus",
+    "distributedMediaFixtureSHA256": "0850d3c38fe7156a2ee1224e462c026754536570cf403f6bab8d297a46b6799e"
+  },
+  "dependenciesForOriginalFixtureOnly": {
+    "pdf.min.js": {
+      "url": "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js",
+      "bytes": 320004,
+      "sha256": "5b5799e6f8c680663207ac5b42ee14eed2a406fa7af48f50c154f0c0b1566946",
+      "header": "/**\n * @licstart The following is the entire license notice for the\n * JavaScript code in this page\n *\n * Copyright 2023 Mozilla Foundation\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n *     http://www.apache.o"
+    },
+    "pdf.worker.min.js": {
+      "url": "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js",
+      "bytes": 1087212,
+      "sha256": "feabdf309770ed24bba31a5467836cdc8cf639c705af27d52b585b041bb8527b",
+      "header": "/**\n * @licstart The following is the entire license notice for the\n * JavaScript code in this page\n *\n * Copyright 2023 Mozilla Foundation\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n *     http://www.apache.o"
+    }
+  },
+  "rerun": "Pack imports this disclosed fixture through the normal Restore control. It does not repeat PDF decoding or recording capture. No upstream source or third-party library is redistributed."
+}

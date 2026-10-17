@@ -1,0 +1,100 @@
+{
+  "startedAt": "2026-10-17T18:51:16.233Z",
+  "runner": "0.12.0-dev.2",
+  "checks": [
+    {
+      "contract": "preservation.json",
+      "expectedExit": 0,
+      "actualExit": 0,
+      "results": [
+        {
+          "check": "reload",
+          "status": "pass",
+          "phase": "compare"
+        },
+        {
+          "check": "rejected-update",
+          "status": "pass",
+          "phase": "compare"
+        }
+      ]
+    },
+    {
+      "contract": "roundtrip.json",
+      "expectedExit": 0,
+      "actualExit": 0,
+      "results": [
+        {
+          "check": "backup-roundtrip",
+          "status": "pass",
+          "phase": "complete"
+        }
+      ]
+    },
+    {
+      "contract": "changed-text-control.json",
+      "expectedExit": 1,
+      "actualExit": 1,
+      "results": [
+        {
+          "check": "reload",
+          "status": "fail",
+          "phase": "compare"
+        }
+      ]
+    }
+  ],
+  "servedIndexSHA256": "af289841ee78c711bf08122fad9e34f38abefe33c4586d8129ff6dc8c8037039",
+  "media": {
+    "firstImport": {
+      "completeBoardsPreserved": true,
+      "recordingMetadataAndBytesPreserved": true,
+      "recordingBlobTypesPreserved": false,
+      "expectedBlobTypes": [
+        "audio/webm;codecs=opus"
+      ],
+      "actualBlobTypes": [
+        "audio/webm"
+      ],
+      "expectedAudioSHA256": [
+        "b58efacc493ade315bf285b5d5119e222640956a08cb293b7c1f41b9047a0704"
+      ],
+      "actualAudioSHA256": [
+        "b58efacc493ade315bf285b5d5119e222640956a08cb293b7c1f41b9047a0704"
+      ]
+    },
+    "realExportRestoreReload": "PASS",
+    "oneByteControlDetected": true,
+    "fullOriginalBlobTypePreservation": false,
+    "scope": "Complementary Playwright audit; current App Crash Lab JSON observer does not support Blob"
+  },
+  "suiteChecksPassed": true,
+  "allOriginalDataAndTypesPreserved": false,
+  "summary": "Board reload/rejection/real backup PASS; changed-text and changed-audio controls detected. Original audio bytes/metadata preserved but Blob MIME parameters change on first import.",
+  "completedAt": "2026-10-17T18:51:36.658Z",
+  "operatorEnvironment": {
+    "node": "22.16.0",
+    "playwright": "1.64.0",
+    "platform": "macOS",
+    "source": "original pinned index, exact hash checked, served on loopback; other network requests blocked"
+  },
+  "independentAuthorRun": false,
+  "scopeLimits": [
+    "Current JSON observer covers complete n-store records, not Blob values",
+    "Media audit is complementary Playwright",
+    "No original PDF file bytes, audio playback, desktop, per-board feature, sync-folder or cross-version guarantee"
+  ],
+  "regularCLI": {
+    "version": "0.12.0-dev.2",
+    "exitCode": 0,
+    "check": "backup-roundtrip",
+    "status": "pass"
+  },
+  "generatedStandalone": {
+    "playwright": "1.64.0",
+    "tests": 1,
+    "passed": 1,
+    "durationSeconds": 9.9,
+    "importsAppCrashLab": false
+  }
+}
