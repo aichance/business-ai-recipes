@@ -297,14 +297,15 @@ keeps imported order fields through reload, but catches missing icing instructio
 and source positions at the confirmation baseline. It includes a passing import
 control and an explicitly inconclusive confirmation check on pinned unchanged source.
 
-A usable-record case: [Kaioken](examples/kaioken/README.md) retains a numeric
-IndexedDB identity across reload, yet the imported entry cannot open. An
-independent Playwright check has one valid control and two real ID-validation
-failures on the pinned app. It permits explicit rejection or a usable repaired
-ID, and needs no App Crash Lab runtime. An included CLI control passes normal
-save/reload, with its generated standalone reproduction also passing. The
-JSON-text import test is separate from that control and actual-file backup
-round trips.
+A usable-record case: [Kaioken 1.7.1](examples/kaioken/README.md) retains a
+numeric IndexedDB identity across reload, yet the imported entry cannot open.
+Our separate Playwright check has one valid control and two ID-validation
+failures on that pinned version. After the maintainer reported a 1.7.2 fix,
+our unchanged spec passed all three cases on the pinned repaired version.
+It permits explicit rejection or a usable repaired ID, and needs no App Crash
+Lab runtime. The separate CLI normal-save/reload control and its generated
+test also passed. The JSON-text import spec is separate from actual-file
+backup round trips; these are our retests, not confirmed maintainer tool use.
 
 A backup-version case: [Leftover](examples/leftover/README.md) passes a real
 JSON backup, fresh restore and full-state reload check. Unrelated JSON is
@@ -319,10 +320,14 @@ Appending one null custom task instead persists an unusable active cook and
 crashes again on reload; its archive stays intact. The dedicated Playwright
 backup tests are separate from the CLI's generic backup capability.
 
-A display-baseline case: [Repwise](examples/repwise/README.md) preserves complete
-workout records through a real JSON backup, fresh restore and reload, while a
-completed workout is already absent from History. Its backup check passes and
-its separate History check stays inconclusive at baseline.
+A display-baseline case: [Repwise 1.1.1](examples/repwise/README.md) preserves
+complete workout records through a real JSON backup, fresh restore and reload,
+while a completed workout is already absent from History. That version passes
+the backup check but stops at an inconclusive History baseline. After the
+maintainer reported a 1.2.1 fix, our original History contract passed with the
+0.11.0 runner. The unchanged 1.1.1 backup also restored into a fresh 1.2.1 copy
+with all eight stores and the History display intact after reload. This is our
+local retest, not an in-place database upgrade or confirmed maintainer tool use.
 
 A real-app timing case: the [Chalky note-close diagnostic](examples/chalky-notes-close/README.md)
 compares a rapid keyboard edit/close with a delayed control. The last edit was
