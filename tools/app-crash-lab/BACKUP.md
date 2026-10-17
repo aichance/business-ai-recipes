@@ -59,6 +59,45 @@ For a toast that is absent until success, use a `count` observation selecting
 its exact success text, with expected `1`; it reads `0` before import. A `text`
 probe on an absent node times out and is INCONCLUSIVE.
 
+## Wait for persisted source values (0.11+)
+
+For an autosaving app, the UI may show the new record before its complete saved
+value is committed. Add an optional `sourceReady` inside `backupRoundtrip`:
+
+```json
+"sourceReady": {
+  "observe": {
+    "firstTitle": { "observation": "saved", "jsonPath": [0, "title"] }
+  },
+  "expected": { "firstTitle": "Synthetic note" }
+}
+```
+
+Here the main `observe.saved` must already select the complete saved array.
+Each projection names an existing main browser-storage observation, then a JSON
+path within its observed value. Declare 1..100 projections, paths of up to 64
+string/nonnegative-integer keys, and an expected value for every projection.
+An empty path selects that entire observed value. For IndexedDB record sets,
+paths apply to the already identity-sorted full records described above.
+
+The runner waits within the existing `timeoutMs` for both main `expected` and
+these persisted values. Missing nested fields can wait while the source saves.
+Readiness is evaluated from the **same full observed state** fixed as the
+baseline, with no separate storage read for the predicate. The existing complete
+state stability check then remains mandatory: a transient match, a reverted save,
+or another selected field changing cannot substitute a later stable baseline.
+No additional sleep, storage write, callback, UI action or timeout is introduced.
+
+This is a source-only precondition. The fresh context may lack those nested
+fields; `restore.empty`, complete export/restore/reload comparisons and
+metadata-only artifacts remain unchanged. Readiness never replaces the full
+records under test. A nonmatching source is INCONCLUSIVE with
+`SOURCE_READY_NOT_CONFIRMED`; an unreadable selected source is
+`SOURCE_READY_UNAVAILABLE`, before export/import. A changed baseline retains
+`SOURCE_BASELINE_NOT_STABLE`. No captured values are added to these errors.
+Without `sourceReady`, earlier behavior is retained. Conditions are checked
+only during the declared observation window, not indefinitely after the run.
+
 ## Open the restore UI in a fresh context (0.9+)
 
 If the real import control requires opening Settings or completing normal

@@ -8,6 +8,10 @@ Describe one working save flow and the values worth keeping. App Crash Lab
 checks **reload** and **rejected updates**, then gives you the changed values,
 a browser trace and ordinary Playwright tests you can rerun after a fix.
 
+**0.11 adds persisted source readiness for autosave.** Wait for known saved
+values before fixing the complete backup baseline, without weakening full-record
+comparisons. [Configure source readiness](BACKUP.md#wait-for-persisted-source-values-011)
+or try the [measured Trazo animated-slide backup](examples/trazo/README.md).
 **0.6 adds a third check: export → fresh restore → reload.** It downloads your
 app's real JSON backup, verifies it contains the selected saved records, imports
 the unchanged bytes in a blank context, and compares every selected field again
