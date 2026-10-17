@@ -1,0 +1,32 @@
+{
+  "target": "balalex12/trazo",
+  "target_source_sha": "bc44713a52b0201e26b26e8289ca80405cf1922c",
+  "target_source_unmodified": true,
+  "runner_candidate_version": "0.11.0",
+  "cli_completed_at": "2026-10-17T02:01:49.192Z",
+  "cli_verdict": "PASS",
+  "standalone_completed_at": "2026-10-17T02:04:36.361Z",
+  "unchanged_ordinary_playwright_tests_passed": 1,
+  "real_download_bytes": 3586,
+  "downloaded_original_bytes_uploaded": true,
+  "export_records_match": true,
+  "source_preserved_after_export": true,
+  "fresh_restore_full_state_match": true,
+  "second_reload_full_state_match": true,
+  "source_ready_persisted_values": 9,
+  "main_observations": 3,
+  "main_expected_frame_values": 2,
+  "default_local_port": 3000,
+  "actual_measured_local_port": 62486,
+  "earlier_0_10_0_backup_trial": "INCONCLUSIVE source baseline stability before export/restore",
+  "independent_creator_execution_confirmed": false,
+  "excluded": [
+    "narration audio",
+    "global animation settings",
+    "video exports",
+    "notebooks/maps/icon packs",
+    "AI APIs/MCP",
+    "desktop app",
+    "other browsers/OSes"
+  ]
+}
