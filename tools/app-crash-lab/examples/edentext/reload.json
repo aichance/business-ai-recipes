@@ -1,0 +1,222 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "EdenText / full annotated document reload",
+  "baseURL": "http://127.0.0.1:54193",
+  "path": "/",
+  "timeoutMs": 8000,
+  "stabilityMs": 800,
+  "reset": [],
+  "setup": [
+    {
+      "action": "fill",
+      "target": {
+        "role": "textbox",
+        "name": "Document name"
+      },
+      "value": "Crash Lab synthetic review"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": ".tiptap"
+      },
+      "value": "Crash Lab saved paragraph — 日本語 🐾"
+    },
+    {
+      "action": "press",
+      "target": {
+        "css": ".tiptap"
+      },
+      "value": "ControlOrMeta+A"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "B"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Review"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "New comment"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "role": "textbox",
+        "name": "Comment on the selected text:"
+      },
+      "value": "Preserve the annotation — レビュー 🐾"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "OK"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Reply"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "textarea[placeholder=\"Reply\"]"
+      },
+      "value": "Keep this reply — 返信 🐾"
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Reply"
+      },
+      "save": true
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": "p:text-is(\"Keep this reply — 返信 🐾\")"
+      }
+    }
+  ],
+  "observe": {
+    "document": {
+      "source": "localStorage",
+      "key": "edentext-doc",
+      "parse": "json"
+    },
+    "documentName": {
+      "source": "localStorage",
+      "key": "edentext-doc-name"
+    },
+    "customStyles": {
+      "source": "localStorage",
+      "key": "edentext-styles",
+      "parse": "json"
+    },
+    "tabDocument": {
+      "source": "sessionStorage",
+      "key": "edentext-tab-doc"
+    },
+    "loading": {
+      "source": "localStorage",
+      "key": "edentext-doc-loading"
+    },
+    "bodyKnown": {
+      "source": "localStorage",
+      "key": "edentext-doc",
+      "parse": "json",
+      "jsonPath": [
+        "content",
+        0,
+        "content",
+        0,
+        "text"
+      ]
+    },
+    "boldKnown": {
+      "source": "localStorage",
+      "key": "edentext-doc",
+      "parse": "json",
+      "jsonPath": [
+        "content",
+        0,
+        "content",
+        0,
+        "marks",
+        0,
+        "type"
+      ]
+    },
+    "commentKnown": {
+      "source": "localStorage",
+      "key": "edentext-doc",
+      "parse": "json",
+      "jsonPath": [
+        "content",
+        0,
+        "content",
+        0,
+        "marks",
+        1,
+        "attrs",
+        "text"
+      ]
+    },
+    "replyKnown": {
+      "source": "localStorage",
+      "key": "edentext-doc",
+      "parse": "json",
+      "jsonPath": [
+        "content",
+        0,
+        "content",
+        0,
+        "marks",
+        1,
+        "attrs",
+        "replies",
+        0,
+        "text"
+      ]
+    },
+    "renderedBold": {
+      "source": "text",
+      "target": {
+        "css": ".tiptap strong"
+      }
+    },
+    "renderedComment": {
+      "source": "text",
+      "target": {
+        "css": "p:text-is(\"Preserve the annotation — レビュー 🐾\")"
+      }
+    },
+    "renderedReply": {
+      "source": "text",
+      "target": {
+        "css": "p:text-is(\"Keep this reply — 返信 🐾\")"
+      }
+    }
+  },
+  "expected": {
+    "documentName": "Crash Lab synthetic review",
+    "customStyles": null,
+    "tabDocument": "",
+    "loading": null,
+    "bodyKnown": "Crash Lab saved paragraph — 日本語 🐾",
+    "boldKnown": "bold",
+    "commentKnown": "Preserve the annotation — レビュー 🐾",
+    "replyKnown": "Keep this reply — 返信 🐾",
+    "renderedBold": "Crash Lab saved paragraph — 日本語 🐾",
+    "renderedComment": "Preserve the annotation — レビュー 🐾",
+    "renderedReply": "Keep this reply — 返信 🐾"
+  },
+  "checks": [
+    "reload"
+  ],
+  "afterReload": [
+    {
+      "action": "expectVisible",
+      "target": {
+        "css": ".tiptap strong"
+      }
+    }
+  ]
+}

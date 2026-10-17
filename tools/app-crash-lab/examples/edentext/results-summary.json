@@ -1,0 +1,163 @@
+{
+  "schemaVersion": 1,
+  "measuredAt": "2026-10-17T23:40:59.883719+00:00",
+  "source": {
+    "repository": "https://github.com/stffnb/edentext",
+    "ownerType": "User",
+    "commit": "375aa2e9b2202ae44db3bb0076c33b454322c0d9",
+    "version": "0.10.1",
+    "license": "AGPL-3.0-only",
+    "all781SourceBlobsAndModesVerified": true,
+    "sourceUnchangedAfterBuild": true
+  },
+  "runner": {
+    "version": "0.12.0-dev.2",
+    "node": "22.16.0",
+    "npm": "11.21.1",
+    "playwright": "1.64.0",
+    "chromium": "156.0.8078.4",
+    "platform": "macOS"
+  },
+  "results": [
+    {
+      "contract": "reload.json",
+      "fileSHA256": "253694b47e5731cbab18244af4cacc289e9cc58bbaa6083ca4c7c6f1d005c2a6",
+      "contractHash": "253694b47e5731cbab18244af4cacc289e9cc58bbaa6083ca4c7c6f1d005c2a6",
+      "cli": {
+        "status": "pass",
+        "phase": "compare",
+        "exitCode": 0,
+        "startedAt": "2026-10-17T23:39:41.284Z",
+        "completedAt": "2026-10-17T23:39:44.771Z",
+        "differences": [],
+        "rejection": null
+      },
+      "generated": {
+        "exitCode": 0,
+        "byteUnchanged": true,
+        "specSHA256": "ecc286e4e52ffbc748f5331f83fb26c4918428f5b549f0867ae49b8def6d514a"
+      }
+    },
+    {
+      "contract": "reject-odt.json",
+      "fileSHA256": "020e45bf6998a8b88f03b26da9e659273b3fe9655d585ee58c25ab374e778bc9",
+      "contractHash": "020e45bf6998a8b88f03b26da9e659273b3fe9655d585ee58c25ab374e778bc9",
+      "cli": {
+        "status": "pass",
+        "phase": "compare",
+        "exitCode": 0,
+        "startedAt": "2026-10-17T23:38:25.744Z",
+        "completedAt": "2026-10-17T23:38:29.014Z",
+        "differences": [],
+        "rejection": {
+          "expected": {
+            "type": "alert",
+            "message": "Not a valid .odt file (could not read the archive)."
+          },
+          "actual": [
+            {
+              "type": "alert",
+              "message": "Not a valid .odt file (could not read the archive)."
+            }
+          ],
+          "confirmed": true
+        }
+      },
+      "generated": {
+        "exitCode": 0,
+        "byteUnchanged": true,
+        "specSHA256": "bf52d16da8bca56605f1f972ce4f4c85d0882625080f072d583c27e1cad4d1a4"
+      }
+    },
+    {
+      "contract": "reject-docx.json",
+      "fileSHA256": "1f0c245b1be20c8e209549e1bf5dd6c50936c74f5f49b0dbb6e8beace2ef892e",
+      "contractHash": "1f0c245b1be20c8e209549e1bf5dd6c50936c74f5f49b0dbb6e8beace2ef892e",
+      "cli": {
+        "status": "pass",
+        "phase": "compare",
+        "exitCode": 0,
+        "startedAt": "2026-10-17T23:38:43.077Z",
+        "completedAt": "2026-10-17T23:38:45.933Z",
+        "differences": [],
+        "rejection": {
+          "expected": {
+            "type": "alert",
+            "message": "Not a valid .docx file (could not read the archive)."
+          },
+          "actual": [
+            {
+              "type": "alert",
+              "message": "Not a valid .docx file (could not read the archive)."
+            }
+          ],
+          "confirmed": true
+        }
+      },
+      "generated": {
+        "exitCode": 0,
+        "byteUnchanged": true,
+        "specSHA256": "0aa69e59d472f3ccbb13b778d31fad020e863e66425f6365329191b40c0a7598"
+      }
+    },
+    {
+      "contract": "control-extra-reply.json",
+      "fileSHA256": "23c9fbb7a225877ee9727092b3a77c6543c105374389b46443a19014958b4646",
+      "contractHash": "23c9fbb7a225877ee9727092b3a77c6543c105374389b46443a19014958b4646",
+      "cli": {
+        "status": "fail",
+        "phase": "compare",
+        "exitCode": 1,
+        "startedAt": "2026-10-17T23:38:52.234Z",
+        "completedAt": "2026-10-17T23:38:55.369Z",
+        "differences": [
+          {
+            "path": "$[\"document\"][\"content\"][\"0\"][\"content\"][\"0\"][\"marks\"][\"1\"][\"attrs\"][\"replies\"][\"1\"]",
+            "before": null,
+            "after": {
+              "author": "",
+              "text": "Deliberate extra reply — control only",
+              "date": "2026-10-17T23:38:54.109Z"
+            },
+            "change": "added"
+          }
+        ],
+        "rejection": {
+          "expected": {
+            "type": "alert",
+            "message": "Not a valid .docx file (could not read the archive)."
+          },
+          "actual": [
+            {
+              "type": "alert",
+              "message": "Not a valid .docx file (could not read the archive)."
+            }
+          ],
+          "confirmed": true
+        }
+      },
+      "generated": {
+        "exitCode": 1,
+        "byteUnchanged": true,
+        "specSHA256": "666afd666960e319f14ceef9846a18fdb7268e8f6b4fd1d35101c28d1c6cc94e"
+      }
+    }
+  ],
+  "controlMeaning": "An intentional second reply is added through ordinary UI after rejection. This is a detector control, not an app defect.",
+  "readiness": "Known saved body/bold/comment/final reply and full document are captured in the same Web Storage sample; generated IDs/dates stay selected.",
+  "reloadSetupCorrection": "A custom diagnostic dismissed beforeunload and cancelled navigation. Default Playwright accepts beforeunload; standard CLI and unchanged generated reload pass. No app or runner patch.",
+  "scope": [
+    "browser autosave",
+    "whole saved document and name",
+    "rendered bold text/comment/reply",
+    "malformed non-archive UTF8 files named .odt and .docx"
+  ],
+  "notClaimed": [
+    "binary file roundtrip",
+    "native file picker",
+    "desktop AppImage",
+    "layout equivalence",
+    "independent author execution",
+    "new stars or users"
+  ]
+}
