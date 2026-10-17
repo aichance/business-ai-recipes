@@ -1,0 +1,213 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "Bazkia / named empty project / roundtrip",
+  "baseURL": "http://127.0.0.1:54191",
+  "path": "/",
+  "timeoutMs": 8000,
+  "stabilityMs": 800,
+  "reset": [],
+  "setup": [
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "New project"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "label": "Project name"
+      },
+      "value": "Crash Lab named empty project",
+      "save": true
+    }
+  ],
+  "observe": {
+    "project": {
+      "source": "localStorage",
+      "key": "bazkia:autosave",
+      "parse": "json"
+    },
+    "name": {
+      "source": "value",
+      "target": {
+        "label": "Project name"
+      }
+    },
+    "nodes": {
+      "source": "count",
+      "target": {
+        "css": ".react-flow__node"
+      }
+    },
+    "links": {
+      "source": "count",
+      "target": {
+        "css": ".react-flow__edge"
+      }
+    }
+  },
+  "expected": {
+    "project": {
+      "format": "bazkia",
+      "version": 1,
+      "name": "Crash Lab named empty project",
+      "nodes": [],
+      "edges": []
+    },
+    "name": "Crash Lab named empty project",
+    "nodes": 0,
+    "links": 0
+  },
+  "afterReload": [
+    {
+      "action": "expectVisible",
+      "target": {
+        "label": "Project name"
+      }
+    }
+  ],
+  "checks": [
+    "backup-roundtrip"
+  ],
+  "backupRoundtrip": {
+    "isolation": "browser-local",
+    "export": {
+      "steps": [
+        {
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "Save project"
+          }
+        }
+      ],
+      "maxBytes": 65536,
+      "statePaths": {
+        "project": []
+      }
+    },
+    "restore": {
+      "path": "/",
+      "ready": [
+        {
+          "action": "expectVisible",
+          "target": {
+            "role": "button",
+            "name": "Open project"
+          }
+        }
+      ],
+      "empty": {
+        "project": {
+          "format": "bazkia",
+          "version": 1,
+          "name": "Base64 round trip",
+          "nodes": [
+            {
+              "id": "a",
+              "tool": "input:text",
+              "x": 64,
+              "y": 64,
+              "params": {
+                "text": "Hello, Bazkia!"
+              }
+            },
+            {
+              "id": "b",
+              "tool": "data:toBase64",
+              "x": 424,
+              "y": 64,
+              "params": {
+                "alphabet": "std",
+                "pad": true
+              }
+            },
+            {
+              "id": "c",
+              "tool": "output:display",
+              "x": 784,
+              "y": 64,
+              "params": {
+                "view": "auto"
+              }
+            },
+            {
+              "id": "d",
+              "tool": "data:fromBase64",
+              "x": 424,
+              "y": 328,
+              "params": {
+                "alphabet": "std",
+                "strict": false
+              }
+            },
+            {
+              "id": "e",
+              "tool": "output:display",
+              "x": 784,
+              "y": 328,
+              "params": {
+                "view": "auto"
+              }
+            }
+          ],
+          "edges": [
+            {
+              "id": "x0",
+              "source": "a",
+              "sourceHandle": "out:out",
+              "target": "b",
+              "targetHandle": "in:in"
+            },
+            {
+              "id": "x1",
+              "source": "b",
+              "sourceHandle": "out:out",
+              "target": "c",
+              "targetHandle": "in:in"
+            },
+            {
+              "id": "x2",
+              "source": "b",
+              "sourceHandle": "out:out",
+              "target": "d",
+              "targetHandle": "in:in"
+            },
+            {
+              "id": "x3",
+              "source": "d",
+              "sourceHandle": "out:out",
+              "target": "e",
+              "targetHandle": "in:in"
+            }
+          ]
+        },
+        "name": "Base64 round trip",
+        "nodes": 5,
+        "links": 4
+      },
+      "fileChooser": {
+        "role": "button",
+        "name": "Open project"
+      },
+      "fileName": "roundtrip.bazkia.json",
+      "mimeType": "application/json",
+      "success": {
+        "observe": {
+          "opened": {
+            "source": "count",
+            "target": {
+              "css": ".bx-toast > span:text-is(\"Opened roundtrip.bazkia.json\")"
+            }
+          }
+        },
+        "expected": {
+          "opened": 1
+        }
+      }
+    }
+  }
+}
