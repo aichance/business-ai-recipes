@@ -1,0 +1,367 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "LifePilot v0.4 — complete synthetic continuity profile / reload and invalid import",
+  "baseURL": "http://127.0.0.1:59818",
+  "path": "/",
+  "timeoutMs": 8000,
+  "stabilityMs": 500,
+  "reset": [],
+  "setup": [
+    {
+      "action": "setFile",
+      "target": {
+        "css": "#welcomeFile"
+      },
+      "file": {
+        "name": "synthetic-profile.json",
+        "mimeType": "application/json",
+        "text": "{\"schema_version\":\"0.2\",\"product\":\"Life Pilot\",\"profile_label\":\"Crash Lab synthetic continuity\",\"created_at\":\"2026-10-17T12:00:00.000Z\",\"optimization_policy\":{\"strategy_bias\":\"none\",\"major_decisions_require_user_approval\":true},\"goals\":[{\"id\":\"goal-a\",\"name\":\"Synthetic goal A\",\"status\":\"active\",\"known_context\":[\"Synthetic test data only\"],\"next_actions\":[\"Complete the follow-up activity\"]},{\"id\":\"goal-b\",\"name\":\"Synthetic goal B\",\"status\":\"active\",\"known_context\":[\"Independent second goal\"],\"next_actions\":[\"Keep this goal unchanged\"]}],\"decision_register\":[{\"id\":\"LP-001\",\"decision\":\"Keep the original program until review\",\"status\":\"approved\",\"date\":\"2026-10-17\"}],\"execution\":{\"programs\":[{\"id\":\"program-a\",\"name\":\"Synthetic program\",\"goal_id\":\"goal-a\"}],\"milestones\":[{\"id\":\"milestone-a\",\"name\":\"Synthetic milestone\",\"goal_id\":\"goal-a\",\"program_id\":\"program-a\",\"target\":\"Complete two synthetic activities\"}],\"tasks\":[{\"id\":\"task-done\",\"name\":\"Synthetic prerequisite\",\"goal_id\":\"goal-a\",\"program_id\":\"program-a\",\"milestone_id\":\"milestone-a\",\"due\":\"2026-10-16T09:00\",\"planned_minutes\":10,\"status\":\"completed\",\"actual_minutes\":12,\"prerequisite_id\":\"\",\"history\":[]},{\"id\":\"task-next\",\"name\":\"Synthetic follow-up\",\"goal_id\":\"goal-a\",\"program_id\":\"program-a\",\"milestone_id\":\"milestone-a\",\"due\":\"2026-10-19T09:00\",\"planned_minutes\":15,\"status\":\"planned\",\"actual_minutes\":0,\"prerequisite_id\":\"task-done\",\"history\":[]}],\"observations\":[],\"experiments\":[],\"reviews\":[]},\"system_improvement_log\":[{\"id\":\"initial-correction\",\"type\":\"user_correction\",\"summary\":\"Prior synthetic correction\",\"details\":\"Keep the completed predecessor in the historical profile.\",\"goal_id\":\"goal-a\",\"related_reference\":\"task-done\",\"evidence\":\"Initial synthetic fixture\",\"created_at\":\"2026-10-17T12:05:00.000Z\",\"source\":\"user_recorded\",\"status\":\"recorded\"}],\"synthetic_extension\":{\"note\":\"Preserve unknown profile fields too\"}}"
+      }
+    },
+    {
+      "action": "expectVisible",
+      "target": {
+        "role": "button",
+        "name": "System Improvement Log"
+      }
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "System Improvement Log"
+      }
+    },
+    {
+      "action": "select",
+      "target": {
+        "css": "#improvementType"
+      },
+      "value": "user_correction"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "#improvementSummary"
+      },
+      "value": "Keep the prerequisite link after restore"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "#improvementDetails"
+      },
+      "value": "Completed task-done must remain completed.\nThe follow-up task-next still depends on task-done."
+    },
+    {
+      "action": "select",
+      "target": {
+        "css": "#improvementGoal"
+      },
+      "value": "goal-a"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "#improvementReference"
+      },
+      "value": "task-next"
+    },
+    {
+      "action": "fill",
+      "target": {
+        "css": "#improvementEvidence"
+      },
+      "value": "Synthetic continuity baseline; no real user profile."
+    },
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Save log entry"
+      },
+      "save": true
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": "article.line:first-of-type h3"
+      },
+      "value": "Keep the prerequisite link after restore"
+    }
+  ],
+  "observe": {
+    "profile": {
+      "source": "localStorage",
+      "key": "lifepilot-v02-profile",
+      "parse": "json"
+    },
+    "goals": {
+      "source": "localStorage",
+      "key": "lifepilot-v02-profile",
+      "parse": "json",
+      "jsonPath": [
+        "goals"
+      ]
+    },
+    "tasks": {
+      "source": "localStorage",
+      "key": "lifepilot-v02-profile",
+      "parse": "json",
+      "jsonPath": [
+        "execution",
+        "tasks"
+      ]
+    },
+    "decisions": {
+      "source": "localStorage",
+      "key": "lifepilot-v02-profile",
+      "parse": "json",
+      "jsonPath": [
+        "decision_register"
+      ]
+    },
+    "priorCorrection": {
+      "source": "localStorage",
+      "key": "lifepilot-v02-profile",
+      "parse": "json",
+      "jsonPath": [
+        "system_improvement_log",
+        0
+      ]
+    },
+    "newReference": {
+      "source": "localStorage",
+      "key": "lifepilot-v02-profile",
+      "parse": "json",
+      "jsonPath": [
+        "system_improvement_log",
+        1,
+        "related_reference"
+      ]
+    },
+    "newDetails": {
+      "source": "localStorage",
+      "key": "lifepilot-v02-profile",
+      "parse": "json",
+      "jsonPath": [
+        "system_improvement_log",
+        1,
+        "details"
+      ]
+    },
+    "newEvidence": {
+      "source": "localStorage",
+      "key": "lifepilot-v02-profile",
+      "parse": "json",
+      "jsonPath": [
+        "system_improvement_log",
+        1,
+        "evidence"
+      ]
+    },
+    "newType": {
+      "source": "localStorage",
+      "key": "lifepilot-v02-profile",
+      "parse": "json",
+      "jsonPath": [
+        "system_improvement_log",
+        1,
+        "type"
+      ]
+    },
+    "newSource": {
+      "source": "localStorage",
+      "key": "lifepilot-v02-profile",
+      "parse": "json",
+      "jsonPath": [
+        "system_improvement_log",
+        1,
+        "source"
+      ]
+    },
+    "newStatus": {
+      "source": "localStorage",
+      "key": "lifepilot-v02-profile",
+      "parse": "json",
+      "jsonPath": [
+        "system_improvement_log",
+        1,
+        "status"
+      ]
+    },
+    "extension": {
+      "source": "localStorage",
+      "key": "lifepilot-v02-profile",
+      "parse": "json",
+      "jsonPath": [
+        "synthetic_extension"
+      ]
+    },
+    "profileLabel": {
+      "source": "count",
+      "target": {
+        "css": "#app > .row.between b:text-is(\"Crash Lab synthetic continuity\")"
+      }
+    },
+    "visibleCorrection": {
+      "source": "count",
+      "target": {
+        "css": "article.line h3:text-is(\"Keep the prerequisite link after restore\")"
+      }
+    },
+    "visibleReference": {
+      "source": "count",
+      "target": {
+        "css": "article.line p:text-is(\"Related reference: task-next\")"
+      }
+    }
+  },
+  "expected": {
+    "goals": [
+      {
+        "id": "goal-a",
+        "name": "Synthetic goal A",
+        "status": "active",
+        "known_context": [
+          "Synthetic test data only"
+        ],
+        "next_actions": [
+          "Complete the follow-up activity"
+        ]
+      },
+      {
+        "id": "goal-b",
+        "name": "Synthetic goal B",
+        "status": "active",
+        "known_context": [
+          "Independent second goal"
+        ],
+        "next_actions": [
+          "Keep this goal unchanged"
+        ]
+      }
+    ],
+    "tasks": [
+      {
+        "id": "task-done",
+        "name": "Synthetic prerequisite",
+        "goal_id": "goal-a",
+        "program_id": "program-a",
+        "milestone_id": "milestone-a",
+        "due": "2026-10-16T09:00",
+        "planned_minutes": 10,
+        "status": "completed",
+        "actual_minutes": 12,
+        "prerequisite_id": "",
+        "history": []
+      },
+      {
+        "id": "task-next",
+        "name": "Synthetic follow-up",
+        "goal_id": "goal-a",
+        "program_id": "program-a",
+        "milestone_id": "milestone-a",
+        "due": "2026-10-19T09:00",
+        "planned_minutes": 15,
+        "status": "planned",
+        "actual_minutes": 0,
+        "prerequisite_id": "task-done",
+        "history": []
+      }
+    ],
+    "decisions": [
+      {
+        "id": "LP-001",
+        "decision": "Keep the original program until review",
+        "status": "approved",
+        "date": "2026-10-17"
+      }
+    ],
+    "priorCorrection": {
+      "id": "initial-correction",
+      "type": "user_correction",
+      "summary": "Prior synthetic correction",
+      "details": "Keep the completed predecessor in the historical profile.",
+      "goal_id": "goal-a",
+      "related_reference": "task-done",
+      "evidence": "Initial synthetic fixture",
+      "created_at": "2026-10-17T12:05:00.000Z",
+      "source": "user_recorded",
+      "status": "recorded"
+    },
+    "newReference": "task-next",
+    "newDetails": "Completed task-done must remain completed.\nThe follow-up task-next still depends on task-done.",
+    "newEvidence": "Synthetic continuity baseline; no real user profile.",
+    "newType": "user_correction",
+    "newSource": "user_recorded",
+    "newStatus": "recorded",
+    "extension": {
+      "note": "Preserve unknown profile fields too"
+    },
+    "profileLabel": 1,
+    "visibleCorrection": 1,
+    "visibleReference": 1
+  },
+  "checks": [
+    "reload",
+    "rejected-update"
+  ],
+  "afterReload": [
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "System Improvement Log"
+      }
+    },
+    {
+      "action": "expectText",
+      "target": {
+        "css": "article.line:first-of-type h3"
+      },
+      "value": "Keep the prerequisite link after restore"
+    }
+  ],
+  "rejectedUpdate": {
+    "steps": [
+      {
+        "action": "click",
+        "target": {
+          "role": "button",
+          "name": "Profile & Import"
+        }
+      },
+      {
+        "action": "setFile",
+        "target": {
+          "css": "input[type=\"file\"]"
+        },
+        "file": {
+          "name": "invalid-profile.json",
+          "mimeType": "application/json",
+          "text": "{}"
+        }
+      },
+      {
+        "action": "click",
+        "target": {
+          "role": "button",
+          "name": "System Improvement Log"
+        }
+      },
+      {
+        "action": "expectText",
+        "target": {
+          "css": "article.line:first-of-type h3"
+        },
+        "value": "Keep the prerequisite link after restore"
+      }
+    ],
+    "dialog": {
+      "type": "alert",
+      "message": "Could not import this file: Missing goals array"
+    }
+  }
+}
