@@ -16,6 +16,19 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "tools/app-crash-lab/examples/opresume/LICENSE",
+    "tools/app-crash-lab/examples/opresume/UPSTREAM-LICENSE",
+    "tools/app-crash-lab/examples/opresume/README.md",
+    "tools/app-crash-lab/examples/opresume/cleared-source.png",
+    "tools/app-crash-lab/examples/opresume/cleared-restored.png",
+    "tools/app-crash-lab/examples/opresume/reload-cleared.json",
+    "tools/app-crash-lab/examples/opresume/reload-complete-control.json",
+    "tools/app-crash-lab/examples/opresume/roundtrip-cleared.json",
+    "tools/app-crash-lab/examples/opresume/roundtrip-complete-control.json",
+    "tools/app-crash-lab/examples/opresume/synthetic-complete.json",
+    "tools/app-crash-lab/examples/opresume/results-summary.json",
+    "docs/app-crash-lab-opresume-trial-v0.1.0.zip",
+    "docs/app-crash-lab-opresume-trial-v0.1.0.zip.sha256",
     "tools/app-crash-lab/examples/bazkia/LICENSE",
     "tools/app-crash-lab/examples/bazkia/README.md",
     "tools/app-crash-lab/examples/bazkia/empty-after.png",
