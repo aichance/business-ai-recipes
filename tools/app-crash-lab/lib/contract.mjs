@@ -187,9 +187,16 @@ export function validateContract(input) {
     requireThat(typeof restore.mimeType === 'string' && /^[a-zA-Z0-9.+-]+\/[a-zA-Z0-9.+-]+$/.test(restore.mimeType), 'backupRoundtrip.restore.mimeType must declare the upload file type');
     if (restore.fileName !== undefined) requireThat(text(restore.fileName) && restore.fileName.length <= 255 && !/[\\/\x00-\x1f\x7f]/.test(restore.fileName) && !['.', '..'].includes(restore.fileName), 'backupRoundtrip.restore.fileName must be a filename, not a path');
     requireThat(!Object.values(input.observe).some(p => p.source === 'response'), 'backup-roundtrip does not support server response state');
-    keys(restore.success, ['observe', 'expected'], 'backupRoundtrip.restore.success');
-    probes(restore.success.observe, 'backupRoundtrip.restore.success.observe');
-    requireThat(object(restore.success.expected) && Object.keys(restore.success.expected).length > 0 && Object.keys(restore.success.expected).every(k => own(restore.success.observe, k)), 'backupRoundtrip.restore.success.expected must name success observations');
+    keys(restore.success, ['observe', 'expected', 'dialog'], 'backupRoundtrip.restore.success');
+    if (restore.success.dialog !== undefined) {
+      requireThat(restore.success.observe === undefined && restore.success.expected === undefined, 'backupRoundtrip.restore.success.dialog cannot be combined with DOM success observations');
+      keys(restore.success.dialog, ['type', 'message'], 'backupRoundtrip.restore.success.dialog');
+      requireThat(restore.success.dialog.type === 'alert' && text(restore.success.dialog.message) && restore.success.dialog.message.trim().length > 0, 'backupRoundtrip.restore.success.dialog requires type=alert and an exact nonblank message');
+      requireThat(restore.confirm === undefined && restore.commit === undefined, 'backupRoundtrip.restore.success.dialog supports direct import only, without confirm or commit');
+    } else {
+      probes(restore.success.observe, 'backupRoundtrip.restore.success.observe');
+      requireThat(object(restore.success.expected) && Object.keys(restore.success.expected).length > 0 && Object.keys(restore.success.expected).every(k => own(restore.success.observe, k)), 'backupRoundtrip.restore.success.expected must name success observations');
+    }
     if (restore.after !== undefined) steps(restore.after, 'backupRoundtrip.restore.after');
     const readiness = [...restore.ready, ...(input.afterReload ?? [])];
     requireThat(readiness.every(s => ['expectText', 'expectValue', 'expectVisible'].includes(s.action)), 'backup-roundtrip readiness hooks must only observe, never navigate or repair saved state');
