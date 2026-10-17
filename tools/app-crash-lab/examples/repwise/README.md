@@ -1,5 +1,24 @@
 # Repwise: backup equality and usable History are different checks
 
+## 2026-10-17: author-confirmed fix and regression follow-through
+
+The [maintainer confirmed the original diagnosis and reported a fix in1.2.1](https://github.com/abdulrahmanm-in/repwise/issues/7#issuecomment-6230396169). We then [retested the unchanged source at `6ee82061d2437e1332367c700778f0d69288828a` and returned the measured results](https://github.com/abdulrahmanm-in/repwise/issues/7#issuecomment-6230929632):
+
+- App Crash Lab **0.11.0** with the existing [history-reload.json](history-reload.json): **PASS, exit0**. Contract setup, expectations and observations are unchanged; only `--base-url` is overridden. The completed History title count is1 before/after reload, and all six selected stores' complete records match.
+- The original **10,691-byte JSON from1.1.1** was imported unchanged through normal UI into a fresh1.2.1 guest context. All eight stores match after import and reload (47 exercises, one settings row, one record in each of six business stores). History's active tab and the completed100kg workout display were verified. This is an old-backup import check, not proof of a migration-free in-place database upgrade.
+- All49 original files at the new pin remained unchanged. No app patch, direct storage seeding, Google/Drive login or hosted-deployment check was used. The backup diagnostic dismisses the desktop notice through its normal “Got it” button.
+
+To replay from an unpacked [0.11.0 release](https://github.com/aichance/business-ai-recipes/releases/tag/app-crash-lab-v0.11.0) with its Playwright dependencies installed and your disposable1.2.1 app running:
+
+```sh
+node cli.mjs run examples/repwise/history-reload.json \
+  --base-url http://127.0.0.1:3000 --out repwise-history
+```
+
+These are operator-run verification results. The maintainer's independent App Crash Lab execution remains unverified. The historical1.1.1 counterexample and its0.9.0 results below are preserved.
+
+---
+
 **A completed workout survives JSON export/import exactly, but is absent from History even before export.** This example keeps the passing backup result and the unmet display expectation separate.
 
 We tested an unchanged local copy of [Repwise](https://github.com/abdulrahmanm-in/repwise) at commit `40321419374327338960cbcdd99c4529f4b930f6` on 2026-10-16 JST. This is an AI-assisted operator experiment, not an author execution report or a result for the current deployment. [SOURCE.json](SOURCE.json) identifies the pin and coverage. Only our contracts and instructions are distributed here.
