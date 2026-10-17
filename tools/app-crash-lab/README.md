@@ -71,6 +71,12 @@ DB. It includes a passing full-record control, raw screenshots and a runnable
 server-mode Playwright diagnostic, separate from the built-in browser-local
 backup protocol.
 
+The [EdenText review-thread checks](examples/edentext/README.md) compare the
+complete saved document, including bold text, comment IDs and reply dates,
+through reload and rejected malformed ODT/DOCX files. All three pass on the
+pinned app; a deliberate extra-reply control fails while the original paragraph
+and first reply stay equal. This is a regression kit, not an app-defect claim.
+
 The [Plesfeda WBS contract](examples/plesfeda/README.md) preserves complete
 task records, dependencies and six calendar fields through reload, malformed-JSON
 rejection and an actual Save → fresh Open → reload. The pinned unmodified app
