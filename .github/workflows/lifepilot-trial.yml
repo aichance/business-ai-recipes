@@ -64,17 +64,43 @@ jobs:
               `## Trial incomplete\n\nNo complete summary could be read: ${error.code ?? 'invalid summary'}. Inspect the job log; do not infer a preservation verdict.\n`);
           }
           JS
+      - name: Prepare an exact shareable artifact
+        if: always()
+        env:
+          TRIAL_OUTPUT: ${{ runner.temp }}/lifepilot-trial
+          ARTIFACT_OUTPUT: ${{ runner.temp }}/lifepilot-trial-share
+        run: |
+          node --input-type=module <<'JS'
+          import { readFile, writeFile, mkdir, appendFile } from 'node:fs/promises';
+          import { createHash } from 'node:crypto';
+          import { dirname, join } from 'node:path';
+          import { CASES } from './examples/lifepilot-continuity/ci-trial.mjs';
+          const expected = ['trial-summary.json', 'source-check.json', ...CASES.flatMap(item =>
+            ['report.json', 'index.html', 'repro.spec.mjs', 'playwright.config.mjs'].map(file => `${item.file.replace('.json', '')}/${file}`))];
+          const manifest = { schemaVersion: 1, expectedFiles: expected.length, files: [], missing: [] };
+          await mkdir(process.env.ARTIFACT_OUTPUT, { recursive: false });
+          for (const relative of expected) {
+            let bytes;
+            try { bytes = await readFile(join(process.env.TRIAL_OUTPUT, relative)); }
+            catch (error) { if (error.code === 'ENOENT') { manifest.missing.push(relative); continue; } throw error; }
+            const target = join(process.env.ARTIFACT_OUTPUT, relative);
+            await mkdir(dirname(target), { recursive: true });
+            await writeFile(target, bytes, { flag: 'wx' });
+            manifest.files.push({ path: relative, bytes: bytes.length, sha256: createHash('sha256').update(bytes).digest('hex') });
+          }
+          await writeFile(join(process.env.ARTIFACT_OUTPUT, 'artifact-manifest.json'), JSON.stringify(manifest, null, 2) + '\n', { flag: 'wx' });
+          await appendFile(process.env.GITHUB_STEP_SUMMARY,
+            `\n## Shareable artifact\n\n${manifest.files.length}/${expected.length} expected files, plus artifact-manifest.json. Raw app source, traces and screenshots are excluded.\n\n` +
+            '```json\n' + JSON.stringify(manifest, null, 2) + '\n```\n');
+          if (manifest.missing.length) process.exitCode = 2;
+          JS
       - name: Save synthetic results and repeatable tests
         if: always()
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: lifepilot-continuity-${{ github.run_id }}
           retention-days: 7
-          if-no-files-found: warn
-          path: |
-            ${{ runner.temp }}/lifepilot-trial/trial-summary.json
-            ${{ runner.temp }}/lifepilot-trial/source-check.json
-            ${{ runner.temp }}/lifepilot-trial/*/report.json
-            ${{ runner.temp }}/lifepilot-trial/*/index.html
-            ${{ runner.temp }}/lifepilot-trial/*/repro.spec.mjs
-            ${{ runner.temp }}/lifepilot-trial/*/playwright.config.mjs
+          if-no-files-found: error
+          # A single path is translated correctly into the job container. A
+          # multiline absolute input can translate only its first path.
+          path: ${{ runner.temp }}/lifepilot-trial-share
