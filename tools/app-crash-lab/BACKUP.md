@@ -59,6 +59,44 @@ For a toast that is absent until success, use a `count` observation selecting
 its exact success text, with expected `1`; it reads `0` before import. A `text`
 probe on an absent node times out and is INCONCLUSIVE.
 
+## Native completion alert (0.12.0-dev.1 prerelease)
+
+Some apps report a completed JSON import with a native `alert()` rather than a
+DOM status. For a **direct import**, replace `restore.success` with:
+
+```json
+"success": {
+  "dialog": { "type": "alert", "message": "Progressi ripristinati." }
+}
+```
+
+This requires the **0.12.0-dev.1 prerelease**. Stable 0.11.0 rejects this field;
+that configuration error does not indicate an app defect. The alert form and
+the existing `observe`/`expected` form are mutually exclusive. Declare a
+nonblank exact message. Matching keeps all whitespace and case; substring,
+regex, `accept`, other dialog types and combinations with `restore.confirm` or
+`restore.commit` are unsupported and rejected before execution. Input and
+button-triggered file-chooser delivery are supported.
+
+Only the target page's first matching alert is allowed, starting immediately
+before the actual file delivery. The same `timeoutMs` deadline includes an
+asynchronous import callback after `setFiles` returns. The runner dismisses the
+alert; it does not accept a confirm or replace `window.alert`. Permission ends
+at the first match, expiry or action failure. A missing alert is FAIL
+(`IMPORT_SUCCESS_NOT_OBSERVED`). Source-page, earlier, wrong, repeated or expired
+dialogs observed before the check ends are dismissed and INCONCLUSIVE. Opening
+a chooser does not open this permission. Events after contexts close are
+outside coverage. A delayed, unrelated identical target alert inside the
+allowed window has no browser-provided causal identifier and cannot be
+distinguished from the import's alert.
+
+**The alert is only a completion signal.** The actual export bytes, complete
+selected saved records, source preservation, fresh target, restored values and
+post-reload values must still pass their existing comparisons. Silent field
+loss or an alert after a failed storage write cannot pass. Reports add only
+`importCompletion` booleans/counts; captured dialog text remains omitted.
+Declared exact messages are still saved in the contract and standalone spec.
+
 ## Wait for persisted source values (0.11+)
 
 For an autosaving app, the UI may show the new record before its complete saved
@@ -314,7 +352,7 @@ explicit `request` steps. Declaring `browser-local` does not audit the app or
 isolate a shared backend. Do not use accounts or valuable data. Shared server
 records, multi-step or mixed native/DOM commit flows, encrypted/ZIP/binary backups and
 intentional nondeterministic ID rewrites need another contract. A single exact
-restore confirmation is opt-in as described above. Unexpected
+restore confirmation or direct-import completion alert is opt-in as described above. Unexpected
 native dialogs are dismissed and make the check INCONCLUSIVE.
 
 For this check, observed state, download bytes, dialog messages and suggested

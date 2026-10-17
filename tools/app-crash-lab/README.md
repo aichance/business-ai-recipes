@@ -201,6 +201,24 @@ dialogs invalidate the check. See the
 [button-triggered chooser contract](CONTRACT.md#button-triggered-file-chooser-setup-0120-dev0-prerelease).
 The stable installation commands above remain pinned to 0.11.0.
 
+Experimental **0.12.0-dev.1** also supports a direct JSON import ending with one
+exact native success alert. It still compares the complete exported records,
+fresh restoration and reload; an alert alone cannot pass. Earlier, wrong or
+repeated dialogs remain inconclusive. This first alert form does not combine
+with a native confirmation or DOM preview/commit.
+[Configure the completion alert](BACKUP.md#native-completion-alert-0120-dev1-prerelease)
+and review the contract before running the prerelease against a disposable app:
+
+```sh
+npx --yes --package=https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.12.0-dev.1/app-crash-lab-0.12.0-dev.1.tgz app-crash-lab run my-backup.json
+```
+
+Stable 0.11.0 intentionally rejects this new field. Existing stable setup and
+reload/rejected-update behavior are unchanged.
+The [measured Teoria musicale example](examples/teoria-musicale/README.md)
+creates a real saved mistake through the normal UI, then compares the whole
+SRS record and three complete settings/program values through its real backup.
+
 The [DevTasks backup example](examples/devtasks/README.md) shows a different gap:
 invalid backups are safely rejected, yet a custom-category backup exported by
 the app itself cannot be restored. It includes three passing preservation
