@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "Bazkia / three-node branch control / reload",
+  "baseURL": "http://127.0.0.1:54191",
+  "path": "/",
+  "timeoutMs": 8000,
+  "stabilityMs": 800,
+  "reset": [],
+  "setup": [
+    {
+      "action": "setFile",
+      "target": {
+        "role": "button",
+        "name": "Open project"
+      },
+      "fileChooser": true,
+      "file": {
+        "name": "synthetic-branch.bazkia.json",
+        "mimeType": "application/json",
+        "text": "{\"format\":\"bazkia\",\"version\":1,\"name\":\"Crash Lab synthetic branch\",\"nodes\":[{\"id\":\"source\",\"tool\":\"input:text\",\"x\":64,\"y\":80,\"params\":{\"text\":\"Synthetic branch — 日本語 42\"},\"label\":\"Synthetic source\"},{\"id\":\"left\",\"tool\":\"output:display\",\"x\":440,\"y\":64,\"params\":{\"view\":\"text\"},\"label\":\"Left output\"},{\"id\":\"right\",\"tool\":\"output:display\",\"x\":440,\"y\":380,\"params\":{\"view\":\"text\"},\"label\":\"Right output\"}],\"edges\":[{\"id\":\"left-link\",\"source\":\"source\",\"sourceHandle\":\"out:out\",\"target\":\"left\",\"targetHandle\":\"in:in\"},{\"id\":\"right-link\",\"source\":\"source\",\"sourceHandle\":\"out:out\",\"target\":\"right\",\"targetHandle\":\"in:in\"}]}"
+      },
+      "save": true
+    }
+  ],
+  "observe": {
+    "project": {
+      "source": "localStorage",
+      "key": "bazkia:autosave",
+      "parse": "json"
+    },
+    "name": {
+      "source": "value",
+      "target": {
+        "label": "Project name"
+      }
+    },
+    "nodes": {
+      "source": "count",
+      "target": {
+        "css": ".react-flow__node"
+      }
+    },
+    "links": {
+      "source": "count",
+      "target": {
+        "css": ".react-flow__edge"
+      }
+    }
+  },
+  "expected": {
+    "project": {
+      "format": "bazkia",
+      "version": 1,
+      "name": "Crash Lab synthetic branch",
+      "nodes": [
+        {
+          "id": "source",
+          "tool": "input:text",
+          "x": 64,
+          "y": 80,
+          "params": {
+            "text": "Synthetic branch — 日本語 42"
+          },
+          "label": "Synthetic source"
+        },
+        {
+          "id": "left",
+          "tool": "output:display",
+          "x": 440,
+          "y": 64,
+          "params": {
+            "view": "text"
+          },
+          "label": "Left output"
+        },
+        {
+          "id": "right",
+          "tool": "output:display",
+          "x": 440,
+          "y": 380,
+          "params": {
+            "view": "text"
+          },
+          "label": "Right output"
+        }
+      ],
+      "edges": [
+        {
+          "id": "left-link",
+          "source": "source",
+          "sourceHandle": "out:out",
+          "target": "left",
+          "targetHandle": "in:in"
+        },
+        {
+          "id": "right-link",
+          "source": "source",
+          "sourceHandle": "out:out",
+          "target": "right",
+          "targetHandle": "in:in"
+        }
+      ]
+    },
+    "name": "Crash Lab synthetic branch",
+    "nodes": 3,
+    "links": 2
+  },
+  "afterReload": [
+    {
+      "action": "expectVisible",
+      "target": {
+        "label": "Project name"
+      }
+    }
+  ],
+  "checks": [
+    "reload"
+  ]
+}
