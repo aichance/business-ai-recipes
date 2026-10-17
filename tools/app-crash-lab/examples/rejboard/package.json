@@ -1,0 +1,17 @@
+{
+  "name": "rejboard-app-crash-lab-trial",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node trial.mjs"
+  },
+  "dependencies": {
+    "@aichance/app-crash-lab": "https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.12.0-dev.2/app-crash-lab-0.12.0-dev.2.tgz",
+    "@playwright/test": "1.64.0"
+  }
+}

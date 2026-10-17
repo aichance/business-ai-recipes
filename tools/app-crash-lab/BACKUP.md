@@ -349,6 +349,17 @@ Existing contracts still default to the original reload/rejected-update pair.
 Backup settings require explicitly selecting `backup-roundtrip`. This does
 not turn ordinary preservation checks into backup checks silently.
 
+## Recordings stored as IndexedDB Blobs
+
+The JSON observer cannot verify native Blob bytes. The
+[RejBoard trial](examples/rejboard/README.md) shows a complete board contract
+alongside a complementary Playwright audit for recording metadata and bytes.
+It uses an actual app export, fresh empty-context import and reload, with a
+same-length one-byte audio control. Its original synthetic fixture also
+revealed a Blob MIME-parameter change while every audio byte matched; the
+pack reports both facts rather than calling full type preservation PASS.
+This example does not add Blob support to the CLI's JSON observer.
+
 ## Scope and artifacts
 
 This first mode supports **browser-local JSON data only**. It requires
