@@ -58,6 +58,32 @@ and reading files from disk are not supported. Use synthetic contents; the
 contract and reproduction spec retain that text. Mark it `save: true` if
 importing triggers persistence in your app.
 
+### Button-triggered file chooser setup (0.12.0-dev.0 prerelease)
+
+Some apps create a detached file input only when an Import button is clicked.
+In `setup` only, target that button and explicitly add `fileChooser: true`:
+
+```json
+{
+  "action": "setFile",
+  "target": { "role": "button", "name": "Import backup…" },
+  "fileChooser": true,
+  "file": { "name": "synthetic.json", "mimeType": "application/json", "text": "{}" },
+  "save": true
+}
+```
+
+The runner listens before clicking and uploads the literal fixture only after
+both the click and chooser event succeed. A missing chooser, failed click or
+unexpected native dialog makes the check INCONCLUSIVE. Unexpected dialogs
+before upload prevent upload, including a confirm whose cancelled result the
+app ignores. The same behavior is included in the generated Playwright test.
+The normal `setFile` behavior targeting an input is unchanged. This option is
+not supported in reset, rejected updates or readiness steps and cannot accept
+a setup confirmation. The existing 64 KiB UTF-8 limit still applies; this is
+not a file-system path or binary upload feature. Multiple concurrent chooser
+triggers are unsupported: the browser event has no trigger correlation ID.
+
 ## Observations
 
 Every entry under `observe` has one source:

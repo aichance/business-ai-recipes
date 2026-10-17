@@ -1,6 +1,6 @@
 {
   "name": "@aichance/app-crash-lab",
-  "version": "0.11.0",
+  "version": "0.12.0-dev.0",
   "description": "Verify reloads, rejected updates and real JSON backup restoration. Keep a portable Playwright reproduction.",
   "type": "module",
   "license": "MIT",
