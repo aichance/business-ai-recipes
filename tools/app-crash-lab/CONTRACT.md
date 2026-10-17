@@ -418,6 +418,17 @@ before one commit click. This is mutually exclusive with native `confirm`.
 New completion, full selected records and reload remain required; see
 [the DOM stage and failure classifications](BACKUP.md#in-app-import-preview-and-confirmation-08).
 
+Prerelease0.12.0-dev.1 adds `backupRoundtrip.restore.success.dialog` for a direct
+import that ends with one native alert: `{"type":"alert","message":"Exact text"}`.
+It replaces, and cannot combine with, success `observe`/`expected`. The message
+must be a nonblank exact string. Other types, fuzzy matching, native
+`restore.confirm` and DOM `restore.commit` combinations are unsupported.
+Only the target's first exact alert within the actual file-delivery window is
+dismissed and allowed. Missing completion is FAIL; observed earlier, wrong,
+duplicate or expired dialogs are INCONCLUSIVE. This does not prove persistence:
+all original-byte, complete-record, fresh-target, restoration and reload checks
+still apply. See [the precise window and output limits](BACKUP.md#native-completion-alert-0120-dev1-prerelease).
+
 Runner0.9 adds optional `restore.prepare`, a nonempty array of at most 32 normal
 UI actions (`click/fill/press/select/check/uncheck`) or read-only expectations.
 It runs once after the fresh target's initial route, before `restore.ready` and

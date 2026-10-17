@@ -1,0 +1,26 @@
+{
+  "repository": "https://github.com/mkparente/teoria-musicale",
+  "owner_type": "User",
+  "owner_id": 89986672,
+  "commit": "b406da8bb820a77f7c8bbc8954a1dffc8acaea48",
+  "archive": "https://codeload.github.com/mkparente/teoria-musicale/tar.gz/b406da8bb820a77f7c8bbc8954a1dffc8acaea48",
+  "observed_main_at": "2026-10-17T10:17:27.977708Z",
+  "original_regular_files": 55,
+  "upstream_source_included": false,
+  "upstream_source_patched": false,
+  "upstream_license_file": "not found in pinned tree; source not redistributed",
+  "authored_files_license": "repository MIT license",
+  "conditions": [
+    "disposable local Vite dev server on 127.0.0.1:59812",
+    "fresh Chromium contexts and serviceWorkers:block",
+    "one normal wrong answer, nondefault UI settings and program date",
+    "no storage injection, production account, hosted app or runtime LLM"
+  ],
+  "scope_excludes": [
+    "guided-session plans and completion log",
+    "offline/service-worker updates",
+    "all other exercise types and import formats",
+    "malformed-backup rejection",
+    "third-party execution or adoption"
+  ]
+}

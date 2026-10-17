@@ -365,14 +365,24 @@ async function waitForState(page, contract, probes, expected, ready = null) {
 }
 
 function captureDialogs(page, allowAlerts) {
-  const capture = { events: [], accepted: new Set(), confirmation: null, pending: new Set(), error: null, allowAlerts };
+  const capture = { events: [], accepted: new Set(), acknowledged: new Set(), confirmation: null, completion: null, pending: new Set(), error: null, allowAlerts };
   capture.listener = dialog => {
     const event = { type: dialog.type(), message: dialog.message() };
     const index = capture.events.push(event) - 1;
     const accept = event.type === 'confirm' && capture.confirmation && !capture.confirmation.seen && Date.now() < capture.confirmation.deadline && event.message === capture.confirmation.message;
     if (accept) { capture.confirmation.seen = true; capture.accepted.add(index); }
+    const completion = capture.completion;
+    const acknowledge = event.type === 'alert' && completion && !completion.seen && Date.now() < completion.deadline && event.message === completion.message;
+    if (acknowledge) {
+      completion.seen = true;
+      capture.acknowledged.add(index);
+      // One matching event closes this permission; repeated alerts are unexpected.
+      capture.completion = null;
+    }
     // Handling is required: an unhandled modal would stall the triggering action.
-    const pending = (accept ? dialog.accept() : dialog.dismiss()).catch(error => { capture.error = error; });
+    const pending = (accept ? dialog.accept() : dialog.dismiss())
+      .then(() => { if (acknowledge) completion.dismissedCount++; })
+      .catch(error => { capture.error = error; });
     capture.pending.add(pending);
     pending.finally(() => capture.pending.delete(pending));
   };
@@ -382,7 +392,7 @@ function captureDialogs(page, allowAlerts) {
 
 function assertSupportedDialogs(capture) {
   if (capture.error) throw new Error(`Could not handle native dialog: ${capture.error.message}`);
-  if (capture.events.some((event, index) => !(event.type === 'alert' && capture.allowAlerts) && !capture.accepted.has(index))) throw new Error('Unexpected native dialog; no rejection verdict');
+  if (capture.events.some((event, index) => !(event.type === 'alert' && capture.allowAlerts) && !capture.accepted.has(index) && !capture.acknowledged.has(index))) throw new Error('Unexpected native dialog; no rejection verdict');
 }
 
 async function waitForDialog(capture, start, timeoutMs) {
@@ -561,7 +571,27 @@ async function stableState(page, contract, probes, expected) {
 
 // Captured state and download bytes remain internal. Do not add raw exceptions,
 // dialog text, filenames, screenshots or trace snapshots to this result.
-async function deliverBackupFile(capture, confirmation, timeoutMs, action, result) {
+async function deliverBackupFile(capture, confirmation, timeoutMs, action, result, completion = null) {
+  if (completion) {
+    if (confirmation) throw backupError('MIXED_IMPORT_SIGNALS_UNSUPPORTED');
+    const armed = { message: completion.message, seen: false, dismissedCount: 0, deadline: Date.now() + timeoutMs };
+    capture.completion = armed;
+    try {
+      await action();
+      // File delivery can return before an asynchronous import callback alerts.
+      while (!armed.seen && Date.now() < armed.deadline) {
+        assertSupportedDialogs(capture);
+        await new Promise(resolve => setTimeout(resolve, 25));
+      }
+      await Promise.all(capture.pending);
+      assertSupportedDialogs(capture);
+      if (!armed.seen) throw backupError('IMPORT_SUCCESS_NOT_OBSERVED', true);
+    } finally {
+      capture.completion = null;
+      result.importCompletion = { required: true, observed: armed.seen, matchedCount: armed.seen ? 1 : 0, dismissedCount: armed.dismissedCount };
+    }
+    return;
+  }
   if (!confirmation) { await action(); return; }
   const armed = { message: confirmation.message, seen: false, deadline: Date.now() + timeoutMs };
   const acceptedBefore = capture.accepted.size;
@@ -647,6 +677,7 @@ export async function executeBackupRoundtrip(browser, contract) {
   const downloads = [];
   const backup = contract.backupRoundtrip;
   try {
+    if (backup.restore.success.dialog && (backup.restore.confirm || backup.restore.commit)) throw backupError('MIXED_IMPORT_SIGNALS_UNSUPPORTED');
     async function localPage() {
       const context = await browser.newContext({ serviceWorkers: 'block', viewport: { width: 1120, height: 760 }, acceptDownloads: true });
       contexts.push(context);
@@ -724,11 +755,13 @@ export async function executeBackupRoundtrip(browser, contract) {
     const empty = await stableState(target, contract, contract.observe, backup.restore.empty);
     if (!empty.matched) throw backupError('FRESH_TARGET_NOT_EMPTY');
     const success = backup.restore.success;
-    const previous = await readState(target, contract, success.observe);
-    if (isDeepStrictEqual(selected(previous, success.expected), success.expected)) throw backupError('IMPORT_SUCCESS_ALREADY_TRUE');
+    if (!success.dialog) {
+      const previous = await readState(target, contract, success.observe);
+      if (isDeepStrictEqual(selected(previous, success.expected), success.expected)) throw backupError('IMPORT_SUCCESS_ALREADY_TRUE');
+    }
     await requireInactiveImportCommit(target, backup.restore.commit);
 
-    if (backup.restore.confirm) {
+    if (backup.restore.confirm || success.dialog) {
       for (const { capture } of dialogs) {
         await Promise.all(capture.pending);
         assertSupportedDialogs(capture);
@@ -753,7 +786,7 @@ export async function executeBackupRoundtrip(browser, contract) {
       if (!chooser) throw backupError('IMPORT_FILE_CHOOSER_NOT_OBSERVED');
       await requireInactiveImportCommit(target, backup.restore.commit);
       // A dialog while opening the chooser is outside the upload permission.
-      if (backup.restore.confirm) {
+      if (backup.restore.confirm || success.dialog) {
         await Promise.all(targetDialogs.pending);
         assertSupportedDialogs(targetDialogs);
       }
@@ -762,17 +795,17 @@ export async function executeBackupRoundtrip(browser, contract) {
         result.uploadTransport = 'file-chooser';
         result.uploadedOriginalBytes = true;
         result.uploadNameSource = backup.restore.fileName === undefined ? 'download' : 'contract';
-      }, result);
+      }, result, success.dialog);
     } else {
       await deliverBackupFile(targetDialogs, backup.restore.confirm, contract.timeoutMs, async () => {
         await locate(target, backup.restore.target).setInputFiles(upload);
         result.uploadTransport = 'input';
         result.uploadedOriginalBytes = true;
         result.uploadNameSource = backup.restore.fileName === undefined ? 'download' : 'contract';
-      }, result);
+      }, result, success.dialog);
     }
     await commitBackupImport(target, contract, savedProbes, success, result);
-    const imported = await waitForState(target, contract, success.observe, success.expected);
+    const imported = success.dialog ? { matched: result.importCompletion?.observed === true } : await waitForState(target, contract, success.observe, success.expected);
     if (!imported.matched && backup.restore.commit) {
       result.phase = 'import-commit-result';
       let actual;
@@ -819,6 +852,7 @@ export async function executeBackupRoundtrip(browser, contract) {
     result.error = error.backupCode ?? 'CHECK_COULD_NOT_BE_COMPLETED';
   } finally {
     for (const { page, capture } of dialogs) {
+      capture.completion = null;
       page.off('dialog', capture.listener);
       await Promise.all(capture.pending);
       try { assertSupportedDialogs(capture); }
