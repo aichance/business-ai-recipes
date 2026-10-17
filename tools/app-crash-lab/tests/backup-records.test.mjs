@@ -173,6 +173,21 @@ test('whole records preserve IDs, values and fresh preparation through real back
       for (const privateValue of ['PRIVATE_RECORD', 'PRIVATE_DETAIL', 'PRIVATE_FILENAME', 'PRIVATE_UNEXPECTED']) assert.equal(serialized.includes(privateValue), false);
     });
     const external = change => c => { c.observe.records.keyMode = 'out-of-line'; change?.(c); };
+    await t.test('source-ready projections use the same complete IndexedDB records and remain source-only', async () => {
+      const ready = c => { c.backupRoundtrip.sourceReady = {
+        observe: {
+          firstId: { observation: 'records', jsonPath: [0, 'id'] },
+          firstAmount: { observation: 'records', jsonPath: [0, 'nested', 'amount'] },
+          detailEpoch: { observation: 'details', jsonPath: [0, 'epoch'] },
+        },
+        expected: { firstId: 'a', firstAmount: 12, detailEpoch: 1 },
+      }; };
+      for (const [mode, change] of [['', ready], ['out-of-line', external(ready)]]) {
+        assert.equal((await run(mode, change)).status, 'pass');
+      }
+      assert.equal((await run('field-loss', ready)).status, 'fail');
+      assert.equal((await run('out-of-line-broken-reload', external(ready))).status, 'fail');
+    });
     await t.test('out-of-line keys require explicit mode and retain full typed identities', async () => {
       for (const mode of ['out-of-line', 'out-of-line-mixed-keys']) {
         const r = await run(mode, external()); assert.equal(r.status, 'pass', JSON.stringify(r));
