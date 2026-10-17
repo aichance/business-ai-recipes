@@ -29,6 +29,10 @@ checked for the default pin; a selected newer commit is recorded separately and
 may require a contract update. A request limit, missing browser or setup failure
 must not be treated as an application data-loss verdict.
 
+The artifact includes 18 explicitly selected result/test files and an
+`artifact-manifest.json` with their SHA-256 hashes. Missing expected files fail
+the job; a partial diagnostic artifact must not be presented as a complete run.
+
 This is a LifePilot-specific trial. Using another app requires its own source and
 contract. The action's execution record, app ownership and report must be checked
 before calling a run independent author use; a run by aichance is operator testing.
