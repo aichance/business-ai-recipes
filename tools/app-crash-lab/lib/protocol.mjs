@@ -578,8 +578,9 @@ async function deliverBackupFile(capture, confirmation, timeoutMs, action, resul
     capture.completion = armed;
     try {
       await action();
-      // File delivery can return before an asynchronous import callback alerts.
-      while (!armed.seen && Date.now() < armed.deadline) {
+      // Keep observing the original delivery window after the first match.
+      // Returning early lets a fast reload cancel a queued duplicate alert.
+      while (Date.now() < armed.deadline) {
         assertSupportedDialogs(capture);
         await new Promise(resolve => setTimeout(resolve, 25));
       }
