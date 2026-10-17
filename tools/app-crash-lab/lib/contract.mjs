@@ -132,7 +132,7 @@ export function validateContract(input) {
   requireThat(Array.isArray(checks) && checks.length > 0 && checks.every(c => [...CHECKS, 'backup-roundtrip'].includes(c)) && new Set(checks).size === checks.length, 'checks must contain unique known patterns');
   if (input.backupRoundtrip !== undefined) {
     const backup = input.backupRoundtrip;
-    keys(backup, ['isolation', 'export', 'restore'], 'backupRoundtrip');
+    keys(backup, ['isolation', 'sourceReady', 'export', 'restore'], 'backupRoundtrip');
     requireThat(backup.isolation === 'browser-local', 'backupRoundtrip.isolation must be browser-local; shared server datasets are not supported');
     keys(backup.export, ['steps', 'maxBytes', 'statePaths'], 'backupRoundtrip.export');
     steps(backup.export.steps, 'backupRoundtrip.export.steps', true);
@@ -165,6 +165,18 @@ export function validateContract(input) {
     }
     const observed = Object.keys(input.observe);
     const stored = observed.filter(name => ['localStorage', 'sessionStorage', 'indexedDB'].includes(input.observe[name].source));
+    if (backup.sourceReady !== undefined) {
+      const ready = backup.sourceReady;
+      keys(ready, ['observe', 'expected'], 'backupRoundtrip.sourceReady');
+      requireThat(object(ready.observe) && Object.keys(ready.observe).length > 0 && Object.keys(ready.observe).length <= 100, 'backupRoundtrip.sourceReady.observe needs 1..100 named projections');
+      for (const [name, projection] of Object.entries(ready.observe)) {
+        requireThat(/^[a-zA-Z][a-zA-Z0-9_-]*$/.test(name) && !['constructor', '__proto__', 'prototype'].includes(name), 'backupRoundtrip.sourceReady: invalid projection name');
+        keys(projection, ['observation', 'jsonPath'], `backupRoundtrip.sourceReady.observe.${name}`);
+        requireThat(stored.includes(projection.observation), 'backupRoundtrip.sourceReady projections must name selected browser-storage observations');
+        requireThat(Array.isArray(projection.jsonPath) && projection.jsonPath.length <= 64 && projection.jsonPath.every(k => typeof k === 'string' || (Number.isSafeInteger(k) && k >= 0)), 'backupRoundtrip.sourceReady.jsonPath must contain up to 64 JSON keys');
+      }
+      requireThat(object(ready.expected) && Object.keys(ready.expected).length === Object.keys(ready.observe).length && Object.keys(ready.observe).every(k => own(ready.expected, k)), 'backupRoundtrip.sourceReady.expected must declare every projection');
+    }
     requireThat(object(restore.empty) && Object.keys(restore.empty).length === observed.length && observed.every(k => own(restore.empty, k)), 'backupRoundtrip.restore.empty must declare every selected observation');
     requireThat(stored.length > 0, 'backup-roundtrip needs a saved browser-storage observation, not only UI counts');
     requireThat(object(backup.export.statePaths) && Object.keys(backup.export.statePaths).length === stored.length && stored.every(k => own(backup.export.statePaths, k)), 'backupRoundtrip.export.statePaths must map every saved browser-storage observation');
