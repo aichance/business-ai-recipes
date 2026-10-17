@@ -16,6 +16,15 @@ Turn one successful save workflow into two repeatable checks: **reload without l
 
 **Independently run on two authors’ own apps:** [Sethera](https://qiita.com/cuculhart/items/f020080b2ef1331222d0#comment-79c9c450f3a54f3ba6ac) and [nvim-edu](https://qiita.com/s3onghyun/items/7966ac7e6a534a84f9db#comment-2d25dc275d61b168ee4a). [Reported environments and scope](#independent-author-reports).
 
+**Keep the check after fixing the bug.** These two cases now include a maintainer's fix report and our local retest:
+
+| Case | Reported fix | Replay the check |
+| --- | --- | --- |
+| Repwise 1.1.1: the backup kept a workout that History could not show | [The maintainer reported a 1.2.1 fix](https://github.com/abdulrahmanm-in/repwise/issues/7#issuecomment-6230396169). Our History check now passes; the original backup also restores with all eight stores intact. | [History contract and measured versions](tools/app-crash-lab/examples/repwise/README.md) |
+| Kaioken 1.7.1: a numeric-ID record could not open; an object ID aborted import | [The maintainer reported a 1.7.2 fix](https://github.com/rabocse/kaioken-gym-log/issues/32#issuecomment-6211357922). Our unchanged import spec changes from one passing control and two failures to three passes. | [Standalone import spec and CLI control](tools/app-crash-lab/examples/kaioken/README.md) |
+
+These are our retests on pinned local builds. The fix reports do not establish that either maintainer ran App Crash Lab; independent tool-use reports are listed separately above.
+
 If these checks are useful, [star the repository](https://github.com/aichance/business-ai-recipes) to find them again before your next release. Starring is optional.
 
 ## Check your own app
