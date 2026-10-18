@@ -16,6 +16,12 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "tools/app-crash-lab/examples/stitchwitch-native/LICENSE",
+    "tools/app-crash-lab/examples/stitchwitch-native/README.md",
+    "tools/app-crash-lab/examples/stitchwitch-native/RESULTS.json",
+    "tools/app-crash-lab/examples/stitchwitch-native/stale-browser-tab.spec.mjs",
+    "tools/app-crash-lab/examples/stitchwitch-native/primary-saved-grid.png",
+    "tools/app-crash-lab/examples/stitchwitch-native/peer-after-name-only-save.png",
     "tools/app-crash-lab/examples/optional-history-native/LICENSE",
     "tools/app-crash-lab/examples/optional-history-native/README.md",
     "tools/app-crash-lab/examples/optional-history-native/RESULTS.json",
@@ -743,6 +749,34 @@ def _verify_native_optional_history_pack(root: Path) -> None:
         raise AssertionError("native optional-history measured source hash mismatch")
 
 
+def _verify_stitchwitch_native(root: Path) -> None:
+    source = root / "tools/app-crash-lab/examples/stitchwitch-native"
+    result = json.loads((source / "RESULTS.json").read_text())
+    spec = source / result["nativeSpec"]["file"]
+    if hashlib.sha256(spec.read_bytes()).hexdigest() != result["nativeSpec"]["sha256"]:
+        raise AssertionError("StitchWitch measured spec hash mismatch")
+    if (source / "LICENSE").read_bytes() != (root / "LICENSE").read_bytes():
+        raise AssertionError("StitchWitch example license mismatch")
+    cases = result["cases"]
+    expected = {
+        "same-tab control": "passed",
+        "fresh-peer control": "passed",
+        "earlier-peer regression": "failed",
+        "fresh-peer reload regression": "failed",
+    }
+    if len(cases) != 4 or {item["mode"]: item["status"] for item in cases} != expected:
+        raise AssertionError("StitchWitch measured cases mismatch")
+    for shot in result["screenshots"]:
+        data = (source / shot["file"]).read_bytes()
+        if (
+            data[:8] != b"\x89PNG\r\n\x1a\n"
+            or hashlib.sha256(data).hexdigest() != shot["sha256"]
+            or int.from_bytes(data[16:20], "big") != shot["width"]
+            or int.from_bytes(data[20:24], "big") != shot["height"]
+        ):
+            raise AssertionError("StitchWitch measured screenshot mismatch")
+
+
 def _must_refuse(action) -> None:
     try:
         action()
@@ -1359,6 +1393,7 @@ def verify(
     _verify_native_livepage_pack(root)
     _verify_native_write_denied_pack(root)
     _verify_native_optional_history_pack(root)
+    _verify_stitchwitch_native(root)
     demo_forge_summary = _verify_demo_forge(root)
 
     supplied_inputs = (
