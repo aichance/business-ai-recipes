@@ -1,3 +1,5 @@
+import { isDeepStrictEqual } from 'node:util';
+
 export const PACK = 'state-preservation@1';
 export const CHECKS = ['reload', 'rejected-update'];
 const own = (object, key) => Object.hasOwn(object, key);
@@ -117,7 +119,7 @@ function steps(value, where, nonempty = false) {
 }
 
 export function validateContract(input) {
-  keys(input, ['schemaVersion', 'pack', 'name', 'baseURL', 'path', 'timeoutMs', 'stabilityMs', 'reset', 'setup', 'observe', 'expected', 'afterReload', 'rejectedUpdate', 'backupRoundtrip', 'checks'], 'contract');
+  keys(input, ['schemaVersion', 'pack', 'name', 'baseURL', 'path', 'timeoutMs', 'stabilityMs', 'reset', 'setup', 'observe', 'expected', 'afterReload', 'rejectedUpdate', 'backupRoundtrip', 'staleTab', 'checks'], 'contract');
   requireThat(input.schemaVersion === 1 && input.pack === PACK, `schemaVersion=1 and pack=${PACK} required`);
   requireThat(text(input.name), 'name required');
   localURL(input.baseURL);
@@ -132,7 +134,46 @@ export function validateContract(input) {
   requireThat(Object.keys(input.expected).every(k => own(input.observe, k)), 'expected keys must name observations');
   if (input.afterReload !== undefined) steps(input.afterReload, 'afterReload');
   const checks = input.checks ?? CHECKS;
-  requireThat(Array.isArray(checks) && checks.length > 0 && checks.every(c => [...CHECKS, 'backup-roundtrip'].includes(c)) && new Set(checks).size === checks.length, 'checks must contain unique known patterns');
+  requireThat(Array.isArray(checks) && checks.length > 0 && checks.every(c => [...CHECKS, 'backup-roundtrip', 'stale-tab'].includes(c)) && new Set(checks).size === checks.length, 'checks must contain unique known patterns');
+  if (input.staleTab !== undefined) {
+    const stale = input.staleTab;
+    keys(stale, ['isolation', 'initialExpected', 'peer'], 'staleTab');
+    requireThat(stale.isolation === 'shared-localStorage', 'staleTab.isolation must be shared-localStorage');
+    requireThat((input.stabilityMs ?? 250) > 0, 'stale-tab requires a nonzero stability window');
+    const ui = ['click', 'fill', 'press', 'select', 'check', 'uncheck'];
+    const assertions = ['expectText', 'expectValue', 'expectVisible'];
+    const initial = stale.initialExpected;
+    requireThat(object(initial) && Object.keys(initial).length === Object.keys(input.expected).length && Object.keys(input.expected).every(k => own(initial, k)), 'staleTab.initialExpected must declare every expected baseline guard');
+    requireThat(!isDeepStrictEqual(initial, input.expected), 'stale-tab needs different initial and primary saved values');
+    requireThat(input.reset.length > 0 && input.reset.filter(s => s.save === true).length === 1, 'stale-tab reset needs one explicit UI save of the initial sentinel');
+    keys(stale.peer, ['path', 'ready', 'steps', 'commit'], 'staleTab.peer');
+    const peer = stale.peer;
+    path(peer.path, 'staleTab.peer.path');
+    requireThat(peer.path === input.path, 'stale-tab peer must open the same app route');
+    steps(peer.ready, 'staleTab.peer.ready', true);
+    requireThat(peer.ready.every(s => assertions.includes(s.action) && s.save === undefined && s.confirm === undefined), 'stale-tab readiness must only observe');
+    requireThat(peer.ready.some(s => ['expectText', 'expectValue'].includes(s.action) && s.value.trim().length > 0 && Object.values(initial).some(v => v === s.value)), 'stale-tab readiness needs an exact nonblank initial saved sentinel');
+    steps(peer.steps, 'staleTab.peer.steps', true);
+    requireThat(peer.steps.filter(s => s.save === true).length === 1, 'stale-tab peer steps need one explicit UI save');
+    requireThat([...input.reset, ...input.setup, ...peer.steps].every(s => [...ui, ...assertions].includes(s.action) && s.confirm === undefined), 'stale-tab uses normal UI actions, not requests, navigation or uploads');
+    requireThat((input.afterReload ?? []).every(s => assertions.includes(s.action) && s.save === undefined && s.confirm === undefined), 'stale-tab afterReload must only observe, never repair state');
+    keys(peer.commit, ['observe', 'before', 'expected'], 'staleTab.peer.commit');
+    const commit = peer.commit;
+    probes(commit.observe, 'staleTab.peer.commit.observe');
+    for (const [name, values] of Object.entries({ before: commit.before, expected: commit.expected })) {
+      requireThat(object(values) && Object.keys(values).length === Object.keys(commit.observe).length && Object.keys(commit.observe).every(k => own(values, k)), `staleTab.peer.commit.${name} must declare every commit observation`);
+    }
+    requireThat(!isDeepStrictEqual(commit.before, commit.expected), 'stale-tab needs a new persisted peer commit');
+    const saved = [...Object.values(input.observe), ...Object.values(commit.observe)];
+    requireThat(saved.every(p => p.source === 'localStorage' && text(p.key) && p.keyFrom === undefined && p.parse === 'json') && new Set(saved.map(p => p.key)).size === 1, 'stale-tab observations must read one explicit parsed localStorage record');
+    const overlaps = (a, b) => {
+      const x = a.jsonPath ?? [], y = b.jsonPath ?? [];
+      return x.slice(0, Math.min(x.length, y.length)).every((k, i) => String(k) === String(y[i]));
+    };
+    requireThat(Object.values(input.observe).every(a => Object.values(commit.observe).every(b => !overlaps(a, b))), 'stale-tab protected and peer commit paths must not overlap');
+  }
+  requireThat(input.staleTab === undefined || checks.includes('stale-tab'), 'staleTab settings require checks to include stale-tab');
+  requireThat(!checks.includes('stale-tab') || input.staleTab !== undefined, 'stale-tab requires explicit initial, peer readiness and commit conditions');
   if (input.backupRoundtrip !== undefined) {
     const backup = input.backupRoundtrip;
     keys(backup, ['isolation', 'sourceReady', 'export', 'restore'], 'backupRoundtrip');

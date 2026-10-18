@@ -6,7 +6,7 @@ import { validateContract, PACK } from './contract.mjs';
 import { executeCheck, executeBackupRoundtrip, confineContext } from './protocol.mjs';
 import { renderReport } from './report.mjs';
 
-export const VERSION = '0.12.0-dev.2';
+export const VERSION = '0.12.0-dev.3';
 
 export async function reproductionSpec(contract, hash) {
   const runtime = (await readFile(new URL('./protocol.mjs', import.meta.url), 'utf8'))
@@ -22,8 +22,9 @@ test.describe.configure({ mode: 'default' });
 for (const check of contract.checks) {
   test(contract.name + ' / ' + check, async ({ browser }, testInfo) => {
     const backup = contract.backupRoundtrip;
-    const stepCount = contract.setup.length + contract.reset.length + (contract.afterReload?.length ?? 0) + (contract.rejectedUpdate?.steps.length ?? 0) + (backup?.export.steps.length ?? 0) + (backup?.restore.prepare?.length ?? 0) + (backup?.restore.ready.length ?? 0) + (backup?.restore.after?.length ?? 0) + (backup?.restore.commit ? backup.restore.commit.ready.length + 1 : 0);
-    test.setTimeout(Math.max(60000, contract.timeoutMs * (stepCount + 24) + 5 * contract.stabilityMs));
+    const stale = contract.staleTab;
+    const stepCount = contract.setup.length + contract.reset.length + (contract.afterReload?.length ?? 0) + (contract.rejectedUpdate?.steps.length ?? 0) + (backup?.export.steps.length ?? 0) + (backup?.restore.prepare?.length ?? 0) + (backup?.restore.ready.length ?? 0) + (backup?.restore.after?.length ?? 0) + (backup?.restore.commit ? backup.restore.commit.ready.length + 1 : 0) + (stale ? 2 * stale.peer.ready.length + stale.peer.steps.length : 0);
+    test.setTimeout(Math.max(60000, contract.timeoutMs * (stepCount + 24) + 8 * contract.stabilityMs));
     let result;
     if (check === 'backup-roundtrip') result = await executeBackupRoundtrip(browser, contract);
     else {

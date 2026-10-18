@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "pack": "state-preservation@1",
+  "name": "LivePage: an earlier tab must preserve the saved page tree",
+  "baseURL": "http://127.0.0.1:54194",
+  "path": "/try",
+  "timeoutMs": 10000,
+  "stabilityMs": 1000,
+  "reset": [
+    {
+      "action": "fill",
+      "target": {
+        "label": "Page title"
+      },
+      "value": "Crash Lab initial sentinel — 日本語 🐾"
+    },
+    {
+      "action": "press",
+      "target": {
+        "label": "Page title"
+      },
+      "value": "Enter",
+      "save": true
+    }
+  ],
+  "setup": [
+    {
+      "action": "click",
+      "target": {
+        "role": "button",
+        "name": "Add Row"
+      }
+    },
+    {
+      "action": "fill",
+      "target": {
+        "label": "Page title"
+      },
+      "value": "Crash Lab saved edit — keep this row"
+    },
+    {
+      "action": "press",
+      "target": {
+        "label": "Page title"
+      },
+      "value": "Enter",
+      "save": true
+    }
+  ],
+  "observe": {
+    "tree": {
+      "source": "localStorage",
+      "key": "livepage-page-storage",
+      "parse": "json",
+      "jsonPath": [
+        "componentTree"
+      ]
+    },
+    "persistedTitle": {
+      "source": "localStorage",
+      "key": "livepage-page-storage",
+      "parse": "json",
+      "jsonPath": [
+        "componentTree",
+        0,
+        "attributes",
+        "title"
+      ]
+    }
+  },
+  "expected": {
+    "persistedTitle": "Crash Lab saved edit — keep this row"
+  },
+  "afterReload": [
+    {
+      "action": "expectVisible",
+      "target": {
+        "label": "Page title"
+      }
+    }
+  ],
+  "checks": [
+    "stale-tab"
+  ],
+  "staleTab": {
+    "isolation": "shared-localStorage",
+    "initialExpected": {
+      "persistedTitle": "Crash Lab initial sentinel — 日本語 🐾"
+    },
+    "peer": {
+      "path": "/try",
+      "ready": [
+        {
+          "action": "expectValue",
+          "target": {
+            "label": "Page title"
+          },
+          "value": "Crash Lab initial sentinel — 日本語 🐾"
+        }
+      ],
+      "steps": [
+        {
+          "action": "click",
+          "target": {
+            "role": "button",
+            "name": "Minimize"
+          },
+          "save": true
+        }
+      ],
+      "commit": {
+        "observe": {
+          "toolbar": {
+            "source": "localStorage",
+            "key": "livepage-page-storage",
+            "parse": "json",
+            "jsonPath": [
+              "toolbarMinimized"
+            ]
+          }
+        },
+        "before": {
+          "toolbar": false
+        },
+        "expected": {
+          "toolbar": true
+        }
+      }
+    }
+  }
+}
