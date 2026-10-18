@@ -16,6 +16,15 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "tools/app-crash-lab/examples/edentext/LICENSE",
+    "tools/app-crash-lab/examples/edentext/README.md",
+    "tools/app-crash-lab/examples/edentext/control-extra-reply.json",
+    "tools/app-crash-lab/examples/edentext/reject-docx.json",
+    "tools/app-crash-lab/examples/edentext/reject-odt.json",
+    "tools/app-crash-lab/examples/edentext/reload.json",
+    "tools/app-crash-lab/examples/edentext/results-summary.json",
+    "docs/app-crash-lab-edentext-trial-v0.1.0.zip",
+    "docs/app-crash-lab-edentext-trial-v0.1.0.zip.sha256",
     "tools/app-crash-lab/examples/opresume/LICENSE",
     "tools/app-crash-lab/examples/opresume/UPSTREAM-LICENSE",
     "tools/app-crash-lab/examples/opresume/README.md",
@@ -516,7 +525,9 @@ def _verify_taglio_pack(root: Path) -> None:
     }
     source = root / "tools/app-crash-lab/examples/taglio"
     with ZipFile(path) as archive:
-        if len(archive.namelist()) != len(expected) or set(archive.namelist()) != {"taglio/" + entry for entry in expected}:
+        if len(archive.namelist()) != len(expected) or set(archive.namelist()) != {
+            "taglio/" + entry for entry in expected
+        }:
             raise AssertionError("Taglio fixture pack file set mismatch")
         for entry in expected:
             if archive.read("taglio/" + entry) != (source / entry).read_bytes():
