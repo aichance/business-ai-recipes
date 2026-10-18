@@ -1,6 +1,6 @@
-# Four persistence checks to keep in your test suite
+# Five persistence checks to keep in your test suite
 
-Use these four observed failures to choose an assertion for your own app.
+Use these five observed failures to choose an assertion for your own app.
 Each row links to an actual test or contract, a pinned app version and its
 reproduction steps. The tests use synthetic data on disposable local copies.
 These are our AI-assisted operator experiments; the cited maintainer fix is
@@ -12,6 +12,7 @@ separate from an independent run of App Crash Lab.
 | Restore returns success; message count and bodies match | A reply loses its parent relationship | Compare the source's complete message DTO, including the relation, with an independently empty target | [WA-archiver: reply relationship](examples/wa-archiver/README.md#reproduce-the-real-backup-diagnostic) |
 | All selected stored records survive backup and reload | The saved record cannot be found in its normal screen | Assert the user's expected view as well as the complete saved record | [Repwise: completed History entry](examples/repwise/README.md#run-against-a-disposable-local-copy) |
 | A previously saved note survives reload | The last keyboard edit disappears when its editor closes | Type a new value, close immediately, reopen and compare that new value | [Chalky: final note edit](examples/chalky-notes-close/README.md#run-the-two-condition-diagnostic) |
+| Delete removes a saved record | A previously scheduled autosave writes the deleted ID back | Prove the delete committed, then keep that ID absent through the timer window and reload | [Perma Design Kit: native deletion regression](examples/perma-native-delete/README.md) |
 
 **Start with one row.** Follow its linked app setup and test instructions to
 reproduce the control and failure, then adapt that test's selectors and saved
@@ -101,6 +102,26 @@ The initial App Crash Lab setup could not establish a saved note and correctly
 returned baseline INCONCLUSIVE. The keyboard comparison is a separate
 Playwright diagnostic. This does not claim machine-crash durability or a
 confirmed upstream repair.
+
+## 5. Keep a deleted record deleted
+
+On [Perma Design Kit `426ebb6`](examples/perma-native-delete/README.md), moving
+a plant and deleting its plan before the 500ms autosave made the deleted ID
+reappear in IndexedDB. The test first observed a completed deletion; the
+restored record then survived reload. Waiting for the moved plant to save
+before deleting passed, through both the editor and the list.
+
+Check absence by **the deleted ID**, not just total count or a success toast.
+Protect the complete retained records, establish the actual edit-to-delete
+timing and latch any sampled resurrection even if a later step repairs it.
+Check orphaned per-record UI settings separately: the editor deletion retained
+a view key even when the plan itself stayed deleted.
+
+- **Copy:** [one native file for the existing Playwright suite](examples/perma-native-delete/delayed-delete.e2e.ts).
+- **Replay:** [six scoped cases, timings, actual images and setup](examples/perma-native-delete/README.md).
+
+The measurement covers the unchanged public static build on Chromium, not
+the installed iOS PWA, private Team build or separate backup-import hang.
 
 ## Before keeping a green test
 

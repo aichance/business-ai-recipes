@@ -16,6 +16,12 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "tools/app-crash-lab/examples/perma-native-delete/LICENSE",
+    "tools/app-crash-lab/examples/perma-native-delete/README.md",
+    "tools/app-crash-lab/examples/perma-native-delete/RESULTS.json",
+    "tools/app-crash-lab/examples/perma-native-delete/delayed-delete.e2e.ts",
+    "tools/app-crash-lab/examples/perma-native-delete/before-pending-delete.png",
+    "tools/app-crash-lab/examples/perma-native-delete/after-deletion-and-reload.png",
     "tools/app-crash-lab/examples/stitchwitch-native/LICENSE",
     "tools/app-crash-lab/examples/stitchwitch-native/README.md",
     "tools/app-crash-lab/examples/stitchwitch-native/RESULTS.json",
@@ -777,6 +783,45 @@ def _verify_stitchwitch_native(root: Path) -> None:
             raise AssertionError("StitchWitch measured screenshot mismatch")
 
 
+def _verify_perma_delete_native(root: Path) -> None:
+    source = root / "tools/app-crash-lab/examples/perma-native-delete"
+    result = json.loads((source / "RESULTS.json").read_text())
+    spec = source / result["nativeSpec"]["file"]
+    if hashlib.sha256(spec.read_bytes()).hexdigest() != result["nativeSpec"]["sha256"]:
+        raise AssertionError("Perma measured spec hash mismatch")
+    if (source / "LICENSE").read_bytes() != (root / "LICENSE").read_bytes():
+        raise AssertionError("Perma native example license mismatch")
+    expected = {
+        "settled editor / stored deletion": "passed",
+        "pending editor / stored deletion": "failed",
+        "settled list / stored deletion": "passed",
+        "pending list / stored deletion": "failed",
+        "settled editor / view cleanup": "failed",
+        "settled list / view cleanup": "passed",
+    }
+    if (
+        len(result["cases"]) != 6
+        or {item["case"]: item["status"] for item in result["cases"]} != expected
+    ):
+        raise AssertionError("Perma measured cases mismatch")
+    for case in result["cases"]:
+        if case["case"].startswith("pending") and not (
+            case["deletionAfterPointerUpUpperBoundMs"] < 500
+            and not case["checkpoints"]["firstAbsent"]["targetPresent"]
+            and case["checkpoints"]["afterReload"]["targetPresent"]
+        ):
+            raise AssertionError("Perma measured deletion precondition mismatch")
+    for shot in result["screenshots"]:
+        data = (source / shot["file"]).read_bytes()
+        if (
+            data[:8] != b"\x89PNG\r\n\x1a\n"
+            or hashlib.sha256(data).hexdigest() != shot["sha256"]
+            or int.from_bytes(data[16:20], "big") != shot["width"]
+            or int.from_bytes(data[20:24], "big") != shot["height"]
+        ):
+            raise AssertionError("Perma measured screenshot mismatch")
+
+
 def _must_refuse(action) -> None:
     try:
         action()
@@ -1394,6 +1439,7 @@ def verify(
     _verify_native_write_denied_pack(root)
     _verify_native_optional_history_pack(root)
     _verify_stitchwitch_native(root)
+    _verify_perma_delete_native(root)
     demo_forge_summary = _verify_demo_forge(root)
 
     supplied_inputs = (

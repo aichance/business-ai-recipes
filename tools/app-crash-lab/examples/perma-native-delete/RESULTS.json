@@ -1,0 +1,588 @@
+{
+  "measuredAt": "2026-10-18T10:01:00.373897+00:00",
+  "source": {
+    "repository": "https://github.com/tbdal/Perma-Design-Kit",
+    "commit": "426ebb69790218cf930b41273aabe5201d62f98f",
+    "license": "FSL-1.1-MIT",
+    "upstreamFilesUnchanged": 267,
+    "privateExpertModuleIncluded": false,
+    "modeObserved": "Klassisch (public static build)"
+  },
+  "nativeSpec": {
+    "file": "delayed-delete.e2e.ts",
+    "sha256": "1d27e59a3a0ab10661c407877beec4833884cdaa0733e578471f0142f3a75a22",
+    "lines": 232,
+    "license": "MIT"
+  },
+  "environment": {
+    "os": "macOS arm64",
+    "node": "24.19.0",
+    "playwright": "1.63.0",
+    "browser": "Chromium revision1243",
+    "workers": 1,
+    "config": "Original pwa/playwright.config.ts, original static server4399",
+    "build": "Original npm run build,117generated files;upstream267files unchanged",
+    "buildManifestSha256": "710e5c38a8432b43c021653cef5f239ca98bb95fb786eb67016004117cf18bd1"
+  },
+  "run": {
+    "exitCode": 1,
+    "passed": 3,
+    "failed": 3,
+    "skipped": 0,
+    "flaky": 0,
+    "durationMs": 37965.108,
+    "scope": "Only the added native test file, not the whole upstream suite"
+  },
+  "cases": [
+    {
+      "case": "settled editor / stored deletion",
+      "status": "passed",
+      "durationMs": 6959,
+      "deletionAfterPointerUpUpperBoundMs": 2088.581833,
+      "checkpoints": {
+        "baseline": {
+          "storeCounts": {
+            "plants": 2,
+            "polycultures": 0,
+            "gardenPlans": 2,
+            "varietyLists": 0
+          },
+          "targetPresent": true,
+          "targetName": "Synthetic deletion target",
+          "targetPlacement": [
+            {
+              "id": "f946dbfb-ba74-4d5d-83df-11ec253f9d15",
+              "plantId": "sample-1",
+              "xM": 5,
+              "yM": 5,
+              "notes": ""
+            }
+          ],
+          "targetViewPresent": true
+        },
+        "firstAbsent": {
+          "storeCounts": {
+            "plants": 2,
+            "polycultures": 0,
+            "gardenPlans": 1,
+            "varietyLists": 0
+          },
+          "targetPresent": false,
+          "targetName": null,
+          "targetPlacement": null,
+          "targetViewPresent": true
+        },
+        "afterWindow": {
+          "storeCounts": {
+            "plants": 2,
+            "polycultures": 0,
+            "gardenPlans": 1,
+            "varietyLists": 0
+          },
+          "targetPresent": false,
+          "targetName": null,
+          "targetPlacement": null,
+          "targetViewPresent": true
+        },
+        "afterReload": {
+          "storeCounts": {
+            "plants": 2,
+            "polycultures": 0,
+            "gardenPlans": 1,
+            "varietyLists": 0
+          },
+          "targetPresent": false,
+          "targetName": null,
+          "targetPlacement": null,
+          "targetViewPresent": true
+        }
+      },
+      "firstResurrection": null,
+      "firstCollateralLoss": null,
+      "firstOrphanView": null,
+      "unexpectedDialogs": [],
+      "pageErrors": [],
+      "error": ""
+    },
+    {
+      "case": "pending editor / stored deletion",
+      "status": "failed",
+      "durationMs": 4684,
+      "deletionAfterPointerUpUpperBoundMs": 85.2625420000004,
+      "checkpoints": {
+        "baseline": {
+          "storeCounts": {
+            "plants": 2,
+            "polycultures": 0,
+            "gardenPlans": 2,
+            "varietyLists": 0
+          },
+          "targetPresent": true,
+          "targetName": "Synthetic deletion target",
+          "targetPlacement": [
+            {
+              "id": "30a9a04c-cc54-47a1-92c4-ef221eebb2bb",
+              "plantId": "sample-1",
+              "xM": 5,
+              "yM": 5,
+              "notes": ""
+            }
+          ],
+          "targetViewPresent": true
+        },
+        "firstAbsent": {
+          "storeCounts": {
+            "plants": 2,
+            "polycultures": 0,
+            "gardenPlans": 1,
+            "varietyLists": 0
+          },
+          "targetPresent": false,
+          "targetName": null,
+          "targetPlacement": null,
+          "targetViewPresent": true
+        },
+        "afterWindow": {
+          "storeCounts": {
+            "plants": 2,
+            "polycultures": 0,
+            "gardenPlans": 2,
+            "varietyLists": 0
+          },
+          "targetPresent": true,
+          "targetName": "Synthetic deletion target",
+          "targetPlacement": [
+            {
+              "id": "30a9a04c-cc54-47a1-92c4-ef221eebb2bb",
+              "plantId": "sample-1",
+              "xM": 5.181131896972657,
+              "yM": 5.090565795898438,
+              "notes": ""
+            }
+          ],
+          "targetViewPresent": true
+        },
+        "afterReload": {
+          "storeCounts": {
+            "plants": 2,
+            "polycultures": 0,
+            "gardenPlans": 2,
+            "varietyLists": 0
+          },
+          "targetPresent": true,
+          "targetName": "Synthetic deletion target",
+          "targetPlacement": [
+            {
+              "id": "30a9a04c-cc54-47a1-92c4-ef221eebb2bb",
+              "plantId": "sample-1",
+              "xM": 5.181131896972657,
+              "yM": 5.090565795898438,
+              "notes": ""
+            }
+          ],
+          "targetViewPresent": true
+        }
+      },
+      "firstResurrection": {
+        "storeCounts": {
+          "plants": 2,
+          "polycultures": 0,
+          "gardenPlans": 2,
+          "varietyLists": 0
+        },
+        "targetPresent": true,
+        "targetName": "Synthetic deletion target",
+        "targetPlacement": [
+          {
+            "id": "30a9a04c-cc54-47a1-92c4-ef221eebb2bb",
+            "plantId": "sample-1",
+            "xM": 5.181131896972657,
+            "yM": 5.090565795898438,
+            "notes": ""
+          }
+        ],
+        "targetViewPresent": true
+      },
+      "firstCollateralLoss": null,
+      "firstOrphanView": null,
+      "unexpectedDialogs": [],
+      "pageErrors": [],
+      "error": "Error: DELETED_RECORD_REAPPEARED: a delayed write restored the deleted ID"
+    },
+    {
+      "case": "settled list / stored deletion",
+      "status": "passed",
+      "durationMs": 6688,
+      "deletionAfterPointerUpUpperBoundMs": 2121.71675,
+      "checkpoints": {
+        "baseline": {
+          "storeCounts": {
+            "plants": 2,
+            "polycultures": 0,
+            "gardenPlans": 2,
+            "varietyLists": 0
+          },
+          "targetPresent": true,
+          "targetName": "Synthetic deletion target",
+          "targetPlacement": [
+            {
+              "id": "369bc350-1ba1-4011-8777-511ff929be21",
+              "plantId": "sample-1",
+              "xM": 5,
+              "yM": 5,
+              "notes": ""
+            }
+          ],
+          "targetViewPresent": true
+        },
+        "firstAbsent": {
+          "storeCounts": {
+            "plants": 2,
+            "polycultures": 0,
+            "gardenPlans": 1,
+            "varietyLists": 0
+          },
+          "targetPresent": false,
+          "targetName": null,
+          "targetPlacement": null,
+          "targetViewPresent": false
+        },
+        "afterWindow": {
+          "storeCounts": {
+            "plants": 2,
+            "polycultures": 0,
+            "gardenPlans": 1,
+            "varietyLists": 0
+          },
+          "targetPresent": false,
+          "targetName": null,
+          "targetPlacement": null,
+          "targetViewPresent": false
+        },
+        "afterReload": {
+          "storeCounts": {
+            "plants": 2,
+            "polycultures": 0,
+            "gardenPlans": 1,
+            "varietyLists": 0
+          },
+          "targetPresent": false,
+          "targetName": null,
+          "targetPlacement": null,
+          "targetViewPresent": false
+        }
+      },
+      "firstResurrection": null,
+      "firstCollateralLoss": null,
+      "firstOrphanView": null,
+      "unexpectedDialogs": [],
+      "pageErrors": [],
+      "error": ""
+    },
+    {
+      "case": "pending list / stored deletion",
+      "status": "failed",
+      "durationMs": 4665,
+      "deletionAfterPointerUpUpperBoundMs": 122.21491699999933,
+      "checkpoints": {
+        "baseline": {
+          "storeCounts": {
+            "plants": 2,
+            "polycultures": 0,
+            "gardenPlans": 2,
+            "varietyLists": 0
+          },
+          "targetPresent": true,
+          "targetName": "Synthetic deletion target",
+          "targetPlacement": [
+            {
+              "id": "f9838e2b-7dc8-4e25-86d1-daf6a434f9e3",
+              "plantId": "sample-1",
+              "xM": 5,
+              "yM": 5,
+              "notes": ""
+            }
+          ],
+          "targetViewPresent": true
+        },
+        "firstAbsent": {
+          "storeCounts": {
+            "plants": 2,
+            "polycultures": 0,
+            "gardenPlans": 1,
+            "varietyLists": 0
+          },
+          "targetPresent": false,
+          "targetName": null,
+          "targetPlacement": null,
+          "targetViewPresent": false
+        },
+        "afterWindow": {
+          "storeCounts": {
+            "plants": 2,
+            "polycultures": 0,
+            "gardenPlans": 2,
+            "varietyLists": 0
+          },
+          "targetPresent": true,
+          "targetName": "Synthetic deletion target",
+          "targetPlacement": [
+            {
+              "id": "f9838e2b-7dc8-4e25-86d1-daf6a434f9e3",
+              "plantId": "sample-1",
+              "xM": 5.181131896972656,
+              "yM": 5.090566101074219,
+              "notes": ""
+            }
+          ],
+          "targetViewPresent": false
+        },
+        "afterReload": {
+          "storeCounts": {
+            "plants": 2,
+            "polycultures": 0,
+            "gardenPlans": 2,
+            "varietyLists": 0
+          },
+          "targetPresent": true,
+          "targetName": "Synthetic deletion target",
+          "targetPlacement": [
+            {
+              "id": "f9838e2b-7dc8-4e25-86d1-daf6a434f9e3",
+              "plantId": "sample-1",
+              "xM": 5.181131896972656,
+              "yM": 5.090566101074219,
+              "notes": ""
+            }
+          ],
+          "targetViewPresent": false
+        }
+      },
+      "firstResurrection": {
+        "storeCounts": {
+          "plants": 2,
+          "polycultures": 0,
+          "gardenPlans": 2,
+          "varietyLists": 0
+        },
+        "targetPresent": true,
+        "targetName": "Synthetic deletion target",
+        "targetPlacement": [
+          {
+            "id": "f9838e2b-7dc8-4e25-86d1-daf6a434f9e3",
+            "plantId": "sample-1",
+            "xM": 5.181131896972656,
+            "yM": 5.090566101074219,
+            "notes": ""
+          }
+        ],
+        "targetViewPresent": false
+      },
+      "firstCollateralLoss": null,
+      "firstOrphanView": null,
+      "unexpectedDialogs": [],
+      "pageErrors": [],
+      "error": "Error: DELETED_RECORD_REAPPEARED: a delayed write restored the deleted ID"
+    },
+    {
+      "case": "settled editor / view cleanup",
+      "status": "failed",
+      "durationMs": 6604,
+      "deletionAfterPointerUpUpperBoundMs": 2070.5194589999996,
+      "checkpoints": {
+        "baseline": {
+          "storeCounts": {
+            "plants": 2,
+            "polycultures": 0,
+            "gardenPlans": 2,
+            "varietyLists": 0
+          },
+          "targetPresent": true,
+          "targetName": "Synthetic deletion target",
+          "targetPlacement": [
+            {
+              "id": "d680b634-2473-40d5-9f1e-766629285b0e",
+              "plantId": "sample-1",
+              "xM": 5,
+              "yM": 5,
+              "notes": ""
+            }
+          ],
+          "targetViewPresent": true
+        },
+        "firstAbsent": {
+          "storeCounts": {
+            "plants": 2,
+            "polycultures": 0,
+            "gardenPlans": 1,
+            "varietyLists": 0
+          },
+          "targetPresent": false,
+          "targetName": null,
+          "targetPlacement": null,
+          "targetViewPresent": true
+        },
+        "completedUiDelete": {
+          "storeCounts": {
+            "plants": 2,
+            "polycultures": 0,
+            "gardenPlans": 1,
+            "varietyLists": 0
+          },
+          "targetPresent": false,
+          "targetName": null,
+          "targetPlacement": null,
+          "targetViewPresent": true
+        },
+        "afterWindow": {
+          "storeCounts": {
+            "plants": 2,
+            "polycultures": 0,
+            "gardenPlans": 1,
+            "varietyLists": 0
+          },
+          "targetPresent": false,
+          "targetName": null,
+          "targetPlacement": null,
+          "targetViewPresent": true
+        },
+        "afterReload": {
+          "storeCounts": {
+            "plants": 2,
+            "polycultures": 0,
+            "gardenPlans": 1,
+            "varietyLists": 0
+          },
+          "targetPresent": false,
+          "targetName": null,
+          "targetPlacement": null,
+          "targetViewPresent": true
+        }
+      },
+      "firstResurrection": null,
+      "firstCollateralLoss": null,
+      "firstOrphanView": {
+        "phase": "completed UI deletion",
+        "present": true
+      },
+      "unexpectedDialogs": [],
+      "pageErrors": [],
+      "error": "Error: ORPHAN_VIEW_KEY: view state remained after completed deletion"
+    },
+    {
+      "case": "settled list / view cleanup",
+      "status": "passed",
+      "durationMs": 6701,
+      "deletionAfterPointerUpUpperBoundMs": 2139.4056670000004,
+      "checkpoints": {
+        "baseline": {
+          "storeCounts": {
+            "plants": 2,
+            "polycultures": 0,
+            "gardenPlans": 2,
+            "varietyLists": 0
+          },
+          "targetPresent": true,
+          "targetName": "Synthetic deletion target",
+          "targetPlacement": [
+            {
+              "id": "d585e2b7-50cb-4b5d-8904-22bf227183b3",
+              "plantId": "sample-1",
+              "xM": 5,
+              "yM": 5,
+              "notes": ""
+            }
+          ],
+          "targetViewPresent": true
+        },
+        "firstAbsent": {
+          "storeCounts": {
+            "plants": 2,
+            "polycultures": 0,
+            "gardenPlans": 1,
+            "varietyLists": 0
+          },
+          "targetPresent": false,
+          "targetName": null,
+          "targetPlacement": null,
+          "targetViewPresent": false
+        },
+        "completedUiDelete": {
+          "storeCounts": {
+            "plants": 2,
+            "polycultures": 0,
+            "gardenPlans": 1,
+            "varietyLists": 0
+          },
+          "targetPresent": false,
+          "targetName": null,
+          "targetPlacement": null,
+          "targetViewPresent": false
+        },
+        "afterWindow": {
+          "storeCounts": {
+            "plants": 2,
+            "polycultures": 0,
+            "gardenPlans": 1,
+            "varietyLists": 0
+          },
+          "targetPresent": false,
+          "targetName": null,
+          "targetPlacement": null,
+          "targetViewPresent": false
+        },
+        "afterReload": {
+          "storeCounts": {
+            "plants": 2,
+            "polycultures": 0,
+            "gardenPlans": 1,
+            "varietyLists": 0
+          },
+          "targetPresent": false,
+          "targetName": null,
+          "targetPlacement": null,
+          "targetViewPresent": false
+        }
+      },
+      "firstResurrection": null,
+      "firstCollateralLoss": null,
+      "firstOrphanView": null,
+      "unexpectedDialogs": [],
+      "pageErrors": [],
+      "error": ""
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "before-pending-delete.png",
+      "sha256": "d3f16bcb5a7f5faabcf08870442cf7fd27ef73f90c8456834ababe4737ab0320",
+      "width": 1400,
+      "height": 950,
+      "case": "pending editor / stored deletion"
+    },
+    {
+      "file": "after-deletion-and-reload.png",
+      "sha256": "9dfb79a902f12e33b00b1ee2d3117df4fc4106f607b2d779c0f51f9d865c56dd",
+      "width": 1400,
+      "height": 950,
+      "case": "pending editor / stored deletion"
+    }
+  ],
+  "measurementRules": [
+    "All garden and plant records are created through the app UI;only welcome/persistence-banner preferences are initialized, matching upstream display setup",
+    "Read all4IndexedDBstores in one completed readonly transaction;missing database/store or read failure is a precondition error, not absence",
+    "Physically drag the plant; require actual transform change, a committed deletion before500ms for pending cases, and a sampled first absence",
+    "Compare all complete retained records in4stores;the only excluded garden record is the deliberately deleted target",
+    "Latch any sampled resurrection or collateral change, including final-window and postreload reads",
+    "For view cleanup, start after visible handler completion and remember the first remaining key;reload cannot hide it",
+    "Unexpected native dialogs and uncaught page errors prevent a green result;observed state loss retains priority"
+  ],
+  "limitations": [
+    "Operator-run reproduction, not independent author use",
+    "Public Klassisch staticbuild on Chromium only;not installed iOS PWA,private Team/expert mode,WebKit,bfcache,backup import,or a confirmed fix",
+    "1200ms observation windows with about40ms samples;unobserved instants and later writes are not covered",
+    "85/122ms are measurements for these runs, not universal timing guarantees",
+    "The view-cleanup failure is distinct from the2IndexedDBresurrection failures",
+    "Screenshots show only the viewport;completed-transaction snapshots establish deletion and reappearance"
+  ]
+}
