@@ -53,7 +53,10 @@ Use a disposable **local copy of your app**, with **Node 22+ and npm**.
 
 The runner makes no LLM calls; optional agent setup uses your existing agent. Prefer manual setup? [Create, adapt and run a config](tools/app-crash-lab/README.md). [日本語の導入手順](tools/app-crash-lab/README.md#japanese-setup).
 
-**Want a reusable Codex workflow instead of writing the JSON?**
+**Want Codex to prepare the test for your app?**
+With an existing Playwright suite, the skill starts with a matching native
+regression; no App Crash Lab runner or JSON is needed for that path. Explicit
+runner contracts and real JSON backup roundtrips keep the existing runner path.
 With **Node 22.20+**, open **your app project's directory**, review the
 [skill source](.agents/skills/app-crash-lab/SKILL.md), and install it with:
 
@@ -63,26 +66,29 @@ npx --yes skills@1.7.2 add https://github.com/aichance/business-ai-recipes --ski
 
 Use this only when `.agents/skills/app-crash-lab` does not already exist; keep
 and review an existing folder instead of reinstalling. This copies the skill's
-three files into that project and adds `skills-lock.json`. The installer also
-keeps its own user-level metadata. Verified on macOS with Node 24.19.0;
+four files into that project and adds `skills-lock.json`. The installer also
+keeps its own user-level metadata. The installer command was verified on macOS
+with Node 24.19.0; the v0.2.0 ZIP is checked separately against all four source files.
 [Skills CLI documentation](https://www.skills.sh/docs/cli).
 
 For manual installation or an older Node 22 runtime,
-[download the repo-local skill](https://aichance.github.io/business-ai-recipes/app-crash-lab-skill-v0.1.1.zip)
-and [checksum](https://aichance.github.io/business-ai-recipes/app-crash-lab-skill-v0.1.1.zip.sha256).
+[download the repo-local skill](https://aichance.github.io/business-ai-recipes/app-crash-lab-skill-v0.2.0.zip)
+and [checksum](https://aichance.github.io/business-ai-recipes/app-crash-lab-skill-v0.2.0.zip.sha256).
 Review it, then place the whole `app-crash-lab` folder in **your app project's**
 `.agents/skills/` without overwriting an existing skill. In Codex, ask:
 
 ```text
 $app-crash-lab Check my app's save workflow with synthetic data.
-Inspect the source, explain what you will observe, create the contract and run it.
-Check reload and the actual JSON backup restore if the app supports it.
+Inspect the source and explain what you will observe. For a matching boundary
+in my existing Playwright suite, adapt and run one native test without another runner.
+Otherwise use the pinned runner contract path.
+Test one requested boundary; do not replace an explicitly requested backup roundtrip with reload.
 Keep the app unchanged and tell me the result and exact rerun command.
 ```
 
 [Skill source](.agents/skills/app-crash-lab/SKILL.md) · [Installation and scope](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#codex-skill).
-The skill uses the existing 0.11.0 runner. Review the proposed observations and
-actual report; installing instructions alone does not test an app.
+Review the proposed observations and actual result. The contract path uses the
+existing 0.11.0 runner; installing instructions alone does not test an app.
 
 [**Try App Crash Lab 0.11.0 without cloning**](#try-the-seeded-demo) · [**Release package & checksums**](https://github.com/aichance/business-ai-recipes/releases/tag/app-crash-lab-v0.11.0)
 

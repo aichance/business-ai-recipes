@@ -34,12 +34,14 @@ the ordinary save/rejection prompt does not select backup mode.
 Local Node CLI. No account, LLM call or API key during a test run. MIT licensed.
 Built for disposable local web apps, including apps made with coding agents.
 
-**Codex can draft and run the contract for your app.**
+**Codex can prepare and run the test for your app.**
 Use the [repo-local skill and installation steps](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#codex-skill)
 or review its [source](../../.agents/skills/app-crash-lab/SKILL.md).
-Describe the save workflow; it inspects your source, explains the selected
-observations, writes the JSON and invokes this existing runner. Review the
-contract and actual result. A local test does not cover every input or failure.
+Describe the save workflow; it inspects your source and explains the selected
+observations. For a matching boundary in an existing Playwright suite, it
+adapts one native test without this runner or JSON. Explicit contracts and real
+JSON backup roundtrips use the existing runner path. Review the actual result;
+a local test does not cover every input or failure.
 
 ### Install the Codex skill with one command
 
@@ -52,7 +54,7 @@ running this installation over it.
 npx --yes skills@1.7.2 add https://github.com/aichance/business-ai-recipes --skill app-crash-lab --agent codex --copy --yes --json
 ```
 
-This copies only `app-crash-lab` into `.agents/skills/`, with its reference and
+This copies only `app-crash-lab` into `.agents/skills/`, with its references and
 license, and creates the project's `skills-lock.json`. The installer also
 maintains its own user-level metadata. We verified this fresh-project install
 on macOS with Node 24.19.0 and Skills CLI 1.7.2; installation alone does not test
