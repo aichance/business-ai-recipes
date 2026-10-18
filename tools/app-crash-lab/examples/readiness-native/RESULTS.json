@@ -1,0 +1,241 @@
+{
+  "classification": "operator reproduction on unchanged pinned source; independent author execution unconfirmed",
+  "measuredAt": "2026-10-18T14:36:00.102644+00:00",
+  "source": {
+    "repo": "https://github.com/yunbow/ai-dev-readiness",
+    "commit": "82989c25c0572a93c9516433a43b9ac2791103b7",
+    "version": "0.1.0",
+    "originalFilesUnchanged": 107,
+    "build": "production Vite8.1.4, TypeScript build passed"
+  },
+  "environment": {
+    "node": "22.16.0",
+    "playwright": "1.61.1",
+    "chromium": "149.0.7827.55",
+    "chromiumRevision": "1228",
+    "locale": "ja-JP",
+    "storage": "fresh browser context per case",
+    "externalNetwork": "blocked; zero attempts observed"
+  },
+  "specSha256": "b052312df92ce349265af40e36180a9952547ac7846a0df8440a02da3a2c8d71",
+  "command": "READINESS_URL=http://127.0.0.1:57960 node tests/crashlab-draft-tab.mjs",
+  "expectedPinnedExitCode": 1,
+  "preservationOracle": "Every draft field except currentIndex and updatedAt; semantic deep equality",
+  "peerCommitProof": "Back button changes the visible question and the actual persisted currentIndex; no timestamp-difference requirement",
+  "cases": [
+    {
+      "mode": "same-tab",
+      "status": "PASS",
+      "failureKind": null,
+      "newAnswer": {
+        "question": "Q01",
+        "answer": "new_development"
+      },
+      "baseline": {
+        "tier": "quick",
+        "answers": {
+          "P1": "solo",
+          "P2": "yes"
+        },
+        "profile": {
+          "teamSize": "solo",
+          "regulatedIndustry": true
+        },
+        "currentIndex": 2,
+        "updatedAt": "2026-10-18T14:35:55.755Z"
+      },
+      "saved": {
+        "tier": "quick",
+        "answers": {
+          "P1": "solo",
+          "P2": "yes",
+          "Q01": "new_development"
+        },
+        "profile": {
+          "teamSize": "solo",
+          "regulatedIndustry": true
+        },
+        "currentIndex": 3,
+        "updatedAt": "2026-10-18T14:35:56.156Z"
+      },
+      "afterPeerNavigation": {
+        "tier": "quick",
+        "answers": {
+          "P1": "solo",
+          "P2": "yes",
+          "Q01": "new_development"
+        },
+        "profile": {
+          "teamSize": "solo",
+          "regulatedIndustry": true
+        },
+        "currentIndex": 2,
+        "updatedAt": "2026-10-18T14:35:56.237Z"
+      },
+      "afterReload": {
+        "tier": "quick",
+        "answers": {
+          "P1": "solo",
+          "P2": "yes",
+          "Q01": "new_development"
+        },
+        "profile": {
+          "teamSize": "solo",
+          "regulatedIndustry": true
+        },
+        "currentIndex": 2,
+        "updatedAt": "2026-10-18T14:35:56.311Z"
+      },
+      "preservedAfterNavigation": true,
+      "preservedAfterReload": true,
+      "diagnostic": {
+        "pageErrors": [],
+        "blockedExternalRequests": []
+      }
+    },
+    {
+      "mode": "fresh-peer",
+      "status": "PASS",
+      "failureKind": null,
+      "newAnswer": {
+        "question": "Q01",
+        "answer": "new_development"
+      },
+      "baseline": {
+        "tier": "quick",
+        "answers": {
+          "P1": "solo",
+          "P2": "yes"
+        },
+        "profile": {
+          "teamSize": "solo",
+          "regulatedIndustry": true
+        },
+        "currentIndex": 2,
+        "updatedAt": "2026-10-18T14:35:57.353Z"
+      },
+      "saved": {
+        "tier": "quick",
+        "answers": {
+          "P1": "solo",
+          "P2": "yes",
+          "Q01": "new_development"
+        },
+        "profile": {
+          "teamSize": "solo",
+          "regulatedIndustry": true
+        },
+        "currentIndex": 3,
+        "updatedAt": "2026-10-18T14:35:57.753Z"
+      },
+      "afterPeerNavigation": {
+        "tier": "quick",
+        "answers": {
+          "P1": "solo",
+          "P2": "yes",
+          "Q01": "new_development"
+        },
+        "profile": {
+          "teamSize": "solo",
+          "regulatedIndustry": true
+        },
+        "currentIndex": 2,
+        "updatedAt": "2026-10-18T14:35:57.953Z"
+      },
+      "afterReload": {
+        "tier": "quick",
+        "answers": {
+          "P1": "solo",
+          "P2": "yes",
+          "Q01": "new_development"
+        },
+        "profile": {
+          "teamSize": "solo",
+          "regulatedIndustry": true
+        },
+        "currentIndex": 2,
+        "updatedAt": "2026-10-18T14:35:58.076Z"
+      },
+      "preservedAfterNavigation": true,
+      "preservedAfterReload": true,
+      "diagnostic": {
+        "pageErrors": [],
+        "blockedExternalRequests": []
+      }
+    },
+    {
+      "mode": "earlier-peer",
+      "status": "FAIL",
+      "failureKind": "PRESERVATION",
+      "newAnswer": {
+        "question": "Q01",
+        "answer": "new_development"
+      },
+      "baseline": {
+        "tier": "quick",
+        "answers": {
+          "P1": "solo",
+          "P2": "yes"
+        },
+        "profile": {
+          "teamSize": "solo",
+          "regulatedIndustry": true
+        },
+        "currentIndex": 2,
+        "updatedAt": "2026-10-18T14:35:59.187Z"
+      },
+      "saved": {
+        "tier": "quick",
+        "answers": {
+          "P1": "solo",
+          "P2": "yes",
+          "Q01": "new_development"
+        },
+        "profile": {
+          "teamSize": "solo",
+          "regulatedIndustry": true
+        },
+        "currentIndex": 3,
+        "updatedAt": "2026-10-18T14:35:59.755Z"
+      },
+      "afterPeerNavigation": {
+        "tier": "quick",
+        "answers": {
+          "P1": "solo",
+          "P2": "yes"
+        },
+        "profile": {
+          "teamSize": "solo",
+          "regulatedIndustry": true
+        },
+        "currentIndex": 1,
+        "updatedAt": "2026-10-18T14:35:59.822Z"
+      },
+      "afterReload": {
+        "tier": "quick",
+        "answers": {
+          "P1": "solo",
+          "P2": "yes"
+        },
+        "profile": {
+          "teamSize": "solo",
+          "regulatedIndustry": true
+        },
+        "currentIndex": 1,
+        "updatedAt": "2026-10-18T14:35:59.948Z"
+      },
+      "preservedAfterNavigation": false,
+      "preservedAfterReload": false,
+      "diagnostic": {
+        "pageErrors": [],
+        "blockedExternalRequests": []
+      }
+    }
+  ],
+  "limits": [
+    "No upstream smoke suite, other languages/browsers, diagnosis history IndexedDB, score correctness or simultaneous writes tested",
+    "No upstream fix or independent run claimed"
+  ],
+  "newUseCredit": 0,
+  "newStarCredit": 0
+}
