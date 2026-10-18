@@ -16,6 +16,15 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "tools/app-crash-lab/examples/livepage-native/LICENSE",
+    "tools/app-crash-lab/examples/livepage-native/README.md",
+    "tools/app-crash-lab/examples/livepage-native/RESULTS.json",
+    "tools/app-crash-lab/examples/livepage-native/stale-tab.spec.mjs",
+    "tools/app-crash-lab/examples/livepage-native/playwright.config.mjs",
+    "tools/app-crash-lab/examples/livepage-native/package.json",
+    "tools/app-crash-lab/examples/livepage-native/package-lock.json",
+    "docs/app-crash-lab-livepage-native-v0.1.0.zip",
+    "docs/app-crash-lab-livepage-native-v0.1.0.zip.sha256",
     "tools/app-crash-lab/tests/stale-tab.test.mjs",
     "tools/app-crash-lab/examples/livepage/LICENSE",
     "tools/app-crash-lab/examples/livepage/README.md",
@@ -467,6 +476,8 @@ _DOTS_WORKSPACE_PATHS = frozenset(
         "tools/app-crash-lab/test-results",
         "tools/app-crash-lab/playwright-report",
         "tools/app-crash-lab/examples/livepage/.crash-lab",
+        "tools/app-crash-lab/examples/livepage-native/.crash-lab",
+        "tools/app-crash-lab/examples/livepage-native/node_modules",
     }
 )
 
@@ -614,6 +625,38 @@ def _verify_livepage_pack(root: Path) -> None:
     ):
         if results["portable"][field] != hashlib.sha256((source / file).read_bytes()).hexdigest():
             raise AssertionError(f"LivePage measured portable bytes mismatch: {file}")
+
+
+def _verify_native_livepage_pack(root: Path) -> None:
+    source = root / "tools/app-crash-lab/examples/livepage-native"
+    name = "app-crash-lab-livepage-native-v0.1.0.zip"
+    path = root / "docs" / name
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    if path.with_name(name + ".sha256").read_text().split() != [digest, name]:
+        raise AssertionError("native LivePage checksum mismatch")
+    expected = {
+        "LICENSE",
+        "README.md",
+        "RESULTS.json",
+        "stale-tab.spec.mjs",
+        "playwright.config.mjs",
+        "package.json",
+        "package-lock.json",
+    }
+    with ZipFile(path) as archive:
+        if len(archive.namelist()) != len(expected) or set(archive.namelist()) != {
+            "livepage-native/" + item for item in expected
+        }:
+            raise AssertionError("native LivePage file set mismatch")
+        for item in expected:
+            if archive.read("livepage-native/" + item) != (source / item).read_bytes():
+                raise AssertionError(f"native LivePage source mismatch: {item}")
+    result = json.loads((source / "RESULTS.json").read_text())
+    if (
+        result["nativeSpec"]["sha256"]
+        != hashlib.sha256((source / "stale-tab.spec.mjs").read_bytes()).hexdigest()
+    ):
+        raise AssertionError("native LivePage measured source hash mismatch")
 
 
 def _must_refuse(action) -> None:
@@ -1229,6 +1272,7 @@ def verify(
     _verify_reading_assistant_pack(root)
     _verify_taglio_pack(root)
     _verify_livepage_pack(root)
+    _verify_native_livepage_pack(root)
     demo_forge_summary = _verify_demo_forge(root)
 
     supplied_inputs = (

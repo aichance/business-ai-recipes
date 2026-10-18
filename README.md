@@ -10,7 +10,7 @@ Turn one successful save workflow into two repeatable checks: **reload without l
 
 [**Pick a regression for your test suite:** four real persistence failures, the missing assertions and copyable tests](tools/app-crash-lab/PERSISTENCE-CHECKLIST.md).
 
-**Minimizing an earlier tab can erase another tab's saved row.** The [LivePage regression](tools/app-crash-lab/examples/livepage/README.md) reproduces an existing report on unmodified source: a disjoint toolbar save reverts the title and removes the row. The portable two-tab test checks the complete page tree and the peer's actual persisted commit; same-tab and newly opened-tab controls pass.
+**Minimizing an earlier tab can erase another tab's saved row.** [Copy the single native Playwright test into your existing suite](tools/app-crash-lab/examples/livepage-native/README.md): two controls pass, while the earlier-tab case loses the saved title and row on unmodified LivePage source. It needs no App Crash Lab runtime or JSON contract. The [full original measurement](tools/app-crash-lab/examples/livepage/README.md) and native test both compare the complete page tree and verify the peer's actual persisted commit.
 
 **“Overwrite succeeded” can leave example jobs in a resume.** [The OpResume replay](tools/app-crash-lab/examples/opresume/README.md) imports its actual 66-byte empty backup, reports success, and keeps three example work entries. Four runnable checks distinguish that restore failure from a passing complete synthetic control.
 
