@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "measuredAt": "2026-10-18T21:04:02.188Z",
+  "app": {
+    "repository": "https://github.com/swimmingbrain/brainotes",
+    "ownerType": "User",
+    "sourcePin": "6682d3279ca95a802400148470a97bd0cdb54eb3",
+    "originalSourceFilesUnchanged": 190,
+    "existingSuite": "Vitest; Playwright was added only in our separate test folder"
+  },
+  "environment": {
+    "node": "22.16.0",
+    "pnpm": "12.13.0",
+    "playwright": "1.64.0",
+    "browser": "Chromium",
+    "os": "macOS",
+    "viewport": [
+      1360,
+      900
+    ],
+    "deviceScaleFactor": 1,
+    "appServer": "Vite development server on HTTP loopback"
+  },
+  "nativeSpec": {
+    "file": "autosave-abort.spec.mjs",
+    "sha256": "4abae17cf2052a53cc9a433ecf7ebfb53afe49a50a2079ac10058f9f3198ce1f"
+  },
+  "finalRun": {
+    "exitCode": 0,
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 16587.409,
+    "wholeInvocations": 3,
+    "cases": [
+      {
+        "name": "healthy autosave and reload",
+        "status": "PASS",
+        "durationMs": 5570
+      },
+      {
+        "name": "native transaction abort, feedback, retry and reload",
+        "status": "PASS",
+        "durationMs": 10363
+      }
+    ]
+  },
+  "fault": {
+    "type": "native IDBTransaction.abort after actual matching page put request succeeds",
+    "database": "brainotes",
+    "transactionMode": "readwrite",
+    "transactionStores": [
+      "notebooks",
+      "pages"
+    ],
+    "target": "the current synthetic notebook/page IDs only",
+    "whileDenied": "all three stores exactly equal the saved-and-reloaded A baseline",
+    "retryDelayObservedMs": 5004.7,
+    "failureIndicator": "Could not save, the browser storage may be full",
+    "noSavedBeforeSuccessfulTransactionComplete": true,
+    "afterRetryAndReload": "complete page blobs equal the pre-abort put argument P1; both drawn ink masks match after reload",
+    "allowedChange": "Notebook.updatedAt may monotonically advance; every other notebook field, page, asset and key is compared"
+  },
+  "observations": {
+    "notebooks": 1,
+    "pages": 1,
+    "assets": 0,
+    "strokesAfterRetry": 2,
+    "strokeADarkPixelCount": 856,
+    "strokeBDarkPixelCount": 858,
+    "unclassifiedPageErrors": 0,
+    "visibleScreenshotsReviewed": true
+  },
+  "setupHistory": [
+    {
+      "wholeInvocation": 1,
+      "outcome": "INCONCLUSIVE_SETUP",
+      "reason": "The first page was still inside the 800ms debounce; our polling code dereferenced an absent record. No app bug."
+    },
+    {
+      "wholeInvocation": 2,
+      "outcome": "healthy control PASS; fault INCONCLUSIVE_OBSERVER_ORDER",
+      "reason": "A late complete listener ran 0.2ms after the saved DOM update; source awaits idb tx.done. No app bug was inferred."
+    },
+    {
+      "wholeInvocation": 3,
+      "outcome": "2 PASS",
+      "reason": "The completion observer is registered on native transaction return before idb wraps it; all data, ink and UI assertions remain."
+    }
+  ],
+  "notTested": [
+    "real disk/quota exhaustion",
+    "PDF/image asset contents",
+    "forced shutdown and localStorage rescue",
+    "existing notebook library or multiple concurrent tabs",
+    "browser/OS combinations other than the measured environment"
+  ],
+  "productBugFound": false,
+  "operatorTrial": true,
+  "maintainerExecuted": false,
+  "newIndependentUseCredit": 0,
+  "newStarCredit": 0
+}
