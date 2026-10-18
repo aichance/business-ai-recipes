@@ -1,0 +1,17 @@
+{
+  "name": "app-crash-lab-brainotes-native",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "playwright test --config playwright.config.mjs",
+    "controls": "playwright test --config playwright.config.mjs --grep healthy"
+  },
+  "dependencies": {
+    "@playwright/test": "1.64.0"
+  }
+}

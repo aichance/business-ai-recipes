@@ -24,6 +24,8 @@ For a project using plain `playwright` scripts, [copy one file to check ai-dev-r
 
 **A failed save should tell the user.** [Copy the 109-line native write-denial test](tools/app-crash-lab/examples/storage-write-denied-native/README.md) to check both preservation of the previous ledger and visible failure feedback. On pinned Kinetic Curator source, normal saves survive reload; an injected exact-key storage error preserves the old ledger but produces no matching visible notice. The example includes the normal control and marks what to adapt for your app.
 
+For a working IndexedDB recovery path, [BraiNOTES' native abort/retry checks](tools/app-crash-lab/examples/brainotes-native/README.md) both pass: existing ink stays intact during an aborted save, the app reports failure, and its own retry preserves both strokes after reload. The standalone pack checks complete stored data and actual drawn pixels.
+
 **Successful work can be mislabeled as failed when optional history is full.** [Copy the native optional-history test](tools/app-crash-lab/examples/optional-history-native/README.md): pinned MAL keeps a successful translation visible but reports a generic Error after its history write is denied. The test uses local provider stubs, accepts a truthful history-only warning, and keeps genuine provider failures separate. It does not require a real API key or claim the output disappeared.
 
 **“Overwrite succeeded” can leave example jobs in a resume.** [The OpResume replay](tools/app-crash-lab/examples/opresume/README.md) imports its actual 66-byte empty backup, reports success, and keeps three example work entries. Four runnable checks distinguish that restore failure from a passing complete synthetic control.
