@@ -16,6 +16,9 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "tools/app-crash-lab/examples/readiness-native/README.md",
+    "tools/app-crash-lab/examples/readiness-native/RESULTS.json",
+    "tools/app-crash-lab/examples/readiness-native/draft-navigation.mjs",
     "tools/app-crash-lab/examples/osw-native/LICENSE",
     "tools/app-crash-lab/examples/osw-native/README.md",
     "tools/app-crash-lab/examples/osw-native/RESULTS.json",
@@ -874,6 +877,39 @@ def _verify_osw_native_pack(root: Path) -> None:
             raise AssertionError("OSW ZIP/source byte mismatch")
 
 
+def _verify_readiness_native_pack(root: Path) -> None:
+    source = root / "tools/app-crash-lab/examples/readiness-native"
+    result = json.loads((source / "RESULTS.json").read_text())
+    if (
+        hashlib.sha256((source / "draft-navigation.mjs").read_bytes()).hexdigest()
+        != result["specSha256"]
+    ):
+        raise AssertionError("Readiness measured script hash mismatch")
+    cases = result["cases"]
+    if len(cases) != 3 or {row["mode"]: row["status"] for row in cases} != {
+        "same-tab": "PASS",
+        "fresh-peer": "PASS",
+        "earlier-peer": "FAIL",
+    }:
+        raise AssertionError("Readiness measured controls/regression mismatch")
+    for row in cases:
+        protected = {
+            name: value
+            for name, value in row["saved"].items()
+            if name not in {"currentIndex", "updatedAt"}
+        }
+        for stage in ["afterPeerNavigation", "afterReload"]:
+            actual = {
+                name: value
+                for name, value in row[stage].items()
+                if name not in {"currentIndex", "updatedAt"}
+            }
+            if (actual == protected) != (row["mode"] != "earlier-peer"):
+                raise AssertionError("Readiness saved snapshots contradict outcome")
+        if any(row["diagnostic"].values()):
+            raise AssertionError("Readiness measured diagnostic mismatch")
+
+
 def _must_refuse(action) -> None:
     try:
         action()
@@ -1500,6 +1536,7 @@ def verify(
     _verify_stitchwitch_native(root)
     _verify_perma_delete_native(root)
     _verify_osw_native_pack(root)
+    _verify_readiness_native_pack(root)
     demo_forge_summary = _verify_demo_forge(root)
 
     supplied_inputs = (

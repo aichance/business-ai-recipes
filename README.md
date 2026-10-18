@@ -18,6 +18,8 @@ Turn one successful save workflow into two repeatable checks: **reload without l
 
 **The same boundary with IndexedDB:** [a thumbnail-only update rewinds OSW Studio's saved name and checkpoint metadata](tools/app-crash-lab/examples/osw-native/README.md). Two controls pass and the earlier-peer test fails; complete files and checkpoints remain unchanged. Copy one native file, with a small config for the app's locked Playwright dependency.
 
+For a project using plain `playwright` scripts, [copy one file to check ai-dev-readiness drafts](tools/app-crash-lab/examples/readiness-native/README.md): an earlier tab's Back navigation drops another tab's saved answer. The app's existing dependency runs both controls and the regression, without adding a test runner.
+
 **A failed save should tell the user.** [Copy the 109-line native write-denial test](tools/app-crash-lab/examples/storage-write-denied-native/README.md) to check both preservation of the previous ledger and visible failure feedback. On pinned Kinetic Curator source, normal saves survive reload; an injected exact-key storage error preserves the old ledger but produces no matching visible notice. The example includes the normal control and marks what to adapt for your app.
 
 **Successful work can be mislabeled as failed when optional history is full.** [Copy the native optional-history test](tools/app-crash-lab/examples/optional-history-native/README.md): pinned MAL keeps a successful translation visible but reports a generic Error after its history write is denied. The test uses local provider stubs, accepts a truthful history-only warning, and keeps genuine provider failures separate. It does not require a real API key or claim the output disappeared.
