@@ -1,0 +1,144 @@
+{
+  "measuredAt": "2026-10-18T03:24:27.822609+00:00",
+  "kind": "operator tests; separate from third-party adoption",
+  "source": {
+    "repository": "https://github.com/glennfaison/livepage",
+    "issue": "https://github.com/glennfaison/livepage/issues/355",
+    "commit": "915f828f0b8f9fabc0124c37b5d94797b2ef02e3",
+    "version": "0.1.0",
+    "unmodifiedOriginalBlobs": 476,
+    "mode": "production build"
+  },
+  "environment": {
+    "os": "macOS",
+    "node": "22.16.0",
+    "playwright": "1.64.0",
+    "browser": "Chromium",
+    "data": "synthetic; fresh empty contexts; loopback only"
+  },
+  "nativeSpec": {
+    "file": "stale-tab.spec.mjs",
+    "lines": 135,
+    "sha256": "cea779569e00795b4b4582d4fd20f02cfafd68dff23e02b89ddd5af9c367dbf4",
+    "runtimeDependencies": [
+      "@playwright/test",
+      "Node built-ins"
+    ],
+    "appCrashLabProtocolOrContractRequired": false
+  },
+  "observation": {
+    "knownAppDebounceMs": 500,
+    "windowMs": 1000,
+    "sampleIntervalMs": 75,
+    "unobservedInstantsAndLaterWritesNotCovered": true,
+    "observedTreeLossIsLatched": true
+  },
+  "realAppCases": [
+    {
+      "mode": "same-tab control",
+      "nativeStatus": "passed",
+      "fullTreePreserved": true,
+      "peerCommitConfirmed": true,
+      "peerCommitSurvivedReload": true,
+      "savedTitleBefore": "Later saved page — keep the complete row",
+      "savedTitleAfter": "Later saved page — keep the complete row",
+      "savedRowsBefore": 1,
+      "savedRowsAfter": 1,
+      "observedLossPhase": null,
+      "unexpectedDialogs": []
+    },
+    {
+      "mode": "new-tab control",
+      "nativeStatus": "passed",
+      "fullTreePreserved": true,
+      "peerCommitConfirmed": true,
+      "peerCommitSurvivedReload": true,
+      "savedTitleBefore": "Later saved page — keep the complete row",
+      "savedTitleAfter": "Later saved page — keep the complete row",
+      "savedRowsBefore": 1,
+      "savedRowsAfter": 1,
+      "observedLossPhase": null,
+      "unexpectedDialogs": []
+    },
+    {
+      "mode": "earlier-tab regression",
+      "nativeStatus": "failed",
+      "fullTreePreserved": false,
+      "peerCommitConfirmed": true,
+      "peerCommitSurvivedReload": true,
+      "savedTitleBefore": "Later saved page — keep the complete row",
+      "savedTitleAfter": "Initial saved page — 日本語 🐾",
+      "savedRowsBefore": 1,
+      "savedRowsAfter": 0,
+      "observedLossPhase": "waiting for peer commit",
+      "unexpectedDialogs": []
+    }
+  ],
+  "authoredAcceptanceControls": {
+    "notActualLivePageFixes": true,
+    "allExpectedOutcomesVerified": true,
+    "groups": [
+      {
+        "case": "existing-suite-fixed",
+        "passed": 4,
+        "failed": 0,
+        "expected_error_found": true
+      },
+      {
+        "case": "live-sync",
+        "passed": 3,
+        "failed": 0,
+        "expected_error_found": true
+      },
+      {
+        "case": "live-sync-no-listener",
+        "passed": 0,
+        "failed": 1,
+        "expected_error_found": true
+      },
+      {
+        "case": "peer-no-hydrate",
+        "passed": 0,
+        "failed": 1,
+        "expected_error_found": true
+      },
+      {
+        "case": "primary-no-save",
+        "passed": 0,
+        "failed": 1,
+        "expected_error_found": true
+      },
+      {
+        "case": "no-peer-save",
+        "passed": 0,
+        "failed": 1,
+        "expected_error_found": true
+      },
+      {
+        "case": "nested-loss",
+        "passed": 0,
+        "failed": 1,
+        "expected_error_found": true
+      },
+      {
+        "case": "reload-loses-commit",
+        "passed": 0,
+        "failed": 1,
+        "expected_error_found": true
+      },
+      {
+        "case": "repair-after-loss",
+        "passed": 0,
+        "failed": 1,
+        "expected_error_found": true
+      }
+    ]
+  },
+  "independentOwnAppUseClaimed": false,
+  "knownLimits": [
+    "one ordered localStorage two-page scenario",
+    "not IndexedDB or server concurrency",
+    "not full App Crash Lab protocol parity",
+    "other browsers and operating systems not verified"
+  ]
+}
