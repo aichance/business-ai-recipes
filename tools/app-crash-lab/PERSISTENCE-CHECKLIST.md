@@ -1,10 +1,15 @@
-# Five persistence checks to keep in your test suite
+# Eight persistence and save-outcome checks to keep in your test suite
 
-Use these five observed failures to choose an assertion for your own app.
+Use these eight observed boundaries to choose an assertion for your own app.
 Each row links to an actual test or contract, a pinned app version and its
 reproduction steps. The tests use synthetic data on disposable local copies.
 These are our AI-assisted operator experiments; the cited maintainer fix is
 separate from an independent run of App Crash Lab.
+
+Already using Playwright? Start with [an earlier tab's save](#6-protect-another-tabs-committed-edit),
+[a mandatory save that fails](#7-make-a-rejected-save-visible), or
+[optional history that fails after successful work](#8-keep-optional-history-failure-separate-from-the-main-result).
+Each has a native file you can adapt in your existing suite, with no App Crash Lab runtime.
 
 | What your test already checks | What can still break | Add this assertion | Copy a measured example |
 | --- | --- | --- | --- |
@@ -13,6 +18,9 @@ separate from an independent run of App Crash Lab.
 | All selected stored records survive backup and reload | The saved record cannot be found in its normal screen | Assert the user's expected view as well as the complete saved record | [Repwise: completed History entry](examples/repwise/README.md#run-against-a-disposable-local-copy) |
 | A previously saved note survives reload | The last keyboard edit disappears when its editor closes | Type a new value, close immediately, reopen and compare that new value | [Chalky: final note edit](examples/chalky-notes-close/README.md#run-the-two-condition-diagnostic) |
 | Delete removes a saved record | A previously scheduled autosave writes the deleted ID back | Prove the delete committed, then keep that ID absent through the timer window and reload | [Perma Design Kit: native deletion regression](examples/perma-native-delete/README.md) |
+| A save and reload work in one tab | An earlier tab re-saves stale fields while changing an unrelated setting | Confirm the peer's actual separate commit, preserve the complete primary record and reload; keep same-tab and fresh-peer controls | [LivePage: saved tree](examples/livepage-native/README.md), [Naidan: system prompt](examples/naidan-native/README.md) |
+| The previous saved record survives a rejected write | The user receives no visible notice that the new save failed | Deny the exact real write, prove the UI attempted it, and check both complete-record preservation and a specific visible failure notice | [Kinetic Curator: write denial](examples/storage-write-denied-native/README.md) |
+| The main operation succeeds before its optional history write fails | A generic Error incorrectly labels the successful operation as failed | Keep the distinct new business result usable, preserve old history, accept a truthful history-only warning, and retain a genuine main-failure control | [MAL: optional translation history](examples/optional-history-native/README.md) |
 
 **Start with one row.** Follow its linked app setup and test instructions to
 reproduce the control and failure, then adapt that test's selectors and saved
@@ -123,6 +131,79 @@ a view key even when the plan itself stayed deleted.
 The measurement covers the unchanged public static build on Chromium, not
 the installed iOS PWA, private Team build or separate backup-import hang.
 
+## 6. Protect another tab's committed edit
+
+On [LivePage `915f828f`](examples/livepage-native/README.md), same-tab and freshly
+opened-tab controls preserve the saved title and row. An earlier tab's toolbar
+click loses both, even though its separate `false → true` toolbar preference
+really commits. On [Naidan `78f207e7`](examples/naidan-native/README.md), an
+earlier Connection settings form disables auto-title and restores an old system
+prompt saved before another tab's newer prompt. The original primary document
+still sees the old prompt after reload. Both Naidan controls pass.
+
+Open the peer before making the primary edit. Establish the actual new primary
+commit, change only a different persisted field through the peer's ordinary UI,
+and prove the peer's own change committed. Compare every protected record field
+afterward and after primary reload. A correct synchronization fix may refresh
+the peer; do not inject stale storage or require the form to remain old.
+
+- **Copy/adapt:** [one native two-tab spec and its four marked adaptation areas](examples/livepage-native/README.md#adapt-it-to-your-own-app).
+- **No model setup:** [the Naidan standalone-HTML test and small ZIP](examples/naidan-native/README.md).
+- **Different storage:** [OSW Studio's IndexedDB thumbnail-only save](examples/osw-native/README.md) protects full project metadata and file records.
+
+Keep both controls. A failed startup, unhydrated peer or absent real commit is a
+precondition failure, not proof of a lost edit. Decide how your app represents a
+legitimate conflict refusal: it must preserve the complete previously committed
+record and tell the user that the attempted edit did not save. The Naidan adapter permits that
+specific visible refusal; the LivePage adapter instead requires the actual
+toolbar commit and treats unsupported native dialogs as a precondition failure.
+These ordered cases do not establish simultaneous-write correctness.
+
+## 7. Make a rejected save visible
+
+On [Kinetic Curator `b086c9b0`](examples/storage-write-denied-native/README.md),
+the normal control saves two complete keep records and survives reload. Denying
+the exact ledger write with a synthetic `QuotaExceededError` leaves the previous
+ledger unchanged, but produces no matching visible save-error notice. Its
+regression fails at **FEEDBACK**, not at data preservation.
+
+Save the baseline through normal UI before installing a narrowly targeted
+fault. Confirm a real attempted write reached that fault; otherwise there was
+no failed-save experiment. Assert the complete previous record remains intact
+and require a new, specific visible notice for the failed save. A console error
+or an unrelated pre-existing toast is not that notice.
+
+- **Copy/adapt:** [the 109-line native write-denial spec](examples/storage-write-denied-native/write-denied.spec.mjs).
+- **Run:** [normal control, full setup, expected FEEDBACK failure and ZIP](examples/storage-write-denied-native/README.md).
+
+Restore the original storage descriptor in `finally`. This example denies one
+localStorage key in one document, samples for 1000 ms and does not test actual
+disk exhaustion, IndexedDB or server-write errors. Adapt the fault and completion
+boundary to the storage your app really uses.
+
+## 8. Keep optional history failure separate from the main result
+
+On [MAL `216005fa`](examples/optional-history-native/README.md), a locally
+fulfilled translation succeeds and its new result stays visible. Only the
+optional history write is denied; the previous durable history remains intact.
+The app nevertheless displays an unqualified Error. The regression fails at
+**OUTCOME**. This is misleading failure feedback, not vanished translation output.
+
+Establish a distinguishable new business result before judging the storage
+fault. Keep separate normal-success and genuine-provider-failure controls.
+Accept a truthful "translation completed; history not saved" warning without
+suppressing real translation failures. Use a signature for your app's actual
+visible wording and locale; arbitrary Error text, a hidden stale error, or a
+previous result left on screen cannot establish the same failure.
+
+- **Copy/adapt:** [the native optional-history spec](examples/optional-history-native/optional-history.spec.mjs).
+- **Run:** [local provider responses, controls, exact history key and standalone ZIP](examples/optional-history-native/README.md).
+
+The measured pin has two passing controls and one OUTCOME failure. The provider
+responses are stubs; the test does not establish real model availability or
+translation quality. Hypothetical corrected-copy controls described in the
+guide validate the oracle and are not upstream fixes or author adoption.
+
 ## Before keeping a green test
 
 - [ ] The baseline really contains the complete expected saved value.
@@ -130,6 +211,9 @@ the installed iOS PWA, private Team build or separate backup-import hang.
 - [ ] Restore uses the original download and an independently empty target.
 - [ ] IDs, references, timestamps and optional fields you rely on are compared.
 - [ ] The record is usable in its normal screen after restoration and reload.
+- [ ] Another tab's real disjoint save preserves the complete committed edit.
+- [ ] A mandatory save failure is visible even when the old record stays safe.
+- [ ] An optional history failure does not mislabel successful work or hide a real main-operation failure.
 - [ ] A known broken version fails the intended assertion; setup errors and
       missing baselines remain distinguishable from preservation failures.
 
