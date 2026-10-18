@@ -215,6 +215,8 @@ EXPECTED_FILES = {
     "docs/app-crash-lab-skill-v0.1.1.zip.sha256",
     "docs/app-crash-lab-skill-v0.2.0.zip",
     "docs/app-crash-lab-skill-v0.2.0.zip.sha256",
+    "docs/app-crash-lab-skill-v0.2.1.zip",
+    "docs/app-crash-lab-skill-v0.2.1.zip.sha256",
     "tools/app-crash-lab/examples/spin-the-wheel/README.md",
     "tools/app-crash-lab/examples/spin-the-wheel/SOURCE.json",
     "tools/app-crash-lab/examples/spin-the-wheel/roundtrip.json",
@@ -1016,7 +1018,7 @@ def _load_line_judgment_recipe(root: Path):
 
 def _verify_app_crash_lab_skill(root: Path) -> None:
     skill = root / ".agents" / "skills" / "app-crash-lab"
-    archive = root / "docs" / "app-crash-lab-skill-v0.2.0.zip"
+    archive = root / "docs" / "app-crash-lab-skill-v0.2.1.zip"
     relative_files = (
         "SKILL.md",
         "LICENSE",
@@ -1034,7 +1036,7 @@ def _verify_app_crash_lab_skill(root: Path) -> None:
         for relative in relative_files:
             if bundle.read(f"app-crash-lab/{relative}") != (skill / relative).read_bytes():
                 raise AssertionError(f"App Crash Lab skill ZIP differs from source: {relative}")
-    for version in ("0.1.0", "0.1.1", "0.2.0"):
+    for version in ("0.1.0", "0.1.1", "0.2.0", "0.2.1"):
         published = root / "docs" / f"app-crash-lab-skill-v{version}.zip"
         checksum = published.with_suffix(published.suffix + ".sha256").read_text().split()
         if checksum != [hashlib.sha256(published.read_bytes()).hexdigest(), published.name]:
