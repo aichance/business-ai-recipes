@@ -27,6 +27,12 @@ Two app-specific adaptations reduce setup when they match the user's project:
    files and configuration; use an unused name. Adapt selectors, storage keys,
    full expected records, UI success/error signals and fault prerequisites.
    Do not copy source-specific sample expectations unchanged into another app.
+   Before the first save, check action locators against the rendered UI: each
+   action must resolve to the intended unique element, visible and editable
+   where required. Check that the same locator still reads the intended value
+   after input. Label text in source may differ from the computed accessible
+   name, and IDs may be duplicated; use a verified role/name, test ID or scoped
+   placeholder rather than guessing from markup.
 3. Use synthetic data in a fresh browser context against a disposable local
    app. Create data through its normal flow and independently establish the
    actual persisted baseline. Observe canonical storage read-only where
@@ -42,6 +48,11 @@ Two app-specific adaptations reduce setup when they match the user's project:
    errors from an observed app failure. Preserve every observed loss even if
    a later action restores the value. A fixed app may pass the regression;
    do not manufacture a failure to match the published example.
+   A selector timeout before establishing the saved baseline is setup
+   INCONCLUSIVE, even when Playwright reports the test as failed. This does not
+   turn an observed data mismatch after a valid baseline and fault into setup.
+   Save the relevant DOM and screenshots to explicit output paths and check
+   that they exist; an inline attachment may not survive the chosen reporter.
 
 Use the existing project's approved Node/Playwright/browser versions. The
 published examples were measured on their stated versions, not every version
