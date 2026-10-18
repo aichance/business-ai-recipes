@@ -13,6 +13,9 @@ unrelated preference; the complete selected saved document must survive that
 save and reload. The [LivePage example](examples/livepage/README.md) reproduces
 an existing reported overwrite on an unmodified pinned source, with same-tab
 and freshly opened-tab controls. [Contract and limits](CONTRACT.md#earlier-tab-saving-a-disjoint-field-0120-dev3-prerelease).
+The [OSW Studio native adaptation](examples/osw-native/README.md) checks the same
+boundary in IndexedDB: uploading a thumbnail in an earlier tab rewinds saved
+project metadata while complete file records remain intact.
 This prerelease is available in the source checkout and the example's portable
 trial; the pinned stable release commands below retain their existing features.
 

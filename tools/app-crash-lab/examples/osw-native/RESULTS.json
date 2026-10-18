@@ -1,0 +1,176 @@
+{
+  "measuredAt": "2026-10-18T13:00:49.563921+00:00",
+  "classification": "operator reproduction; independent author execution unconfirmed",
+  "source": {
+    "repository": "https://github.com/o-stahl/osw-studio",
+    "commit": "b4a7a592c7e09cf97d9ee348a23105c10a9857a9",
+    "version": "1.106.1",
+    "originalExtractedBlobsVerifiedUnchanged": 1473,
+    "publicEnvironmentExampleNotExtracted": true,
+    "productionBuild": true,
+    "mode": "Browser Mode / IndexedDB"
+  },
+  "environment": {
+    "platform": "macOS arm64",
+    "node": "22.16.0",
+    "next": "16.3.0",
+    "playwright": "1.62.1",
+    "chromium": "151.0.7922.34, headless revision1234",
+    "workers": 1,
+    "freshStorageState": true,
+    "externalRequestsBlocked": true,
+    "serviceWorkers": "block",
+    "providerCalls": 0
+  },
+  "nativeSpec": {
+    "file": "stale-thumbnail.spec.mjs",
+    "sha256": "d69a31d8755e20d872c1afd187322ad4d5c06135ef44a155725cc03f5df40ddc",
+    "lines": 220
+  },
+  "configSha256": "57aec5f24a8460b59c5dc23bb497a87b929998e75c6d062b4528938bb854e017",
+  "testExitCode": 1,
+  "passed": 2,
+  "failed": 1,
+  "wallTimeSeconds": 6.8,
+  "cases": [
+    {
+      "case": "earlier peer",
+      "status": "failed",
+      "expectedName": "CRASHLAB-old-SAVED",
+      "nameAfterThumbnail": "CRASHLAB-old",
+      "nameAfterReload": "CRASHLAB-old",
+      "savedCheckpointBefore": "cp_1792328448624_2",
+      "savedCheckpointAfterThumbnail": "cp_1792328447850_0",
+      "savedCheckpointAfterReload": "cp_1792328447850_0",
+      "changedProjectFields": [
+        "name",
+        "updatedAt",
+        "lastSavedCheckpointId",
+        "lastSavedAt",
+        "previewUpdatedAt",
+        "previewImage"
+      ],
+      "allFilesFileTreeAndCheckpointsUnchanged": true,
+      "savedFilePresentAfterReload": true,
+      "recordCounts": {
+        "files": 7,
+        "fileTree": 4,
+        "checkpoints": 3
+      },
+      "unexpectedDialogs": [],
+      "previewPageErrors": {
+        "count": 4,
+        "messages": [
+          "SecurityError: Failed to read the 'serviceWorker' property from 'Navigator': Service worker is disabled because the context is sandboxed and lacks the 'allow-same-origin' flag."
+        ]
+      }
+    },
+    {
+      "case": "fresh peer",
+      "status": "passed",
+      "expectedName": "CRASHLAB-new-SAVED",
+      "nameAfterThumbnail": "CRASHLAB-new-SAVED",
+      "nameAfterReload": "CRASHLAB-new-SAVED",
+      "savedCheckpointBefore": "cp_1792328446158_2",
+      "savedCheckpointAfterThumbnail": "cp_1792328446158_2",
+      "savedCheckpointAfterReload": "cp_1792328446158_2",
+      "changedProjectFields": [
+        "updatedAt",
+        "previewUpdatedAt",
+        "previewImage"
+      ],
+      "allFilesFileTreeAndCheckpointsUnchanged": true,
+      "savedFilePresentAfterReload": true,
+      "recordCounts": {
+        "files": 7,
+        "fileTree": 4,
+        "checkpoints": 3
+      },
+      "unexpectedDialogs": [],
+      "previewPageErrors": {
+        "count": 4,
+        "messages": [
+          "SecurityError: Failed to read the 'serviceWorker' property from 'Navigator': Service worker is disabled because the context is sandboxed and lacks the 'allow-same-origin' flag."
+        ]
+      }
+    },
+    {
+      "case": "same tab",
+      "status": "passed",
+      "expectedName": "CRASHLAB-same-SAVED",
+      "nameAfterThumbnail": "CRASHLAB-same-SAVED",
+      "nameAfterReload": "CRASHLAB-same-SAVED",
+      "savedCheckpointBefore": "cp_1792328444590_2",
+      "savedCheckpointAfterThumbnail": "cp_1792328444590_2",
+      "savedCheckpointAfterReload": "cp_1792328444590_2",
+      "changedProjectFields": [
+        "updatedAt",
+        "previewUpdatedAt",
+        "previewImage"
+      ],
+      "allFilesFileTreeAndCheckpointsUnchanged": true,
+      "savedFilePresentAfterReload": true,
+      "recordCounts": {
+        "files": 7,
+        "fileTree": 4,
+        "checkpoints": 3
+      },
+      "unexpectedDialogs": [],
+      "previewPageErrors": {
+        "count": 4,
+        "messages": [
+          "SecurityError: Failed to read the 'serviceWorker' property from 'Navigator': Service worker is disabled because the context is sandboxed and lacks the 'allow-same-origin' flag."
+        ]
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "primary-saved.png",
+      "sha256": "e24269b099929af05ac01da2f8bdb6cd1f17de2bce543225c1c9098ee709807a",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "file": "after-thumbnail.png",
+      "sha256": "faf5dd5fd24f831e58cc8d2264c787e6ef83474aa03fee08fa3175ae82b67203",
+      "width": 1280,
+      "height": 720
+    }
+  ],
+  "separateConsequenceProbe": {
+    "specBundled": false,
+    "specSha256": "8e33948ca31b25b1539f82fa5753d225575750017eabf7225543e498ab03b63e",
+    "scope": "After gallery reload, reopen the project, upload a different unsaved file, then click actual Discard Changes and reload. Opening regenerated saved checkpoint IDs in all three cases. No saved file loss was observed; do not infer a destructive restore to the rolled-back pointer.",
+    "cases": [
+      {
+        "case": "earlier peer",
+        "savedFilePresentAfterDiscard": true,
+        "savedFilePresentAfterDiscardReload": true,
+        "laterUnsavedFileRemoved": true,
+        "openingWorkspaceCreatedAnotherCheckpoint": true
+      },
+      {
+        "case": "fresh peer",
+        "savedFilePresentAfterDiscard": true,
+        "savedFilePresentAfterDiscardReload": true,
+        "laterUnsavedFileRemoved": true,
+        "openingWorkspaceCreatedAnotherCheckpoint": true
+      },
+      {
+        "case": "same tab",
+        "savedFilePresentAfterDiscard": true,
+        "savedFilePresentAfterDiscardReload": true,
+        "laterUnsavedFileRemoved": true,
+        "openingWorkspaceCreatedAnotherCheckpoint": true
+      }
+    ]
+  },
+  "limits": [
+    "No file content loss observed after thumbnail update or reload.",
+    "Same-origin ordered UI scenario only; no simultaneous-write stress test, server/desktop mode or other browser engine.",
+    "Sandboxed preview service-worker SecurityErrors occurred in controls and earlier-peer case; sandbox protections stayed unchanged.",
+    "Development-server bootstrap failed before a data fixture; measured cases use the unchanged production build.",
+    "No upstream patch, author execution or whole-application certification."
+  ]
+}
