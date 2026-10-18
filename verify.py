@@ -16,6 +16,21 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "tools/app-crash-lab/tests/stale-tab.test.mjs",
+    "tools/app-crash-lab/examples/livepage/LICENSE",
+    "tools/app-crash-lab/examples/livepage/README.md",
+    "tools/app-crash-lab/examples/livepage/stale-tab.json",
+    "tools/app-crash-lab/examples/livepage/controls.spec.mjs",
+    "tools/app-crash-lab/examples/livepage/controls.config.mjs",
+    "tools/app-crash-lab/examples/livepage/package.json",
+    "tools/app-crash-lab/examples/livepage/package-lock.json",
+    "tools/app-crash-lab/examples/livepage/repro.spec.mjs",
+    "tools/app-crash-lab/examples/livepage/playwright.config.mjs",
+    "tools/app-crash-lab/examples/livepage/results-summary.json",
+    "tools/app-crash-lab/examples/livepage/saved-page.png",
+    "tools/app-crash-lab/examples/livepage/after-stale-save.png",
+    "docs/app-crash-lab-livepage-trial-v0.1.0.zip",
+    "docs/app-crash-lab-livepage-trial-v0.1.0.zip.sha256",
     "tools/app-crash-lab/examples/edentext/LICENSE",
     "tools/app-crash-lab/examples/edentext/README.md",
     "tools/app-crash-lab/examples/edentext/control-extra-reply.json",
@@ -451,6 +466,7 @@ _DOTS_WORKSPACE_PATHS = frozenset(
         "tools/app-crash-lab/.crash-lab",
         "tools/app-crash-lab/test-results",
         "tools/app-crash-lab/playwright-report",
+        "tools/app-crash-lab/examples/livepage/.crash-lab",
     }
 )
 
@@ -556,6 +572,48 @@ def _verify_reading_assistant_pack(root: Path) -> None:
         for entry in expected:
             if archive.read(entry) != (source / entry).read_bytes():
                 raise AssertionError(f"reading assistant kit source differs: {entry}")
+
+
+def _verify_livepage_pack(root: Path) -> None:
+    source = root / "tools/app-crash-lab/examples/livepage"
+    name = "app-crash-lab-livepage-trial-v0.1.0.zip"
+    path = root / "docs" / name
+    checksum = path.with_name(name + ".sha256").read_text().split()
+    if checksum != [hashlib.sha256(path.read_bytes()).hexdigest(), name]:
+        raise AssertionError("LivePage trial checksum mismatch")
+    expected = {
+        "LICENSE",
+        "README.md",
+        "stale-tab.json",
+        "controls.spec.mjs",
+        "controls.config.mjs",
+        "package.json",
+        "package-lock.json",
+        "repro.spec.mjs",
+        "playwright.config.mjs",
+        "results-summary.json",
+        "saved-page.png",
+        "after-stale-save.png",
+    }
+    with ZipFile(path) as archive:
+        prefix = "app-crash-lab-livepage-trial/"
+        if len(archive.namelist()) != len(expected) or set(archive.namelist()) != {
+            prefix + item for item in expected
+        }:
+            raise AssertionError("LivePage trial file set mismatch")
+        for item in expected:
+            if archive.read(prefix + item) != (source / item).read_bytes():
+                raise AssertionError(f"LivePage trial differs from source: {item}")
+    results = json.loads((source / "results-summary.json").read_text())
+    contract = (source / "stale-tab.json").read_bytes()
+    if results["runner"]["contractSha256"] != hashlib.sha256(contract).hexdigest():
+        raise AssertionError("LivePage measured contract hash mismatch")
+    for field, file in (
+        ("specSha256", "repro.spec.mjs"),
+        ("configSha256", "playwright.config.mjs"),
+    ):
+        if results["portable"][field] != hashlib.sha256((source / file).read_bytes()).hexdigest():
+            raise AssertionError(f"LivePage measured portable bytes mismatch: {file}")
 
 
 def _must_refuse(action) -> None:
@@ -1170,6 +1228,7 @@ def verify(
     _verify_app_crash_lab_skill(root)
     _verify_reading_assistant_pack(root)
     _verify_taglio_pack(root)
+    _verify_livepage_pack(root)
     demo_forge_summary = _verify_demo_forge(root)
 
     supplied_inputs = (
