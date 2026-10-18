@@ -8,11 +8,13 @@ Turn one successful save workflow into two repeatable checks: **reload without l
 
 [**Check your own app**](#check-your-own-app) · [**Try a no-install example**](https://aichance.github.io/business-ai-recipes/test-the-test.html) · [**Contract format**](tools/app-crash-lab/CONTRACT.md)
 
-[**Pick a regression for your test suite:** four real persistence failures, the missing assertions and copyable tests](tools/app-crash-lab/PERSISTENCE-CHECKLIST.md).
+[**Pick a regression for your test suite:** five real persistence failures, the missing assertions and copyable tests](tools/app-crash-lab/PERSISTENCE-CHECKLIST.md).
 
 **Minimizing an earlier tab can erase another tab's saved row.** [Copy the single native Playwright test into your existing suite](tools/app-crash-lab/examples/livepage-native/README.md): two controls pass, while the earlier-tab case loses the saved title and row on unmodified LivePage source. It needs no App Crash Lab runtime or JSON contract. The [full original measurement](tools/app-crash-lab/examples/livepage/README.md) and native test both compare the complete page tree and verify the peer's actual persisted commit.
 
 **The same check, ready for another real app:** [Copy one file into StitchWitch's existing Playwright suite](tools/app-crash-lab/examples/stitchwitch-native/README.md). On pinned source, a name-only save from an earlier browser tab rolls a saved 400-cell chart back to white; a separate test catches the committed name reverting on reload. Two scoped controls pass and two regression checks fail. The example includes actual screenshots and complete saved-state assertions.
+
+[**A related delayed-write check:** keep a deleted Perma garden plan deleted](tools/app-crash-lab/examples/perma-native-delete/README.md). One file for the app's existing suite; actual plant drag, committed deletion, both editor/list paths and separate view cleanup.
 
 **A failed save should tell the user.** [Copy the 109-line native write-denial test](tools/app-crash-lab/examples/storage-write-denied-native/README.md) to check both preservation of the previous ledger and visible failure feedback. On pinned Kinetic Curator source, normal saves survive reload; an injected exact-key storage error preserves the old ledger but produces no matching visible notice. The example includes the normal control and marks what to adapt for your app.
 
