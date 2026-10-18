@@ -4,52 +4,23 @@
 
 **Your app says “Saved.” Does the data survive the next mistake?**
 
-Turn one successful save workflow into two repeatable checks: **reload without losing data** and **reject an invalid update without corrupting the previous value**. Keep the state diff, browser trace and standalone Playwright tests.
+Add one persistence regression to your existing Playwright suite. Start with a measured example, adapt its app actions and saved-state assertions, and keep the test in your release checks. The native path needs no App Crash Lab runtime or JSON contract.
 
-[**Check your own app**](#check-your-own-app) · [**Try a no-install example**](https://aichance.github.io/business-ai-recipes/test-the-test.html) · [**Contract format**](tools/app-crash-lab/CONTRACT.md)
+[**Copy a native test**](#copy-one-playwright-regression) · [**Check your own app**](#check-your-own-app) · [**Try a no-install example**](https://aichance.github.io/business-ai-recipes/test-the-test.html) · [**Contract format**](tools/app-crash-lab/CONTRACT.md)
 
-[**Pick a regression for your test suite:** eight persistence and save-outcome checks, the missing assertions and copyable tests](tools/app-crash-lab/PERSISTENCE-CHECKLIST.md).
+**Earlier CLI checks and exported tests, independently run on two authors’ own apps:** [Sethera](https://qiita.com/cuculhart/items/f020080b2ef1331222d0#comment-79c9c450f3a54f3ba6ac) and [nvim-edu](https://qiita.com/s3onghyun/items/7966ac7e6a534a84f9db#comment-2d25dc275d61b168ee4a). [Reported environments and scope](#independent-author-reports).
 
-**Minimizing an earlier tab can erase another tab's saved row.** [Copy the single native Playwright test into your existing suite](tools/app-crash-lab/examples/livepage-native/README.md): two controls pass, while the earlier-tab case loses the saved title and row on unmodified LivePage source. It needs no App Crash Lab runtime or JSON contract. The [full original measurement](tools/app-crash-lab/examples/livepage/README.md) and native test both compare the complete page tree and verify the peer's actual persisted commit.
+## Copy one Playwright regression
 
-**The same check, ready for another real app:** [Copy one file into StitchWitch's existing Playwright suite](tools/app-crash-lab/examples/stitchwitch-native/README.md). On pinned source, a name-only save from an earlier browser tab rolls a saved 400-cell chart back to white; a separate test catches the committed name reverting on reload. Two scoped controls pass and two regression checks fail. The example includes actual screenshots and complete saved-state assertions.
-
-[**A related delayed-write check:** keep a deleted Perma garden plan deleted](tools/app-crash-lab/examples/perma-native-delete/README.md). One file for the app's existing suite; actual plant drag, committed deletion, both editor/list paths and separate view cleanup.
-
-**The same boundary with IndexedDB:** [a thumbnail-only update rewinds OSW Studio's saved name and checkpoint metadata](tools/app-crash-lab/examples/osw-native/README.md). Two controls pass and the earlier-peer test fails; complete files and checkpoints remain unchanged. Copy one native file, with a small config for the app's locked Playwright dependency.
-
-For a project using plain `playwright` scripts, [copy one file to check ai-dev-readiness drafts](tools/app-crash-lab/examples/readiness-native/README.md): an earlier tab's Back navigation drops another tab's saved answer. The app's existing dependency runs both controls and the regression, without adding a test runner.
-
-**Changing auto-title can undo a system prompt saved in another tab.** [The Naidan native test](tools/app-crash-lab/examples/naidan-native/README.md) runs against a local standalone HTML without an LLM or API key. Two controls pass; the earlier settings tab restores the old prompt, including after the primary tab reloads. The small isolated test ZIP includes the complete measured settings and a locked Playwright dependency.
-
-**A failed save should tell the user.** [Copy the 109-line native write-denial test](tools/app-crash-lab/examples/storage-write-denied-native/README.md) to check both preservation of the previous ledger and visible failure feedback. On pinned Kinetic Curator source, normal saves survive reload; an injected exact-key storage error preserves the old ledger but produces no matching visible notice. The example includes the normal control and marks what to adapt for your app.
-
-For a working IndexedDB recovery path, [BraiNOTES' native abort/retry checks](tools/app-crash-lab/examples/brainotes-native/README.md) both pass: existing ink stays intact during an aborted save, the app reports failure, and its own retry preserves both strokes after reload. The standalone pack checks complete stored data and actual drawn pixels.
-
-**Successful work can be mislabeled as failed when optional history is full.** [Copy the native optional-history test](tools/app-crash-lab/examples/optional-history-native/README.md): pinned MAL keeps a successful translation visible but reports a generic Error after its history write is denied. The test uses local provider stubs, accepts a truthful history-only warning, and keeps genuine provider failures separate. It does not require a real API key or claim the output disappeared.
-
-**“Overwrite succeeded” can leave example jobs in a resume.** [The OpResume replay](tools/app-crash-lab/examples/opresume/README.md) imports its actual 66-byte empty backup, reports success, and keeps three example work entries. Four runnable checks distinguish that restore failure from a passing complete synthetic control.
-
-**A valid empty project is still saved work.** [The Bazkia replay](tools/app-crash-lab/examples/bazkia/README.md) restores its actual JSON successfully, then replaces the named empty project with a sample after reload. Four prepared checks include a passing 3-node/2-link control.
-
-**It exported a backup it could not restore.** In an unchanged local [DevTasks build](tools/app-crash-lab/examples/devtasks/README.md), a synthetic task with a custom `DOCS` category exported successfully, then the same file was rejected in a fresh browser context. The built-in `FEATURE` control restored.
-
-[![21-second actual DevTasks flow: export a synthetic DOCS task, reject its backup in a fresh context, then restore a FEATURE control](docs/devtasks-backup-roundtrip.gif)](https://aichance.github.io/business-ai-recipes/devtasks-backup-roundtrip.mp4)
-
-*[Watch the 21-second MP4](https://aichance.github.io/business-ai-recipes/devtasks-backup-roundtrip.mp4) · [Run the separate Playwright round-trip test](tools/app-crash-lab/examples/devtasks/README.md). This recording uses synthetic records on pinned local source, not the public service. The recording uses the historical separate test; the same real-file checks now run in CLI0.6+. Operator testing is separate from author adoption.*
-
-**Independently run on two authors’ own apps:** [Sethera](https://qiita.com/cuculhart/items/f020080b2ef1331222d0#comment-79c9c450f3a54f3ba6ac) and [nvim-edu](https://qiita.com/s3onghyun/items/7966ac7e6a534a84f9db#comment-2d25dc275d61b168ee4a). [Reported environments and scope](#independent-author-reports).
-
-**Keep the check after fixing the bug.** These two cases now include a maintainer's fix report and our local retest:
-
-| Case | Reported fix | Replay the check |
+| Boundary to check | What the test observes | Start from |
 | --- | --- | --- |
-| Repwise 1.1.1: the backup kept a workout that History could not show | [The maintainer reported a 1.2.1 fix](https://github.com/abdulrahmanm-in/repwise/issues/7#issuecomment-6230396169). Our History check now passes; the original backup also restores with all eight stores intact. | [History contract and measured versions](tools/app-crash-lab/examples/repwise/README.md) |
-| Kaioken 1.7.1: a numeric-ID record could not open; an object ID aborted import | [The maintainer reported a 1.7.2 fix](https://github.com/rabocse/kaioken-gym-log/issues/32#issuecomment-6211357922). Our unchanged import spec changes from one passing control and two failures to three passes. | [Standalone import spec and CLI control](tools/app-crash-lab/examples/kaioken/README.md) |
+| An earlier tab saves an unrelated change | The other tab's committed fields remain intact after the peer save and reload | [LivePage: one native spec](tools/app-crash-lab/examples/livepage-native/README.md) |
+| A storage write is denied or aborted | Previously saved data stays intact and failure feedback appears; BraiNOTES also checks the app's retry | [Kinetic Curator](tools/app-crash-lab/examples/storage-write-denied-native/README.md) · [BraiNOTES](tools/app-crash-lab/examples/brainotes-native/README.md) |
+| Optional history cannot be saved after successful work | The successful output remains visible and a history-only failure is distinguished from a failed request | [MAL: one native spec](tools/app-crash-lab/examples/optional-history-native/README.md) |
 
-These are our retests on pinned local builds. The fix reports do not establish that either maintainer ran App Crash Lab; independent tool-use reports are listed separately above.
+These files target the named apps and measured versions. Follow the selected guide's prerequisites; adapt the UI actions, selectors and storage assertions for another app. Keep the passing controls and observe the failure **after it finishes**. Use the measured versions and limits in each guide to interpret the result.
 
-If these checks are useful, [star the repository](https://github.com/aichance/business-ai-recipes) to find them again before your next release. Starring is optional.
+For backup export/import, use the [real-file roundtrip path](tools/app-crash-lab/BACKUP.md) instead of substituting a reload check. [Choose among eight persistence boundaries](tools/app-crash-lab/PERSISTENCE-CHECKLIST.md).
 
 ## Check your own app
 
@@ -101,6 +72,52 @@ existing 0.11.0 runner; installing instructions alone does not test an app.
 [**Try App Crash Lab 0.11.0 without cloning**](#try-the-seeded-demo) · [**Release package & checksums**](https://github.com/aichance/business-ai-recipes/releases/tag/app-crash-lab-v0.11.0)
 
 **No install:** [**Would your test catch this?**](https://aichance.github.io/business-ai-recipes/test-the-test.html) Save English, reload a deliberately broken UI, then add a text observation to turn a misleading PASS into a detected failure. This interactive browser example links to the matching CLI checks.
+
+<details>
+<summary>More measured app examples, screenshots and maintainer fixes</summary>
+
+[**Pick a regression for your test suite:** eight persistence and save-outcome checks, the missing assertions and copyable tests](tools/app-crash-lab/PERSISTENCE-CHECKLIST.md).
+
+**Minimizing an earlier tab can erase another tab's saved row.** [Copy the single native Playwright test into your existing suite](tools/app-crash-lab/examples/livepage-native/README.md): two controls pass, while the earlier-tab case loses the saved title and row on unmodified LivePage source. It needs no App Crash Lab runtime or JSON contract. The [full original measurement](tools/app-crash-lab/examples/livepage/README.md) and native test both compare the complete page tree and verify the peer's actual persisted commit.
+
+**The same check, ready for another real app:** [Copy one file into StitchWitch's existing Playwright suite](tools/app-crash-lab/examples/stitchwitch-native/README.md). On pinned source, a name-only save from an earlier browser tab rolls a saved 400-cell chart back to white; a separate test catches the committed name reverting on reload. Two scoped controls pass and two regression checks fail. The example includes actual screenshots and complete saved-state assertions.
+
+[**A related delayed-write check:** keep a deleted Perma garden plan deleted](tools/app-crash-lab/examples/perma-native-delete/README.md). One file for the app's existing suite; actual plant drag, committed deletion, both editor/list paths and separate view cleanup.
+
+**The same boundary with IndexedDB:** [a thumbnail-only update rewinds OSW Studio's saved name and checkpoint metadata](tools/app-crash-lab/examples/osw-native/README.md). Two controls pass and the earlier-peer test fails; complete files and checkpoints remain unchanged. Copy one native file, with a small config for the app's locked Playwright dependency.
+
+For a project using plain `playwright` scripts, [copy one file to check ai-dev-readiness drafts](tools/app-crash-lab/examples/readiness-native/README.md): an earlier tab's Back navigation drops another tab's saved answer. The app's existing dependency runs both controls and the regression, without adding a test runner.
+
+**Changing auto-title can undo a system prompt saved in another tab.** [The Naidan native test](tools/app-crash-lab/examples/naidan-native/README.md) runs against a local standalone HTML without an LLM or API key. Two controls pass; the earlier settings tab restores the old prompt, including after the primary tab reloads. The small isolated test ZIP includes the complete measured settings and a locked Playwright dependency.
+
+**A failed save should tell the user.** [Copy the 109-line native write-denial test](tools/app-crash-lab/examples/storage-write-denied-native/README.md) to check both preservation of the previous ledger and visible failure feedback. On pinned Kinetic Curator source, normal saves survive reload; an injected exact-key storage error preserves the old ledger but produces no matching visible notice. The example includes the normal control and marks what to adapt for your app.
+
+For a working IndexedDB recovery path, [BraiNOTES' native abort/retry checks](tools/app-crash-lab/examples/brainotes-native/README.md) both pass: existing ink stays intact during an aborted save, the app reports failure, and its own retry preserves both strokes after reload. The standalone pack checks complete stored data and actual drawn pixels.
+
+**Successful work can be mislabeled as failed when optional history is full.** [Copy the native optional-history test](tools/app-crash-lab/examples/optional-history-native/README.md): pinned MAL keeps a successful translation visible but reports a generic Error after its history write is denied. The test uses local provider stubs, accepts a truthful history-only warning, and keeps genuine provider failures separate. It does not require a real API key or claim the output disappeared.
+
+**“Overwrite succeeded” can leave example jobs in a resume.** [The OpResume replay](tools/app-crash-lab/examples/opresume/README.md) imports its actual 66-byte empty backup, reports success, and keeps three example work entries. Four runnable checks distinguish that restore failure from a passing complete synthetic control.
+
+**A valid empty project is still saved work.** [The Bazkia replay](tools/app-crash-lab/examples/bazkia/README.md) restores its actual JSON successfully, then replaces the named empty project with a sample after reload. Four prepared checks include a passing 3-node/2-link control.
+
+**It exported a backup it could not restore.** In an unchanged local [DevTasks build](tools/app-crash-lab/examples/devtasks/README.md), a synthetic task with a custom `DOCS` category exported successfully, then the same file was rejected in a fresh browser context. The built-in `FEATURE` control restored.
+
+[![21-second actual DevTasks flow: export a synthetic DOCS task, reject its backup in a fresh context, then restore a FEATURE control](docs/devtasks-backup-roundtrip.gif)](https://aichance.github.io/business-ai-recipes/devtasks-backup-roundtrip.mp4)
+
+*[Watch the 21-second MP4](https://aichance.github.io/business-ai-recipes/devtasks-backup-roundtrip.mp4) · [Run the separate Playwright round-trip test](tools/app-crash-lab/examples/devtasks/README.md). This recording uses synthetic records on pinned local source, not the public service. The recording uses the historical separate test; the same real-file checks now run in CLI0.6+. Operator testing is separate from author adoption.*
+
+**Keep the check after fixing the bug.** These two cases now include a maintainer's fix report and our local retest:
+
+| Case | Reported fix | Replay the check |
+| --- | --- | --- |
+| Repwise 1.1.1: the backup kept a workout that History could not show | [The maintainer reported a 1.2.1 fix](https://github.com/abdulrahmanm-in/repwise/issues/7#issuecomment-6230396169). Our History check now passes; the original backup also restores with all eight stores intact. | [History contract and measured versions](tools/app-crash-lab/examples/repwise/README.md) |
+| Kaioken 1.7.1: a numeric-ID record could not open; an object ID aborted import | [The maintainer reported a 1.7.2 fix](https://github.com/rabocse/kaioken-gym-log/issues/32#issuecomment-6211357922). Our unchanged import spec changes from one passing control and two failures to three passes. | [Standalone import spec and CLI control](tools/app-crash-lab/examples/kaioken/README.md) |
+
+These are our retests on pinned local builds. The fix reports do not establish that either maintainer ran App Crash Lab; independent tool-use reports are listed separately above.
+
+</details>
+
+If these checks are useful, [star the repository](https://github.com/aichance/business-ai-recipes) to find them again before your next release. Starring is optional.
 
 ## Independent author reports
 
