@@ -1,0 +1,231 @@
+{
+  "sourceRepo": "https://github.com/nwtgck/naidan",
+  "sourceSha": "78f207e7ac4e3346ab8e4b0063b1187e14ccf6f7",
+  "sourceArchiveSha256": "c9c5496d51e190d5956ad5da473e5f77582c2ca66268e0cd7c53e7ebf21e424e",
+  "originalBlobsVerifiedAfterBuild": 24302,
+  "appSourceModified": false,
+  "measuredAt": "2026-10-18T17:08:56.197Z",
+  "playwright": "1.64.0",
+  "specSha256": "ddb7231dfeb8cd12eefbd3a2efebe8df177736814e5d088a3c899cfd3aa39c33",
+  "standaloneHtmlSha256": "930c69759f96ced7f2bccd218cf1ad44fa09f79bd9152437cfec9109b225c022",
+  "standaloneZipSha256": "5ff39248b0e9badd02312ae01990a11f145a7d8869fb7bfb135ff56c1edb208f",
+  "build": {
+    "standalone": "SUCCESS",
+    "hosted": "FAILED_GZIP_FINGERPRINT; guard unchanged",
+    "overallBuildAllExit": 1,
+    "embeddedArchiveIdentity": "unknown by upstream design"
+  },
+  "browserContext": "fresh Chromium file://; official first-run storage-type=local; no external requests",
+  "cases": [
+    {
+      "mode": "single",
+      "environment": {
+        "node": "v22.16.0",
+        "platform": "darwin",
+        "chromium": "156.0.8078.4"
+      },
+      "blockedRequests": [],
+      "pageErrors": [],
+      "nativeDialogs": [],
+      "primaryCommitted": {
+        "endpoint": {
+          "type": "openai",
+          "url": ""
+        },
+        "titleGeneration": {
+          "endpoint": "same_scope",
+          "model": "same_scope",
+          "lmParameters": {
+            "reasoning": {
+              "effort": "none"
+            }
+          }
+        },
+        "storageType": "local",
+        "providerProfiles": [],
+        "mounts": [],
+        "heavyContentAlertDismissed": false,
+        "systemPrompt": "App Crash Lab NEW primary prompt: preserve this exact text.",
+        "experimental": {
+          "sidebarSendMessageReorder": "disabled"
+        }
+      },
+      "peerPromptBeforeSave": "App Crash Lab NEW primary prompt: preserve this exact text.",
+      "afterPeerSave": {
+        "endpoint": {
+          "type": "openai",
+          "url": ""
+        },
+        "titleGeneration": "disabled",
+        "storageType": "local",
+        "providerProfiles": [],
+        "mounts": [],
+        "heavyContentAlertDismissed": false,
+        "systemPrompt": "App Crash Lab NEW primary prompt: preserve this exact text.",
+        "experimental": {
+          "sidebarSendMessageReorder": "disabled"
+        }
+      },
+      "refused": false,
+      "afterPrimaryReload": {
+        "endpoint": {
+          "type": "openai",
+          "url": ""
+        },
+        "titleGeneration": "disabled",
+        "storageType": "local",
+        "providerProfiles": [],
+        "mounts": [],
+        "heavyContentAlertDismissed": false,
+        "systemPrompt": "App Crash Lab NEW primary prompt: preserve this exact text.",
+        "experimental": {
+          "sidebarSendMessageReorder": "disabled"
+        }
+      },
+      "status": "PASS",
+      "durationMs": 2120,
+      "assertion": null
+    },
+    {
+      "mode": "fresh-peer",
+      "environment": {
+        "node": "v22.16.0",
+        "platform": "darwin",
+        "chromium": "156.0.8078.4"
+      },
+      "blockedRequests": [],
+      "pageErrors": [],
+      "nativeDialogs": [],
+      "primaryCommitted": {
+        "endpoint": {
+          "type": "openai",
+          "url": ""
+        },
+        "titleGeneration": {
+          "endpoint": "same_scope",
+          "model": "same_scope",
+          "lmParameters": {
+            "reasoning": {
+              "effort": "none"
+            }
+          }
+        },
+        "storageType": "local",
+        "providerProfiles": [],
+        "mounts": [],
+        "heavyContentAlertDismissed": false,
+        "systemPrompt": "App Crash Lab NEW primary prompt: preserve this exact text.",
+        "experimental": {
+          "sidebarSendMessageReorder": "disabled"
+        }
+      },
+      "peerPromptBeforeSave": "App Crash Lab NEW primary prompt: preserve this exact text.",
+      "afterPeerSave": {
+        "endpoint": {
+          "type": "openai",
+          "url": ""
+        },
+        "titleGeneration": "disabled",
+        "storageType": "local",
+        "providerProfiles": [],
+        "mounts": [],
+        "heavyContentAlertDismissed": false,
+        "systemPrompt": "App Crash Lab NEW primary prompt: preserve this exact text.",
+        "experimental": {
+          "sidebarSendMessageReorder": "disabled"
+        }
+      },
+      "refused": false,
+      "afterPrimaryReload": {
+        "endpoint": {
+          "type": "openai",
+          "url": ""
+        },
+        "titleGeneration": "disabled",
+        "storageType": "local",
+        "providerProfiles": [],
+        "mounts": [],
+        "heavyContentAlertDismissed": false,
+        "systemPrompt": "App Crash Lab NEW primary prompt: preserve this exact text.",
+        "experimental": {
+          "sidebarSendMessageReorder": "disabled"
+        }
+      },
+      "status": "PASS",
+      "durationMs": 3165,
+      "assertion": null
+    },
+    {
+      "mode": "earlier-peer",
+      "environment": {
+        "node": "v22.16.0",
+        "platform": "darwin",
+        "chromium": "156.0.8078.4"
+      },
+      "blockedRequests": [],
+      "pageErrors": [],
+      "nativeDialogs": [],
+      "primaryCommitted": {
+        "endpoint": {
+          "type": "openai",
+          "url": ""
+        },
+        "titleGeneration": {
+          "endpoint": "same_scope",
+          "model": "same_scope",
+          "lmParameters": {
+            "reasoning": {
+              "effort": "none"
+            }
+          }
+        },
+        "storageType": "local",
+        "providerProfiles": [],
+        "mounts": [],
+        "heavyContentAlertDismissed": false,
+        "systemPrompt": "App Crash Lab NEW primary prompt: preserve this exact text.",
+        "experimental": {
+          "sidebarSendMessageReorder": "disabled"
+        }
+      },
+      "peerPromptBeforeSave": "App Crash Lab baseline: preserve all unrelated settings.",
+      "afterPeerSave": {
+        "endpoint": {
+          "type": "openai",
+          "url": ""
+        },
+        "titleGeneration": "disabled",
+        "storageType": "local",
+        "providerProfiles": [],
+        "mounts": [],
+        "heavyContentAlertDismissed": false,
+        "systemPrompt": "App Crash Lab baseline: preserve all unrelated settings.",
+        "experimental": {
+          "sidebarSendMessageReorder": "disabled"
+        }
+      },
+      "refused": false,
+      "afterPrimaryReload": {
+        "endpoint": {
+          "type": "openai",
+          "url": ""
+        },
+        "titleGeneration": "disabled",
+        "storageType": "local",
+        "providerProfiles": [],
+        "mounts": [],
+        "heavyContentAlertDismissed": false,
+        "systemPrompt": "App Crash Lab baseline: preserve all unrelated settings.",
+        "experimental": {
+          "sidebarSendMessageReorder": "disabled"
+        }
+      },
+      "status": "FAIL",
+      "durationMs": 3235,
+      "assertion": "PRESERVATION"
+    }
+  ],
+  "thirdPartyRun": false,
+  "newUseCredit": 0,
+  "newStarCredit": 0
+}
