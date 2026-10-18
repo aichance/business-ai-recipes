@@ -74,12 +74,12 @@ Use this only when `.agents/skills/app-crash-lab` does not already exist; keep
 and review an existing folder instead of reinstalling. This copies the skill's
 four files into that project and adds `skills-lock.json`. The installer also
 keeps its own user-level metadata. The installer command was verified on macOS
-with Node 24.19.0; the v0.2.0 ZIP is checked separately against all four source files.
+with Node 24.19.0; the v0.2.1 ZIP is checked separately against all four source files.
 [Skills CLI documentation](https://www.skills.sh/docs/cli).
 
 For manual installation or an older Node 22 runtime,
-[download the repo-local skill](https://aichance.github.io/business-ai-recipes/app-crash-lab-skill-v0.2.0.zip)
-and [checksum](https://aichance.github.io/business-ai-recipes/app-crash-lab-skill-v0.2.0.zip.sha256).
+[download the repo-local skill](https://aichance.github.io/business-ai-recipes/app-crash-lab-skill-v0.2.1.zip)
+and [checksum](https://aichance.github.io/business-ai-recipes/app-crash-lab-skill-v0.2.1.zip.sha256).
 Review it, then place the whole `app-crash-lab` folder in **your app project's**
 `.agents/skills/` without overwriting an existing skill. In Codex, ask:
 
