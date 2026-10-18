@@ -16,6 +16,15 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "tools/app-crash-lab/examples/osw-native/LICENSE",
+    "tools/app-crash-lab/examples/osw-native/README.md",
+    "tools/app-crash-lab/examples/osw-native/RESULTS.json",
+    "tools/app-crash-lab/examples/osw-native/stale-thumbnail.spec.mjs",
+    "tools/app-crash-lab/examples/osw-native/playwright.config.mjs",
+    "tools/app-crash-lab/examples/osw-native/primary-saved.png",
+    "tools/app-crash-lab/examples/osw-native/after-thumbnail.png",
+    "docs/app-crash-lab-osw-native-v0.1.0.zip",
+    "docs/app-crash-lab-osw-native-v0.1.0.zip.sha256",
     "tools/app-crash-lab/examples/perma-native-delete/LICENSE",
     "tools/app-crash-lab/examples/perma-native-delete/README.md",
     "tools/app-crash-lab/examples/perma-native-delete/RESULTS.json",
@@ -825,6 +834,46 @@ def _verify_perma_delete_native(root: Path) -> None:
             raise AssertionError("Perma measured screenshot mismatch")
 
 
+def _verify_osw_native_pack(root: Path) -> None:
+    source = root / "tools/app-crash-lab/examples/osw-native"
+    result = json.loads((source / "RESULTS.json").read_text())
+    for name, expected in {
+        result["nativeSpec"]["file"]: result["nativeSpec"]["sha256"],
+        "playwright.config.mjs": result["configSha256"],
+    }.items():
+        if hashlib.sha256((source / name).read_bytes()).hexdigest() != expected:
+            raise AssertionError("OSW measured test/config hash mismatch")
+    if (source / "LICENSE").read_bytes() != (root / "LICENSE").read_bytes():
+        raise AssertionError("OSW native license mismatch")
+    if {x["case"]: x["status"] for x in result["cases"]} != {
+        "same tab": "passed",
+        "fresh peer": "passed",
+        "earlier peer": "failed",
+    } or len(result["cases"]) != 3:
+        raise AssertionError("OSW measured controls/regression mismatch")
+    for shot in result["screenshots"]:
+        raw = (source / shot["file"]).read_bytes()
+        if (
+            raw[:8] != b"\x89PNG\r\n\x1a\n"
+            or hashlib.sha256(raw).hexdigest() != shot["sha256"]
+            or int.from_bytes(raw[16:20], "big") != shot["width"]
+            or int.from_bytes(raw[20:24], "big") != shot["height"]
+        ):
+            raise AssertionError("OSW screenshot identity mismatch")
+    name = "app-crash-lab-osw-native-v0.1.0.zip"
+    raw = (root / "docs" / name).read_bytes()
+    if (root / "docs" / (name + ".sha256")).read_text() != hashlib.sha256(
+        raw
+    ).hexdigest() + "  " + name + "\n":
+        raise AssertionError("OSW ZIP checksum mismatch")
+    members = {"osw-native/" + p.name: p.read_bytes() for p in source.iterdir() if p.is_file()}
+    with ZipFile(root / "docs" / name) as archive:
+        if set(archive.namelist()) != set(members) or any(
+            archive.read(k) != v for k, v in members.items()
+        ):
+            raise AssertionError("OSW ZIP/source byte mismatch")
+
+
 def _must_refuse(action) -> None:
     try:
         action()
@@ -1450,6 +1499,7 @@ def verify(
     _verify_native_optional_history_pack(root)
     _verify_stitchwitch_native(root)
     _verify_perma_delete_native(root)
+    _verify_osw_native_pack(root)
     demo_forge_summary = _verify_demo_forge(root)
 
     supplied_inputs = (
