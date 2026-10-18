@@ -19,7 +19,8 @@ does not evaluate JavaScript supplied by the app or contract.
 | `afterReload` | Optional readiness steps after reloading |
 | `rejectedUpdate` | Invalid steps and an explicit rejection signal |
 | `backupRoundtrip` | Real JSON export → fresh restore → reload; [runner 0.6+ fields](BACKUP.md) |
-| `checks` | Default `["reload", "rejected-update"]`; select either, or explicitly opt into `"backup-roundtrip"` |
+| `staleTab` | One earlier tab saves a disjoint field in the same localStorage JSON record; explicit opt-in below |
+| `checks` | Default `["reload", "rejected-update"]`; select either, or explicitly opt into `"backup-roundtrip"` / `"stale-tab"` |
 
 Mark exactly one save-triggering step in `setup` with `save: true`. It may
 be a click, autosaving fill or a successful HTTP mutation, never a read-only
@@ -443,6 +444,73 @@ Unexpected dialogs, unreachable preparation and initial-state mismatch remain
 INCONCLUSIVE. The runner cannot infer whether configured UI steps create
 business data, so inspect those steps and retain an independent normal control.
 
+## Earlier tab saving a disjoint field (0.12.0-dev.3 prerelease)
+
+Select `checks: ["stale-tab"]` and configure `staleTab`. The default checks
+are unchanged. This check uses exactly two pages in the **same fresh context**,
+opening the peer before the primary save. It tests one ordered interference,
+not simultaneous writes or general conflict resolution.
+
+Both the protected domain and peer commit must be projections of one literal
+`localStorage` key with `parse: "json"`. Their JSON paths cannot overlap or be
+prefixes of each other. For example, protect the **entire** `componentTree`
+and observe `toolbarMinimized` separately as the peer's legitimate change.
+Add a persisted title projection to `observe`/`expected` to prove the primary
+save completed; keep the full tree observation alongside it.
+
+```json
+"staleTab": {
+  "isolation": "shared-localStorage",
+  "initialExpected": { "persistedTitle": "Saved initial sentinel" },
+  "peer": {
+    "path": "/try",
+    "ready": [{ "action": "expectValue", "target": { "label": "Page title" }, "value": "Saved initial sentinel" }],
+    "steps": [{ "action": "click", "target": { "role": "button", "name": "Minimize" }, "save": true }],
+    "commit": {
+      "observe": { "toolbar": { "source": "localStorage", "key": "livepage-page-storage", "parse": "json", "jsonPath": ["toolbarMinimized"] } },
+      "before": { "toolbar": false },
+      "expected": { "toolbar": true }
+    }
+  }
+}
+```
+
+The complete runnable contract is in [the LivePage example](examples/livepage/README.md).
+`reset` must save a synthetic initial sentinel through normal UI, marking one
+trigger `save: true`. `initialExpected` declares every root `expected` guard,
+with at least one different value. The runner waits for its persisted value
+and stable full snapshot **before** reloading. The peer's observation-only
+`ready` assertions must display that exact nonblank saved sentinel on the same
+app route. Choose a sentinel different from server/default UI text; a visible
+input or a read of shared storage does not prove the peer hydrated its state.
+
+Only then does primary `setup` perform its marked save. The new persisted
+guards and complete selected state must settle, and differ from the initial
+snapshot. The peer's persisted `before` condition must match before its UI
+action. `commit.before` and `commit.expected` declare every commit observation
+and must differ. A UI-only change, no-op save or already-completed condition
+is INCONCLUSIVE, never PASS.
+
+After the peer's save, every sampled protected value is compared while waiting
+for the persisted commit and during `stabilityMs`, then again through primary
+reload and its stability window. A sampled loss remains FAIL even if repaired
+later. Once the primary and peer commit gates are confirmed, later reload or
+readiness errors retain that demonstrated FAIL and add a follow-through
+diagnostic. A confirmed peer commit lost during these windows also fails. Both
+pages reject unexpected native dialogs; these still make the run INCONCLUSIVE.
+`reset`, `setup` and peer steps permit
+normal UI actions and assertions only; no requests, navigation, upload, script
+evaluation or dialog acceptance. `afterReload` is observation-only. An optional
+root `afterReload` assertion should check readiness, without repairing values.
+
+Use a nonzero `stabilityMs` that covers the app's known debounce (the measured
+LivePage contract uses 1000 ms for its 500 ms save). Missing/unstable setup,
+unavailable observations and unconfirmed peer completion are INCONCLUSIVE.
+The report retains phase order, full protected diffs and commit evidence.
+CLI and unchanged generated Playwright specs execute the same protocol.
+This does not cover other storage keys, IndexedDB, sessionStorage, servers,
+more tabs, devices, unsampled transient losses or writes after the windows.
+
 ## Isolation and timing
 
 Each pattern has a fresh, nonpersistent browser context. First navigate to
@@ -457,4 +525,5 @@ rendering. After the first match, selected values are sampled for `stabilityMs`
 (default 250 ms); a mismatch during that window fails. A restoration before
 the first match can pass, and changes after the observation window are outside
 coverage. This is not continuous monitoring or a machine-crash durability proof. Use explicit save-completion/readiness steps. Parallel requests,
-real-time clocks and multiple tabs are outside this first pack.
+real-time clocks and multi-tab behavior beyond the explicit `stale-tab`
+sequence are outside this pack.

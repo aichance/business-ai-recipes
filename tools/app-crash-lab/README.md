@@ -8,6 +8,14 @@ Describe one working save flow and the values worth keeping. App Crash Lab
 checks **reload** and **rejected updates**, then gives you the changed values,
 a browser trace and ordinary Playwright tests you can rerun after a fix.
 
+**0.12.0-dev.3 adds an opt-in two-tab regression.** An earlier tab changes an
+unrelated preference; the complete selected saved document must survive that
+save and reload. The [LivePage example](examples/livepage/README.md) reproduces
+an existing reported overwrite on an unmodified pinned source, with same-tab
+and freshly opened-tab controls. [Contract and limits](CONTRACT.md#earlier-tab-saving-a-disjoint-field-0120-dev3-prerelease).
+This prerelease is available in the source checkout and the example's portable
+trial; the pinned stable release commands below retain their existing features.
+
 **0.11 adds persisted source readiness for autosave.** Wait for known saved
 values before fixing the complete backup baseline, without weakening full-record
 comparisons. [Configure source readiness](BACKUP.md#wait-for-persisted-source-values-011)
