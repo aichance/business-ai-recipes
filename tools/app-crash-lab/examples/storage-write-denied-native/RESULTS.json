@@ -1,0 +1,152 @@
+{
+  "measuredAt": "2026-10-18T03:58:02.881134+00:00",
+  "kind": "AI-assisted operator tests; separate from maintainer execution and third-party adoption",
+  "source": {
+    "repository": "https://github.com/NeuralIO444/Kinetic_Curator",
+    "commit": "b086c9b02835c3413fa5f65eccde286bf678c9e0",
+    "version": "0.9.0",
+    "unmodifiedOriginalBlobs": 1657,
+    "mode": "production Vite preview; reused existing build"
+  },
+  "environment": {
+    "os": "macOS",
+    "node": "22.16.0",
+    "playwright": "1.64.0",
+    "browser": "Chromium",
+    "data": "synthetic; empty contexts; loopback only"
+  },
+  "nativeSpec": {
+    "file": "write-denied.spec.mjs",
+    "lines": 109,
+    "sha256": "48761acce83aec29b922ec65875f4f31bc5f613851dfe4723bb457e7caa36a18",
+    "runtimeDependencies": [
+      "@playwright/test",
+      "Node built-ins"
+    ],
+    "appCrashLabProtocolOrContractRequired": false
+  },
+  "observation": {
+    "windowMs": 1000,
+    "sampleIntervalMs": 75,
+    "fault": "synthetic exact-key QuotaExceededError in current document",
+    "key": "kc:ledger:keeps:v1",
+    "observedLedgerLossIsLatched": true,
+    "unobservedInstantsAndLaterWritesNotCovered": true
+  },
+  "realAppCases": [
+    {
+      "test": "control: normal keeps save and survive reload",
+      "nativeStatus": "passed",
+      "baselineRecords": 1,
+      "deniedAttempts": 0,
+      "sampledPriorLedgerPreserved": null,
+      "sampleCount": 0,
+      "matchingVisibleErrorSeen": null,
+      "normalSavedRecordsAfterReload": 2,
+      "failureStage": null
+    },
+    {
+      "test": "a rejected keep write is visible and preserves the previous ledger",
+      "nativeStatus": "failed",
+      "baselineRecords": 1,
+      "deniedAttempts": 1,
+      "sampledPriorLedgerPreserved": true,
+      "sampleCount": 13,
+      "matchingVisibleErrorSeen": false,
+      "normalSavedRecordsAfterReload": null,
+      "failureStage": "FEEDBACK"
+    }
+  ],
+  "authoredAcceptanceControls": {
+    "notActualUpstreamFixes": true,
+    "allExpectedOutcomesVerified": true,
+    "groups": [
+      {
+        "case": "handled",
+        "ok": true,
+        "exit_code": 0,
+        "passed": 2,
+        "failed": 0,
+        "expected_error_found": true,
+        "elapsed_seconds": 5.778
+      },
+      {
+        "case": "delayed-first",
+        "ok": true,
+        "exit_code": 0,
+        "passed": 2,
+        "failed": 0,
+        "expected_error_found": true,
+        "elapsed_seconds": 6.622
+      },
+      {
+        "case": "retry",
+        "ok": true,
+        "exit_code": 0,
+        "passed": 1,
+        "failed": 0,
+        "expected_error_found": true,
+        "elapsed_seconds": 4.276
+      },
+      {
+        "case": "silent",
+        "ok": true,
+        "exit_code": 1,
+        "passed": 0,
+        "failed": 1,
+        "expected_error_found": true,
+        "elapsed_seconds": 4.432
+      },
+      {
+        "case": "no-attempt",
+        "ok": true,
+        "exit_code": 1,
+        "passed": 0,
+        "failed": 1,
+        "expected_error_found": true,
+        "elapsed_seconds": 7.272
+      },
+      {
+        "case": "corrupt-prior",
+        "ok": true,
+        "exit_code": 1,
+        "passed": 0,
+        "failed": 1,
+        "expected_error_found": true,
+        "elapsed_seconds": 3.224
+      },
+      {
+        "case": "native-dialog",
+        "ok": true,
+        "exit_code": 1,
+        "passed": 0,
+        "failed": 1,
+        "expected_error_found": true,
+        "elapsed_seconds": 3.752
+      },
+      {
+        "case": "invalid-second",
+        "ok": true,
+        "exit_code": 1,
+        "passed": 0,
+        "failed": 1,
+        "expected_error_found": true,
+        "elapsed_seconds": 2.875
+      }
+    ]
+  },
+  "independentOwnAppUseClaimed": false,
+  "knownLimits": [
+    "not actual quota exhaustion",
+    "not IndexedDB or server storage",
+    "current document only",
+    "visible matching DOM error required; native dialogs unsupported",
+    "other app Playwright version not verified",
+    "no upstream fix claimed"
+  ],
+  "timing": {
+    "totalTestDeadlineMs": 60000,
+    "observationWindowUnchangedMs": 1000,
+    "reason": "first extracted normal-control run exceeded the earlier 35000ms whole-test deadline; separate control passed; the final native tests use 60000ms with all preconditions and assertions unchanged"
+  }
+}

@@ -12,6 +12,8 @@ Turn one successful save workflow into two repeatable checks: **reload without l
 
 **Minimizing an earlier tab can erase another tab's saved row.** [Copy the single native Playwright test into your existing suite](tools/app-crash-lab/examples/livepage-native/README.md): two controls pass, while the earlier-tab case loses the saved title and row on unmodified LivePage source. It needs no App Crash Lab runtime or JSON contract. The [full original measurement](tools/app-crash-lab/examples/livepage/README.md) and native test both compare the complete page tree and verify the peer's actual persisted commit.
 
+**A failed save should tell the user.** [Copy the 109-line native write-denial test](tools/app-crash-lab/examples/storage-write-denied-native/README.md) to check both preservation of the previous ledger and visible failure feedback. On pinned Kinetic Curator source, normal saves survive reload; an injected exact-key storage error preserves the old ledger but produces no matching visible notice. The example includes the normal control and marks what to adapt for your app.
+
 **“Overwrite succeeded” can leave example jobs in a resume.** [The OpResume replay](tools/app-crash-lab/examples/opresume/README.md) imports its actual 66-byte empty backup, reports success, and keeps three example work entries. Four runnable checks distinguish that restore failure from a passing complete synthetic control.
 
 **A valid empty project is still saved work.** [The Bazkia replay](tools/app-crash-lab/examples/bazkia/README.md) restores its actual JSON successfully, then replaces the named empty project with a sample after reload. Four prepared checks include a passing 3-node/2-link control.
