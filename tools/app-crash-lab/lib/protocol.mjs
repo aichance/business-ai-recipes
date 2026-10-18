@@ -280,11 +280,21 @@ async function readState(page, contract, probes) {
   const result = {};
   const storageProbes = Object.entries(probes).filter(([, probe]) => probe.source.endsWith('Storage'));
   // A delayed save must not split one snapshot into old and new storage values.
-  const storageValues = storageProbes.length ? await page.evaluate(entries => Object.fromEntries(entries.map(([name, { source, key, keyFrom, keyPrefix = '' }]) => {
-    const storage = window[source];
-    const suffix = keyFrom === undefined ? null : storage.getItem(keyFrom);
-    return [name, keyFrom !== undefined && suffix === null ? null : storage.getItem(keyFrom === undefined ? key : keyPrefix + suffix)];
-  })), storageProbes) : {};
+  const storageValues = storageProbes.length ? await page.evaluate(entries => {
+    // A single JSON envelope may serve several projections. Read each resolved
+    // source/key once per sample, even if another tab writes between calls.
+    const sources = new Map();
+    const read = (source, key) => {
+      if (!sources.has(source)) sources.set(source, new Map());
+      const records = sources.get(source);
+      if (!records.has(key)) records.set(key, window[source].getItem(key));
+      return records.get(key);
+    };
+    return Object.fromEntries(entries.map(([name, { source, key, keyFrom, keyPrefix = '' }]) => {
+      const suffix = keyFrom === undefined ? null : read(source, keyFrom);
+      return [name, keyFrom !== undefined && suffix === null ? null : read(source, keyFrom === undefined ? key : keyPrefix + suffix)];
+    }));
+  }, storageProbes) : {};
   const indexedValues = await readIndexedDB(page, Object.entries(probes).filter(([, p]) => p.source === 'indexedDB'), contract.timeoutMs);
   for (const [name, probe] of Object.entries(probes)) {
     let value;
@@ -412,6 +422,7 @@ function dialogRejection(capture, start, expected) {
 }
 
 export async function executeCheck(page, contract, check) {
+  if (check === 'stale-tab') return executeStaleTab(page, contract);
   const result = { check, status: 'inconclusive', phase: 'reset', before: null, after: null, differences: [], events: [] };
   const chooserSetup = contract.setup.some(step => step.fileChooser);
   const rejectionDialogs = check === 'rejected-update' && (contract.rejectedUpdate.dialog || contract.rejectedUpdate.steps.some(step => step.confirm));
@@ -564,6 +575,130 @@ async function stableState(page, contract, probes, expected) {
       await new Promise(resolve => setTimeout(resolve, Math.min(75, until - Date.now())));
       result.state = await readState(page, contract, probes);
       if (!isDeepStrictEqual(selected(result.state, expected), expected)) { result.matched = false; break; }
+    }
+  }
+  return result;
+}
+
+// One pre-existing peer, one shared JSON envelope, one disjoint UI save.
+// All storage probes in a sample use readState's single read-only evaluation.
+async function executeStaleTab(page, contract) {
+  const result = { check: 'stale-tab', status: 'inconclusive', phase: 'initial-save', before: null, after: null, differences: [], events: [], comparisons: [] };
+  const stale = contract.staleTab, commit = stale.peer.commit;
+  const jointProbes = { ...contract.observe, ...Object.fromEntries(Object.entries(commit.observe).map(([name, probe]) => [`__peer_${name}`, probe])) };
+  const protectedState = state => Object.fromEntries(Object.keys(contract.observe).map(name => [name, state[name]]));
+  const peerState = state => Object.fromEntries(Object.keys(commit.observe).map(name => [name, state[`__peer_${name}`]]));
+  const primaryDialogs = captureDialogs(page, false);
+  result.dialogs = primaryDialogs.events;
+  let peer, peerDialogs, firstViolation, commitLost = false;
+  const assertDialogs = async () => {
+    for (const capture of [primaryDialogs, peerDialogs].filter(Boolean)) {
+      await Promise.all(capture.pending);
+      assertSupportedDialogs(capture);
+    }
+  };
+  const checkpoint = phase => result.events.push({ phase, status: 'completed' });
+  const knownState = async expected => {
+    const known = await waitForState(page, contract, contract.observe, expected);
+    if (!known.matched) throw new Error('Known saved values did not match; no preservation verdict');
+    const stable = await stableState(page, contract, contract.observe, known.state);
+    if (!stable.matched) throw new Error('Saved baseline did not remain stable; no preservation verdict');
+    return stable.state;
+  };
+  const compare = (sample, phase) => {
+    const after = protectedState(sample);
+    const diff = differences(result.before, after);
+    if (diff.length && !firstViolation) firstViolation = { phase, after, differences: diff };
+    result.after = after;
+    result.comparisons.push({ phase, matched: diff.length === 0, differences: diff });
+    return peerState(sample);
+  };
+  page.setDefaultTimeout(contract.timeoutMs);
+  page.setDefaultNavigationTimeout(contract.timeoutMs);
+  try {
+    await page.goto(scopedURL(contract.baseURL, contract.path), { waitUntil: 'domcontentloaded' });
+    await applySteps(page, contract, contract.reset, 'initial-save', result.events, primaryDialogs);
+    result.initial = await knownState(stale.initialExpected);
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await applySteps(page, contract, stale.peer.ready, 'initial-hydrated', result.events, primaryDialogs);
+    const initialReload = await stableState(page, contract, contract.observe, result.initial);
+    if (!initialReload.matched) throw new Error('Initial sentinel did not survive reload; no stale-tab verdict');
+    result.phase = 'peer-ready';
+    peer = await page.context().newPage();
+    peer.setDefaultTimeout(contract.timeoutMs);
+    peer.setDefaultNavigationTimeout(contract.timeoutMs);
+    peerDialogs = captureDialogs(peer, false);
+    result.peerDialogs = peerDialogs.events;
+    await peer.goto(scopedURL(contract.baseURL, stale.peer.path), { waitUntil: 'domcontentloaded' });
+    await applySteps(peer, contract, stale.peer.ready, 'peer-ready', result.events, peerDialogs);
+    const hydrated = await stableState(page, contract, contract.observe, result.initial);
+    if (!hydrated.matched) throw new Error('Initial state changed while the peer hydrated');
+    await assertDialogs();
+    checkpoint('peer-hydrated-before-primary-save');
+    result.phase = 'primary-save';
+    await applySteps(page, contract, contract.setup, 'primary-save', result.events, primaryDialogs);
+    result.before = await knownState(contract.expected);
+    if (isDeepStrictEqual(result.initial, result.before)) throw new Error('Primary save did not change selected persisted state');
+    checkpoint('primary-saved');
+    result.phase = 'peer-precondition';
+    const previous = await readState(page, contract, jointProbes);
+    if (!isDeepStrictEqual(protectedState(previous), result.before)) throw new Error('Protected baseline changed before peer action');
+    result.peerCommit = { before: peerState(previous), expected: commit.expected, actual: null, confirmed: false };
+    if (!isDeepStrictEqual(result.peerCommit.before, commit.before)) throw new Error('Persisted peer commit precondition did not match');
+    result.phase = 'peer-save';
+    await applySteps(peer, contract, stale.peer.steps, 'peer-save', result.events, peerDialogs);
+    result.phase = 'peer-commit';
+    const deadline = Date.now() + contract.timeoutMs;
+    let until = null;
+    do {
+      await assertDialogs();
+      const sample = await readState(page, contract, jointProbes);
+      result.peerCommit.actual = compare(sample, 'peer-commit');
+      const matched = isDeepStrictEqual(result.peerCommit.actual, commit.expected);
+      if (matched && !result.peerCommit.confirmed) {
+        result.peerCommit.confirmed = true;
+        until = Date.now() + contract.stabilityMs;
+        checkpoint('peer-committed');
+      } else if (!matched && result.peerCommit.confirmed) commitLost = true;
+      if (until !== null && Date.now() >= until) break;
+      await new Promise(resolve => setTimeout(resolve, 75));
+    } while (until !== null || Date.now() < deadline);
+    if (!result.peerCommit.confirmed) throw new Error('Peer edit did not produce its declared persisted commit');
+    result.phase = 'primary-reload';
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await applySteps(page, contract, contract.afterReload ?? [], 'after-reload', result.events, primaryDialogs);
+    const reloadUntil = Date.now() + contract.stabilityMs;
+    do {
+      await assertDialogs();
+      const final = await readState(page, contract, jointProbes);
+      result.peerCommit.afterReload = compare(final, 'primary-reload');
+      if (!isDeepStrictEqual(result.peerCommit.afterReload, commit.expected)) commitLost = true;
+      if (Date.now() >= reloadUntil) break;
+      await new Promise(resolve => setTimeout(resolve, Math.min(75, reloadUntil - Date.now())));
+    } while (true);
+    checkpoint('primary-reloaded');
+    result.phase = 'compare';
+    result.peerCommit.preservedAfterReload = !commitLost;
+    result.differences = firstViolation?.differences ?? [];
+    if (firstViolation) result.firstViolation = firstViolation;
+    result.status = firstViolation || commitLost ? 'fail' : 'pass';
+    if (firstViolation) result.error = 'Selected saved state changed after the peer edit';
+    else if (commitLost) result.error = 'Confirmed peer commit did not remain persisted';
+  } catch (error) {
+    const provenFailure = result.peerCommit?.confirmed && (firstViolation || commitLost);
+    result.status = provenFailure ? 'fail' : 'inconclusive';
+    result.error = provenFailure ? (firstViolation ? 'Selected saved state changed after the peer edit' : 'Confirmed peer commit did not remain persisted') : error.message;
+    if (provenFailure) result.followthroughError = error.message;
+    if (commitLost) result.peerCommit.preservedAfterReload = false;
+    result.differences = firstViolation?.differences ?? [];
+    if (firstViolation) result.firstViolation = firstViolation;
+  } finally {
+    try { await assertDialogs(); }
+    catch (error) { result.status = 'inconclusive'; result.error = error.message; }
+    page.off('dialog', primaryDialogs.listener);
+    if (peer) {
+      peer.off('dialog', peerDialogs.listener);
+      await peer.close();
     }
   }
   return result;
