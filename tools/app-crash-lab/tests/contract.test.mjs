@@ -92,4 +92,8 @@ test('report escapes app values and never calls infrastructure failure a pass', 
   assert.ok(!html.includes('<script>'));
   assert.ok(html.includes('Some checks could not be verified'));
   assert.ok(html.includes('Infrastructure error:'));
+  const stale = renderReport({ name: 'diagnostic', pack: 'pack', version: 'test', baseURL: 'local', createdAt: 'now', contractHash: 'test', results: [{ check: 'stale-tab', status: 'fail', phase: 'primary-reload', error: 'Saved state changed', before: {}, after: {}, differences: [], events: [], peerCommit: { confirmed: true }, followthroughError: '<script>untrusted locator text</script>' }] });
+  assert.ok(stale.includes('followthroughError'));
+  assert.ok(stale.includes('&lt;script&gt;untrusted locator text&lt;/script&gt;'));
+  assert.ok(!stale.includes('<script>'));
 });
