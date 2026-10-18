@@ -1,0 +1,183 @@
+{
+  "measuredAt": "2026-10-18T06:10:01.581939+00:00",
+  "kind": "AI-assisted operator compatibility/regression tests; not author execution or adoption",
+  "source": {
+    "repository": "https://github.com/laffyxy/MAL",
+    "commit": "216005fae2214cec4c6c6597435992d37a9eb810",
+    "unmodifiedRuntimeFiles": 6,
+    "fullCheckoutOrUpstreamSuiteExecuted": false
+  },
+  "environment": {
+    "os": "macOS",
+    "node": "22.16.0",
+    "playwright": "1.64.0",
+    "browser": "Chromium",
+    "context": "fresh, service workers blocked, synthetic input only"
+  },
+  "nativeSpec": {
+    "file": "optional-history.spec.mjs",
+    "lines": 142,
+    "sha256": "87521159fe9b102b8d4b0015750747d2d3c6cfd35443d5bfe2b74c44bde90972",
+    "runtimeDependencies": [
+      "@playwright/test",
+      "Node built-ins"
+    ],
+    "appCrashLabProtocolOrContractRequired": false
+  },
+  "fault": {
+    "key": "translation_history",
+    "method": "armed exact-key localStorage.setItem QuotaExceededError; all other writes delegate",
+    "providerResponse": "local synthetic JSON fulfillment; no real provider call",
+    "realApiKeysUsed": 0,
+    "allOtherExternalRequests": "blocked",
+    "denialTimeNoticeSnapshot": "microtask after synchronous catch/finally; visible DOM notice log",
+    "mainFailureOracleScope": "known MAL injected Error and explicit Translation/OCR failed or unsuccessful wording; adapt for other copy/locale"
+  },
+  "cases": [
+    {
+      "source": "original",
+      "passed": 2,
+      "failed": 1,
+      "cases": [
+        {
+          "name": "normal translation succeeds and persists its history",
+          "status": "passed"
+        },
+        {
+          "name": "successful translation is not reported as failed when optional history is denied",
+          "status": "failed"
+        },
+        {
+          "name": "real provider failure remains a failure, without a history write",
+          "status": "passed"
+        }
+      ],
+      "witness": {
+        "locallyFulfilledSuccessfulResponses": 2,
+        "deniedHistoryWrites": 1,
+        "newOutputRetained": true,
+        "priorDurableHistoryUnchanged": true,
+        "denialTimeNotice": {
+          "toast": "Error: C_SYNTHETIC_HISTORY_WRITE_DENIED",
+          "toastShown": true,
+          "translation": "Synthetic translation 2"
+        },
+        "visibleNotices": [
+          "Translation completed!",
+          "Error: C_SYNTHETIC_HISTORY_WRITE_DENIED"
+        ]
+      }
+    },
+    {
+      "source": "corrected-control",
+      "passed": 3,
+      "failed": 0,
+      "cases": [
+        {
+          "name": "normal translation succeeds and persists its history",
+          "status": "passed"
+        },
+        {
+          "name": "successful translation is not reported as failed when optional history is denied",
+          "status": "passed"
+        },
+        {
+          "name": "real provider failure remains a failure, without a history write",
+          "status": "passed"
+        }
+      ],
+      "witness": {
+        "locallyFulfilledSuccessfulResponses": 2,
+        "deniedHistoryWrites": 1,
+        "newOutputRetained": true,
+        "priorDurableHistoryUnchanged": true,
+        "denialTimeNotice": {
+          "toast": "Translation completed; history not saved.",
+          "toastShown": true,
+          "translation": "Synthetic translation 2"
+        },
+        "visibleNotices": [
+          "Translation completed!",
+          "Translation completed; history not saved."
+        ]
+      }
+    },
+    {
+      "source": "renamed-error-control",
+      "passed": 2,
+      "failed": 1,
+      "cases": [
+        {
+          "name": "normal translation succeeds and persists its history",
+          "status": "passed"
+        },
+        {
+          "name": "successful translation is not reported as failed when optional history is denied",
+          "status": "failed"
+        },
+        {
+          "name": "real provider failure remains a failure, without a history write",
+          "status": "passed"
+        }
+      ],
+      "witness": {
+        "locallyFulfilledSuccessfulResponses": 2,
+        "deniedHistoryWrites": 1,
+        "newOutputRetained": true,
+        "priorDurableHistoryUnchanged": true,
+        "denialTimeNotice": {
+          "toast": "Translation failed",
+          "toastShown": true,
+          "translation": "Synthetic translation 2"
+        },
+        "visibleNotices": [
+          "Translation completed!",
+          "Translation failed"
+        ]
+      }
+    },
+    {
+      "source": "hidden-error-control",
+      "passed": 3,
+      "failed": 0,
+      "cases": [
+        {
+          "name": "normal translation succeeds and persists its history",
+          "status": "passed"
+        },
+        {
+          "name": "successful translation is not reported as failed when optional history is denied",
+          "status": "passed"
+        },
+        {
+          "name": "real provider failure remains a failure, without a history write",
+          "status": "passed"
+        }
+      ],
+      "witness": {
+        "locallyFulfilledSuccessfulResponses": 2,
+        "deniedHistoryWrites": 1,
+        "newOutputRetained": true,
+        "priorDurableHistoryUnchanged": true,
+        "denialTimeNotice": {
+          "toast": "Error: C_SYNTHETIC_HISTORY_WRITE_DENIED",
+          "toastShown": false,
+          "translation": "Synthetic translation 2"
+        },
+        "visibleNotices": [
+          "Translation completed!"
+        ]
+      }
+    }
+  ],
+  "controlsAreIsolatedHypotheticalCopiesNotUpstreamFixes": true,
+  "newTranslationDisappeared": false,
+  "independentOwnAppUseClaimed": false,
+  "limits": [
+    "no real OCR/translation/model availability result",
+    "no real quota exhaustion or iOS eviction",
+    "current document only; not IndexedDB/server storage",
+    "in-memory history rollback not required or claimed",
+    "arbitrary notification wording and asynchronous completion require adapter changes"
+  ]
+}

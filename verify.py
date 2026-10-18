@@ -16,6 +16,15 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "tools/app-crash-lab/examples/optional-history-native/LICENSE",
+    "tools/app-crash-lab/examples/optional-history-native/README.md",
+    "tools/app-crash-lab/examples/optional-history-native/RESULTS.json",
+    "tools/app-crash-lab/examples/optional-history-native/optional-history.spec.mjs",
+    "tools/app-crash-lab/examples/optional-history-native/playwright.config.mjs",
+    "tools/app-crash-lab/examples/optional-history-native/package.json",
+    "tools/app-crash-lab/examples/optional-history-native/package-lock.json",
+    "docs/app-crash-lab-optional-history-native-v0.1.0.zip",
+    "docs/app-crash-lab-optional-history-native-v0.1.0.zip.sha256",
     "tools/app-crash-lab/examples/livepage-native/LICENSE",
     "tools/app-crash-lab/examples/livepage-native/README.md",
     "tools/app-crash-lab/examples/livepage-native/RESULTS.json",
@@ -702,6 +711,38 @@ def _verify_native_write_denied_pack(root: Path) -> None:
         raise AssertionError("native write-denial measured source hash mismatch")
 
 
+def _verify_native_optional_history_pack(root: Path) -> None:
+    source = root / "tools/app-crash-lab/examples/optional-history-native"
+    name = "app-crash-lab-optional-history-native-v0.1.0.zip"
+    path = root / "docs" / name
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    if path.with_name(name + ".sha256").read_text().split() != [digest, name]:
+        raise AssertionError("native optional-history checksum mismatch")
+    expected = {
+        "LICENSE",
+        "README.md",
+        "RESULTS.json",
+        "optional-history.spec.mjs",
+        "playwright.config.mjs",
+        "package.json",
+        "package-lock.json",
+    }
+    with ZipFile(path) as archive:
+        if len(archive.namelist()) != len(expected) or set(archive.namelist()) != {
+            "optional-history-native/" + item for item in expected
+        }:
+            raise AssertionError("native optional-history file set mismatch")
+        for item in expected:
+            if archive.read("optional-history-native/" + item) != (source / item).read_bytes():
+                raise AssertionError(f"native optional-history source mismatch: {item}")
+    result = json.loads((source / "RESULTS.json").read_text())
+    if (
+        result["nativeSpec"]["sha256"]
+        != hashlib.sha256((source / "optional-history.spec.mjs").read_bytes()).hexdigest()
+    ):
+        raise AssertionError("native optional-history measured source hash mismatch")
+
+
 def _must_refuse(action) -> None:
     try:
         action()
@@ -1317,6 +1358,7 @@ def verify(
     _verify_livepage_pack(root)
     _verify_native_livepage_pack(root)
     _verify_native_write_denied_pack(root)
+    _verify_native_optional_history_pack(root)
     demo_forge_summary = _verify_demo_forge(root)
 
     supplied_inputs = (
