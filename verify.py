@@ -16,6 +16,16 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "tools/app-crash-lab/examples/naidan-native/LICENSE",
+    "tools/app-crash-lab/examples/naidan-native/README.md",
+    "tools/app-crash-lab/examples/naidan-native/RESULTS.json",
+    "tools/app-crash-lab/examples/naidan-native/stale-settings.spec.mjs",
+    "tools/app-crash-lab/examples/naidan-native/playwright.config.mjs",
+    "tools/app-crash-lab/examples/naidan-native/package.json",
+    "tools/app-crash-lab/examples/naidan-native/package-lock.json",
+    "tools/app-crash-lab/examples/naidan-native/earlier-peer-after-save.png",
+    "docs/app-crash-lab-naidan-native-v0.1.0.zip",
+    "docs/app-crash-lab-naidan-native-v0.1.0.zip.sha256",
     "tools/app-crash-lab/examples/readiness-native/README.md",
     "tools/app-crash-lab/examples/readiness-native/RESULTS.json",
     "tools/app-crash-lab/examples/readiness-native/draft-navigation.mjs",
@@ -523,6 +533,8 @@ _DOTS_WORKSPACE_PATHS = frozenset(
         "tools/app-crash-lab/examples/livepage/.crash-lab",
         "tools/app-crash-lab/examples/livepage-native/.crash-lab",
         "tools/app-crash-lab/examples/livepage-native/node_modules",
+        "tools/app-crash-lab/examples/naidan-native/.crash-lab",
+        "tools/app-crash-lab/examples/naidan-native/node_modules",
         "tools/app-crash-lab/examples/storage-write-denied-native/test-results",
         "tools/app-crash-lab/examples/storage-write-denied-native/node_modules",
     }
@@ -875,6 +887,50 @@ def _verify_osw_native_pack(root: Path) -> None:
             archive.read(k) != v for k, v in members.items()
         ):
             raise AssertionError("OSW ZIP/source byte mismatch")
+
+
+def _verify_naidan_native_pack(root: Path) -> None:
+    source = root / "tools/app-crash-lab/examples/naidan-native"
+    result = json.loads((source / "RESULTS.json").read_text())
+    if (
+        hashlib.sha256((source / "stale-settings.spec.mjs").read_bytes()).hexdigest()
+        != result["specSha256"]
+    ):
+        raise AssertionError("Naidan measured script hash mismatch")
+    cases = result["cases"]
+    if len(cases) != 3 or {row["mode"]: row["status"] for row in cases} != {
+        "single": "PASS",
+        "fresh-peer": "PASS",
+        "earlier-peer": "FAIL",
+    }:
+        raise AssertionError("Naidan measured controls/regression mismatch")
+    for row in cases:
+        expected = {**row["primaryCommitted"], "titleGeneration": "disabled"}
+        for stage in ["afterPeerSave", "afterPrimaryReload"]:
+            actual = row[stage]
+            if (actual == expected) != (row["mode"] != "earlier-peer"):
+                raise AssertionError("Naidan saved snapshots contradict outcome")
+            if row["mode"] == "earlier-peer":
+                if (
+                    actual["systemPrompt"] != row["peerPromptBeforeSave"]
+                    or {**actual, "systemPrompt": expected["systemPrompt"]} != expected
+                ):
+                    raise AssertionError("Naidan changed more than the measured prompt")
+        if row["refused"] or any(
+            row[name] for name in ["blockedRequests", "pageErrors", "nativeDialogs"]
+        ):
+            raise AssertionError("Naidan measured diagnostic mismatch")
+    name = "app-crash-lab-naidan-native-v0.1.0.zip"
+    bundle = root / "docs" / name
+    digest = hashlib.sha256(bundle.read_bytes()).hexdigest()
+    if (root / "docs" / (name + ".sha256")).read_text() != f"{digest}  {name}\n":
+        raise AssertionError("Naidan ZIP digest mismatch")
+    members = {"naidan-native/" + p.name: p.read_bytes() for p in source.iterdir() if p.is_file()}
+    with ZipFile(bundle) as archive:
+        if set(archive.namelist()) != set(members) or len(archive.namelist()) != len(members):
+            raise AssertionError("Naidan ZIP membership mismatch")
+        if any(archive.read(path) != body for path, body in members.items()):
+            raise AssertionError("Naidan ZIP/source byte mismatch")
 
 
 def _verify_readiness_native_pack(root: Path) -> None:
@@ -1537,6 +1593,7 @@ def verify(
     _verify_perma_delete_native(root)
     _verify_osw_native_pack(root)
     _verify_readiness_native_pack(root)
+    _verify_naidan_native_pack(root)
     demo_forge_summary = _verify_demo_forge(root)
 
     supplied_inputs = (
