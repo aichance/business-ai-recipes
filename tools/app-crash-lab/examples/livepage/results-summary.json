@@ -1,0 +1,116 @@
+{
+  "measuredAt": "2026-10-18T00:57:22.299065+00:00",
+  "scope": "Operator local reproduction of existing source-traced issue355; not new issue discovery, maintainer use, star or whole-app certification.",
+  "upstream": {
+    "repository": "glennfaison/livepage",
+    "ownerType": "User",
+    "ownerId": 17485270,
+    "repoId": 992906198,
+    "sourceSha": "915f828f0b8f9fabc0124c37b5d94797b2ef02e3",
+    "version": "0.1.0",
+    "mode": "unmodified production build",
+    "existingIssue": "https://github.com/glennfaison/livepage/issues/355",
+    "originalBlobsChecked": 476,
+    "sourceUnchanged": true,
+    "license": "MIT"
+  },
+  "runtime": {
+    "node": "22.16.0",
+    "playwright": "1.64.0",
+    "appCrashLab": "0.12.0-dev.3",
+    "browser": "Chromium, fresh disposable context",
+    "network": "loopback origin only",
+    "promptAssistEnabled": false,
+    "providerKeysInherited": false,
+    "appSourcePatched": false
+  },
+  "protection": {
+    "key": "livepage-page-storage",
+    "entireSelectedValue": "componentTree, every field/node/ID/attribute retained",
+    "guardPath": [
+      "componentTree",
+      0,
+      "attributes",
+      "title"
+    ],
+    "peerCommitPath": [
+      "toolbarMinimized"
+    ],
+    "peerCommitBefore": false,
+    "peerCommitExpected": true,
+    "stabilityMs": 1000,
+    "knownAppDebounceMs": 500
+  },
+  "uiControls": [
+    {
+      "mode": "same-tab",
+      "completeTreePreserved": true,
+      "beforeRowCount": 1,
+      "afterReloadRowCount": 1,
+      "peerCommitConfirmed": true,
+      "blockedRequests": 0,
+      "pageErrors": []
+    },
+    {
+      "mode": "fresh-peer",
+      "completeTreePreserved": true,
+      "beforeRowCount": 1,
+      "afterReloadRowCount": 1,
+      "peerCommitConfirmed": true,
+      "blockedRequests": 0,
+      "pageErrors": []
+    },
+    {
+      "mode": "stale-peer",
+      "completeTreePreserved": false,
+      "beforeRowCount": 1,
+      "afterReloadRowCount": 0,
+      "peerCommitConfirmed": true,
+      "blockedRequests": 0,
+      "pageErrors": []
+    }
+  ],
+  "runner": {
+    "status": "fail",
+    "phase": "compare",
+    "exitCode": 1,
+    "contractSha256": "c404699cf156ba5d65b092d5c1bc0dfa31f93b010a360871e49f875268684549",
+    "peerCommitConfirmed": true,
+    "peerCommitRetainedAfterReload": true,
+    "beforeRowCount": 1,
+    "afterReloadRowCount": 0,
+    "differences": [
+      {
+        "path": "$[\"tree\"][\"0\"][\"attributes\"][\"title\"]",
+        "change": "changed"
+      },
+      {
+        "path": "$[\"tree\"][\"0\"][\"children\"][\"0\"]",
+        "change": "removed"
+      },
+      {
+        "path": "$[\"persistedTitle\"]",
+        "change": "changed"
+      }
+    ],
+    "checkpointOrder": [
+      "peer-hydrated-before-primary-save",
+      "primary-saved",
+      "peer-committed",
+      "primary-reloaded"
+    ]
+  },
+  "portable": {
+    "specSha256": "79af6a4c6f8191601cbb09e3a9636dd2b4dc0e5690fded553724da944493f9d1",
+    "configSha256": "d93c6fdafbc36e6deaddefec817b617780282e5b7041013ad3fd3b918b07ea6c",
+    "generatedBytesUnchanged": true,
+    "sameStatusPhaseDiffPathsAndCommitEvidence": true,
+    "actualControlsExitCode": 0
+  },
+  "limitations": [
+    "Exactly two same-origin pages, one declared JSON localStorage envelope and one ordered interference; not concurrent stress testing.",
+    "Sentinel must differ from SSR/default UI and be visibly hydrated before primary edit.",
+    "Only configured values and bounded windows are covered; unobserved transient loss or later writes are outside coverage.",
+    "Actual author execution and new stars remain unconfirmed."
+  ]
+}
