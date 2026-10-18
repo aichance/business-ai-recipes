@@ -1,0 +1,242 @@
+{
+  "measuredAt": "2026-10-18T09:01:54.306573Z",
+  "source": {
+    "repository": "https://github.com/carinaruut/stitchwitch",
+    "commit": "f31655c3c73c29dda62049888a116b30e995647e",
+    "license": "MIT",
+    "upstreamFilesUnchanged": 168
+  },
+  "nativeSpec": {
+    "file": "stale-browser-tab.spec.mjs",
+    "sha256": "bbedb28fe754310d75456c168095eeee328e151ef69891b1e58d9924bb0a75e4"
+  },
+  "environment": {
+    "os": "macOS arm64",
+    "node": "24.19.0",
+    "pnpm": "11.17.0",
+    "playwright": "1.62.1",
+    "browserProject": "chromium",
+    "browserRevision": "1234",
+    "workers": 1,
+    "config": "Original upstream playwright.config.ts; original pnpm dev webServer on 127.0.0.1:4173",
+    "command": "pnpm exec playwright test tests/e2e/stale-browser-tab.spec.mjs --project=chromium --workers=1"
+  },
+  "run": {
+    "exitCode": 1,
+    "passed": 2,
+    "failed": 2,
+    "skipped": 0,
+    "flaky": 0,
+    "durationMs": 37876.589,
+    "scope": "Only the added spec, not the upstream full suite"
+  },
+  "cases": [
+    {
+      "mode": "same-tab control",
+      "status": "passed",
+      "durationMs": 10528,
+      "firstLoss": null,
+      "checkpoints": {
+        "initial": {
+          "name": "Initial chart — 日本語",
+          "cellCounts": {
+            "#ffffff": 400
+          },
+          "rows": 20,
+          "columns": 20
+        },
+        "primarySaved": {
+          "name": "Initial chart — 日本語",
+          "cellCounts": {
+            "#7c3aed": 400
+          },
+          "rows": 20,
+          "columns": 20
+        },
+        "peerCommitted": {
+          "name": "Name-only save / same-tab control",
+          "cellCounts": {
+            "#7c3aed": 400
+          },
+          "rows": 20,
+          "columns": 20
+        },
+        "afterReload": {
+          "name": "Name-only save / same-tab control",
+          "cellCounts": {
+            "#7c3aed": 400
+          },
+          "rows": 20,
+          "columns": 20
+        }
+      },
+      "error": ""
+    },
+    {
+      "mode": "fresh-peer control",
+      "status": "passed",
+      "durationMs": 8817,
+      "firstLoss": null,
+      "checkpoints": {
+        "initial": {
+          "name": "Initial chart — 日本語",
+          "cellCounts": {
+            "#ffffff": 400
+          },
+          "rows": 20,
+          "columns": 20
+        },
+        "primarySaved": {
+          "name": "Initial chart — 日本語",
+          "cellCounts": {
+            "#7c3aed": 400
+          },
+          "rows": 20,
+          "columns": 20
+        },
+        "peerCommitted": {
+          "name": "Name-only save / fresh-peer control",
+          "cellCounts": {
+            "#7c3aed": 400
+          },
+          "rows": 20,
+          "columns": 20
+        },
+        "afterReload": {
+          "name": "Initial chart — 日本語",
+          "cellCounts": {
+            "#7c3aed": 400
+          },
+          "rows": 20,
+          "columns": 20
+        }
+      },
+      "error": ""
+    },
+    {
+      "mode": "earlier-peer regression",
+      "status": "failed",
+      "durationMs": 8153,
+      "firstLoss": {
+        "phase": "waiting for the peer rename",
+        "document": {
+          "name": "Name-only save / earlier-peer regression",
+          "cellCounts": {
+            "#ffffff": 400
+          },
+          "rows": 20,
+          "columns": 20
+        }
+      },
+      "checkpoints": {
+        "initial": {
+          "name": "Initial chart — 日本語",
+          "cellCounts": {
+            "#ffffff": 400
+          },
+          "rows": 20,
+          "columns": 20
+        },
+        "primarySaved": {
+          "name": "Initial chart — 日本語",
+          "cellCounts": {
+            "#7c3aed": 400
+          },
+          "rows": 20,
+          "columns": 20
+        },
+        "peerCommitted": {
+          "name": "Name-only save / earlier-peer regression",
+          "cellCounts": {
+            "#ffffff": 400
+          },
+          "rows": 20,
+          "columns": 20
+        },
+        "afterReload": {
+          "name": "Initial chart — 日本語",
+          "cellCounts": {
+            "#7c3aed": 400
+          },
+          "rows": 20,
+          "columns": 20
+        }
+      },
+      "error": "Error: PRESERVATION: a name-only save replaced another saved field"
+    },
+    {
+      "mode": "fresh-peer reload regression",
+      "status": "failed",
+      "durationMs": 8134,
+      "firstLoss": null,
+      "checkpoints": {
+        "initial": {
+          "name": "Initial chart — 日本語",
+          "cellCounts": {
+            "#ffffff": 400
+          },
+          "rows": 20,
+          "columns": 20
+        },
+        "primarySaved": {
+          "name": "Initial chart — 日本語",
+          "cellCounts": {
+            "#7c3aed": 400
+          },
+          "rows": 20,
+          "columns": 20
+        },
+        "peerCommitted": {
+          "name": "Name-only save / fresh-peer reload regression",
+          "cellCounts": {
+            "#7c3aed": 400
+          },
+          "rows": 20,
+          "columns": 20
+        },
+        "afterReload": {
+          "name": "Initial chart — 日本語",
+          "cellCounts": {
+            "#7c3aed": 400
+          },
+          "rows": 20,
+          "columns": 20
+        }
+      },
+      "error": "Error: RELOAD_RENAME: reloading an older primary undid the peer name"
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "primary-saved-grid.png",
+      "sha256": "e8de78aafdbfb1e80e47ecf2b28b4c8cb87ddaddf9e3701be353384cdc6c581d",
+      "width": 1280,
+      "height": 720,
+      "case": "earlier-peer regression",
+      "meaning": "Primary page before peer rename"
+    },
+    {
+      "file": "peer-after-name-only-save.png",
+      "sha256": "bc51a983d3cbb74ad6868b7dc1c073b748d936186e677553f1168d2d926f7195",
+      "width": 1280,
+      "height": 720,
+      "case": "earlier-peer regression",
+      "meaning": "Earlier peer after its name-only commit; shared stored document was separately read"
+    }
+  ],
+  "assertionScope": {
+    "allCases": "Compare the complete saved project envelope excluding deliberately edited pattern.name",
+    "freshPeerReloadRegression": "Also require the committed peer name after primary reload",
+    "firstLoss": "A sampled protected-field rollback is latched even if a later reload repairs it",
+    "observations": "1000ms windows, about75ms samples; app autosave debounce300ms",
+    "fixture": "Fresh isolated browser context; real UI Fill shortcut makes400cells purple; no storage seeding or app patches"
+  },
+  "limitations": [
+    "Operator-run compatibility and bug reproduction; no third-party execution established",
+    "Chromium only; Firefox, WebKit, desktop apps, and mobile behavior untested",
+    "Not acceptance of the full first-glove/second-glove journey, exports, or Tracker workflows",
+    "Screenshots show different browser pages and only the viewport; stored400-cell counts come from separately captured complete records",
+    "The fresh-peer non-name control passes while its peer name later rolls back; the fourth case asserts that name loss explicitly",
+    "Single ordered two-page scenario; unobserved instants and writes after the observation window are not covered"
+  ]
+}
