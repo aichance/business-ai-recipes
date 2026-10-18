@@ -1,4 +1,21 @@
-# A named empty project becomes the example after reload
+# A saved empty project: regression reproduced and fix verified
+
+## Upstream fix verified — 2026-10-18
+
+The author [fixed issue #1 in `797ca892`](https://github.com/avestura/bazkia/commit/797ca892785da3dbdd4c6119db55c1ae809f6781). I reran the **same four contracts without changing their actions or assertions** against that browser revision, using the already-published App Crash Lab `0.12.0-dev.2` runtime.
+
+| Unchanged check | Original `e949745a` | Fixed `797ca892` |
+| --- | --- | --- |
+| Named empty project → reload | FAIL | **PASS** |
+| Named empty project → actual export → fresh import → reload | FAIL after reload | **PASS** |
+| Three-node / two-link control → reload | PASS | **PASS** |
+| Three-node / two-link control → actual export → fresh import → reload | PASS | **PASS** |
+
+All four generated standalone Playwright replays also pass. The empty backup remains the same **113 bytes / SHA256 `ebe76186de6f9c407fba0dfdf39323d0b16ff16e9d5d60822c7c1a112e0f7ee2`**; its full saved record and visible name/counts survive reloading. [Results delivered to the author](https://github.com/avestura/bazkia/issues/1#issuecomment-6247467081).
+
+These are operator reruns on macOS, Node 24.19.0 and Chromium / Playwright 1.64.0, with synthetic projects. The source change is the author's one-line fix; dependencies were unchanged and reused from the baseline installation. This is not a fresh dependency-install test, an upstream full-suite run, a desktop/Tauri test or an independent maintainer execution report. The existing ZIP below contains the unchanged contracts and the original baseline results; it can also check this fixed revision.
+
+## Original measured regression
 
 A valid empty project is still saved work. On pinned **Bazkia 0.1.0 / e949745a**, its actual 113-byte JSON file restores the custom name and empty canvas, but reloading then replaces them with the default Base64 project: **5 nodes and 4 links**. A nonempty branched project is the passing control.
 
@@ -22,7 +39,7 @@ The branch backup is 977 bytes. The empty backup is 113 bytes; its SHA256 is `eb
 3. Reload. The default Base64 project appears instead of the named empty project.
 4. In an independent fresh browser context, **Open project** with that same unchanged file. Its name and empty canvas return; reload replaces them with the example again.
 
-The local source suggests the branch in `src/App.tsx` is relevant: the startup fallback requires `saved.nodes.length` to be nonzero. This identifies a likely cause, not a tested patch. The app is not changed by this kit.
+In the original source, the startup fallback in `src/App.tsx` requires `saved.nodes.length` to be nonzero. The upstream change verified above uses a valid empty saved project instead of treating it as absent. This kit does not patch the app.
 
 ## Run the prepared checks
 
