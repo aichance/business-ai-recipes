@@ -1,13 +1,13 @@
 ---
 name: app-crash-lab
-description: Test a local web app's saved data across reload, rejected input, or real JSON backup restoration with App Crash Lab. Inspect the app and create the contract for the user; use when they want a repeatable saved-state check, not a general UI audit.
+description: Test a local web app's saved state and save feedback using its existing Playwright suite or App Crash Lab contracts. Inspect the app and prepare a focused regression for the requested boundary; not a general UI audit.
 ---
 
 # App Crash Lab
 
-Turn the user's save workflow into a small, runnable test of **their app**. Use
-the existing App Crash Lab 0.11.0 runner; do not implement another runner or
-silently substitute its bundled demo.
+Turn the user's save workflow into a small, runnable test of **their app**.
+Choose the test path that fits the requested behavior and existing project.
+Do not implement another runner or silently substitute a bundled demo.
 
 ## Establish what the test means
 
@@ -19,12 +19,12 @@ records. Do not read credentials, reuse a logged-in browser profile, deploy,
 publish, or modify the app merely to manufacture a passing check. Test actions
 can write data.
 
-Before writing JSON, show a short observation table:
+Before writing a test or JSON, show a short observation table:
 
 | Requirement | How the app completes it | What will be compared |
 | --- | --- | --- |
 | The requested record was saved | Actual save-completion signal from source/UI | Complete selected persisted record(s), plus a meaningful visible result |
-| Chosen follow-up preserves it | Reload, explicit rejection, or real import completion | The same stored values and selected UI result afterward |
+| Chosen follow-up has the expected outcome | Actual edit/delete, storage rejection, reload, or import completion | Complete retained values and the truthful visible result afterward |
 
 Fill the table with this app's facts, not these descriptions. Input text, a toast,
 record counts or a preference key alone may miss a lost record/field. Read the
@@ -32,7 +32,31 @@ actual canonical saved value where supported, keep full selected records and
 IDs, and add UI observations when display behavior matters. Preservation does
 not establish that the original calculation or content was correct.
 
-Choose only the checks relevant to the request:
+For either test path, retain actual failure evidence. If fixes are already
+part of the user's request and permission, continue within that scope after
+establishing the failure. A test-only request does not authorize app changes;
+do not invent an approval gate for an already requested fix.
+
+## Choose native Playwright or a runner contract
+
+First honor an explicit runner/JSON request or a real JSON backup roundtrip:
+use the contract path below with the existing App Crash Lab **0.11.0** runner.
+Do not replace a requested real-file restore with a native reload test.
+
+Otherwise, if the app already has a working `@playwright/test` suite and the
+requested boundary fits a measured native example, start with
+[one native Playwright regression](references/native-playwright.md). Use the
+app's existing configuration, dependencies and test naming. Adapt one example
+to its actual UI, saved records and completion signals. This path requires
+neither App Crash Lab JSON nor its runner; do not install them for it.
+
+Without a verified existing suite, use the runner only if it covers the
+requested workflow. If neither path establishes the requested boundary, report
+the missing capability instead of substituting an easier passing check.
+Native and contract checks prove their stated boundary, not every behavior
+of the app.
+
+For a runner contract, choose only the checks relevant to the request:
 
 - `reload`: save through the normal flow, then compare after reload.
 - `rejected-update`: separately establish that the invalid operation finished
@@ -42,12 +66,14 @@ Choose only the checks relevant to the request:
   into its JSON, restore unchanged bytes into an empty browser context, and
   compare after import and reload. A malformed-file test is not this check.
 
-If the app needs unsupported authentication, external services, storage formats
-or confirmation steps, report the exact boundary. Do not replace the real data
-with a simpler key, normalize away changed IDs, inject storage to prepare a
+For either path, if the app needs unsupported authentication, external services,
+storage formats or confirmation steps, report the exact boundary. Do not replace
+the real data with a simpler key, normalize away changed IDs, inject storage to prepare a
 fresh restore, or add sleeps that conceal an incomplete save.
 
 ## Create and execute the contract
+
+This section applies to the runner path, not the native path above.
 
 Read [runner setup and contract sources](references/runner.md). Use the pinned
 format and supported actions/observations; inspect the referenced contract and
@@ -72,9 +98,6 @@ Distinguish PASS, a reproducible FAIL, and INCONCLUSIVE. For a setup/selector
 mistake, preserve the first report, make a focused correction and run to a new
 output directory. Do not change expected values to observed values just to pass.
 For an actual app failure, retain the failing contract and explain the mismatch.
-If fixes are already part of the user's request and permission, preserve that
-failure evidence and proceed within that scope. A test-only request does not
-authorize app changes; do not invent an approval gate for an already requested fix.
 
 Run the generated standalone Playwright test when dependencies and the requested
 scope permit; otherwise state that it was generated but not rerun. Stop only
