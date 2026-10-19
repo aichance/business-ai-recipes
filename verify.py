@@ -16,6 +16,11 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "docs/livepage-template-saved.png",
+    "docs/livepage-template-rolled-back.png",
+    "docs/livepage-template.spec.mjs",
+    "docs/livepage-template-proof.json",
+    "docs/livepage-template-proof.md",
     "docs/app-crash-lab-life-tracker-stale-cloud-native-v0.1.0.zip",
     "docs/app-crash-lab-life-tracker-stale-cloud-native-v0.1.0.zip.sha256",
     "docs/life-tracker-stale-cloud-native.md",

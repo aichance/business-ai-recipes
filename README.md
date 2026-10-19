@@ -8,6 +8,17 @@ Add one persistence regression to your existing Playwright suite. Start with a m
 
 [**Copy a native test**](#copy-one-playwright-regression) · [**Check your own app**](#check-your-own-app) · [**Try a no-install example**](https://aichance.github.io/business-ai-recipes/test-the-test.html) · [**Contract format**](tools/app-crash-lab/CONTRACT.md)
 
+**A saved landing page can roll back after a toolbar click in another tab.**
+
+| Saved page | After an earlier tab saves its toolbar setting and the primary reloads |
+| --- | --- |
+| ![Saved sample landing page in an unchanged local LivePage build](docs/livepage-template-saved.png) | ![The same page rolled back to the earlier empty state](docs/livepage-template-rolled-back.png) |
+
+Actual screenshots with bundled sample content: two controls preserved the
+complete 67-node tree; only the earlier-tab case failed. [Run the native test
+and inspect the measurements](docs/livepage-template-proof.md). This is our local
+reproduction of an existing issue, separate from independent author use below.
+
 **Earlier CLI checks and exported tests, independently run on two authors’ own apps:** [Sethera](https://qiita.com/cuculhart/items/f020080b2ef1331222d0#comment-79c9c450f3a54f3ba6ac) and [nvim-edu](https://qiita.com/s3onghyun/items/7966ac7e6a534a84f9db#comment-2d25dc275d61b168ee4a). [Reported environments and scope](#independent-author-reports).
 
 ## Copy one Playwright regression
