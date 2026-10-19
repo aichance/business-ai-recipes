@@ -50,6 +50,12 @@ adapts one native test without this runner or JSON. Explicit contracts and real
 JSON backup roundtrips use the existing runner path. Review the actual result;
 a local test does not cover every input or failure.
 
+Already using Vitest for save/load code? For an explicitly requested data-layer
+check, the skill can reuse your existing tests. It compares the complete saved
+record separately from intentional load-time resets. A store rehydration in
+jsdom is not a browser reload, two-tab test or real backup restore; those
+requests still require the corresponding browser check.
+
 ### Install the Codex skill with one command
 
 Use **Node 22.20+** for the Skills CLI. In **your app project's directory**,
