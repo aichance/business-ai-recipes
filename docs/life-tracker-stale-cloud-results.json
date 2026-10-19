@@ -1,0 +1,1735 @@
+{
+  "schema_version": 1,
+  "measured_at": "2026-10-19T04:15:30.455036+00:00",
+  "operator": "aichance",
+  "measurement_type": "operator full original client with synthetic HTTP boundary",
+  "upstream": {
+    "repository": "https://github.com/Adnan9-63/life-tracker",
+    "issue": "https://github.com/Adnan9-63/life-tracker/issues/28",
+    "revision": "402ad57f75816302fc0cd50cb1a17f78eb78d143",
+    "original_files_verified": 35,
+    "source_redistributed": false
+  },
+  "nativeSpec": {
+    "file": "life-tracker-stale-cloud.spec.mjs",
+    "sha256": "aebe5523f6bf9f88b0307ff14039b525c721c3fc923094cbf81116819cc6f11a"
+  },
+  "source_manifest_sha256": "9985985678945a09ff62477fd246b7cff18142e0a83adf685596d0e8b93464a5",
+  "archive": {
+    "file": "app-crash-lab-life-tracker-stale-cloud-native-v0.1.0.zip",
+    "sha256": "09164a1358ec62d7127428e01ad647303100f8d68d91de84433f26f88725b444",
+    "bytes": 12863,
+    "entries": [
+      "LICENSE",
+      "README.md",
+      "download-source.py",
+      "package-lock.json",
+      "package.json",
+      "playwright.config.mjs",
+      "server.mjs",
+      "setup.mjs",
+      "source-manifest.json",
+      "tests/stale-cloud.spec.mjs"
+    ]
+  },
+  "environment": {
+    "os": "macOS",
+    "node": "22.16.0",
+    "playwright": "1.64.0",
+    "browser": "Chromium"
+  },
+  "fresh_extraction_commands": [
+    {
+      "command": "npm ci --ignore-scripts --no-audit --no-fund",
+      "measurement_options": "JSON reporter and temporary local output directory for test commands only",
+      "exit_code": 0,
+      "seconds": 0.491
+    },
+    {
+      "command": "npm run setup",
+      "measurement_options": "JSON reporter and temporary local output directory for test commands only",
+      "exit_code": 0,
+      "seconds": 2.68
+    },
+    {
+      "command": "npx playwright install chromium",
+      "measurement_options": "JSON reporter and temporary local output directory for test commands only",
+      "exit_code": 0,
+      "seconds": 0.766
+    },
+    {
+      "command": "npm run controls",
+      "measurement_options": "JSON reporter and temporary local output directory for test commands only",
+      "exit_code": 0,
+      "seconds": 15.504
+    },
+    {
+      "command": "npm test",
+      "measurement_options": "JSON reporter and temporary local output directory for test commands only",
+      "exit_code": 1,
+      "seconds": 19.087
+    }
+  ],
+  "stats": {
+    "startTime": "2026-10-19T04:15:11.829Z",
+    "duration": 18579.813,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  },
+  "cases": [
+    {
+      "name": "remote update control",
+      "status": "passed",
+      "duration_ms": 916,
+      "assertion": "PASS",
+      "checkpoints": {
+        "baseline": {
+          "life_data": {
+            "3": {
+              "weeklyGoal": "Keep 日本語 🐾",
+              "weeklyReview": "Synthetic review",
+              "milestone": "Synthetic pin",
+              "weeklyScore": 4,
+              "days": [
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 0",
+                      "done": true
+                    }
+                  ],
+                  "habits": [
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 1",
+                      "done": false
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 2",
+                      "done": true
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 3",
+                      "done": false
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 4",
+                      "done": true
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 5",
+                      "done": false
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 6",
+                      "done": true
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false
+                  ]
+                }
+              ]
+            }
+          },
+          "year_data": {
+            "0": "Retain this synthetic year note"
+          },
+          "habit_labels": [
+            "Read",
+            "Walk",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          "birth_date": "1990-01-02",
+          "user_name": "Initial synthetic writer"
+        },
+        "afterReload": {
+          "life_data": {
+            "3": {
+              "weeklyGoal": "Keep 日本語 🐾",
+              "weeklyReview": "Synthetic review",
+              "milestone": "Synthetic pin",
+              "weeklyScore": 4,
+              "days": [
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 0",
+                      "done": true
+                    }
+                  ],
+                  "habits": [
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 1",
+                      "done": false
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 2",
+                      "done": true
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 3",
+                      "done": false
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 4",
+                      "done": true
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 5",
+                      "done": false
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 6",
+                      "done": true
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false
+                  ]
+                }
+              ]
+            }
+          },
+          "year_data": {
+            "0": "Retain this synthetic year note"
+          },
+          "habit_labels": [
+            "Read",
+            "Walk",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          "birth_date": "1990-01-02",
+          "user_name": "Newer remote writer"
+        }
+      },
+      "transport_counts": {
+        "reads": 4,
+        "writes": 0,
+        "rejected_writes": 0,
+        "unexpected": 0,
+        "foreign_blocked": 0
+      }
+    },
+    {
+      "name": "unavailable remote control",
+      "status": "passed",
+      "duration_ms": 11965,
+      "assertion": "PASS",
+      "checkpoints": {
+        "baseline": {
+          "life_data": {
+            "3": {
+              "weeklyGoal": "Keep 日本語 🐾",
+              "weeklyReview": "Synthetic review",
+              "milestone": "Synthetic pin",
+              "weeklyScore": 4,
+              "days": [
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 0",
+                      "done": true
+                    }
+                  ],
+                  "habits": [
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 1",
+                      "done": false
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 2",
+                      "done": true
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 3",
+                      "done": false
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 4",
+                      "done": true
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 5",
+                      "done": false
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 6",
+                      "done": true
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false
+                  ]
+                }
+              ]
+            }
+          },
+          "year_data": {
+            "0": "Retain this synthetic year note"
+          },
+          "habit_labels": [
+            "Read",
+            "Walk",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          "birth_date": "1990-01-02",
+          "user_name": "Initial synthetic writer"
+        },
+        "localBeforeReload": {
+          "life_data": {
+            "3": {
+              "weeklyGoal": "Keep 日本語 🐾",
+              "weeklyReview": "Synthetic review",
+              "milestone": "Synthetic pin",
+              "weeklyScore": 4,
+              "days": [
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 0",
+                      "done": true
+                    }
+                  ],
+                  "habits": [
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 1",
+                      "done": false
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 2",
+                      "done": true
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 3",
+                      "done": false
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 4",
+                      "done": true
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 5",
+                      "done": false
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 6",
+                      "done": true
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false
+                  ]
+                }
+              ]
+            }
+          },
+          "year_data": {
+            "0": "Retain this synthetic year note"
+          },
+          "habit_labels": [
+            "Read",
+            "Walk",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          "birth_date": "1990-01-02",
+          "user_name": "New offline edit 日本語 🐾"
+        },
+        "visibleBeforeReload": "New offline edit 日本語 🐾's Tracker",
+        "localObservedAt": "2026-10-19T04:15:16.083Z",
+        "afterReload": {
+          "life_data": {
+            "3": {
+              "weeklyGoal": "Keep 日本語 🐾",
+              "weeklyReview": "Synthetic review",
+              "milestone": "Synthetic pin",
+              "weeklyScore": 4,
+              "days": [
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 0",
+                      "done": true
+                    }
+                  ],
+                  "habits": [
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 1",
+                      "done": false
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 2",
+                      "done": true
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 3",
+                      "done": false
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 4",
+                      "done": true
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 5",
+                      "done": false
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 6",
+                      "done": true
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false
+                  ]
+                }
+              ]
+            }
+          },
+          "year_data": {
+            "0": "Retain this synthetic year note"
+          },
+          "habit_labels": [
+            "Read",
+            "Walk",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          "birth_date": "1990-01-02",
+          "user_name": "New offline edit 日本語 🐾"
+        },
+        "visibleAfterReload": "New offline edit 日本語 🐾's Tracker"
+      },
+      "transport_counts": {
+        "reads": 10,
+        "writes": 1,
+        "rejected_writes": 1,
+        "unexpected": 0,
+        "foreign_blocked": 0
+      }
+    },
+    {
+      "name": "older remote regression",
+      "status": "failed",
+      "duration_ms": 4607,
+      "assertion": "Error: PRESERVATION: no transient loss after remote response",
+      "checkpoints": {
+        "baseline": {
+          "life_data": {
+            "3": {
+              "weeklyGoal": "Keep 日本語 🐾",
+              "weeklyReview": "Synthetic review",
+              "milestone": "Synthetic pin",
+              "weeklyScore": 4,
+              "days": [
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 0",
+                      "done": true
+                    }
+                  ],
+                  "habits": [
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 1",
+                      "done": false
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 2",
+                      "done": true
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 3",
+                      "done": false
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 4",
+                      "done": true
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 5",
+                      "done": false
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 6",
+                      "done": true
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false
+                  ]
+                }
+              ]
+            }
+          },
+          "year_data": {
+            "0": "Retain this synthetic year note"
+          },
+          "habit_labels": [
+            "Read",
+            "Walk",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          "birth_date": "1990-01-02",
+          "user_name": "Initial synthetic writer"
+        },
+        "localBeforeReload": {
+          "life_data": {
+            "3": {
+              "weeklyGoal": "Keep 日本語 🐾",
+              "weeklyReview": "Synthetic review",
+              "milestone": "Synthetic pin",
+              "weeklyScore": 4,
+              "days": [
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 0",
+                      "done": true
+                    }
+                  ],
+                  "habits": [
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 1",
+                      "done": false
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 2",
+                      "done": true
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 3",
+                      "done": false
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 4",
+                      "done": true
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 5",
+                      "done": false
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 6",
+                      "done": true
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false
+                  ]
+                }
+              ]
+            }
+          },
+          "year_data": {
+            "0": "Retain this synthetic year note"
+          },
+          "habit_labels": [
+            "Read",
+            "Walk",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          "birth_date": "1990-01-02",
+          "user_name": "New offline edit 日本語 🐾"
+        },
+        "visibleBeforeReload": "New offline edit 日本語 🐾's Tracker",
+        "localObservedAt": "2026-10-19T04:15:28.162Z",
+        "firstLoss": {
+          "phase": "after completed remote response",
+          "cache": {
+            "raw": "{\"life_data\":{\"3\":{\"weeklyGoal\":\"Keep 日本語 🐾\",\"weeklyReview\":\"Synthetic review\",\"milestone\":\"Synthetic pin\",\"weeklyScore\":4,\"days\":[{\"score\":3,\"subgoals\":[{\"text\":\"Synthetic task 0\",\"done\":true}],\"habits\":[true,false,false,false,false,false,false,false,false,false]},{\"score\":3,\"subgoals\":[{\"text\":\"Synthetic task 1\",\"done\":false}],\"habits\":[false,true,false,false,false,false,false,false,false,false]},{\"score\":3,\"subgoals\":[{\"text\":\"Synthetic task 2\",\"done\":true}],\"habits\":[false,false,true,false,false,false,false,false,false,false]},{\"score\":3,\"subgoals\":[{\"text\":\"Synthetic task 3\",\"done\":false}],\"habits\":[false,false,false,true,false,false,false,false,false,false]},{\"score\":3,\"subgoals\":[{\"text\":\"Synthetic task 4\",\"done\":true}],\"habits\":[false,false,false,false,true,false,false,false,false,false]},{\"score\":3,\"subgoals\":[{\"text\":\"Synthetic task 5\",\"done\":false}],\"habits\":[false,false,false,false,false,true,false,false,false,false]},{\"score\":3,\"subgoals\":[{\"text\":\"Synthetic task 6\",\"done\":true}],\"habits\":[false,false,false,false,false,false,true,false,false,false]}]}},\"year_data\":{\"0\":\"Retain this synthetic year note\"},\"habit_labels\":[\"Read\",\"Walk\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"],\"birth_date\":\"1990-01-02\",\"user_name\":\"Initial synthetic writer\"}",
+            "value": {
+              "life_data": {
+                "3": {
+                  "weeklyGoal": "Keep 日本語 🐾",
+                  "weeklyReview": "Synthetic review",
+                  "milestone": "Synthetic pin",
+                  "weeklyScore": 4,
+                  "days": [
+                    {
+                      "score": 3,
+                      "subgoals": [
+                        {
+                          "text": "Synthetic task 0",
+                          "done": true
+                        }
+                      ],
+                      "habits": [
+                        true,
+                        false,
+                        false,
+                        false,
+                        false,
+                        false,
+                        false,
+                        false,
+                        false,
+                        false
+                      ]
+                    },
+                    {
+                      "score": 3,
+                      "subgoals": [
+                        {
+                          "text": "Synthetic task 1",
+                          "done": false
+                        }
+                      ],
+                      "habits": [
+                        false,
+                        true,
+                        false,
+                        false,
+                        false,
+                        false,
+                        false,
+                        false,
+                        false,
+                        false
+                      ]
+                    },
+                    {
+                      "score": 3,
+                      "subgoals": [
+                        {
+                          "text": "Synthetic task 2",
+                          "done": true
+                        }
+                      ],
+                      "habits": [
+                        false,
+                        false,
+                        true,
+                        false,
+                        false,
+                        false,
+                        false,
+                        false,
+                        false,
+                        false
+                      ]
+                    },
+                    {
+                      "score": 3,
+                      "subgoals": [
+                        {
+                          "text": "Synthetic task 3",
+                          "done": false
+                        }
+                      ],
+                      "habits": [
+                        false,
+                        false,
+                        false,
+                        true,
+                        false,
+                        false,
+                        false,
+                        false,
+                        false,
+                        false
+                      ]
+                    },
+                    {
+                      "score": 3,
+                      "subgoals": [
+                        {
+                          "text": "Synthetic task 4",
+                          "done": true
+                        }
+                      ],
+                      "habits": [
+                        false,
+                        false,
+                        false,
+                        false,
+                        true,
+                        false,
+                        false,
+                        false,
+                        false,
+                        false
+                      ]
+                    },
+                    {
+                      "score": 3,
+                      "subgoals": [
+                        {
+                          "text": "Synthetic task 5",
+                          "done": false
+                        }
+                      ],
+                      "habits": [
+                        false,
+                        false,
+                        false,
+                        false,
+                        false,
+                        true,
+                        false,
+                        false,
+                        false,
+                        false
+                      ]
+                    },
+                    {
+                      "score": 3,
+                      "subgoals": [
+                        {
+                          "text": "Synthetic task 6",
+                          "done": true
+                        }
+                      ],
+                      "habits": [
+                        false,
+                        false,
+                        false,
+                        false,
+                        false,
+                        false,
+                        true,
+                        false,
+                        false,
+                        false
+                      ]
+                    }
+                  ]
+                }
+              },
+              "year_data": {
+                "0": "Retain this synthetic year note"
+              },
+              "habit_labels": [
+                "Read",
+                "Walk",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "birth_date": "1990-01-02",
+              "user_name": "Initial synthetic writer"
+            }
+          }
+        },
+        "afterReload": {
+          "life_data": {
+            "3": {
+              "weeklyGoal": "Keep 日本語 🐾",
+              "weeklyReview": "Synthetic review",
+              "milestone": "Synthetic pin",
+              "weeklyScore": 4,
+              "days": [
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 0",
+                      "done": true
+                    }
+                  ],
+                  "habits": [
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 1",
+                      "done": false
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 2",
+                      "done": true
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 3",
+                      "done": false
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 4",
+                      "done": true
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 5",
+                      "done": false
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                },
+                {
+                  "score": 3,
+                  "subgoals": [
+                    {
+                      "text": "Synthetic task 6",
+                      "done": true
+                    }
+                  ],
+                  "habits": [
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    true,
+                    false,
+                    false,
+                    false
+                  ]
+                }
+              ]
+            }
+          },
+          "year_data": {
+            "0": "Retain this synthetic year note"
+          },
+          "habit_labels": [
+            "Read",
+            "Walk",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          "birth_date": "1990-01-02",
+          "user_name": "Initial synthetic writer"
+        },
+        "visibleAfterReload": "Initial synthetic writer's Tracker"
+      },
+      "transport_counts": {
+        "reads": 4,
+        "writes": 1,
+        "rejected_writes": 1,
+        "unexpected": 0,
+        "foreign_blocked": 0
+      }
+    }
+  ],
+  "setup_errors": 0,
+  "server_port_closed": true,
+  "limits": [
+    "Original React UI, AuthContext, hook and Supabase SDK; synthetic password login and auth/REST replies on loopback only.",
+    "No real Supabase cloud, authentication security, RLS, user records or full physical offline/PWA validation.",
+    "Only the name is edited; all five business fields are compared. Bounded 1.6-second observation with first-loss capture.",
+    "The first-loss assertion fails before the later preservation cache/UI assertions. Captured checkpoints independently show the old cache and visible title.",
+    "This is not a maintainer execution, adopted fix, upstream PR, independent use or star report."
+  ],
+  "third_party_use_credit": 0,
+  "natural_star_credit": 0
+}
