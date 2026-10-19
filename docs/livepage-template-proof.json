@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "app": "LivePage",
+  "upstream_source": "https://github.com/glennfaison/livepage/tree/c81fc99ce7113de14c62a66ab25f85c02fd173de",
+  "upstream_pin": "c81fc99ce7113de14c62a66ab25f85c02fd173de",
+  "app_source_original_files_verified": 484,
+  "app_business_source_modified": false,
+  "existing_issue": "https://github.com/glennfaison/livepage/issues/355",
+  "measurement_completed_at": "2026-10-19T07:00:40.606089+00:00",
+  "operator": "aichance; AI-assisted local verification, not maintainer adoption",
+  "sample": "Built-in Landing Page / SaaS template, synthetic sample content",
+  "environment": {
+    "node": "22.16.0",
+    "playwright": "1.64.0",
+    "browser": "Chromium",
+    "os": "macOS",
+    "app_origin": "HTTP loopback",
+    "build": "NEXT_PUBLIC_PROMPT_ASSIST_ENABLED=0 npm run build; production build",
+    "dependencies": "Reused existing installation of identical app lockfile; new fresh app npm ci not repeated"
+  },
+  "results": [
+    {
+      "scenario": "same-tab control",
+      "status": "passed",
+      "duration_ms": 20800,
+      "protected_component_nodes_before": 67,
+      "protected_component_nodes_after_reload": 67,
+      "complete_component_tree_equal": true,
+      "first_loss_observed": false,
+      "first_loss_phase": null,
+      "peer_toolbar_commit_verified": true,
+      "before_tree_sha256": "e052f85efe8e659d9db35eb101a487edd3288c33cc0d45325ee0cbfaf29652f2",
+      "after_reload_tree_sha256": "e052f85efe8e659d9db35eb101a487edd3288c33cc0d45325ee0cbfaf29652f2"
+    },
+    {
+      "scenario": "new-tab control",
+      "status": "passed",
+      "duration_ms": 20081,
+      "protected_component_nodes_before": 67,
+      "protected_component_nodes_after_reload": 67,
+      "complete_component_tree_equal": true,
+      "first_loss_observed": false,
+      "first_loss_phase": null,
+      "peer_toolbar_commit_verified": true,
+      "before_tree_sha256": "e052f85efe8e659d9db35eb101a487edd3288c33cc0d45325ee0cbfaf29652f2",
+      "after_reload_tree_sha256": "e052f85efe8e659d9db35eb101a487edd3288c33cc0d45325ee0cbfaf29652f2"
+    },
+    {
+      "scenario": "earlier-tab regression",
+      "status": "failed",
+      "duration_ms": 19161,
+      "protected_component_nodes_before": 67,
+      "protected_component_nodes_after_reload": 1,
+      "complete_component_tree_equal": false,
+      "first_loss_observed": true,
+      "first_loss_phase": "waiting for peer commit",
+      "peer_toolbar_commit_verified": true,
+      "before_tree_sha256": "e052f85efe8e659d9db35eb101a487edd3288c33cc0d45325ee0cbfaf29652f2",
+      "after_reload_tree_sha256": "10253895575292d382248e39be7445cd90bde188ac201f1f947d0c6c073e2266"
+    }
+  ],
+  "run_exit_code": 1,
+  "whole_command_elapsed_seconds": 103.362,
+  "spec": {
+    "path": "livepage-template.spec.mjs",
+    "lines": 162,
+    "sha256": "dc346f6de26bd1253f46066052e93342a95f9192189848107e88d6098c9f6676"
+  },
+  "images": [
+    {
+      "path": "livepage-template-saved.png",
+      "sha256": "b5add7a1325ee2efe73b78e3c94ac3146791e157983a610567caa172b50cf870",
+      "bytes": 122081
+    },
+    {
+      "path": "livepage-template-rolled-back.png",
+      "sha256": "f5b0af49238f7705bbfa9b5ae4aa915cfb91c559bec131b9e048463d110717e5",
+      "bytes": 30034
+    }
+  ],
+  "tree_hash_serialization": "UTF-8 JSON, sorted object keys, compact separators, Unicode retained",
+  "limits": [
+    "An ordered two-tab localStorage scenario; outside-origin browser HTTP blocked, fresh contexts, no API keys.",
+    "Complete current componentTree compared; recovery from history and permanent loss are not established.",
+    "Final run disables optional video; earlier video captures stalled during teardown. Images are unchanged PNGs from final completed run.",
+    "Own compatibility/reproduction evidence, not third-party tool execution or a verified upstream fix."
+  ]
+}
