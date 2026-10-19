@@ -16,10 +16,17 @@ the complete VideoHost application, its production error boundary or its backend
 
 ## Run it
 
-Extract the ZIP or open this folder from the repository. Node **22.12+** and npm
-are required. No Docker, database, provider key or VideoHost account is needed.
+Download and extract the standalone ZIP. It creates a `video-host-history-native/`
+folder containing `package.json`, `browser/`, and `upstream/`.
+The repository's `docs/` links provide the readable guide, test, and results;
+the ZIP contains the complete runnable fixture.
+Node **22.12+** and npm are required. No Docker, database, provider key or
+VideoHost account is needed.
+
+From the directory containing that extracted folder, run:
 
 ```sh
+cd video-host-history-native
 npm ci --ignore-scripts --no-audit --no-fund
 npx playwright install chromium
 npm run controls
