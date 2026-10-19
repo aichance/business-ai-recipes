@@ -1,6 +1,6 @@
 ---
 name: app-crash-lab
-description: Test a local web app's saved state and save feedback using its existing Playwright suite or App Crash Lab contracts. Inspect the app and prepare a focused regression for the requested boundary; not a general UI audit.
+description: Test a local web app's saved state and save feedback using its existing Playwright suite or App Crash Lab contracts. Reuse existing unit tests for an explicitly requested data-layer check. Inspect the app and prepare a focused regression for the requested boundary; not a general UI audit.
 ---
 
 # App Crash Lab
@@ -23,8 +23,8 @@ Before writing a test or JSON, show a short observation table:
 
 | Requirement | How the app completes it | What will be compared |
 | --- | --- | --- |
-| The requested record was saved | Actual save-completion signal from source/UI | Complete selected persisted record(s), plus a meaningful visible result |
-| Chosen follow-up has the expected outcome | Actual edit/delete, storage rejection, reload, or import completion | Complete retained values and the truthful visible result afterward |
+| The requested record was saved | Actual save-completion signal from source/UI | Complete selected persisted record(s), plus a meaningful visible result for browser checks |
+| Chosen follow-up has the expected outcome | Actual edit/delete, storage rejection, reload, or import completion | Complete retained values and, when testing the UI, its truthful result afterward |
 
 Fill the table with this app's facts, not these descriptions. Input text, a toast,
 record counts or a preference key alone may miss a lost record/field. Read the
@@ -32,12 +32,40 @@ actual canonical saved value where supported, keep full selected records and
 IDs, and add UI observations when display behavior matters. Preservation does
 not establish that the original calculation or content was correct.
 
-For either test path, retain actual failure evidence. If fixes are already
+Read save and load together before fixing the expectations. An app may save a
+motion value but deliberately reset it on load. First compare the complete raw
+saved record, then the complete expected loaded record with only source-backed,
+explicit load transformations. Keep IDs and retained settings; do not drop
+changed fields or derive the expectation from the failing result. A documented
+transient-state reset is different from losing a setting that must survive.
+The runner's full-record preservation contract is unchanged. Use app-specific
+native assertions for expected load transformations, or report the unsupported
+boundary; do not change the runner's comparisons to hide the difference.
+
+For every test path, retain actual failure evidence. If fixes are already
 part of the user's request and permission, continue within that scope after
 establishing the failure. A test-only request does not authorize app changes;
 do not invent an approval gate for an already requested fix.
 
 ## Choose native Playwright or a runner contract
+
+Inspect the project's existing test scripts and configuration before installing
+another test environment. For an **explicitly requested data-layer save/load
+check**, an existing framework such as Vitest may be enough: use the actual
+save/load code, wait for its real completion, clear the relevant in-memory store,
+and restore from the persisted fixture. Fake timers may advance the app's own
+autosave timer; they do not replace assertions that the save actually completed.
+Report the exact command, outcomes and compared records. Label a jsdom hook
+remount or store rehydration as a data-layer check, not a browser reload or a
+complete JavaScript-memory reset.
+For that explicitly scoped data-layer request, return this result and its rerun
+command without adding a browser runner. Other requests follow the paths below.
+
+A unit/integration check can help localize a failure, but cannot fulfill a
+requested browser reload, two-tab interaction, visible save feedback or real
+backup restore. Keep that requirement and use the appropriate browser path
+below; if it cannot run, report that boundary as INCONCLUSIVE. Do not silently
+replace the user's requested end-to-end result with the easier lower-layer test.
 
 First honor an explicit runner/JSON request or a real JSON backup roundtrip:
 use the contract path below with the existing App Crash Lab **0.11.0** runner.
@@ -66,7 +94,7 @@ For a runner contract, choose only the checks relevant to the request:
   into its JSON, restore unchanged bytes into an empty browser context, and
   compare after import and reload. A malformed-file test is not this check.
 
-For either path, if the app needs unsupported authentication, external services,
+For any path, if the app needs unsupported authentication, external services,
 storage formats or confirmation steps, report the exact boundary. Do not replace
 the real data with a simpler key, normalize away changed IDs, inject storage to prepare a
 fresh restore, or add sleeps that conceal an incomplete save.
