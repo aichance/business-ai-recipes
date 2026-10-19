@@ -38,6 +38,8 @@ A related initial-load boundary: [VideoHost component reproduction](docs/video-h
 
 Already checking browser modules without a browser? [Recovered-draft cleanup: one dependency-free Node test](tools/app-crash-lab/examples/draft-recovery-native/README.md) catches an older restored copy deleting another context’s newer complete recovery stash. This is an original-module `vm` check with two passing controls, not a full editor or server test.
 
+[**Same preservation boundary in a dependency-free Node workflow**](tools/app-crash-lab/examples/misaneco-native/README.md): the diagnosis app’s existing 76,788 checks pass, while an earlier state’s industry change clears two newer task selections. One Node file and an optional real-browser replay both produce two passing controls and one preservation failure on the pinned original source.
+
 For backup export/import, use the [real-file roundtrip path](tools/app-crash-lab/BACKUP.md) instead of substituting a reload check. [Choose among eight persistence boundaries](tools/app-crash-lab/PERSISTENCE-CHECKLIST.md).
 
 ## Check your own app
