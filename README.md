@@ -61,12 +61,12 @@ Use this only when `.agents/skills/app-crash-lab` does not already exist; keep
 and review an existing folder instead of reinstalling. This copies the skill's
 four files into that project and adds `skills-lock.json`. The installer also
 keeps its own user-level metadata. The installer command was verified on macOS
-with Node 24.19.0; the v0.2.1 ZIP is checked separately against all four source files.
+with Node 24.19.0; the v0.2.2 ZIP is checked separately against all four source files.
 [Skills CLI documentation](https://www.skills.sh/docs/cli).
 
 For manual installation or an older Node 22 runtime,
-[download the repo-local skill](https://aichance.github.io/business-ai-recipes/app-crash-lab-skill-v0.2.1.zip)
-and [checksum](https://aichance.github.io/business-ai-recipes/app-crash-lab-skill-v0.2.1.zip.sha256).
+[download the repo-local skill](https://aichance.github.io/business-ai-recipes/app-crash-lab-skill-v0.2.2.zip)
+and [checksum](https://aichance.github.io/business-ai-recipes/app-crash-lab-skill-v0.2.2.zip.sha256).
 Review it, then place the whole `app-crash-lab` folder in **your app project's**
 `.agents/skills/` without overwriting an existing skill. In Codex, ask:
 
@@ -82,6 +82,12 @@ Keep the app unchanged and tell me the result and exact rerun command.
 [Skill source](.agents/skills/app-crash-lab/SKILL.md) · [Installation and scope](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#codex-skill).
 Review the proposed observations and actual result. The contract path uses the
 existing 0.11.0 runner; installing instructions alone does not test an app.
+
+Already using Vitest for save/load code? For an explicitly requested data-layer
+check, the skill can reuse your existing tests. It compares the complete saved
+record separately from intentional load-time resets. A store rehydration in
+jsdom is not a browser reload, two-tab test or real backup restore; those
+requests still require the corresponding browser check.
 
 [**Try App Crash Lab 0.11.0 without cloning**](#try-the-seeded-demo) · [**Release package & checksums**](https://github.com/aichance/business-ai-recipes/releases/tag/app-crash-lab-v0.11.0)
 
