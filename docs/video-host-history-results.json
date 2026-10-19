@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "measuredAt": "2026-10-19T01:29:56.465Z",
+  "operator": "aichance",
+  "scope": "unchanged Video component initial new-content-URL effect in isolated client fixture",
+  "wholeAppRun": false,
+  "nativeFamily": "C optional-history failure boundary",
+  "upstream": "xpadev-net/video-host",
+  "revision": "14630a0abaa8da3badf4525111488d6cb2fd7004",
+  "nativeSpec": {
+    "file": "browser/optional-history.spec.mjs",
+    "sha256": "3f82d4bc58892564d621856606133a47f617dd648b740fd2279b6bb24daea094"
+  },
+  "environment": {
+    "node": "22.16.0",
+    "playwright": "1.64.0",
+    "browser": "Chromium1248",
+    "os": "macOS",
+    "react": "19.3.0",
+    "jotai": "2.20.3",
+    "hls": "1.7.3",
+    "router": "1.170.44"
+  },
+  "cases": [
+    {
+      "witness": "normal.json",
+      "status": "PASS",
+      "hlsInitialized": true,
+      "error": null,
+      "manifestRequests": 2,
+      "mediaSegmentRequests": 6,
+      "unexpectedExternalRequests": 0,
+      "historyWritesDenied": 0,
+      "oldDurableRecordPreserved": true,
+      "media": {
+        "currentTime": 10.3084,
+        "duration": 11.999999,
+        "readyState": 4,
+        "paused": false,
+        "error": null
+      },
+      "seekPositionPersistedFraction": 0.8512167376013948
+    },
+    {
+      "witness": "unrelated.json",
+      "status": "PASS",
+      "hlsInitialized": true,
+      "error": null,
+      "manifestRequests": 2,
+      "mediaSegmentRequests": 6,
+      "unexpectedExternalRequests": 0,
+      "historyWritesDenied": 0,
+      "oldDurableRecordPreserved": true,
+      "media": {
+        "currentTime": 10.3056,
+        "duration": 11.999999,
+        "readyState": 4,
+        "paused": false,
+        "error": null
+      },
+      "seekPositionPersistedFraction": 0.8513834042819503
+    },
+    {
+      "witness": "quota-before-outcome.json",
+      "status": "OUTCOME_FAIL",
+      "hlsInitialized": false,
+      "error": {
+        "name": "QuotaExceededError",
+        "message": "C_SYNTHETIC_VIDEO_HISTORY_DENIED"
+      },
+      "manifestRequests": 0,
+      "mediaSegmentRequests": 0,
+      "unexpectedExternalRequests": 0,
+      "historyWritesDenied": 1,
+      "oldDurableRecordPreserved": true,
+      "media": null,
+      "seekPositionPersistedFraction": null
+    }
+  ],
+  "oracleCalibration": {
+    "separateHypotheticalCopy": true,
+    "changes": "catch ancillary history write exceptions in the two component handlers",
+    "testsPassed": 3,
+    "upstreamFix": false,
+    "adoption": false
+  },
+  "excludedClaims": [
+    "whole-app crash/error UI",
+    "real quota capacity/frequency",
+    "later progress-write failure impact",
+    "backend/auth/provider correctness",
+    "third-party use"
+  ],
+  "sourceHashGate": "eight source/license files match SOURCE.json Git blobs and SHA-256",
+  "dependencyAudit": {
+    "totalVulnerabilities": 0,
+    "scriptsDisabledDuringInstall": true
+  }
+}

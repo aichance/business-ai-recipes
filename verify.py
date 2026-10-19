@@ -532,6 +532,11 @@ EXPECTED_FILES = {
     "tools/dots-studio/test/protocol.test.mjs",
     "tools/dots-studio/ui.mjs",
     "verify.py",
+    "docs/app-crash-lab-video-host-history-native-v0.1.0.zip",
+    "docs/app-crash-lab-video-host-history-native-v0.1.0.zip.sha256",
+    "docs/video-host-history-native.md",
+    "docs/video-host-history-results.json",
+    "docs/video-host-history.spec.mjs",
 }
 _MISSING = object()
 _WORKSPACE_DIRS = frozenset({".demo-forge-output", ".demo-forge-venv"})
@@ -831,6 +836,42 @@ def _verify_native_optional_history_pack(root: Path) -> None:
         != hashlib.sha256((source / "optional-history.spec.mjs").read_bytes()).hexdigest()
     ):
         raise AssertionError("native optional-history measured source hash mismatch")
+
+
+def _verify_video_host_history_native(root: Path) -> None:
+    name = "app-crash-lab-video-host-history-native-v0.1.0.zip"
+    path = root / "docs" / name
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    if path.with_name(name + ".sha256").read_text().split() != [digest, name]:
+        raise AssertionError("video-host native ZIP checksum mismatch")
+    prefix = "video-host-history-native/"
+    with ZipFile(path) as archive:
+        names = archive.namelist()
+        if (
+            len(names) != 31
+            or len(set(names)) != 31
+            or any(not n.startswith(prefix) or ".." in Path(n).parts for n in names)
+        ):
+            raise AssertionError("video-host native ZIP file set mismatch")
+        spec = archive.read(prefix + "browser/optional-history.spec.mjs")
+        result_bytes = archive.read(prefix + "RESULTS.json")
+        if spec != (root / "docs/video-host-history.spec.mjs").read_bytes():
+            raise AssertionError("published video-host native spec differs from ZIP")
+        if result_bytes != (root / "docs/video-host-history-results.json").read_bytes():
+            raise AssertionError("published video-host native result differs from ZIP")
+        result = json.loads(result_bytes)
+        if result["nativeSpec"]["sha256"] != hashlib.sha256(spec).hexdigest():
+            raise AssertionError("video-host native measured spec mismatch")
+        metadata = json.loads(archive.read(prefix + "SOURCE.json"))
+        if (
+            metadata["revision"] != "14630a0abaa8da3badf4525111488d6cb2fd7004"
+            or len(metadata["files"]) != 8
+        ):
+            raise AssertionError("video-host source provenance mismatch")
+        for item in metadata["files"]:
+            blob = archive.read(prefix + "upstream/" + item["path"])
+            if len(blob) != item["bytes"] or hashlib.sha256(blob).hexdigest() != item["sha256"]:
+                raise AssertionError("video-host unchanged source mismatch")
 
 
 def _verify_stitchwitch_native(root: Path) -> None:
@@ -1641,6 +1682,7 @@ def verify(
     _verify_native_write_denied_pack(root)
     _verify_brainotes_native_pack(root)
     _verify_native_optional_history_pack(root)
+    _verify_video_host_history_native(root)
     _verify_stitchwitch_native(root)
     _verify_perma_delete_native(root)
     _verify_osw_native_pack(root)
