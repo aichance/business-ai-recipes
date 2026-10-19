@@ -23,6 +23,8 @@ reproduction of an existing issue, separate from independent author use below.
 
 ## Copy one Playwright regression
 
+**“Saved” after cancelling, with zero output files.** [Run the real PDF-app check in your browser](https://aichance.github.io/business-ai-recipes/pdf-save-lab.html), then [copy its single Playwright spec](tools/app-crash-lab/examples/pdf-save-native/README.md). Normal save and denied-write fallback preserve both complete pages; cancellation falsely reports success on the affected source. The same document can retry successfully. Synthetic PDF only; browser save APIs are simulated.
+
 | Boundary to check | What the test observes | Start from |
 | --- | --- | --- |
 | An earlier tab saves an unrelated change | The other tab's committed fields remain intact after the peer save and reload | [LivePage: one native spec](tools/app-crash-lab/examples/livepage-native/README.md) |
