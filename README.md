@@ -6,7 +6,7 @@
 
 Add one persistence regression to your existing Playwright suite. Start with a measured example, adapt its app actions and saved-state assertions, and keep the test in your release checks. The native path needs no App Crash Lab runtime or JSON contract.
 
-[**Copy a native test**](#copy-one-playwright-regression) · [**Check your own app**](#check-your-own-app) · [**Try a no-install example**](https://aichance.github.io/business-ai-recipes/test-the-test.html) · [**Contract format**](tools/app-crash-lab/CONTRACT.md)
+[**Copy a native test**](#copy-one-playwright-regression) · [**Ask your coding agent**](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#native-agent) · [**Check your own app**](#check-your-own-app) · [**Try a no-install example**](https://aichance.github.io/business-ai-recipes/test-the-test.html) · [**Contract format**](tools/app-crash-lab/CONTRACT.md)
 
 **A saved landing page can roll back after a toolbar click in another tab.**
 
@@ -37,6 +37,8 @@ A related initial-load boundary: [VideoHost component reproduction](docs/video-h
 For backup export/import, use the [real-file roundtrip path](tools/app-crash-lab/BACKUP.md) instead of substituting a reload check. [Choose among eight persistence boundaries](tools/app-crash-lab/PERSISTENCE-CHECKLIST.md).
 
 ## Check your own app
+
+Already have a test suite? [Copy a request for your existing Playwright suite or explicitly choose a Vitest data-layer check](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#native-agent). These paths require your project’s installed test dependencies and coding agent, without installing the App Crash Lab runner or skill. A Vitest result does not establish browser reload, peer-tab or backup behavior.
 
 Use a disposable **local copy of your app**, with **Node 22+ and npm**.
 
