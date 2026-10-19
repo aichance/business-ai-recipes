@@ -1,0 +1,521 @@
+{
+  "measured_at": "2026-10-19T23:07:44.902Z",
+  "source": {
+    "repository": "fearless0712/misaneco-tools",
+    "commit": "02e7befca9d5e0248f8668adf94607d8c62a9c88",
+    "entry": "dx/index.html",
+    "all_original_blobs_unchanged_after_checks": 233,
+    "original_source_distributed_here": false
+  },
+  "runtime": {
+    "node": "22.16.0",
+    "playwright": "1.64.0",
+    "chromium": "156.0.8078.4"
+  },
+  "existing_japanese_suite": {
+    "command": "node test/test.js",
+    "pass": 76788,
+    "fail": 0,
+    "exit_code": 0,
+    "scope": "Original dx/test/test.js only; not all repository or the full separate English suite"
+  },
+  "native": {
+    "command": "node --test two-state-preservation.test.mjs",
+    "file": "two-state-preservation.test.mjs",
+    "sha256": "0c6aefe5661afb2016293cae4e0a0026357e8ca104b7f031e763aa2e2439d893",
+    "scope": "Original data/logic/browser-IIFE scripts in independent VM contexts, minimal DOM handlers and shared Map; not a browser simulation",
+    "pass": 2,
+    "fail": 1,
+    "exit_code": 1,
+    "duration_ms": 121.093958,
+    "cases": [
+      {
+        "mode": "same-state",
+        "before": {
+          "industry": "office",
+          "sel": {
+            "invoice": {
+              "freq": "monthly",
+              "min": 120
+            },
+            "reconcile": {
+              "freq": "monthly",
+              "min": 90
+            }
+          },
+          "order": [
+            "invoice",
+            "reconcile"
+          ],
+          "env": {
+            "sheet": "excel",
+            "pc": "win",
+            "m365": "no",
+            "code": "none",
+            "budget": "0"
+          },
+          "choices": {}
+        },
+        "after": {
+          "industry": "realestate",
+          "sel": {
+            "invoice": {
+              "freq": "monthly",
+              "min": 120
+            },
+            "reconcile": {
+              "freq": "monthly",
+              "min": 90
+            }
+          },
+          "order": [
+            "invoice",
+            "reconcile"
+          ],
+          "env": {
+            "sheet": "excel",
+            "pc": "win",
+            "m365": "no",
+            "code": "none",
+            "budget": "0"
+          },
+          "choices": {}
+        },
+        "expected": {
+          "industry": "realestate",
+          "sel": {
+            "invoice": {
+              "freq": "monthly",
+              "min": 120
+            },
+            "reconcile": {
+              "freq": "monthly",
+              "min": 90
+            }
+          },
+          "order": [
+            "invoice",
+            "reconcile"
+          ],
+          "env": {
+            "sheet": "excel",
+            "pc": "win",
+            "m365": "no",
+            "code": "none",
+            "budget": "0"
+          },
+          "choices": {}
+        },
+        "reloadedSelection": "2件選択中",
+        "preserved": true
+      },
+      {
+        "mode": "fresh-state",
+        "before": {
+          "industry": "office",
+          "sel": {
+            "invoice": {
+              "freq": "monthly",
+              "min": 120
+            },
+            "reconcile": {
+              "freq": "monthly",
+              "min": 90
+            }
+          },
+          "order": [
+            "invoice",
+            "reconcile"
+          ],
+          "env": {
+            "sheet": "excel",
+            "pc": "win",
+            "m365": "no",
+            "code": "none",
+            "budget": "0"
+          },
+          "choices": {}
+        },
+        "after": {
+          "industry": "realestate",
+          "sel": {
+            "invoice": {
+              "freq": "monthly",
+              "min": 120
+            },
+            "reconcile": {
+              "freq": "monthly",
+              "min": 90
+            }
+          },
+          "order": [
+            "invoice",
+            "reconcile"
+          ],
+          "env": {
+            "sheet": "excel",
+            "pc": "win",
+            "m365": "no",
+            "code": "none",
+            "budget": "0"
+          },
+          "choices": {}
+        },
+        "expected": {
+          "industry": "realestate",
+          "sel": {
+            "invoice": {
+              "freq": "monthly",
+              "min": 120
+            },
+            "reconcile": {
+              "freq": "monthly",
+              "min": 90
+            }
+          },
+          "order": [
+            "invoice",
+            "reconcile"
+          ],
+          "env": {
+            "sheet": "excel",
+            "pc": "win",
+            "m365": "no",
+            "code": "none",
+            "budget": "0"
+          },
+          "choices": {}
+        },
+        "reloadedSelection": "2件選択中",
+        "preserved": true
+      },
+      {
+        "mode": "earlier-state",
+        "before": {
+          "industry": "office",
+          "sel": {
+            "invoice": {
+              "freq": "monthly",
+              "min": 120
+            },
+            "reconcile": {
+              "freq": "monthly",
+              "min": 90
+            }
+          },
+          "order": [
+            "invoice",
+            "reconcile"
+          ],
+          "env": {
+            "sheet": "excel",
+            "pc": "win",
+            "m365": "no",
+            "code": "none",
+            "budget": "0"
+          },
+          "choices": {}
+        },
+        "after": {
+          "industry": "realestate",
+          "sel": {},
+          "order": [],
+          "env": {
+            "sheet": "excel",
+            "pc": "win",
+            "m365": "no",
+            "code": "none",
+            "budget": "0"
+          },
+          "choices": {}
+        },
+        "expected": {
+          "industry": "realestate",
+          "sel": {
+            "invoice": {
+              "freq": "monthly",
+              "min": 120
+            },
+            "reconcile": {
+              "freq": "monthly",
+              "min": 90
+            }
+          },
+          "order": [
+            "invoice",
+            "reconcile"
+          ],
+          "env": {
+            "sheet": "excel",
+            "pc": "win",
+            "m365": "no",
+            "code": "none",
+            "budget": "0"
+          },
+          "choices": {}
+        },
+        "reloadedSelection": "0件選択中",
+        "preserved": false
+      }
+    ],
+    "duration_scope": "Node TAP runner reported duration, excluding checkout/download/setup"
+  },
+  "browser": {
+    "file": "browser-replay.mjs",
+    "sha256": "4f15c73cf9050a23175d60611b701e2a8d670ea578a39de812c8c8c5ac424bee",
+    "scope": "Original app served on loopback, fresh Chromium context per case, actual checkbox/radio actions, committed full record then reload",
+    "pass": 2,
+    "fail": 1,
+    "exit_code": 1,
+    "cases": [
+      {
+        "mode": "same-state",
+        "before": {
+          "industry": "office",
+          "sel": {
+            "invoice": {
+              "freq": "monthly",
+              "min": 120
+            },
+            "reconcile": {
+              "freq": "monthly",
+              "min": 90
+            }
+          },
+          "order": [
+            "invoice",
+            "reconcile"
+          ],
+          "env": {
+            "sheet": "excel",
+            "pc": "win",
+            "m365": "no",
+            "code": "none",
+            "budget": "0"
+          },
+          "choices": {}
+        },
+        "after": {
+          "industry": "realestate",
+          "sel": {
+            "invoice": {
+              "freq": "monthly",
+              "min": 120
+            },
+            "reconcile": {
+              "freq": "monthly",
+              "min": 90
+            }
+          },
+          "order": [
+            "invoice",
+            "reconcile"
+          ],
+          "env": {
+            "sheet": "excel",
+            "pc": "win",
+            "m365": "no",
+            "code": "none",
+            "budget": "0"
+          },
+          "choices": {}
+        },
+        "expected": {
+          "industry": "realestate",
+          "sel": {
+            "invoice": {
+              "freq": "monthly",
+              "min": 120
+            },
+            "reconcile": {
+              "freq": "monthly",
+              "min": 90
+            }
+          },
+          "order": [
+            "invoice",
+            "reconcile"
+          ],
+          "env": {
+            "sheet": "excel",
+            "pc": "win",
+            "m365": "no",
+            "code": "none",
+            "budget": "0"
+          },
+          "choices": {}
+        },
+        "reloadedSelection": "2件選択中",
+        "preserved": true,
+        "classification": "PASS"
+      },
+      {
+        "mode": "fresh-state",
+        "before": {
+          "industry": "office",
+          "sel": {
+            "invoice": {
+              "freq": "monthly",
+              "min": 120
+            },
+            "reconcile": {
+              "freq": "monthly",
+              "min": 90
+            }
+          },
+          "order": [
+            "invoice",
+            "reconcile"
+          ],
+          "env": {
+            "sheet": "excel",
+            "pc": "win",
+            "m365": "no",
+            "code": "none",
+            "budget": "0"
+          },
+          "choices": {}
+        },
+        "after": {
+          "industry": "realestate",
+          "sel": {
+            "invoice": {
+              "freq": "monthly",
+              "min": 120
+            },
+            "reconcile": {
+              "freq": "monthly",
+              "min": 90
+            }
+          },
+          "order": [
+            "invoice",
+            "reconcile"
+          ],
+          "env": {
+            "sheet": "excel",
+            "pc": "win",
+            "m365": "no",
+            "code": "none",
+            "budget": "0"
+          },
+          "choices": {}
+        },
+        "expected": {
+          "industry": "realestate",
+          "sel": {
+            "invoice": {
+              "freq": "monthly",
+              "min": 120
+            },
+            "reconcile": {
+              "freq": "monthly",
+              "min": 90
+            }
+          },
+          "order": [
+            "invoice",
+            "reconcile"
+          ],
+          "env": {
+            "sheet": "excel",
+            "pc": "win",
+            "m365": "no",
+            "code": "none",
+            "budget": "0"
+          },
+          "choices": {}
+        },
+        "reloadedSelection": "2件選択中",
+        "preserved": true,
+        "classification": "PASS"
+      },
+      {
+        "mode": "earlier-state",
+        "before": {
+          "industry": "office",
+          "sel": {
+            "invoice": {
+              "freq": "monthly",
+              "min": 120
+            },
+            "reconcile": {
+              "freq": "monthly",
+              "min": 90
+            }
+          },
+          "order": [
+            "invoice",
+            "reconcile"
+          ],
+          "env": {
+            "sheet": "excel",
+            "pc": "win",
+            "m365": "no",
+            "code": "none",
+            "budget": "0"
+          },
+          "choices": {}
+        },
+        "after": {
+          "industry": "realestate",
+          "sel": {},
+          "order": [],
+          "env": {
+            "sheet": "excel",
+            "pc": "win",
+            "m365": "no",
+            "code": "none",
+            "budget": "0"
+          },
+          "choices": {}
+        },
+        "expected": {
+          "industry": "realestate",
+          "sel": {
+            "invoice": {
+              "freq": "monthly",
+              "min": 120
+            },
+            "reconcile": {
+              "freq": "monthly",
+              "min": 90
+            }
+          },
+          "order": [
+            "invoice",
+            "reconcile"
+          ],
+          "env": {
+            "sheet": "excel",
+            "pc": "win",
+            "m365": "no",
+            "code": "none",
+            "budget": "0"
+          },
+          "choices": {}
+        },
+        "reloadedSelection": "0件選択中",
+        "preserved": false,
+        "classification": "PRESERVATION_FAIL"
+      }
+    ],
+    "network": {
+      "forwarded_remote_requests": 0,
+      "forwarded_non_GET_requests": 0,
+      "rejected_remote_attempts": 22
+    }
+  },
+  "limits": [
+    "Sequential chosen two-state/two-tab scenario, not arbitrary concurrency or a browser compatibility survey",
+    "No analytics submission, ads interaction, backend, sync, account transition, CSV output or permanent-loss recovery checked",
+    "Preservation expectation is a proposed test contract; author acceptance and production fix are not established",
+    "Operator results only; recipient has not reported running these test files"
+  ],
+  "kpi_credit": {
+    "new_star": 0,
+    "new_own_app_user": 0,
+    "new_reuse": 0
+  },
+  "fixed_native48_initial_cohort_or_clock_changed": false
+}
