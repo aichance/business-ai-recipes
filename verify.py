@@ -16,6 +16,10 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "docs/pdf-save-lab.html",
+    "docs/pdf-save-lab.mjs",
+    "tools/app-crash-lab/examples/pdf-save-native/README.md",
+    "tools/app-crash-lab/examples/pdf-save-native/pdf-save.spec.mjs",
     "tools/app-crash-lab/examples/optional-result-native/README.md",
     "tools/app-crash-lab/examples/optional-result-native/optional-result.spec.mjs",
     "docs/livepage-template-saved.png",
