@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "measured_at": "2026-10-19T21:38:34Z",
+  "scope": "native Vitest exporter/parser data-layer contract; not browser or cloud restore",
+  "upstream": {
+    "repository": "Simplificatedd/JobApplicationTracker",
+    "commit": "bae82842d4f9d29897ee9017d6fa4074de4949db",
+    "issue": 128,
+    "source_unmodified_for_original_run": true,
+    "source_distributed": false
+  },
+  "test_sha256": "fbcf3ac809b770f1a9c0cbeee1b5e33088d951ede78b88096eadf81285b599b0",
+  "runtime": "Node22.16.0",
+  "vitest": "4.1.11",
+  "original_related_tests": {
+    "pass": 37,
+    "fail": 0,
+    "files": 2
+  },
+  "original_contract": {
+    "pass": 2,
+    "fail": 1,
+    "skip": 0,
+    "exit_code": 1,
+    "runner_duration_seconds": 2.8,
+    "cases": [
+      {
+        "name": "small control",
+        "count": 1,
+        "raw_file_bytes_each": 128,
+        "result": "PASS"
+      },
+      {
+        "name": "seven allowed10MiBfiles",
+        "count": 7,
+        "raw_file_bytes_each": 10485760,
+        "result": "PASS"
+      },
+      {
+        "name": "eight allowed10MiBfiles",
+        "count": 8,
+        "raw_file_bytes_each": 10485760,
+        "raw_file_bytes_total": 83886080,
+        "actual_exported_blob_bytes": 111855413,
+        "import_cap_bytes": 104857600,
+        "result": "FAIL",
+        "observed_error": "Tracker backup files must be 100 MB or smaller."
+      }
+    ]
+  },
+  "diagnostic_only": {
+    "single_change": "local MAX_BACKUP_FILE_BYTES100MiB→200MiB",
+    "pass": 3,
+    "fail": 0,
+    "source_restored_byte_exact": true,
+    "not_production_fix": true,
+    "cloud_upload_still_unverified": true
+  },
+  "checks": {
+    "typescript": "PASS",
+    "targeted_eslint": "PASS"
+  },
+  "recipient_execution_confirmed": false,
+  "limits": [
+    "PDF-signature synthetic payloads accepted by actual app validator, not PDF rendering",
+    "Actual exporter Blob and parser; no File.size override",
+    "No browser, Cloudflare Access, R2 upload, backend cleanup or end-to-end restore",
+    "No claim to resolve the legacy oversized upload or partial failure parts of issue128",
+    "Largest case materializes about112MB JSON; peak memory not measured"
+  ]
+}
