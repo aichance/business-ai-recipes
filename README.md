@@ -36,6 +36,8 @@ These files target the named apps and measured versions. Follow the selected gui
 
 A related initial-load boundary: [VideoHost component reproduction](docs/video-host-history-native.md) measures a history-only write rejection before HLS starts. It includes two passing controls and preserves the original component source. This is a component fixture, not a complete application run.
 
+Already checking browser modules without a browser? [Recovered-draft cleanup: one dependency-free Node test](tools/app-crash-lab/examples/draft-recovery-native/README.md) catches an older restored copy deleting another context’s newer complete recovery stash. This is an original-module `vm` check with two passing controls, not a full editor or server test.
+
 For backup export/import, use the [real-file roundtrip path](tools/app-crash-lab/BACKUP.md) instead of substituting a reload check. [Choose among eight persistence boundaries](tools/app-crash-lab/PERSISTENCE-CHECKLIST.md).
 
 ## Check your own app

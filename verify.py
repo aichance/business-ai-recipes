@@ -16,6 +16,9 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "tools/app-crash-lab/examples/draft-recovery-native/README.md",
+    "tools/app-crash-lab/examples/draft-recovery-native/RESULTS.json",
+    "tools/app-crash-lab/examples/draft-recovery-native/draft-recovery-cleanup.test.mjs",
     "docs/pdf-save-lab.html",
     "docs/pdf-save-lab.mjs",
     "tools/app-crash-lab/examples/pdf-save-native/README.md",

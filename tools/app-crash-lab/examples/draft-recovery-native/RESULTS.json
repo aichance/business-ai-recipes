@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "measured_at": "2026-10-19T19:21:15.035429+00:00",
+  "test_type": "original browser module in isolated VMs; not browser E2E",
+  "upstream": {
+    "repository": "laboef1900/simonswanderlust",
+    "commit": "9e400f977100f11808ef1d92f1e9880469c12dd8",
+    "source_path": "uploader/public/draft-guard.js",
+    "git_blob_sha1": "75cbed768d5ea1525cb52ba67cbcefd26b475818",
+    "bytes": 9106,
+    "source_sha256": "715d8deeba1f1125559522345aed963da664b0a57f46d2ccbd6f6ba9373466b5",
+    "source_unmodified": true,
+    "source_distributed": false
+  },
+  "test_sha256": "ae74909347251381b184a467e98f1af1714642c70790ee7a824d3e1f92bedb4b",
+  "measured_runtimes": [
+    "v24.19.0",
+    "v22.16.0"
+  ],
+  "original": {
+    "pass": 2,
+    "fail": 1,
+    "skip": 0,
+    "exit_code": 1,
+    "failed_boundary": "PRESERVATION: newer source recovery stash removed"
+  },
+  "hypothetical_local_copy": {
+    "pass": 3,
+    "fail": 0,
+    "exit_code": 0,
+    "upstream_fix": false
+  },
+  "recipient_execution_confirmed": false,
+  "limits": [
+    "Map-backed storage and deterministic guard calls, not browser localStorage or UI",
+    "No actual HTTP write, server state, authentication, cross-user isolation, crash or OS disk test",
+    "Still-open source in-memory form and prior server-saved post not claimed lost"
+  ]
+}
