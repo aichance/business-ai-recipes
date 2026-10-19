@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="実際のPDF編集アプリで、正常保存・書込拒否・保存キャンセルを検証。インストール不要のApp Crash Lab実験。">
+  <title>保存しました、は本当？ | App Crash Lab</title>
+  <style>
+    :root{color-scheme:light;--ink:#152c29;--muted:#526963;--line:#dce5df;--green:#145d44;--red:#a22820;--paper:#f6f7f1}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.7 system-ui,sans-serif}main{max-width:1120px;margin:auto;padding:32px 28px 60px}a{color:var(--green);text-underline-offset:4px}nav{display:flex;justify-content:space-between;gap:20px;border-bottom:1px solid var(--line);padding-bottom:18px;font-size:14px}.brand{font-weight:800;letter-spacing:.03em}header{padding:48px 0 30px;max-width:850px}.eyebrow{font-size:12px;font-weight:800;letter-spacing:.14em;color:var(--green)}h1{font-size:clamp(30px,5vw,56px);line-height:1.25;letter-spacing:-.04em;margin:14px 0 22px}p{margin:12px 0}.lead{font-size:18px;color:var(--muted);max-width:740px}.actions{display:flex;flex-wrap:wrap;align-items:center;gap:16px;margin:26px 0 10px}button{font:inherit;font-weight:700;cursor:pointer;border-radius:8px;border:1px solid var(--green);padding:13px 22px;background:var(--green);color:white}button:disabled{opacity:.65;cursor:wait}button.secondary{background:white;color:var(--green);padding:9px 16px;font-size:14px}.small{font-size:13px;color:var(--muted)}#status{min-height:28px;color:var(--muted)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:start}.checks{display:grid;gap:12px}.check{border:1px solid var(--line);background:white;border-radius:12px;padding:18px 20px}.check h2{font-size:17px;line-height:1.5;margin:0 0 7px}.pill{float:right;font:700 11px/1.5 system-ui;border-radius:5px;padding:4px 9px;background:#edf1ec;color:var(--muted);margin:2px 0 8px 10px}.check[data-state=PASS]{border-color:#a2c6b5}.check[data-state=PASS] .pill{background:#e5f3ea;color:var(--green)}.check[data-state=FAIL]{border-color:#cf9c91}.check[data-state=FAIL] .pill{background:#fce9e3;color:var(--red)}.check p{font-size:14px;color:var(--muted);margin:0}.preview{border:1px solid var(--line);background:white;border-radius:12px;overflow:hidden}.preview-label{padding:13px 16px;border-bottom:1px solid var(--line);font-size:13px;font-weight:700}.preview-window{height:410px;position:relative;overflow:hidden;background:#fff}.preview-empty{padding:50px 28px;color:var(--muted);font-size:15px}.preview iframe{width:1000px;height:780px;transform:scale(.5);transform-origin:top left;border:0;pointer-events:none}.preview-caption{padding:12px 16px;color:var(--muted);font-size:12px;border-top:1px solid var(--line)}.report{border-top:1px solid var(--line);margin-top:30px;padding-top:24px}.report h2{font-size:20px;margin:0 0 12px}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.6 ui-monospace,monospace;background:#eaf0e9;padding:18px;border-radius:8px;max-height:300px;overflow:auto}.scope{border-top:1px solid var(--line);padding-top:24px;margin-top:32px;color:var(--muted);font-size:14px}.scope strong{color:var(--ink)}details{margin-top:20px}summary{cursor:pointer;font-weight:600}button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #d38d22;outline-offset:4px}#canary{display:none}@media(max-width:720px){main{padding:22px 18px 40px}header{padding-top:34px}.grid{grid-template-columns:1fr}.lead{font-size:16px}.preview-window{height:310px}.preview iframe{transform:scale(.36)}nav{font-size:12px}button{width:100%}.actions a{font-size:14px}h1{font-size:34px}.check{padding:16px}.secondary{width:auto}}
+  </style>
+</head>
+<body>
+<main>
+  <nav><span class="brand">App Crash Lab / 実アプリ検証</span><a href="https://github.com/aichance/business-ai-recipes">GitHub ↗</a></nav>
+  <header>
+    <div class="eyebrow">THE SAVE COMPLETION CHECK</div>
+    <h1>「保存しました」は、<br>本当に保存できた？</h1>
+    <p class="lead">PDFを回転 → 保存をキャンセル。ファイルが一つも出ていなくても、成功と表示される？ 公開された実アプリで、3つの保存経路を確かめます。</p>
+    <div class="actions"><button id="run" type="button">実アプリで3項目を検証</button><a href="https://github.com/aichance/business-ai-recipes/tree/main/tools/app-crash-lab/examples/pdf-save-native">自分の環境で動かすPlaywrightテスト ↗</a></div>
+    <p class="small">インストール・ログイン不要。合成PDFのみ。保存APIは模擬します。</p>
+    <p id="status" role="status" aria-live="polite">未実行。ボタンを押すと固定版のソースをGitHubから取得します。</p>
+  </header>
+  <div class="grid">
+    <section class="checks" aria-label="検証結果">
+      <article class="check" data-case="success"><span class="pill">未実行</span><h2>01 正常保存</h2><p>書込完了後に成功を表示し、2ページの全テキスト・順序・90°回転を保つか。</p></article>
+      <article class="check" data-case="write-denied"><span class="pill">未実行</span><h2>02 書込拒否 → 代替保存</h2><p>書込エラーでも、ダウンロード用のPDFが全ページ揃うか。</p></article>
+      <article class="check" data-case="abort"><span class="pill">未実行</span><h2>03 キャンセル → 再試行</h2><p>出力ゼロで「保存済み」と言わないか。編集を保って再保存できるか。</p></article>
+    </section>
+    <section class="preview" aria-label="合成PDFを使った実アプリの表示">
+      <div class="preview-label">PDF_Studio / 固定版の実コード</div>
+      <div class="preview-window" id="preview"><div class="preview-empty">実行時にここでアプリが動きます。<br>個人のファイルは選択・入力できません。</div></div>
+      <div class="preview-caption">外側のページから隔離した表示専用環境。実ファイルの保存・ダウンロードは行いません。</div>
+    </section>
+  </div>
+  <section class="report" id="report-section" hidden>
+    <h2 id="summary">検証レポート</h2>
+    <button class="secondary" id="copy" type="button">レポートをコピー</button>
+    <details><summary>測定条件と結果を表示</summary><pre id="report"></pre></details>
+  </section>
+  <section class="scope">
+    <p><strong>何を実行する？</strong> <a href="https://github.com/yoshiki2024/PDF_Studio/tree/87160462e342c039235531be49883113b1265e49">PDF_Studio@87160462</a> のHTML・CSS・同梱JSを固定ハッシュで確認し、元のアプリ処理で合成PDFを読み込み・回転・出力します。アプリのコードは変更しません。上流ソースはこのサイトに複製していません。</p>
+    <p><strong>何は測らない？</strong> 本物のOS保存ダイアログ、実ディスクへの書込、全PDF形式、墨消し、実ユーザーの資料は対象外です。このブラウザ版の代替ダウンロードはBlobを捕捉します。公開Playwright版では実際のブラウザダウンロードも検査します。準備に失敗した場合は「判定不能」です。</p>
+    <p>各ケースは新しい隔離環境で実行します。ネットワーク送信は固定された公開ソースの取得のみ。PDFや結果を送信する機能・解析タグはありません。実アプリ由来の表示や結果は、第三者による利用実績とは別です。</p>
+    <p><a href="app-crash-lab.html">App Crash Labの他の検証へ</a> · <a href="https://github.com/aichance/business-ai-recipes/tree/main/tools/app-crash-lab/examples/pdf-save-native">テストと実測の説明</a></p>
+  </section>
+  <span id="canary">parent-unchanged</span>
+</main>
+<script type="module" src="pdf-save-lab.mjs"></script>
+</body>
+</html>
