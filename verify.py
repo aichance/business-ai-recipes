@@ -16,6 +16,11 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "docs/app-crash-lab-life-tracker-stale-cloud-native-v0.1.0.zip",
+    "docs/app-crash-lab-life-tracker-stale-cloud-native-v0.1.0.zip.sha256",
+    "docs/life-tracker-stale-cloud-native.md",
+    "docs/life-tracker-stale-cloud-results.json",
+    "docs/life-tracker-stale-cloud.spec.mjs",
     "tools/app-crash-lab/examples/brainotes-native/LICENSE",
     "tools/app-crash-lab/examples/brainotes-native/README.md",
     "tools/app-crash-lab/examples/brainotes-native/RESULTS.json",
@@ -836,6 +841,54 @@ def _verify_native_optional_history_pack(root: Path) -> None:
         != hashlib.sha256((source / "optional-history.spec.mjs").read_bytes()).hexdigest()
     ):
         raise AssertionError("native optional-history measured source hash mismatch")
+
+
+def _verify_life_tracker_stale_cloud_native(root: Path) -> None:
+    name = "app-crash-lab-life-tracker-stale-cloud-native-v0.1.0.zip"
+    path = root / "docs" / name
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    if path.with_name(name + ".sha256").read_text().split() != [digest, name]:
+        raise AssertionError("Life Tracker native ZIP checksum mismatch")
+    result = json.loads((root / "docs/life-tracker-stale-cloud-results.json").read_text())
+    expected = {
+        "LICENSE",
+        "README.md",
+        "download-source.py",
+        "package-lock.json",
+        "package.json",
+        "playwright.config.mjs",
+        "server.mjs",
+        "setup.mjs",
+        "source-manifest.json",
+        "tests/stale-cloud.spec.mjs",
+    }
+    prefix = "life-tracker-stale-cloud-native/"
+    with ZipFile(path) as archive:
+        names = archive.namelist()
+        if len(names) != len(expected) or set(names) != {prefix + n for n in expected}:
+            raise AssertionError("Life Tracker ZIP must contain only our test/setup files")
+        spec = archive.read(prefix + "tests/stale-cloud.spec.mjs")
+        if spec != (root / "docs/life-tracker-stale-cloud.spec.mjs").read_bytes():
+            raise AssertionError("Life Tracker readable spec differs from measured ZIP")
+        if hashlib.sha256(spec).hexdigest() != result["nativeSpec"]["sha256"]:
+            raise AssertionError("Life Tracker measured spec hash mismatch")
+        source = archive.read(prefix + "source-manifest.json")
+        if hashlib.sha256(source).hexdigest() != result["source_manifest_sha256"]:
+            raise AssertionError("Life Tracker source manifest identity mismatch")
+        manifest = json.loads(source)
+        if (
+            manifest["pin"] != "402ad57f75816302fc0cd50cb1a17f78eb78d143"
+            or len(manifest["blobs"]) != 35
+        ):
+            raise AssertionError("Life Tracker pinned source manifest mismatch")
+    if result["archive"]["sha256"] != digest or result["archive"]["bytes"] != path.stat().st_size:
+        raise AssertionError("Life Tracker measured ZIP identity mismatch")
+    if {c["name"]: c["status"] for c in result["cases"]} != {
+        "remote update control": "passed",
+        "unavailable remote control": "passed",
+        "older remote regression": "failed",
+    }:
+        raise AssertionError("Life Tracker measured control/regression cases mismatch")
 
 
 def _verify_video_host_history_native(root: Path) -> None:
@@ -1683,6 +1736,7 @@ def verify(
     _verify_brainotes_native_pack(root)
     _verify_native_optional_history_pack(root)
     _verify_video_host_history_native(root)
+    _verify_life_tracker_stale_cloud_native(root)
     _verify_stitchwitch_native(root)
     _verify_perma_delete_native(root)
     _verify_osw_native_pack(root)
