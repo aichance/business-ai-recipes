@@ -38,6 +38,11 @@ Two app-specific adaptations reduce setup when they match the user's project:
    actual persisted baseline. Observe canonical storage read-only where
    possible. Do not seed replacement records, patch app code, or weaken the
    requested condition to get a passing baseline.
+   Read the load path too: compare the complete raw saved document separately
+   from the complete expected post-load state. If the app intentionally resets
+   transient motion or selection on load, name and justify that transformation
+   before the run and still assert the retained design/content settings and IDs.
+   Do not filter fields or normalize an unexpected mismatch into a pass.
 4. Reuse the app's existing Playwright command and configuration. First run the
    normal controls, then the relevant regression, retaining all outcomes.
    Do not add `skip`, `test.fail()`, a blanket storage denial, or sleeps that
@@ -63,3 +68,9 @@ servers started for this task. Do not call an operator run independent adoption.
 For requested real JSON download → empty restore → reload checks, return to
 the runner path in `SKILL.md` and [its pinned references](runner.md). None of
 these native examples substitutes for that full backup requirement.
+
+An existing Vitest/jsdom integration test may exercise the real save/load code
+and help localize a defect. Clearing a store and remounting a hook does not
+exercise browser reload, another tab, browser storage failure feedback or a
+download/file-chooser restore. Keep the requested browser test and report any
+missing browser evidence separately; do not rename the lower-layer result E2E.
