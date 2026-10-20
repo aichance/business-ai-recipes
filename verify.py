@@ -16,6 +16,9 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "tools/app-crash-lab/examples/reduce-motion-native/README.md",
+    "tools/app-crash-lab/examples/reduce-motion-native/RESULTS.json",
+    "tools/app-crash-lab/examples/reduce-motion-native/reduce-motion.persistence.test.ts",
     "tools/app-crash-lab/examples/rejboard/ELECTRON_SYNC.md",
     "tools/app-crash-lab/examples/rejboard/SYNC_RESULTS.json",
     "tools/app-crash-lab/examples/rejboard/electron-sync.spec.mjs",
