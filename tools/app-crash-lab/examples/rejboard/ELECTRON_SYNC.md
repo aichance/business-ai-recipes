@@ -1,5 +1,29 @@
 # Real sync-folder acceptance: two Electron profiles, one disposable directory
 
+## Fixed lock retest: a73ee29
+
+The maintainer confirmed the lock bug and [requested verification of the fix](https://github.com/RejwanShafi25/RejBoard/issues/2#issuecomment-6286392970). On [`a73ee294`](https://github.com/RejwanShafi25/RejBoard/tree/a73ee29468ff61f44fc3a4868503cc8438b34819), the **same lock scenario passes**: A still believes it holds the lock, B explicitly takes over, and A's real page reload leaves B's on-disk lock present and B-owned, including ten further checks over one second.
+
+Copy these three files together into your existing Playwright suite:
+
+- [`electron-lock-fixed.spec.mjs`](electron-lock-fixed.spec.mjs)
+- [`electron-sync-bootstrap.cjs`](electron-sync-bootstrap.cjs)
+- [`media-backup.json`](media-backup.json)
+
+Use a separate disposable RejBoard checkout at the exact fixed commit with its Electron dependencies installed, as described below. Run from the Playwright project, using a fresh output directory:
+
+```sh
+REJBOARD_SMOKE=0 REJBOARD_SOURCE_DIR=/absolute/path/to/disposable/RejBoard npx playwright test tests/rejboard/electron-lock-fixed.spec.mjs --workers=1 --retries=0 --global-timeout=180000 --reporter=line --output .crash-lab/rejboard-lock-fixed-1
+```
+
+**Measured on 2026-10-20:** one test passed, zero skips/retries; test 19,493 ms, runner 22,427 ms. A was still held and B owned the actual lock 155 ms after A acquired it, before the first 60-second ownership heartbeat. Both Electron apps closed, and all 80 upstream source blobs remained unchanged. Node22.16.0 / Playwright1.64.0 / Electron44.5.1, macOS arm64. [Machine-readable before/after measurements](SYNC_RESULTS.json) retain the original failure and add a separate `fixed_lock_retest` record.
+
+The lock test body is byte-for-byte identical to the earlier failing case. The new file updates four reviewed source pins and the evidence revision, selects the exact `index.html` window despite the added splash, and records process IDs for cleanup. The existing bootstrap and synthetic fixture are unchanged. It imports no App Crash Lab runtime.
+
+This retest covers **only the lock case**. The fixed source is four commits newer and changes board-storage representation; the earlier two full-content backup/import tests were not rerun or declared compatible with it. The original three-case spec and its measurements below stay pinned to4156c283. This is not an isolated single-patch causality experiment, an atomic cross-computer lock guarantee, cloud-sync qualification, or proof that the maintainer ran this test.
+
+## Earlier full-suite measurement: 4156c283
+
 The maintainer [requested a retest](https://github.com/RejwanShafi25/RejBoard/issues/2#issuecomment-6283052485) after adding per-board synced-folder backups in [`4156c283`](https://github.com/RejwanShafi25/RejBoard/tree/4156c283719b40ce4eecf469b308cb95535d7868).
 
 Copy these three files together into an existing Playwright project:
