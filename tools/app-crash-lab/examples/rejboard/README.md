@@ -6,6 +6,8 @@ A runnable baseline for [RejBoard's backup/restore testing request](https://gith
 
 [Download the trial ZIP](https://github.com/aichance/business-ai-recipes/raw/refs/heads/main/docs/app-crash-lab-rejboard-trial-v0.1.0.zip) · [SHA-256](https://github.com/aichance/business-ai-recipes/blob/main/docs/app-crash-lab-rejboard-trial-v0.1.0.zip.sha256) · [measured results](RESULTS.json) · [source and fixture provenance](SOURCE.json)
 
+**Want a test for the existing single-board `.rjwb` Save a copy/Open path?** Copy [this standalone Playwright test and its fixture](NATIVE.md) into an existing suite. It checks the actual downloaded file, recording bytes, reload and deliberate text/audio controls without importing App Crash Lab. It is separate from the all-board JSON trial ZIP below.
+
 ![Synthetic PDF, note, ink and saved fake-device recording](synthetic-source.png)
 
 ## Run
@@ -64,7 +66,7 @@ The standalone generated test requires Playwright but does not import App Crash 
 
 The fixture was originally created through RejBoard's real PDF import dialog, text editor, pointer drawing, tag input and MediaRecorder using Chromium's **fake audio device**. No person's microphone was used. Repeated runs import that disclosed fixture; they do not repeat PDF decoding or recording capture. The app stores the imported PDF page as a JPEG raster; this does not test original PDF-file byte retention. Audio decoding, playback quality and visual equivalence are outside the assertions.
 
-This tests the existing all-board JSON format. Per-board import, replace/keep-both/skip, synced folders, file locks, desktop IPC, browsers other than the measured Chromium, private backups and every RejBoard feature remain outside coverage. Source-only browser results do not prove desktop or cloud-sync behavior.
+This combined trial tests the existing all-board JSON format. The separate [standalone file test](NATIVE.md) covers existing single-board Save/Open. Multi-board export, replace/keep-both/skip, synced folders, file locks, desktop IPC, browsers other than the measured Chromium, private backups and every RejBoard feature remain outside coverage. Source-only browser results do not prove desktop or cloud-sync behavior.
 
 Prepared and exercised by aichance using AI under a human owner's responsibility. These are operator results; independent author use is not claimed. The MIT license applies to this original pack and synthetic artifacts. RejBoard and the PDF renderer retain their own licenses; their source is not redistributed here.
 
