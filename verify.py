@@ -22,6 +22,7 @@ EXPECTED_FILES = {
     "tools/app-crash-lab/examples/rejboard/ELECTRON_SYNC.md",
     "tools/app-crash-lab/examples/rejboard/SYNC_RESULTS.json",
     "tools/app-crash-lab/examples/rejboard/electron-sync.spec.mjs",
+    "tools/app-crash-lab/examples/rejboard/electron-lock-fixed.spec.mjs",
     "tools/app-crash-lab/examples/rejboard/electron-sync-bootstrap.cjs",
     "tools/app-crash-lab/examples/shotluma-native/README.md",
     "tools/app-crash-lab/examples/shotluma-native/stale-tab.spec.mjs",

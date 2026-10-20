@@ -280,5 +280,63 @@
     "simultaneous acquire",
     "takeover during long export",
     "arbitrary user backup"
-  ]
+  ],
+  "fixed_lock_retest": {
+    "operator_measurement": true,
+    "independent_author_execution": false,
+    "run_started_at": "2026-10-20T09:11:43.328Z",
+    "upstream_commit": "a73ee29468ff61f44fc3a4868503cc8438b34819",
+    "upstream_tree": "9bdb689e94f1e0da3beb4baab8d19e31af9a089d",
+    "source_blobs_verified_before_and_after": 80,
+    "source_archive_sha256": "6e3bb65bbcf822d331f7c6e7ae834b314a15d2867401f6d0470e853a22c67a5d",
+    "upstream_modified": false,
+    "environment": {
+      "node": "22.16.0",
+      "playwright": "1.64.0",
+      "electron": "44.5.1",
+      "electron_updater": "6.6.2",
+      "lodash_isequal": "4.5.0",
+      "os": "macOS arm64"
+    },
+    "outcome": {
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "flaky": 0,
+      "retries": 0,
+      "process_exit_code": 0,
+      "test_duration_ms": 19493,
+      "runner_duration_ms": 22427.458,
+      "lock_precondition": {
+        "aStillHeld": true,
+        "bOwnsDiskLock": true,
+        "elapsedMs": 155
+      },
+      "previous_owner_reload_preserves_b_owned_lock": true,
+      "subsequent_stability_checks": 10,
+      "stability_interval_ms": 100,
+      "close_errors": [],
+      "launched_main_processes_confirmed_absent": true
+    },
+    "test_files_sha256": {
+      "electron-lock-fixed.spec.mjs": "0c4bfdecfea1ab6ef52f93f0b455629f7122771115817a13ce2e5ab8382cf429",
+      "electron-sync-bootstrap.cjs": "e63c9ea5e23d627991da47495324df3fa82a829e20f2b35038dd516b04bfe0cb",
+      "media-backup.json": "0850d3c38fe7156a2ee1224e462c026754536570cf403f6bab8d297a46b6799e"
+    },
+    "lock_test_body_sha256": "917a9fa74da62433ff0b608fc96afd19b55204dae5424b9e5ce9ae30430f100b",
+    "lock_case_byte_identical_to_previous_failure": true,
+    "adapter_changes": [
+      "4 reviewed source hash pins and evidence SHA",
+      "exact index.html window selection for added splash",
+      "only selected original lock case; original3-case spec retained unchanged",
+      "record launched main PIDs for cleanup verification"
+    ],
+    "not_claimed": [
+      "full3-case suite on fixed compact-storage representation",
+      "isolated single-patch causality across4 upstream commits",
+      "physical computers or cloud transport",
+      "atomic lock acquisition or read-and-delete",
+      "maintainer execution or tool adoption"
+    ]
+  }
 }
