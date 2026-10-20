@@ -16,6 +16,8 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "tools/app-crash-lab/examples/rejboard/NATIVE.md",
+    "tools/app-crash-lab/examples/rejboard/single-board.spec.mjs",
     "tools/app-crash-lab/examples/misaneco-native/README.md",
     "tools/app-crash-lab/examples/misaneco-native/RESULTS.json",
     "tools/app-crash-lab/examples/misaneco-native/two-state-preservation.test.mjs",
