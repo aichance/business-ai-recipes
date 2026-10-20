@@ -16,6 +16,11 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "tools/app-crash-lab/examples/task-packing-native/README.md",
+    "tools/app-crash-lab/examples/task-packing-native/RESULTS.md",
+    "tools/app-crash-lab/examples/task-packing-native/import-completion.spec.mjs",
+    "tools/app-crash-lab/examples/task-packing-native/restore-before-reload.png",
+    "tools/app-crash-lab/examples/task-packing-native/restore-after-reload.png",
     "tools/app-crash-lab/examples/reduce-motion-native/README.md",
     "tools/app-crash-lab/examples/reduce-motion-native/RESULTS.json",
     "tools/app-crash-lab/examples/reduce-motion-native/reduce-motion.persistence.test.ts",
