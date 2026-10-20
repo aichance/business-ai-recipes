@@ -1,0 +1,17 @@
+{
+  "name": "app-crash-lab-native-storage-clear",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "playwright test storage-clear.spec.mjs --workers=1 --retries=0 --reporter=list"
+  },
+  "dependencies": {
+    "@playwright/test": "1.64.0",
+    "esbuild": "0.25.11",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "engines": { "node": ">=22" },
+  "license": "MIT"
+}
