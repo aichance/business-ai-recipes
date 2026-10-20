@@ -446,7 +446,19 @@ test('real bytes, fresh contexts, full records, reload and private failure artif
       const attachedText = Buffer.from(attached[0].body, 'base64').toString('utf8');
       assert.ok(!attachedText.includes(sentinel)); assert.ok(!attachedText.includes(confirmationMessage));
       const actual = JSON.parse(attachedText), expected = r.results[0];
-      for (const field of ['status', 'error', 'phase']) assert.deepEqual(actual[field], expected[field], `${mode}: ${field}`);
+      for (const field of ['status', 'error']) assert.deepEqual(actual[field], expected[field], `${mode}: ${field}`);
+      if (mode === 'confirm-late') {
+        // The undeclared second dialog is timer-driven: CLI and portable replay
+        // may notice it at different post-upload checkpoints. Its verdict and
+        // one-confirmation limit must agree even when that diagnostic phase does not.
+        const phases = ['import', 'compare-restoration', 'compare-reload', 'complete'];
+        for (const result of [actual, expected]) {
+          assert.equal(result.status, 'inconclusive');
+          assert.equal(result.error, 'UNEXPECTED_NATIVE_DIALOG');
+          assert.ok(phases.includes(result.phase), `${mode}: invalid phase ${result.phase}`);
+          assert.deepEqual(result.importConfirmation, { required: true, observed: true, acceptedCount: 1 });
+        }
+      } else assert.deepEqual(actual.phase, expected.phase, `${mode}: phase`);
       if (mode === 'no-download') { assert.equal(r.exitCode, 2); assert.match(replay.output, /inconclusive/); assert.match(replay.output, /NO_EXPORT_DOWNLOAD/); }
     }
   });
