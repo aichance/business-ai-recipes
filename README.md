@@ -19,7 +19,7 @@ complete 67-node tree; only the earlier-tab case failed. [Run the native test
 and inspect the measurements](docs/livepage-template-proof.md). This is our local
 reproduction of an existing issue, separate from independent author use below.
 
-**Earlier CLI checks and exported tests, independently run on two authors’ own apps:** [Sethera](https://qiita.com/cuculhart/items/f020080b2ef1331222d0#comment-79c9c450f3a54f3ba6ac) and [nvim-edu](https://qiita.com/s3onghyun/items/7966ac7e6a534a84f9db#comment-2d25dc275d61b168ee4a). [Reported environments and scope](#independent-author-reports).
+**Independently run on three authors’ own apps:** [Sethera](https://qiita.com/cuculhart/items/f020080b2ef1331222d0#comment-79c9c450f3a54f3ba6ac) and [nvim-edu](https://qiita.com/s3onghyun/items/7966ac7e6a534a84f9db#comment-2d25dc275d61b168ee4a) used earlier CLI checks and exported tests; [PDF_Studio’s author](https://qiita.com/yoyoyo2024/items/f4f08276c835cab80b53#comment-23d925ca8772b4a0cb9a) ran the standalone Playwright spec after fixing save cancellation. [Reported environments and scope](#independent-author-reports).
 
 ## Copy one Playwright regression
 
@@ -158,6 +158,8 @@ If these checks are useful, [star the repository](https://github.com/aichance/bu
 **Used on a developer's own app:** [Sethera's author reports](https://qiita.com/cuculhart/items/f020080b2ef1331222d0#comment-79c9c450f3a54f3ba6ac) testing an unchanged Sethera v1.0.0 on Windows with App Crash Lab 0.4.1, Node 22.16.0 and Playwright 1.64.0. Both preservation checks and both exported tests passed. The intentional negative controls correctly returned FAIL for a changed filter (300 → 900) and INCONCLUSIVE for a wrong baseline. [Download the six-file setup pack](https://github.com/aichance/business-ai-recipes/releases/download/app-crash-lab-v0.4.1/app-crash-lab-sethera-v1-pack.zip) · [Reported scope and earlier use](tools/app-crash-lab/examples/SETHERA.md#independent-author-report). These are the author's public results for that app and runner version, separate from our compatibility runs.
 
 **A second independent app author:** [nvim-edu's author reports](https://qiita.com/s3onghyun/items/7966ac7e6a534a84f9db#comment-2d25dc275d61b168ee4a) both CLI reload checks and both generated Playwright tests passing on their own Vim-learning app in a Playwright container. Their setup and test-coverage feedback led to a Python ZIP-extraction command and a second-attempt completion check. [Run the two lesson-progress checks](tools/app-crash-lab/examples/nvim-edu-progress). The report covers App Crash Lab0.6.2 and the original contracts; author execution of the revised contract is unconfirmed.
+
+**A third independent app author:** [PDF_Studio’s author reports](https://qiita.com/yoyoyo2024/items/f4f08276c835cab80b53#comment-23d925ca8772b4a0cb9a) running the supplied `pdf-save.spec.mjs` locally after fixing the false success message on cancellation. Normal save, denied-write fallback and cancellation/retry all passed. This is the standalone native test; the report does not specify OS or runtime versions. Our separate rerun of the unchanged spec on upstream fix `12849c4c` also passed all three checks. [Copy one file and inspect both measurements](tools/app-crash-lab/examples/pdf-save-native/README.md#author-run-and-upstream-fix).
 
 ## Try the seeded demo
 

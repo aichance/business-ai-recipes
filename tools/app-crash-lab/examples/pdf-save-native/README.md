@@ -4,6 +4,14 @@
 
 This is a bounded save-completion example using unchanged [`yoshiki2024/PDF_Studio@87160462`](https://github.com/yoshiki2024/PDF_Studio/tree/87160462e342c039235531be49883113b1265e49). Its original frontend loads the PDF and rotates both pages by 90 degrees. Only the browser's output interfaces are controlled; the application writer and UI run normally.
 
+## Author run and upstream fix
+
+On 2026-10-20, [PDF_Studio’s author publicly reported](https://qiita.com/yoyoyo2024/items/f4f08276c835cab80b53#comment-23d925ca8772b4a0cb9a) running the supplied `pdf-save.spec.mjs` locally after fixing cancellation: **normal save, denied write and SAVE_COMPLETION/retry all PASS**. The report identifies the test and outcomes; OS, runtime versions and a raw execution log are unspecified.
+
+We separately reran the unchanged test on upstream fix [`12849c4c`](https://github.com/yoshiki2024/PDF_Studio/commit/12849c4c8960ab74e1dc78dbf93589d98dfa9280): **3 PASS / 0 FAIL / 0 skipped**, in 6.524s (Node 22.16.0, Chromium, Playwright 1.64.0). The same synthetic two-page PDF, complete text/order/rotation comparisons, fallback and cancellation/retry assertions were retained. All 18 upstream Git blobs were verified before and after; this direct child of the affected pin changes only `js/app.js`. Test SHA-256: `4746912fcdc4b3f44778e27be436aa5f4397e346d3ecce9f23df4c0584b84613`.
+
+The hosted example and original measurement below keep the affected `87160462` pin so the false success remains reproducible. The author’s execution report and our fixed-source rerun are separate evidence. Save APIs remain simulated; neither result establishes real OS dialogs or physical disk writes.
+
 ## Measured behavior
 
 Operator measurement on 2026-10-20 JST, Node 24.19.0, Chromium and Playwright 1.64.0:
@@ -18,7 +26,7 @@ The cancellation test verifies **one picker call, an actual `AbortError`, zero w
 
 For every normal, fallback and retry output, PDF.js independently reads the PDF-lib writer's output. Both page positions, all ten original text fields, page boxes and both rotations must match the synthetic gold. An additional operator check with pypdf validated all six outputs across the affected and hypothetical fixed copies; the rotated pages were also rendered and visually reviewed.
 
-The affected app produces **2 pass / 1 fail / 0 skipped** and exit 1. A setup error or timeout is not the regression. A separate hypothetical local copy that returns a cancellation outcome and suppresses the caller's success toast passes all three checks. This does not claim that upstream is fixed. All 18 original source blobs remained unchanged.
+The affected app produces **2 pass / 1 fail / 0 skipped** and exit 1. A setup error or timeout is not the regression. A separate hypothetical local copy that returns a cancellation outcome and suppresses the caller's success toast passes all three checks. That copy was a sensitivity control at the original measurement; the later upstream fix and author execution are recorded above. All 18 original source blobs remained unchanged.
 
 ## Run in an existing Playwright suite
 
