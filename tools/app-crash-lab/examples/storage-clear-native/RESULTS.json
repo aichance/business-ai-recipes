@@ -1,0 +1,565 @@
+{
+  "schema_version": 1,
+  "measured_at": "2026-10-20T10:22:41.122638+00:00",
+  "kind": "operator_native_chromium_complement_to_existing_unit_tests",
+  "upstream_repository": "https://github.com/astoilkov/use-local-storage-state",
+  "upstream_fix_pr": "https://github.com/astoilkov/use-local-storage-state/pull/86",
+  "fix_and_original_unit_test_author": "feritcemkahraman",
+  "upstream_pr_status_when_checked": "open",
+  "same_spec_and_fixture_for_both_variants": true,
+  "runtime": {
+    "@playwright/test": "1.64.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "esbuild": "0.25.11"
+  },
+  "test_and_fixture_sha256": {
+    "storage-clear.spec.mjs": "c66244e47242c6ddfa8d6275704f7325c7c6abe9c515f5a4336382864a6aa135",
+    "consumer.mjs": "c12f1b1c10effb15e3537bff55f2a234d1ac7d02b6205ca9fd3852c21b967064",
+    "package.json": "21a1e53d5523899af1dc47aed659375c674e8124f512b241689a2dbecf828786",
+    "package-lock.json": "3d404747befaf4c82847c6e2b4056fab635f8f72411cc124bb4bada4101c9e92"
+  },
+  "native_storage_events_not_manually_dispatched": true,
+  "underlying_hook_not_modified": true,
+  "all17_source_blobs_verified_before_and_after_each_run": true,
+  "runs": {
+    "base": {
+      "source_pin": "799291ab6152fbdca80823bf6b12e87257d98638",
+      "observed_at": "2026-10-20T10:22:41.122638+00:00",
+      "exit_code": 1,
+      "runner_duration_ms": 5733.569,
+      "wall_ms": 6079,
+      "skipped": 0,
+      "retries": 0,
+      "all17_source_blobs_unchanged_after_run": true,
+      "cases": [
+        {
+          "case": "control: actual peer setItem updates the complete record and keeps the other key",
+          "status": "passed",
+          "duration_ms": 931,
+          "measurement": {
+            "sourcePin": "799291ab6152fbdca80823bf6b12e87257d98638",
+            "hookBlob": "a95e073e7555c6c081921800d3996022af2119a7",
+            "checkpoints": {
+              "after": {
+                "hookState": {
+                  "todos": [
+                    {
+                      "id": "task-a",
+                      "title": "Updated in peer",
+                      "done": true
+                    }
+                  ],
+                  "prefs": {
+                    "theme": "dark",
+                    "columns": [
+                      "title",
+                      "done"
+                    ],
+                    "revision": 7
+                  }
+                },
+                "durable": [
+                  "[{\"id\":\"task-a\",\"title\":\"Updated in peer\",\"done\":true}]",
+                  "{\"theme\":\"dark\",\"columns\":[\"title\",\"done\"],\"revision\":7}"
+                ],
+                "events": [
+                  {
+                    "key": "acl-clear:todos",
+                    "oldValue": null,
+                    "newValue": "[{\"id\":\"task-a\",\"title\":\"Synthetic saved task\",\"done\":false}]",
+                    "isTrusted": true,
+                    "area": "local"
+                  },
+                  {
+                    "key": "acl-clear:prefs",
+                    "oldValue": null,
+                    "newValue": "{\"theme\":\"dark\",\"columns\":[\"title\",\"done\"],\"revision\":7}",
+                    "isTrusted": true,
+                    "area": "local"
+                  },
+                  {
+                    "key": "acl-clear:todos",
+                    "oldValue": "[{\"id\":\"task-a\",\"title\":\"Synthetic saved task\",\"done\":false}]",
+                    "newValue": "[{\"id\":\"task-a\",\"title\":\"Updated in peer\",\"done\":true}]",
+                    "isTrusted": true,
+                    "area": "local"
+                  }
+                ]
+              },
+              "reloaded": {
+                "hookState": {
+                  "todos": [
+                    {
+                      "id": "task-a",
+                      "title": "Updated in peer",
+                      "done": true
+                    }
+                  ],
+                  "prefs": {
+                    "theme": "dark",
+                    "columns": [
+                      "title",
+                      "done"
+                    ],
+                    "revision": 7
+                  }
+                },
+                "durable": [
+                  "[{\"id\":\"task-a\",\"title\":\"Updated in peer\",\"done\":true}]",
+                  "{\"theme\":\"dark\",\"columns\":[\"title\",\"done\"],\"revision\":7}"
+                ],
+                "events": []
+              }
+            },
+            "pageErrors": [],
+            "blockedRequests": []
+          }
+        },
+        {
+          "case": "control: actual iframe sessionStorage.clear leaves local records and hook values intact",
+          "status": "passed",
+          "duration_ms": 487,
+          "measurement": {
+            "sourcePin": "799291ab6152fbdca80823bf6b12e87257d98638",
+            "hookBlob": "a95e073e7555c6c081921800d3996022af2119a7",
+            "checkpoints": {
+              "after": {
+                "hookState": {
+                  "todos": [
+                    {
+                      "id": "task-a",
+                      "title": "Synthetic saved task",
+                      "done": false
+                    }
+                  ],
+                  "prefs": {
+                    "theme": "dark",
+                    "columns": [
+                      "title",
+                      "done"
+                    ],
+                    "revision": 7
+                  }
+                },
+                "durable": [
+                  "[{\"id\":\"task-a\",\"title\":\"Synthetic saved task\",\"done\":false}]",
+                  "{\"theme\":\"dark\",\"columns\":[\"title\",\"done\"],\"revision\":7}"
+                ],
+                "events": [
+                  {
+                    "key": "acl-clear:todos",
+                    "oldValue": null,
+                    "newValue": "[{\"id\":\"task-a\",\"title\":\"Synthetic saved task\",\"done\":false}]",
+                    "isTrusted": true,
+                    "area": "local"
+                  },
+                  {
+                    "key": "acl-clear:prefs",
+                    "oldValue": null,
+                    "newValue": "{\"theme\":\"dark\",\"columns\":[\"title\",\"done\"],\"revision\":7}",
+                    "isTrusted": true,
+                    "area": "local"
+                  },
+                  {
+                    "key": "session-only",
+                    "oldValue": null,
+                    "newValue": "synthetic",
+                    "isTrusted": true,
+                    "area": "session"
+                  },
+                  {
+                    "key": null,
+                    "oldValue": null,
+                    "newValue": null,
+                    "isTrusted": true,
+                    "area": "session"
+                  }
+                ]
+              }
+            },
+            "pageErrors": [],
+            "blockedRequests": []
+          }
+        },
+        {
+          "case": "peer localStorage.clear updates both mounted consumers before any reload",
+          "status": "failed",
+          "duration_ms": 2478,
+          "measurement": {
+            "sourcePin": "799291ab6152fbdca80823bf6b12e87257d98638",
+            "hookBlob": "a95e073e7555c6c081921800d3996022af2119a7",
+            "checkpoints": {
+              "eventReceived": {
+                "hookState": {
+                  "todos": [
+                    {
+                      "id": "task-a",
+                      "title": "Synthetic saved task",
+                      "done": false
+                    }
+                  ],
+                  "prefs": {
+                    "theme": "dark",
+                    "columns": [
+                      "title",
+                      "done"
+                    ],
+                    "revision": 7
+                  }
+                },
+                "durable": [
+                  null,
+                  null
+                ],
+                "events": [
+                  {
+                    "key": "acl-clear:todos",
+                    "oldValue": null,
+                    "newValue": "[{\"id\":\"task-a\",\"title\":\"Synthetic saved task\",\"done\":false}]",
+                    "isTrusted": true,
+                    "area": "local"
+                  },
+                  {
+                    "key": "acl-clear:prefs",
+                    "oldValue": null,
+                    "newValue": "{\"theme\":\"dark\",\"columns\":[\"title\",\"done\"],\"revision\":7}",
+                    "isTrusted": true,
+                    "area": "local"
+                  },
+                  {
+                    "key": null,
+                    "oldValue": null,
+                    "newValue": null,
+                    "isTrusted": true,
+                    "area": "local"
+                  }
+                ]
+              },
+              "beforeReload": {
+                "hookState": {
+                  "todos": [
+                    {
+                      "id": "task-a",
+                      "title": "Synthetic saved task",
+                      "done": false
+                    }
+                  ],
+                  "prefs": {
+                    "theme": "dark",
+                    "columns": [
+                      "title",
+                      "done"
+                    ],
+                    "revision": 7
+                  }
+                },
+                "durable": [
+                  null,
+                  null
+                ],
+                "events": [
+                  {
+                    "key": "acl-clear:todos",
+                    "oldValue": null,
+                    "newValue": "[{\"id\":\"task-a\",\"title\":\"Synthetic saved task\",\"done\":false}]",
+                    "isTrusted": true,
+                    "area": "local"
+                  },
+                  {
+                    "key": "acl-clear:prefs",
+                    "oldValue": null,
+                    "newValue": "{\"theme\":\"dark\",\"columns\":[\"title\",\"done\"],\"revision\":7}",
+                    "isTrusted": true,
+                    "area": "local"
+                  },
+                  {
+                    "key": null,
+                    "oldValue": null,
+                    "newValue": null,
+                    "isTrusted": true,
+                    "area": "local"
+                  }
+                ]
+              },
+              "afterReload": {
+                "hookState": {
+                  "todos": null,
+                  "prefs": null
+                },
+                "durable": [
+                  null,
+                  null
+                ],
+                "events": []
+              }
+            },
+            "pageErrors": [],
+            "blockedRequests": []
+          }
+        }
+      ]
+    },
+    "head": {
+      "source_pin": "f53a57a5e069262713e3ab6ae096e4c679ebc327",
+      "observed_at": "2026-10-20T10:22:39.088805+00:00",
+      "exit_code": 0,
+      "runner_duration_ms": 3673.1710000000003,
+      "wall_ms": 4045,
+      "skipped": 0,
+      "retries": 0,
+      "all17_source_blobs_unchanged_after_run": true,
+      "cases": [
+        {
+          "case": "control: actual peer setItem updates the complete record and keeps the other key",
+          "status": "passed",
+          "duration_ms": 932,
+          "measurement": {
+            "sourcePin": "f53a57a5e069262713e3ab6ae096e4c679ebc327",
+            "hookBlob": "89e465e1bbf027e367d3362e79a3a519a275698f",
+            "checkpoints": {
+              "after": {
+                "hookState": {
+                  "todos": [
+                    {
+                      "id": "task-a",
+                      "title": "Updated in peer",
+                      "done": true
+                    }
+                  ],
+                  "prefs": {
+                    "theme": "dark",
+                    "columns": [
+                      "title",
+                      "done"
+                    ],
+                    "revision": 7
+                  }
+                },
+                "durable": [
+                  "[{\"id\":\"task-a\",\"title\":\"Updated in peer\",\"done\":true}]",
+                  "{\"theme\":\"dark\",\"columns\":[\"title\",\"done\"],\"revision\":7}"
+                ],
+                "events": [
+                  {
+                    "key": "acl-clear:todos",
+                    "oldValue": null,
+                    "newValue": "[{\"id\":\"task-a\",\"title\":\"Synthetic saved task\",\"done\":false}]",
+                    "isTrusted": true,
+                    "area": "local"
+                  },
+                  {
+                    "key": "acl-clear:prefs",
+                    "oldValue": null,
+                    "newValue": "{\"theme\":\"dark\",\"columns\":[\"title\",\"done\"],\"revision\":7}",
+                    "isTrusted": true,
+                    "area": "local"
+                  },
+                  {
+                    "key": "acl-clear:todos",
+                    "oldValue": "[{\"id\":\"task-a\",\"title\":\"Synthetic saved task\",\"done\":false}]",
+                    "newValue": "[{\"id\":\"task-a\",\"title\":\"Updated in peer\",\"done\":true}]",
+                    "isTrusted": true,
+                    "area": "local"
+                  }
+                ]
+              },
+              "reloaded": {
+                "hookState": {
+                  "todos": [
+                    {
+                      "id": "task-a",
+                      "title": "Updated in peer",
+                      "done": true
+                    }
+                  ],
+                  "prefs": {
+                    "theme": "dark",
+                    "columns": [
+                      "title",
+                      "done"
+                    ],
+                    "revision": 7
+                  }
+                },
+                "durable": [
+                  "[{\"id\":\"task-a\",\"title\":\"Updated in peer\",\"done\":true}]",
+                  "{\"theme\":\"dark\",\"columns\":[\"title\",\"done\"],\"revision\":7}"
+                ],
+                "events": []
+              }
+            },
+            "pageErrors": [],
+            "blockedRequests": []
+          }
+        },
+        {
+          "case": "control: actual iframe sessionStorage.clear leaves local records and hook values intact",
+          "status": "passed",
+          "duration_ms": 459,
+          "measurement": {
+            "sourcePin": "f53a57a5e069262713e3ab6ae096e4c679ebc327",
+            "hookBlob": "89e465e1bbf027e367d3362e79a3a519a275698f",
+            "checkpoints": {
+              "after": {
+                "hookState": {
+                  "todos": [
+                    {
+                      "id": "task-a",
+                      "title": "Synthetic saved task",
+                      "done": false
+                    }
+                  ],
+                  "prefs": {
+                    "theme": "dark",
+                    "columns": [
+                      "title",
+                      "done"
+                    ],
+                    "revision": 7
+                  }
+                },
+                "durable": [
+                  "[{\"id\":\"task-a\",\"title\":\"Synthetic saved task\",\"done\":false}]",
+                  "{\"theme\":\"dark\",\"columns\":[\"title\",\"done\"],\"revision\":7}"
+                ],
+                "events": [
+                  {
+                    "key": "acl-clear:todos",
+                    "oldValue": null,
+                    "newValue": "[{\"id\":\"task-a\",\"title\":\"Synthetic saved task\",\"done\":false}]",
+                    "isTrusted": true,
+                    "area": "local"
+                  },
+                  {
+                    "key": "acl-clear:prefs",
+                    "oldValue": null,
+                    "newValue": "{\"theme\":\"dark\",\"columns\":[\"title\",\"done\"],\"revision\":7}",
+                    "isTrusted": true,
+                    "area": "local"
+                  },
+                  {
+                    "key": "session-only",
+                    "oldValue": null,
+                    "newValue": "synthetic",
+                    "isTrusted": true,
+                    "area": "session"
+                  },
+                  {
+                    "key": null,
+                    "oldValue": null,
+                    "newValue": null,
+                    "isTrusted": true,
+                    "area": "session"
+                  }
+                ]
+              }
+            },
+            "pageErrors": [],
+            "blockedRequests": []
+          }
+        },
+        {
+          "case": "peer localStorage.clear updates both mounted consumers before any reload",
+          "status": "passed",
+          "duration_ms": 449,
+          "measurement": {
+            "sourcePin": "f53a57a5e069262713e3ab6ae096e4c679ebc327",
+            "hookBlob": "89e465e1bbf027e367d3362e79a3a519a275698f",
+            "checkpoints": {
+              "eventReceived": {
+                "hookState": {
+                  "todos": null,
+                  "prefs": null
+                },
+                "durable": [
+                  null,
+                  null
+                ],
+                "events": [
+                  {
+                    "key": "acl-clear:todos",
+                    "oldValue": null,
+                    "newValue": "[{\"id\":\"task-a\",\"title\":\"Synthetic saved task\",\"done\":false}]",
+                    "isTrusted": true,
+                    "area": "local"
+                  },
+                  {
+                    "key": "acl-clear:prefs",
+                    "oldValue": null,
+                    "newValue": "{\"theme\":\"dark\",\"columns\":[\"title\",\"done\"],\"revision\":7}",
+                    "isTrusted": true,
+                    "area": "local"
+                  },
+                  {
+                    "key": null,
+                    "oldValue": null,
+                    "newValue": null,
+                    "isTrusted": true,
+                    "area": "local"
+                  }
+                ]
+              },
+              "beforeReload": {
+                "hookState": {
+                  "todos": null,
+                  "prefs": null
+                },
+                "durable": [
+                  null,
+                  null
+                ],
+                "events": [
+                  {
+                    "key": "acl-clear:todos",
+                    "oldValue": null,
+                    "newValue": "[{\"id\":\"task-a\",\"title\":\"Synthetic saved task\",\"done\":false}]",
+                    "isTrusted": true,
+                    "area": "local"
+                  },
+                  {
+                    "key": "acl-clear:prefs",
+                    "oldValue": null,
+                    "newValue": "{\"theme\":\"dark\",\"columns\":[\"title\",\"done\"],\"revision\":7}",
+                    "isTrusted": true,
+                    "area": "local"
+                  },
+                  {
+                    "key": null,
+                    "oldValue": null,
+                    "newValue": null,
+                    "isTrusted": true,
+                    "area": "local"
+                  }
+                ]
+              },
+              "afterReload": {
+                "hookState": {
+                  "todos": null,
+                  "prefs": null
+                },
+                "durable": [
+                  null,
+                  null
+                ],
+                "events": []
+              }
+            },
+            "pageErrors": [],
+            "blockedRequests": []
+          }
+        }
+      ]
+    }
+  },
+  "known_dependency_audit_vulnerabilities_at_measurement": 0,
+  "interpretation": "After an intentional native localStorage.clear, base mounted values remain stale despite absent durable keys and a trusted null-key local event. The unchanged PR head reflects the clear before reload. Reload repair never erases the base assertion failure. This is not accidental deletion.",
+  "limits": [
+    "One Chromium/host, React18.3.1, two keys without defaultValue",
+    "Session clear control proves value retention, not zero internal callback execution",
+    "Full upstream unit suite and other React/browser/defaultValue/SSR/quota/fallback combinations not run",
+    "No maintainer adoption, read, upstream merge or new natural star is established"
+  ],
+  "new_use_credit": 0,
+  "new_star_credit": 0
+}
