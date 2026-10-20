@@ -1,5 +1,7 @@
 # Existing single-board `.rjwb` Save/Open: a standalone Playwright test
 
+For the newer per-board sync-folder feature and real Electron/filesystem checks at `4156c283`, use the separate [sync-folder acceptance test](ELECTRON_SYNC.md). The original Save/Open measurement below remains unchanged.
+
 Copy [`single-board.spec.mjs`](single-board.spec.mjs) and [`media-backup.json`](media-backup.json) together into an existing Playwright project. **The test imports only `@playwright/test` and Node built-ins. It does not import or install App Crash Lab.** The optional files are in this repository; the older v0.1.0 trial ZIP contains the separate all-board JSON baseline.
 
 This follows the maintainer's [backup testing request](https://github.com/RejwanShafi25/RejBoard/issues/2). Single-board Save a copy/Open already exists in measured commit [`14d6318`](https://github.com/RejwanShafi25/RejBoard/tree/14d63180e4cb932db39793050992ff406f8a3165). This is a regression for that path, separate from future multi-board export, synced folders and locks.
