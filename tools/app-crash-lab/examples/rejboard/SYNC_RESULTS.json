@@ -1,0 +1,284 @@
+{
+  "schema_version": 1,
+  "operator_measurement": true,
+  "independent_author_execution": false,
+  "observed_at": "2026-10-20T05:20:21.530903+00:00",
+  "run_started_at": "2026-10-20T05:18:12.064Z",
+  "run_duration_ms": 54662.560000000005,
+  "upstream_commit": "4156c283719b40ce4eecf469b308cb95535d7868",
+  "environment": {
+    "node": "22.16.0",
+    "playwright": "1.64.0",
+    "electron_package": "44.5.1",
+    "electron_updater": "6.6.2",
+    "lodash_isequal": "4.5.0",
+    "os": "macOS arm64",
+    "vendor_math_pdf_export_assets": "absent, external fallbacks blocked"
+  },
+  "outcome": {
+    "passed": 2,
+    "failed": 1,
+    "flaky": 0,
+    "expected_process_exit_code": 1,
+    "failure": "Previous owner pagehide removes new owner disk lock",
+    "user_data_loss_demonstrated": false
+  },
+  "test_files_sha256": {
+    "electron-sync.spec.mjs": "7c4e5d9a78937881e09bdd716144c62e84c14470a4303f2045bfe67cd19b91a6",
+    "electron-sync-bootstrap.cjs": "e63c9ea5e23d627991da47495324df3fa82a829e20f2b35038dd516b04bfe0cb",
+    "media-backup.json": "0850d3c38fe7156a2ee1224e462c026754536570cf403f6bab8d297a46b6799e"
+  },
+  "cases": [
+    {
+      "name": "real folder roundtrip preserves full linked boards/audio; rename removes the old file",
+      "status": "passed",
+      "duration_ms": 20997,
+      "measurement": {
+        "upstream": "4156c283719b40ce4eecf469b308cb95535d7868",
+        "hashes": {
+          "index.html": "129faf4dd0c279249239eaa191c2fab41f75a6209de2f4c0661614b56ae80796",
+          "main.js": "7230fc84c0c4385b32751bb61aa008c23075ce9b91a4c6e4c923e9140d2982a5",
+          "preload.js": "505ed76bff88ec74e116b84326d0c1770ca65c15f66c2bb3f21940442be1723a",
+          "lan.js": "4db71dac4e84af835ada7eb8e505d9c73606b3a15ded1f268f932ab579a38ae3",
+          "ocr.js": "37fce3ebf6f1a2337515498492f0075dbed69c8ed468141a7d1e2e2aa6a0ee91",
+          "update-policy.js": "d3e4bdc1abdd457bd9237eca69fdab3247c3f3345e6de95ae1b1087724e11521",
+          "package.json": "a6e5a306ea0b2a20a5c2c10537eda97e9839ee24f08e741759f98203c3d3b1e7"
+        },
+        "electron": "44.5.1",
+        "scope": "one host, real Electron IPC, real directory, separate profiles; no cloud transport",
+        "cases": [
+          {
+            "roundtrip": "PASS",
+            "boards": 2,
+            "recordings": 1,
+            "audioBytes": 3567,
+            "MIMEParametersPreserved": false,
+            "keepBothLinkRemap": "PASS",
+            "rename": "PASS",
+            "sameCountChangedValue": "DETECTED",
+            "fileSHA256": [
+              {
+                "name": ".._同期_ board__ [mvcr03rjtyl8].rjwb",
+                "sha256": "96fac49955811d3c7140e91e154416aefee5c241a2b9b3ddb39a198adb843dad"
+              },
+              {
+                "name": "Linked board [sync-linked].rjwb",
+                "sha256": "e0dae7946ab67a5341ae0a7765ac394f6187a6a30cbdf65c31b96856aaeb39fb"
+              }
+            ]
+          }
+        ],
+        "launches": [
+          {
+            "isolatedPaths": [
+              "appData",
+              "userData",
+              "sessionData",
+              "logs",
+              "crashDumps"
+            ],
+            "blockedNetwork": [
+              "https://cdnjs.cloudflare.com",
+              "https://cdnjs.cloudflare.com",
+              "https://cdnjs.cloudflare.com",
+              "https://cdnjs.cloudflare.com",
+              "https://cdnjs.cloudflare.com",
+              "https://cdnjs.cloudflare.com"
+            ],
+            "blockedIPC": [
+              "browser:clear"
+            ]
+          },
+          {
+            "isolatedPaths": [
+              "appData",
+              "userData",
+              "sessionData",
+              "logs",
+              "crashDumps"
+            ],
+            "blockedNetwork": [
+              "https://cdnjs.cloudflare.com",
+              "https://cdnjs.cloudflare.com",
+              "https://cdnjs.cloudflare.com",
+              "https://cdnjs.cloudflare.com",
+              "https://cdnjs.cloudflare.com",
+              "https://cdnjs.cloudflare.com"
+            ],
+            "blockedIPC": [
+              "browser:clear"
+            ]
+          }
+        ],
+        "closeErrors": []
+      }
+    },
+    {
+      "name": "older real file warns; Skip, Keep both and Replace retain the correct records",
+      "status": "passed",
+      "duration_ms": 16366,
+      "measurement": {
+        "upstream": "4156c283719b40ce4eecf469b308cb95535d7868",
+        "hashes": {
+          "index.html": "129faf4dd0c279249239eaa191c2fab41f75a6209de2f4c0661614b56ae80796",
+          "main.js": "7230fc84c0c4385b32751bb61aa008c23075ce9b91a4c6e4c923e9140d2982a5",
+          "preload.js": "505ed76bff88ec74e116b84326d0c1770ca65c15f66c2bb3f21940442be1723a",
+          "lan.js": "4db71dac4e84af835ada7eb8e505d9c73606b3a15ded1f268f932ab579a38ae3",
+          "ocr.js": "37fce3ebf6f1a2337515498492f0075dbed69c8ed468141a7d1e2e2aa6a0ee91",
+          "update-policy.js": "d3e4bdc1abdd457bd9237eca69fdab3247c3f3345e6de95ae1b1087724e11521",
+          "package.json": "a6e5a306ea0b2a20a5c2c10537eda97e9839ee24f08e741759f98203c3d3b1e7"
+        },
+        "electron": "44.5.1",
+        "scope": "one host, real Electron IPC, real directory, separate profiles; no cloud transport",
+        "cases": [
+          {
+            "olderFileWarning": "PASS",
+            "skipUnchanged": "PASS",
+            "keepBothRecordingAssociation": "PASS",
+            "replaceAndReload": "PASS"
+          }
+        ],
+        "launches": [
+          {
+            "isolatedPaths": [
+              "appData",
+              "userData",
+              "sessionData",
+              "logs",
+              "crashDumps"
+            ],
+            "blockedNetwork": [
+              "https://cdnjs.cloudflare.com",
+              "https://cdnjs.cloudflare.com",
+              "https://cdnjs.cloudflare.com",
+              "https://cdnjs.cloudflare.com",
+              "https://cdnjs.cloudflare.com",
+              "https://cdnjs.cloudflare.com"
+            ],
+            "blockedIPC": [
+              "browser:clear"
+            ]
+          },
+          {
+            "isolatedPaths": [
+              "appData",
+              "userData",
+              "sessionData",
+              "logs",
+              "crashDumps"
+            ],
+            "blockedNetwork": [
+              "https://cdnjs.cloudflare.com",
+              "https://cdnjs.cloudflare.com",
+              "https://cdnjs.cloudflare.com",
+              "https://cdnjs.cloudflare.com",
+              "https://cdnjs.cloudflare.com",
+              "https://cdnjs.cloudflare.com"
+            ],
+            "blockedIPC": [
+              "browser:clear"
+            ]
+          }
+        ],
+        "closeErrors": []
+      }
+    },
+    {
+      "name": "fresh lock blocks writing; takeover lock survives the previous owner leaving",
+      "status": "failed",
+      "duration_ms": 15376,
+      "measurement": {
+        "upstream": "4156c283719b40ce4eecf469b308cb95535d7868",
+        "hashes": {
+          "index.html": "129faf4dd0c279249239eaa191c2fab41f75a6209de2f4c0661614b56ae80796",
+          "main.js": "7230fc84c0c4385b32751bb61aa008c23075ce9b91a4c6e4c923e9140d2982a5",
+          "preload.js": "505ed76bff88ec74e116b84326d0c1770ca65c15f66c2bb3f21940442be1723a",
+          "lan.js": "4db71dac4e84af835ada7eb8e505d9c73606b3a15ded1f268f932ab579a38ae3",
+          "ocr.js": "37fce3ebf6f1a2337515498492f0075dbed69c8ed468141a7d1e2e2aa6a0ee91",
+          "update-policy.js": "d3e4bdc1abdd457bd9237eca69fdab3247c3f3345e6de95ae1b1087724e11521",
+          "package.json": "a6e5a306ea0b2a20a5c2c10537eda97e9839ee24f08e741759f98203c3d3b1e7"
+        },
+        "electron": "44.5.1",
+        "scope": "one host, real Electron IPC, real directory, separate profiles; no cloud transport",
+        "cases": [
+          {
+            "differentProfileIDs": "PASS",
+            "staleLockAcquire": "PASS",
+            "freshLockCancelNoWrite": "PASS",
+            "explicitTakeover": "PASS"
+          },
+          {
+            "previousOwnerReload": true,
+            "takeoverLockPresent": false,
+            "lockOwnerIsB": false
+          }
+        ],
+        "lockPrecondition": {
+          "aStillHeld": true,
+          "bOwnsDiskLock": true,
+          "elapsedMs": 319
+        },
+        "launches": [
+          {
+            "isolatedPaths": [
+              "appData",
+              "userData",
+              "sessionData",
+              "logs",
+              "crashDumps"
+            ],
+            "blockedNetwork": [
+              "https://cdnjs.cloudflare.com",
+              "https://cdnjs.cloudflare.com",
+              "https://cdnjs.cloudflare.com",
+              "https://cdnjs.cloudflare.com",
+              "https://cdnjs.cloudflare.com",
+              "https://cdnjs.cloudflare.com",
+              "https://cdnjs.cloudflare.com",
+              "https://cdnjs.cloudflare.com",
+              "https://cdnjs.cloudflare.com"
+            ],
+            "blockedIPC": [
+              "browser:clear",
+              "browser:clear"
+            ]
+          },
+          {
+            "isolatedPaths": [
+              "appData",
+              "userData",
+              "sessionData",
+              "logs",
+              "crashDumps"
+            ],
+            "blockedNetwork": [
+              "https://cdnjs.cloudflare.com",
+              "https://cdnjs.cloudflare.com",
+              "https://cdnjs.cloudflare.com",
+              "https://cdnjs.cloudflare.com",
+              "https://cdnjs.cloudflare.com",
+              "https://cdnjs.cloudflare.com"
+            ],
+            "blockedIPC": [
+              "browser:clear"
+            ]
+          }
+        ],
+        "closeErrors": []
+      }
+    }
+  ],
+  "unverified": [
+    "cloud provider transport",
+    "two physical machines",
+    "Chromium File System Access",
+    "Firefox",
+    "Safari",
+    "original PDF decode",
+    "audio playback",
+    "symlink/path security",
+    "simultaneous acquire",
+    "takeover during long export",
+    "arbitrary user backup"
+  ]
+}
