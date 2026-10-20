@@ -4,6 +4,16 @@
 
 **Your app says “Saved.” Does the data survive the next mistake?**
 
+**Keep a regression in the test setup you already use.** [Choose a browser or data-layer request](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#native-agent) for your coding agent:
+
+| Existing setup | What it checks | Start here |
+| --- | --- | --- |
+| Playwright | Actual browser actions, committed state and reload | [Copy a browser request](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#native-agent-prompt) |
+| Vitest | Real save/load code and complete raw/loaded records | [Copy a Vitest request](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#unit-agent-prompt) |
+| Node tests or registered JavaScript selfcheck | Original modules with declared fixture boundaries; no new test package | [Copy a Node request](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#node-agent-prompt) |
+
+Use an installed compatible harness, supported runtime and your app's prerequisites. These requests need no App Crash Lab runner, skill installation or JSON contract. Vitest and Node data-layer results do not establish actual browser reload, peer-tab or real-file backup preservation. The contract-driven runner remains available below.
+
 Describe one working save flow and the values worth keeping. App Crash Lab
 checks **reload** and **rejected updates**, then gives you the changed values,
 a browser trace and ordinary Playwright tests you can rerun after a fix.
@@ -495,13 +505,13 @@ with AI assistance; report facts and limitations are reviewed against runs.
 ## 日本語：試すところから、自分のアプリへ
 
 **「保存しました」の後も、その値は残っていますか？**
-App Crash Labは、正常に保存できる操作を1つ設定し、次の2つを検査します。
+App Crash LabのCLIでは、正常に保存できる操作を1つ設定し、次の2つを検査します。
 
 - 再読み込みした後も、保存した値が残る。
 - 無効な更新が拒否された後も、直前の正常な値が壊れない。
 
 結果には、保存値の前後の差分・ブラウザtrace・単独で再実行できるPlaywrightテストが含まれます。
-実行する操作と期待値はJSONで指定します。アプリの仕様や保存場所を自動で推測するツールではありません。
+CLIで実行する操作と期待値はJSONで指定します。アプリの仕様や保存場所を自動で推測するツールではありません。既存のテストへ直接追加する場合は、下の「既存のテストへ1件追加する」を参照してください。
 
 ### まず、インストールせずに体験する
 
@@ -509,6 +519,16 @@ App Crash Labは、正常に保存できる操作を1つ設定し、次の2つ�
 「英語を保存 → 再読込」を押し、実際の本文を検査対象に加えてください。
 同じ画面でも、確認する値によってPASSとFAILが変わる例を試せます。
 これは故障を仕込んだ教材です。自分のアプリの検査や、Node CLIの実行ではありません。
+
+### 既存のテストへ1件追加する
+
+すでに検査環境がある場合は、[3種類の依頼文](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#native-agent)から選び、自分のアプリのプロジェクト内で普段のコーディングエージェントに渡せます。App Crash Labの導入やJSON設定は不要です。
+
+- **Playwright**：実際の画面操作、保存完了、再読み込みなどブラウザの振る舞いを検査します。
+- **Vitest**：既存のsave/load処理と、完全な保存レコード・読み戻し状態を比較します。
+- **Nodeテスト／登録済みJavaScript selfcheck**：追加テストパッケージを入れず、元のモジュールを検査します。対応するNodeと既存の実行環境が必要です。[実測済みのNode実例](examples/misaneco-native/README.md)も参照できます。
+
+VitestやNodeのデータ層検査では、実ブラウザの再読み込み・別タブ・実ファイルのバックアップ復元を検査したことにはなりません。アプリ固有の依存や実行条件が足りなければ、検査未実行として報告します。次のCLI手順は、設定を使って検査する別の入口です。
 
 ### CLIのデモを2コマンドで動かす
 
