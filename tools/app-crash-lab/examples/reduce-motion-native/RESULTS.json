@@ -1,0 +1,109 @@
+{
+  "measured_at": "2026-10-20T06:13:14.839555+00:00",
+  "source": {
+    "repository": "https://github.com/keroway/astro-blog",
+    "owner_type": "User",
+    "issue": "https://github.com/keroway/astro-blog/issues/907",
+    "commit": "f5f6e1489df411496225b979c248beb85468cbca",
+    "file": "src/scripts/reduce-motion.ts",
+    "sha256": "369e7a6ae4ca684b7dcdae9c2fd13d771d8f8cc17ac60ffae6a7b44330cf832a",
+    "unmodified": true
+  },
+  "nativeSpec": {
+    "file": "reduce-motion.persistence.test.ts",
+    "sha256": "1f72e29e573d5551ab38adb0dc6a9b843b53bf02cbdc53d090257e7a27eb1367"
+  },
+  "environment": {
+    "node": "v22.16.0",
+    "vitest": "4.1.11",
+    "happy-dom": "20.11.2",
+    "install_scripts_executed": false,
+    "network_used_during_tests": false,
+    "app_crash_lab_installed": false
+  },
+  "runs": [
+    {
+      "name": "existing",
+      "exit_code": 0,
+      "elapsed_seconds": 1.467,
+      "passed": 15,
+      "failed": 0,
+      "total": 15
+    },
+    {
+      "name": "native",
+      "exit_code": 1,
+      "elapsed_seconds": 0.725,
+      "passed": 6,
+      "failed": 6,
+      "total": 12
+    },
+    {
+      "name": "runtime-only-reference-control",
+      "exit_code": 0,
+      "elapsed_seconds": 0.616,
+      "passed": 12,
+      "failed": 0,
+      "total": 12
+    }
+  ],
+  "cases": [
+    {
+      "name": "unset to ON; OS reduce=false; write fails=false",
+      "status": "passed"
+    },
+    {
+      "name": "saved ON to OFF; OS reduce=false; write fails=false",
+      "status": "passed"
+    },
+    {
+      "name": "saved OFF to ON; OS reduce=false; write fails=false",
+      "status": "passed"
+    },
+    {
+      "name": "unset to ON; OS reduce=false; write fails=true",
+      "status": "failed"
+    },
+    {
+      "name": "saved ON to OFF; OS reduce=false; write fails=true",
+      "status": "failed"
+    },
+    {
+      "name": "saved OFF to ON; OS reduce=false; write fails=true",
+      "status": "failed"
+    },
+    {
+      "name": "unset to ON; OS reduce=true; write fails=false",
+      "status": "passed"
+    },
+    {
+      "name": "saved ON to OFF; OS reduce=true; write fails=false",
+      "status": "passed"
+    },
+    {
+      "name": "saved OFF to ON; OS reduce=true; write fails=false",
+      "status": "passed"
+    },
+    {
+      "name": "unset to ON; OS reduce=true; write fails=true",
+      "status": "failed"
+    },
+    {
+      "name": "saved ON to OFF; OS reduce=true; write fails=true",
+      "status": "failed"
+    },
+    {
+      "name": "saved OFF to ON; OS reduce=true; write fails=true",
+      "status": "failed"
+    }
+  ],
+  "reference_control": {
+    "runtime_only": true,
+    "production_fix": false,
+    "description": "Temporary mutation retains the latest failed write choice in module memory until a successful write. Only the new spec was run against this sensitivity control; upstream tests explicitly assert the old failing behavior."
+  },
+  "scope": "Original preferences module with injected DOMException and stubbed matchMedia in happy-dom. Not a full Astro app build, real browser quota exhaustion, page navigation, reload persistence, or screen-reader/animation playback check. Another same-document apply is checked only after the immediate state assertion passes.",
+  "independent_author_execution": false,
+  "new_use_credit": 0,
+  "new_star_credit": 0
+}
