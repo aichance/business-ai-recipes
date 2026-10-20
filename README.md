@@ -4,7 +4,7 @@
 
 **Your app says “Saved.” Does the data survive the next mistake?**
 
-Add one persistence regression to your existing Playwright suite. Start with a measured example, adapt its app actions and saved-state assertions, and keep the test in your release checks. The native path needs no App Crash Lab runtime or JSON contract.
+Add one persistence regression to the test setup your app already uses. Choose Playwright for browser behavior, or explicitly choose Vitest, Node tests or a registered JavaScript selfcheck for the data layer. Start with a measured example and keep the adapted test in your release checks. These paths need no App Crash Lab runtime or JSON contract.
 
 [**Copy a native test**](#copy-one-playwright-regression) · [**Ask your coding agent**](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#native-agent) · [**Check your own app**](#check-your-own-app) · [**Try a no-install example**](https://aichance.github.io/business-ai-recipes/test-the-test.html) · [**Contract format**](tools/app-crash-lab/CONTRACT.md)
 
@@ -36,15 +36,21 @@ These files target the named apps and measured versions. Follow the selected gui
 
 A related initial-load boundary: [VideoHost component reproduction](docs/video-host-history-native.md) measures a history-only write rejection before HLS starts. It includes two passing controls and preserves the original component source. This is a component fixture, not a complete application run.
 
-Already checking browser modules without a browser? [Recovered-draft cleanup: one dependency-free Node test](tools/app-crash-lab/examples/draft-recovery-native/README.md) catches an older restored copy deleting another context’s newer complete recovery stash. This is an original-module `vm` check with two passing controls, not a full editor or server test.
+For backup export/import, use the [real-file roundtrip path](tools/app-crash-lab/BACKUP.md) instead of substituting a reload check. [Choose among eight persistence boundaries](tools/app-crash-lab/PERSISTENCE-CHECKLIST.md).
+
+## Check the data layer with Node
+
+Already have Node tests or a registered JavaScript selfcheck? [Copy a request for that existing setup](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#node-agent-prompt). Use the supported Node runtime and your app's prerequisites, without adding a test package. The request keeps the real save/load functions, complete saved-state comparisons and a passing control. An incompatible module or harness is a setup gap, not proof of data loss.
+
+[Recovered-draft cleanup: one dependency-free Node test](tools/app-crash-lab/examples/draft-recovery-native/README.md) catches an older restored copy deleting another context’s newer complete recovery stash. This is an original-module `vm` check with two passing controls, not a full editor or server test.
 
 [**Same preservation boundary in a dependency-free Node workflow**](tools/app-crash-lab/examples/misaneco-native/README.md): the diagnosis app’s existing 76,788 checks pass, while an earlier state’s industry change clears two newer task selections. One Node file and an optional real-browser replay both produce two passing controls and one preservation failure on the pinned original source.
 
-For backup export/import, use the [real-file roundtrip path](tools/app-crash-lab/BACKUP.md) instead of substituting a reload check. [Choose among eight persistence boundaries](tools/app-crash-lab/PERSISTENCE-CHECKLIST.md).
+These Node results do not establish actual browser reload, peer-tab or real-file backup preservation. Choose the corresponding browser or backup path when that is the behavior you need to check.
 
 ## Check your own app
 
-Already have a test suite? [Copy a request for your existing Playwright suite or explicitly choose a Vitest data-layer check](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#native-agent). These paths require your project’s installed test dependencies and coding agent, without installing the App Crash Lab runner or skill. A Vitest result does not establish browser reload, peer-tab or backup behavior.
+Already have a test setup? [Choose Playwright for browser behavior, or explicitly choose Vitest, Node tests or a registered JavaScript selfcheck for the data layer](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#native-agent). Use your existing compatible harness, runtime and app prerequisites, without installing the App Crash Lab runner or skill. Data-layer results do not establish browser reload, peer-tab or backup behavior.
 
 Use a disposable **local copy of your app**, with **Node 22+ and npm**.
 
