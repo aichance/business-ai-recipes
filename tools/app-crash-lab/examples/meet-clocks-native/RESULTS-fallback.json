@@ -1,0 +1,1514 @@
+{
+  "schema_version": 1,
+  "kind": "operator_native_two_pin_measurement_not_independent_author_execution",
+  "spec": {
+    "file": "storage-boundary.spec.mjs",
+    "sha256": "396db55d130e55e7f8f43ee1dd1eb8eb8e860b9d856dc65aeb2a8309faf49e65",
+    "same_bytes_on_both_pins": true,
+    "case_timeout_ms": 90000,
+    "workers": 1,
+    "retries": 0
+  },
+  "environment": {
+    "node": "22.16.0",
+    "playwright": "1.64.0",
+    "os": "macOS arm64",
+    "meet_host": "controlled empty HTML at the matching synthetic Meet URL",
+    "chrome_storage": "real, unmodified APIs in disposable profiles with no signed-in account"
+  },
+  "fixture": {
+    "key": "meetClocks",
+    "real_sync_bytes_before": 8166,
+    "new_record_utf8_json_plus_key_bytes": 8278,
+    "real_sync_per_item_quota": 8192,
+    "address_book_before": 107,
+    "address_book_after": 108,
+    "visible_attendees_before": 1,
+    "visible_attendees_after": 2,
+    "seed_record": {
+      "addressBook": {
+        "avery test": {
+          "name": "Avery Test",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 000": {
+          "name": "Synthetic Contact 000",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 001": {
+          "name": "Synthetic Contact 001",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 002": {
+          "name": "Synthetic Contact 002",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 003": {
+          "name": "Synthetic Contact 003",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 004": {
+          "name": "Synthetic Contact 004",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 005": {
+          "name": "Synthetic Contact 005",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 006": {
+          "name": "Synthetic Contact 006",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 007": {
+          "name": "Synthetic Contact 007",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 008": {
+          "name": "Synthetic Contact 008",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 009": {
+          "name": "Synthetic Contact 009",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 010": {
+          "name": "Synthetic Contact 010",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 011": {
+          "name": "Synthetic Contact 011",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 012": {
+          "name": "Synthetic Contact 012",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 013": {
+          "name": "Synthetic Contact 013",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 014": {
+          "name": "Synthetic Contact 014",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 015": {
+          "name": "Synthetic Contact 015",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 016": {
+          "name": "Synthetic Contact 016",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 017": {
+          "name": "Synthetic Contact 017",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 018": {
+          "name": "Synthetic Contact 018",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 019": {
+          "name": "Synthetic Contact 019",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 020": {
+          "name": "Synthetic Contact 020",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 021": {
+          "name": "Synthetic Contact 021",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 022": {
+          "name": "Synthetic Contact 022",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 023": {
+          "name": "Synthetic Contact 023",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 024": {
+          "name": "Synthetic Contact 024",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 025": {
+          "name": "Synthetic Contact 025",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 026": {
+          "name": "Synthetic Contact 026",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 027": {
+          "name": "Synthetic Contact 027",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 028": {
+          "name": "Synthetic Contact 028",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 029": {
+          "name": "Synthetic Contact 029",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 030": {
+          "name": "Synthetic Contact 030",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 031": {
+          "name": "Synthetic Contact 031",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 032": {
+          "name": "Synthetic Contact 032",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 033": {
+          "name": "Synthetic Contact 033",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 034": {
+          "name": "Synthetic Contact 034",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 035": {
+          "name": "Synthetic Contact 035",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 036": {
+          "name": "Synthetic Contact 036",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 037": {
+          "name": "Synthetic Contact 037",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 038": {
+          "name": "Synthetic Contact 038",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 039": {
+          "name": "Synthetic Contact 039",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 040": {
+          "name": "Synthetic Contact 040",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 041": {
+          "name": "Synthetic Contact 041",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 042": {
+          "name": "Synthetic Contact 042",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 043": {
+          "name": "Synthetic Contact 043",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 044": {
+          "name": "Synthetic Contact 044",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 045": {
+          "name": "Synthetic Contact 045",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 046": {
+          "name": "Synthetic Contact 046",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 047": {
+          "name": "Synthetic Contact 047",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 048": {
+          "name": "Synthetic Contact 048",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 049": {
+          "name": "Synthetic Contact 049",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 050": {
+          "name": "Synthetic Contact 050",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 051": {
+          "name": "Synthetic Contact 051",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 052": {
+          "name": "Synthetic Contact 052",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 053": {
+          "name": "Synthetic Contact 053",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 054": {
+          "name": "Synthetic Contact 054",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 055": {
+          "name": "Synthetic Contact 055",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 056": {
+          "name": "Synthetic Contact 056",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 057": {
+          "name": "Synthetic Contact 057",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 058": {
+          "name": "Synthetic Contact 058",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 059": {
+          "name": "Synthetic Contact 059",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 060": {
+          "name": "Synthetic Contact 060",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 061": {
+          "name": "Synthetic Contact 061",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 062": {
+          "name": "Synthetic Contact 062",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 063": {
+          "name": "Synthetic Contact 063",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 064": {
+          "name": "Synthetic Contact 064",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 065": {
+          "name": "Synthetic Contact 065",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 066": {
+          "name": "Synthetic Contact 066",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 067": {
+          "name": "Synthetic Contact 067",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 068": {
+          "name": "Synthetic Contact 068",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 069": {
+          "name": "Synthetic Contact 069",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 070": {
+          "name": "Synthetic Contact 070",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 071": {
+          "name": "Synthetic Contact 071",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 072": {
+          "name": "Synthetic Contact 072",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 073": {
+          "name": "Synthetic Contact 073",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 074": {
+          "name": "Synthetic Contact 074",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 075": {
+          "name": "Synthetic Contact 075",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 076": {
+          "name": "Synthetic Contact 076",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 077": {
+          "name": "Synthetic Contact 077",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 078": {
+          "name": "Synthetic Contact 078",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 079": {
+          "name": "Synthetic Contact 079",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 080": {
+          "name": "Synthetic Contact 080",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 081": {
+          "name": "Synthetic Contact 081",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 082": {
+          "name": "Synthetic Contact 082",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 083": {
+          "name": "Synthetic Contact 083",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 084": {
+          "name": "Synthetic Contact 084",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 085": {
+          "name": "Synthetic Contact 085",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 086": {
+          "name": "Synthetic Contact 086",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 087": {
+          "name": "Synthetic Contact 087",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 088": {
+          "name": "Synthetic Contact 088",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 089": {
+          "name": "Synthetic Contact 089",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 090": {
+          "name": "Synthetic Contact 090",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 091": {
+          "name": "Synthetic Contact 091",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 092": {
+          "name": "Synthetic Contact 092",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 093": {
+          "name": "Synthetic Contact 093",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 094": {
+          "name": "Synthetic Contact 094",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 095": {
+          "name": "Synthetic Contact 095",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 096": {
+          "name": "Synthetic Contact 096",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 097": {
+          "name": "Synthetic Contact 097",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 098": {
+          "name": "Synthetic Contact 098",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 099": {
+          "name": "Synthetic Contact 099",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 100": {
+          "name": "Synthetic Contact 100",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 101": {
+          "name": "Synthetic Contact 101",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 102": {
+          "name": "Synthetic Contact 102",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 103": {
+          "name": "Synthetic Contact 103",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 104": {
+          "name": "Synthetic Contact 104",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 105": {
+          "name": "Synthetic Contact 105",
+          "tz": "Asia/Tokyo"
+        }
+      },
+      "autoShare": false,
+      "collapsed": false,
+      "fmt": "12",
+      "people": [
+        {
+          "name": "Avery Test",
+          "tz": "Asia/Tokyo"
+        }
+      ],
+      "pos": null,
+      "selfName": "",
+      "tiles": true
+    },
+    "added_record": {
+      "addressBook": {
+        "avery test": {
+          "name": "Avery Test",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 000": {
+          "name": "Synthetic Contact 000",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 001": {
+          "name": "Synthetic Contact 001",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 002": {
+          "name": "Synthetic Contact 002",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 003": {
+          "name": "Synthetic Contact 003",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 004": {
+          "name": "Synthetic Contact 004",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 005": {
+          "name": "Synthetic Contact 005",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 006": {
+          "name": "Synthetic Contact 006",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 007": {
+          "name": "Synthetic Contact 007",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 008": {
+          "name": "Synthetic Contact 008",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 009": {
+          "name": "Synthetic Contact 009",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 010": {
+          "name": "Synthetic Contact 010",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 011": {
+          "name": "Synthetic Contact 011",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 012": {
+          "name": "Synthetic Contact 012",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 013": {
+          "name": "Synthetic Contact 013",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 014": {
+          "name": "Synthetic Contact 014",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 015": {
+          "name": "Synthetic Contact 015",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 016": {
+          "name": "Synthetic Contact 016",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 017": {
+          "name": "Synthetic Contact 017",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 018": {
+          "name": "Synthetic Contact 018",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 019": {
+          "name": "Synthetic Contact 019",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 020": {
+          "name": "Synthetic Contact 020",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 021": {
+          "name": "Synthetic Contact 021",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 022": {
+          "name": "Synthetic Contact 022",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 023": {
+          "name": "Synthetic Contact 023",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 024": {
+          "name": "Synthetic Contact 024",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 025": {
+          "name": "Synthetic Contact 025",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 026": {
+          "name": "Synthetic Contact 026",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 027": {
+          "name": "Synthetic Contact 027",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 028": {
+          "name": "Synthetic Contact 028",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 029": {
+          "name": "Synthetic Contact 029",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 030": {
+          "name": "Synthetic Contact 030",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 031": {
+          "name": "Synthetic Contact 031",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 032": {
+          "name": "Synthetic Contact 032",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 033": {
+          "name": "Synthetic Contact 033",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 034": {
+          "name": "Synthetic Contact 034",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 035": {
+          "name": "Synthetic Contact 035",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 036": {
+          "name": "Synthetic Contact 036",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 037": {
+          "name": "Synthetic Contact 037",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 038": {
+          "name": "Synthetic Contact 038",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 039": {
+          "name": "Synthetic Contact 039",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 040": {
+          "name": "Synthetic Contact 040",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 041": {
+          "name": "Synthetic Contact 041",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 042": {
+          "name": "Synthetic Contact 042",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 043": {
+          "name": "Synthetic Contact 043",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 044": {
+          "name": "Synthetic Contact 044",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 045": {
+          "name": "Synthetic Contact 045",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 046": {
+          "name": "Synthetic Contact 046",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 047": {
+          "name": "Synthetic Contact 047",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 048": {
+          "name": "Synthetic Contact 048",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 049": {
+          "name": "Synthetic Contact 049",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 050": {
+          "name": "Synthetic Contact 050",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 051": {
+          "name": "Synthetic Contact 051",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 052": {
+          "name": "Synthetic Contact 052",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 053": {
+          "name": "Synthetic Contact 053",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 054": {
+          "name": "Synthetic Contact 054",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 055": {
+          "name": "Synthetic Contact 055",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 056": {
+          "name": "Synthetic Contact 056",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 057": {
+          "name": "Synthetic Contact 057",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 058": {
+          "name": "Synthetic Contact 058",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 059": {
+          "name": "Synthetic Contact 059",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 060": {
+          "name": "Synthetic Contact 060",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 061": {
+          "name": "Synthetic Contact 061",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 062": {
+          "name": "Synthetic Contact 062",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 063": {
+          "name": "Synthetic Contact 063",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 064": {
+          "name": "Synthetic Contact 064",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 065": {
+          "name": "Synthetic Contact 065",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 066": {
+          "name": "Synthetic Contact 066",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 067": {
+          "name": "Synthetic Contact 067",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 068": {
+          "name": "Synthetic Contact 068",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 069": {
+          "name": "Synthetic Contact 069",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 070": {
+          "name": "Synthetic Contact 070",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 071": {
+          "name": "Synthetic Contact 071",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 072": {
+          "name": "Synthetic Contact 072",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 073": {
+          "name": "Synthetic Contact 073",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 074": {
+          "name": "Synthetic Contact 074",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 075": {
+          "name": "Synthetic Contact 075",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 076": {
+          "name": "Synthetic Contact 076",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 077": {
+          "name": "Synthetic Contact 077",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 078": {
+          "name": "Synthetic Contact 078",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 079": {
+          "name": "Synthetic Contact 079",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 080": {
+          "name": "Synthetic Contact 080",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 081": {
+          "name": "Synthetic Contact 081",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 082": {
+          "name": "Synthetic Contact 082",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 083": {
+          "name": "Synthetic Contact 083",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 084": {
+          "name": "Synthetic Contact 084",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 085": {
+          "name": "Synthetic Contact 085",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 086": {
+          "name": "Synthetic Contact 086",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 087": {
+          "name": "Synthetic Contact 087",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 088": {
+          "name": "Synthetic Contact 088",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 089": {
+          "name": "Synthetic Contact 089",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 090": {
+          "name": "Synthetic Contact 090",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 091": {
+          "name": "Synthetic Contact 091",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 092": {
+          "name": "Synthetic Contact 092",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 093": {
+          "name": "Synthetic Contact 093",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 094": {
+          "name": "Synthetic Contact 094",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 095": {
+          "name": "Synthetic Contact 095",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 096": {
+          "name": "Synthetic Contact 096",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 097": {
+          "name": "Synthetic Contact 097",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 098": {
+          "name": "Synthetic Contact 098",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 099": {
+          "name": "Synthetic Contact 099",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 100": {
+          "name": "Synthetic Contact 100",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 101": {
+          "name": "Synthetic Contact 101",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 102": {
+          "name": "Synthetic Contact 102",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 103": {
+          "name": "Synthetic Contact 103",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 104": {
+          "name": "Synthetic Contact 104",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 105": {
+          "name": "Synthetic Contact 105",
+          "tz": "Asia/Tokyo"
+        },
+        "jordan boundary": {
+          "name": "Jordan Boundary",
+          "tz": "Europe/Paris"
+        }
+      },
+      "autoShare": false,
+      "collapsed": false,
+      "fmt": "12",
+      "people": [
+        {
+          "name": "Avery Test",
+          "tz": "Asia/Tokyo"
+        },
+        {
+          "name": "Jordan Boundary",
+          "tz": "Europe/Paris"
+        }
+      ],
+      "pos": null,
+      "selfName": "",
+      "tiles": true
+    },
+    "edited_record": {
+      "addressBook": {
+        "avery test": {
+          "name": "Avery Test",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 000": {
+          "name": "Synthetic Contact 000",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 001": {
+          "name": "Synthetic Contact 001",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 002": {
+          "name": "Synthetic Contact 002",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 003": {
+          "name": "Synthetic Contact 003",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 004": {
+          "name": "Synthetic Contact 004",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 005": {
+          "name": "Synthetic Contact 005",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 006": {
+          "name": "Synthetic Contact 006",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 007": {
+          "name": "Synthetic Contact 007",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 008": {
+          "name": "Synthetic Contact 008",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 009": {
+          "name": "Synthetic Contact 009",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 010": {
+          "name": "Synthetic Contact 010",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 011": {
+          "name": "Synthetic Contact 011",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 012": {
+          "name": "Synthetic Contact 012",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 013": {
+          "name": "Synthetic Contact 013",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 014": {
+          "name": "Synthetic Contact 014",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 015": {
+          "name": "Synthetic Contact 015",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 016": {
+          "name": "Synthetic Contact 016",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 017": {
+          "name": "Synthetic Contact 017",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 018": {
+          "name": "Synthetic Contact 018",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 019": {
+          "name": "Synthetic Contact 019",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 020": {
+          "name": "Synthetic Contact 020",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 021": {
+          "name": "Synthetic Contact 021",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 022": {
+          "name": "Synthetic Contact 022",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 023": {
+          "name": "Synthetic Contact 023",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 024": {
+          "name": "Synthetic Contact 024",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 025": {
+          "name": "Synthetic Contact 025",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 026": {
+          "name": "Synthetic Contact 026",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 027": {
+          "name": "Synthetic Contact 027",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 028": {
+          "name": "Synthetic Contact 028",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 029": {
+          "name": "Synthetic Contact 029",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 030": {
+          "name": "Synthetic Contact 030",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 031": {
+          "name": "Synthetic Contact 031",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 032": {
+          "name": "Synthetic Contact 032",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 033": {
+          "name": "Synthetic Contact 033",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 034": {
+          "name": "Synthetic Contact 034",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 035": {
+          "name": "Synthetic Contact 035",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 036": {
+          "name": "Synthetic Contact 036",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 037": {
+          "name": "Synthetic Contact 037",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 038": {
+          "name": "Synthetic Contact 038",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 039": {
+          "name": "Synthetic Contact 039",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 040": {
+          "name": "Synthetic Contact 040",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 041": {
+          "name": "Synthetic Contact 041",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 042": {
+          "name": "Synthetic Contact 042",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 043": {
+          "name": "Synthetic Contact 043",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 044": {
+          "name": "Synthetic Contact 044",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 045": {
+          "name": "Synthetic Contact 045",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 046": {
+          "name": "Synthetic Contact 046",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 047": {
+          "name": "Synthetic Contact 047",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 048": {
+          "name": "Synthetic Contact 048",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 049": {
+          "name": "Synthetic Contact 049",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 050": {
+          "name": "Synthetic Contact 050",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 051": {
+          "name": "Synthetic Contact 051",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 052": {
+          "name": "Synthetic Contact 052",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 053": {
+          "name": "Synthetic Contact 053",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 054": {
+          "name": "Synthetic Contact 054",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 055": {
+          "name": "Synthetic Contact 055",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 056": {
+          "name": "Synthetic Contact 056",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 057": {
+          "name": "Synthetic Contact 057",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 058": {
+          "name": "Synthetic Contact 058",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 059": {
+          "name": "Synthetic Contact 059",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 060": {
+          "name": "Synthetic Contact 060",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 061": {
+          "name": "Synthetic Contact 061",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 062": {
+          "name": "Synthetic Contact 062",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 063": {
+          "name": "Synthetic Contact 063",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 064": {
+          "name": "Synthetic Contact 064",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 065": {
+          "name": "Synthetic Contact 065",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 066": {
+          "name": "Synthetic Contact 066",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 067": {
+          "name": "Synthetic Contact 067",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 068": {
+          "name": "Synthetic Contact 068",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 069": {
+          "name": "Synthetic Contact 069",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 070": {
+          "name": "Synthetic Contact 070",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 071": {
+          "name": "Synthetic Contact 071",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 072": {
+          "name": "Synthetic Contact 072",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 073": {
+          "name": "Synthetic Contact 073",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 074": {
+          "name": "Synthetic Contact 074",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 075": {
+          "name": "Synthetic Contact 075",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 076": {
+          "name": "Synthetic Contact 076",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 077": {
+          "name": "Synthetic Contact 077",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 078": {
+          "name": "Synthetic Contact 078",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 079": {
+          "name": "Synthetic Contact 079",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 080": {
+          "name": "Synthetic Contact 080",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 081": {
+          "name": "Synthetic Contact 081",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 082": {
+          "name": "Synthetic Contact 082",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 083": {
+          "name": "Synthetic Contact 083",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 084": {
+          "name": "Synthetic Contact 084",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 085": {
+          "name": "Synthetic Contact 085",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 086": {
+          "name": "Synthetic Contact 086",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 087": {
+          "name": "Synthetic Contact 087",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 088": {
+          "name": "Synthetic Contact 088",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 089": {
+          "name": "Synthetic Contact 089",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 090": {
+          "name": "Synthetic Contact 090",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 091": {
+          "name": "Synthetic Contact 091",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 092": {
+          "name": "Synthetic Contact 092",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 093": {
+          "name": "Synthetic Contact 093",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 094": {
+          "name": "Synthetic Contact 094",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 095": {
+          "name": "Synthetic Contact 095",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 096": {
+          "name": "Synthetic Contact 096",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 097": {
+          "name": "Synthetic Contact 097",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 098": {
+          "name": "Synthetic Contact 098",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 099": {
+          "name": "Synthetic Contact 099",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 100": {
+          "name": "Synthetic Contact 100",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 101": {
+          "name": "Synthetic Contact 101",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 102": {
+          "name": "Synthetic Contact 102",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 103": {
+          "name": "Synthetic Contact 103",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 104": {
+          "name": "Synthetic Contact 104",
+          "tz": "Asia/Tokyo"
+        },
+        "synthetic contact 105": {
+          "name": "Synthetic Contact 105",
+          "tz": "Asia/Tokyo"
+        },
+        "jordan boundary": {
+          "name": "Jordan Boundary",
+          "tz": "Europe/Paris"
+        }
+      },
+      "autoShare": false,
+      "collapsed": false,
+      "fmt": "24",
+      "people": [
+        {
+          "name": "Avery Test",
+          "tz": "Asia/Tokyo"
+        },
+        {
+          "name": "Jordan Boundary",
+          "tz": "Europe/Paris"
+        }
+      ],
+      "pos": null,
+      "selfName": "",
+      "tiles": true
+    }
+  },
+  "snapshot_hash_method": "SHA256 of UTF-8 JSON with sorted object keys, no whitespace, ensure_ascii=False; array order preserved",
+  "runs": [
+    {
+      "pin": "e7fafc7ad7cfb46c9677fb0a4f2ab1e452fb681e",
+      "version": "0.9.2",
+      "observed_at": "2026-10-21T22:46:05.180812+00:00",
+      "source_hashes": {
+        "manifest.json": "8c42fc82db4fb0149fea276eda6d962c29d489ebf6d9b622fc50a35f0e6afa32",
+        "config.js": "53839a321165dc3ed7547f75a06727961bcb1429c4086b9bfb1beca63acadb6b",
+        "content.js": "fa9033793b4554f87184172b14efe6ad252494d8fde5b7ace5d3bc1b069860b3"
+      },
+      "source_blobs_checked_after_tests": 41,
+      "all_source_blobs_unchanged": true,
+      "browser_version": "156.0.8078.4",
+      "passed": 2,
+      "failed": 1,
+      "skipped": 0,
+      "exit_code": 1,
+      "cases": [
+        {
+          "title": "control: an ordinary UI add preserves the complete saved record after reload",
+          "status": "passed",
+          "duration_ms": 12969,
+          "failure": null
+        },
+        {
+          "title": "control: a same-size UI edit persists a valid near-limit complete record",
+          "status": "passed",
+          "duration_ms": 5420,
+          "failure": null
+        },
+        {
+          "title": "quota boundary: complete fallback survives reload and another save, or refusal is explicit",
+          "status": "failed",
+          "duration_ms": 5768,
+          "failure": "Missing visible refusal feedback after unsaved addition"
+        }
+      ],
+      "quota_outcome": {
+        "acceptance_path": "refused_or_unsaved",
+        "visible_storage_error": "",
+        "unhandled_extension_exception_count": 2,
+        "new_clock_visible_before_reload": true,
+        "snapshot_sha256": {
+          "before_reload": {
+            "sync": "9446f0c3d32fcb4fa7817ceb844997b17f0c7daa4b206dfa333a961ad896378d",
+            "local": "9446f0c3d32fcb4fa7817ceb844997b17f0c7daa4b206dfa333a961ad896378d"
+          },
+          "after_reload": {
+            "sync": "9446f0c3d32fcb4fa7817ceb844997b17f0c7daa4b206dfa333a961ad896378d",
+            "local": "9446f0c3d32fcb4fa7817ceb844997b17f0c7daa4b206dfa333a961ad896378d"
+          }
+        },
+        "all_snapshot_records_checked_in_full": true
+      },
+      "disposable_profiles_removed": 3,
+      "image": "before-fix-reload.png",
+      "image_sha256": "dd1d29d18c9d3b2ad3517246196cbd25fea1d0fd33403844b603bd341dca51ac",
+      "fresh_portable_package_used": true
+    },
+    {
+      "pin": "f13d8ff41ab6e2a3b22e1ce29294d2b717afd7b1",
+      "version": "0.9.3",
+      "observed_at": "2026-10-21T22:46:25.118753+00:00",
+      "source_hashes": {
+        "manifest.json": "a991832e42534255dc8b40fceb744a96eb6814f1ae65f93c2d054adfe8bcc32d",
+        "config.js": "53839a321165dc3ed7547f75a06727961bcb1429c4086b9bfb1beca63acadb6b",
+        "content.js": "5a9328cfc0d29d623fde05c629697717752815faaf00e55592671c5e7f7c64cf"
+      },
+      "source_blobs_checked_after_tests": 43,
+      "all_source_blobs_unchanged": true,
+      "browser_version": "156.0.8078.4",
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "cases": [
+        {
+          "title": "control: an ordinary UI add preserves the complete saved record after reload",
+          "status": "passed",
+          "duration_ms": 9431,
+          "failure": null
+        },
+        {
+          "title": "control: a same-size UI edit persists a valid near-limit complete record",
+          "status": "passed",
+          "duration_ms": 3846,
+          "failure": null
+        },
+        {
+          "title": "quota boundary: complete fallback survives reload and another save, or refusal is explicit",
+          "status": "passed",
+          "duration_ms": 4047,
+          "failure": null
+        }
+      ],
+      "quota_outcome": {
+        "acceptance_path": "complete_local_fallback",
+        "visible_storage_error": "",
+        "unhandled_extension_exception_count": 0,
+        "new_clock_visible_before_reload": true,
+        "snapshot_sha256": {
+          "before_reload": {
+            "sync": "9446f0c3d32fcb4fa7817ceb844997b17f0c7daa4b206dfa333a961ad896378d",
+            "local": "5f52156a0147ebb959277bd6afc6390fa59d78c7dd31d4e19ccb6b9292909b9b"
+          },
+          "after_reload": {
+            "sync": "9446f0c3d32fcb4fa7817ceb844997b17f0c7daa4b206dfa333a961ad896378d",
+            "local": "5f52156a0147ebb959277bd6afc6390fa59d78c7dd31d4e19ccb6b9292909b9b"
+          },
+          "after_reload_edit": {
+            "sync": "9446f0c3d32fcb4fa7817ceb844997b17f0c7daa4b206dfa333a961ad896378d",
+            "local": "ec14470579fb854ce67b5a0a1d5ac8ed01952489b0def42d62d453df7e101342"
+          },
+          "after_second_reload": {
+            "sync": "9446f0c3d32fcb4fa7817ceb844997b17f0c7daa4b206dfa333a961ad896378d",
+            "local": "ec14470579fb854ce67b5a0a1d5ac8ed01952489b0def42d62d453df7e101342"
+          }
+        },
+        "all_snapshot_records_checked_in_full": true
+      },
+      "disposable_profiles_removed": 3,
+      "image": "after-fix-reload.png",
+      "image_sha256": "6458897fb5432806034e824e1f0d1a6d5a37846fc7c4862d093c913f8abc0ebc",
+      "fresh_portable_package_used": true
+    }
+  ],
+  "pilot_status": "Earlier30s pilot had test timeouts and was inconclusive. One unchanged historical control passed in31179ms; final90s runs completed without timeouts.",
+  "limits": [
+    "Unpacked GitHub source, not Chrome Web Store package",
+    "Original and fixed pins use the changed fallback-aware spec, not an unchanged claim about the historical refusal-only spec",
+    "Synthetic host only; no real Meet call, relay or signed-in account",
+    "Device-local fallback; cross-device sync and local total quota are untested",
+    "Concurrent writes and immediate termination during save are untested",
+    "Only the complete app record is compared; transient shared flag is intentionally excluded"
+  ],
+  "final_check_note": "Final file, after trailing-blank-line normalization, tested identically on both pins using dependencies from the isolated fresh package."
+}

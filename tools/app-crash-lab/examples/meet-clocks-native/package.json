@@ -4,6 +4,9 @@
   "type": "module",
   "license": "MIT",
   "engines": { "node": ">=22" },
-  "scripts": { "test": "playwright test sync-quota.spec.mjs --workers=1 --retries=0 --reporter=list" },
+  "scripts": {
+    "test": "playwright test storage-boundary.spec.mjs --workers=1 --retries=0 --reporter=list",
+    "test:refusal": "playwright test sync-quota.spec.mjs --workers=1 --retries=0 --timeout=90000 --reporter=list"
+  },
   "devDependencies": { "@playwright/test": "1.64.0" }
 }
