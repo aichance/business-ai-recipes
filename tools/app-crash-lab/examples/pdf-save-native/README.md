@@ -10,7 +10,7 @@ On 2026-10-20, [PDF_Studio’s author publicly reported](https://qiita.com/yoyoy
 
 We separately reran the unchanged test on upstream fix [`12849c4c`](https://github.com/yoshiki2024/PDF_Studio/commit/12849c4c8960ab74e1dc78dbf93589d98dfa9280): **3 PASS / 0 FAIL / 0 skipped**, in 6.524s (Node 22.16.0, Chromium, Playwright 1.64.0). The same synthetic two-page PDF, complete text/order/rotation comparisons, fallback and cancellation/retry assertions were retained. All 18 upstream Git blobs were verified before and after; this direct child of the affected pin changes only `js/app.js`. Test SHA-256: `4746912fcdc4b3f44778e27be436aa5f4397e346d3ecce9f23df4c0584b84613`.
 
-The hosted example and original measurement below keep the affected `87160462` pin so the false success remains reproducible. The author’s execution report and our fixed-source rerun are separate evidence. Save APIs remain simulated; neither result establishes real OS dialogs or physical disk writes.
+The hosted example can run either the affected `87160462` pin or the author's `12849c4c` fix with the same synthetic PDF and three checks. Its comparison table keeps each version's last result and source pin; the affected version remains reproducible. This browser run, the author’s execution report and our standalone fixed-source rerun are separate evidence. Save APIs remain simulated; none establishes real OS dialogs or physical disk writes.
 
 ## Measured behavior
 
