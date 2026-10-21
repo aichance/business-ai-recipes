@@ -20,12 +20,15 @@ notice and empty visible store after a mocked Tauri IPC rejection. Copy one
 test into its existing suite; two controls pass and the rejection case fails.
 This store-level check does not run SQLite or the desktop app.
 
-**A new attendee clock appears, then disappears after reload.** The
-[Meet Clocks native example](examples/meet-clocks-native/README.md) uses the actual
-unpacked extension and real Chrome sync-storage API: a valid 8,166-byte record
-plus one attendee exceeds the 8,192-byte per-item quota. Two controls pass; the
-silent-refusal check fails. Older saved data remains intact. It uses a synthetic
-Meet host and a separate Playwright package, without a real meeting or account.
+**A real Chrome quota, and a local fallback that keeps the new clock.** The
+[Meet Clocks native example](examples/meet-clocks-native/README.md) uses the
+unmodified extension and real Chrome storage APIs. The same fallback-aware
+spec gives v0.9.2 **2 PASS/1 FAIL** and the author's v0.9.3 **3 PASS**. A complete
+8,278-byte record survives local fallback, reload, another UI edit and reload;
+the older sync record stays intact. This operator verification follows the
+author's acknowledged fix, separate from an independent author test run. It
+uses an empty synthetic Meet host and a separate Playwright package, without
+a real meeting or account.
 
 **Renaming a root in an older tab removes a saved child.** The
 [NEBULARK standalone test](examples/nebulark-native/README.md) operates the real
