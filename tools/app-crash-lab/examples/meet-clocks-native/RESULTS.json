@@ -1,0 +1,92 @@
+{
+  "observed_at": "2026-10-21T14:06:15.823Z",
+  "operator": "App Crash Lab / aichance; not an independent author run",
+  "upstream": {
+    "repo": "mamarezza/meet-clocks",
+    "owner_type": "User",
+    "owner_id": 23649853,
+    "repo_id": 1425058295,
+    "sha": "e7fafc7ad7cfb46c9677fb0a4f2ab1e452fb681e",
+    "manifest_version": "0.9.2",
+    "source_sha256": {
+      "manifest.json": "8c42fc82db4fb0149fea276eda6d962c29d489ebf6d9b622fc50a35f0e6afa32",
+      "config.js": "53839a321165dc3ed7547f75a06727961bcb1429c4086b9bfb1beca63acadb6b",
+      "content.js": "fa9033793b4554f87184172b14efe6ad252494d8fde5b7ace5d3bc1b069860b3"
+    }
+  },
+  "environment": {
+    "os": "macOS arm64",
+    "playwright": "1.64.0",
+    "chromium": "156.0.8078.4",
+    "headless": true,
+    "profile": "fresh disposable, signed out; removed after each case",
+    "meet_host": "synthetic empty HTML at a matching URL; not live Google Meet",
+    "storage": "actual chrome.storage.sync, no mocks",
+    "sync_across_devices_tested": false
+  },
+  "result": {
+    "passed": 2,
+    "failed": 1,
+    "exit_code": 1,
+    "failure": "No visible save-error feedback after actual quota refusal"
+  },
+  "cases": [
+    {
+      "name": "ordinary UI add and reload",
+      "result": "PASS",
+      "saved_bytes": 216,
+      "complete_record_equal_after_reload": true
+    },
+    {
+      "name": "near-limit same-size format edit and reload",
+      "result": "PASS",
+      "saved_bytes": 8166,
+      "all_other_fields_equal": true
+    },
+    {
+      "name": "quota-refused UI add",
+      "result": "FAIL",
+      "seed_bytes": 8166,
+      "attempted_bytes": 8278,
+      "actual_per_item_quota": 8192,
+      "seed_visible_attendees": 1,
+      "seed_address_book_entries": 107,
+      "actual_api_rejections": [
+        "Error: Resource::kQuotaBytesPerItem quota exceeded",
+        "Error: Resource::kQuotaBytesPerItem quota exceeded"
+      ],
+      "visible_error_before_reload": "",
+      "new_clock_visible_before_reload": true,
+      "new_clock_present_in_persisted_record": false,
+      "new_clock_present_after_reload": false,
+      "complete_previous_record_unchanged_before_and_after_reload": true
+    }
+  ],
+  "controls": {
+    "all_41_original_git_blobs_match_before_and_after": true,
+    "source_modified": false,
+    "real_meet_or_relay_requests_allowed": false,
+    "disposable_profiles_removed": true,
+    "expected_failure_annotation": false,
+    "separate_counterfactual_handler_clone": {
+      "purpose": "Oracle validation only; catch rejected real save Promise and show error",
+      "same_test_file": true,
+      "passed": 3,
+      "failed": 0,
+      "exit_code": 0,
+      "upstream_fix_or_publication": false
+    }
+  },
+  "limitations": [
+    "Synthetic bulk-seeded historical address book; contact count is fixture-specific",
+    "Local signed-out Chrome sync area only, not cross-device synchronization",
+    "Unpacked pinned GitHub source, not the Chrome Web Store build",
+    "New unsaved attendee disappears; previously saved data remains intact",
+    "Operator run is not third-party adoption"
+  ],
+  "artifact_sha256": {
+    "sync-quota.spec.mjs": "655f5e711424418e1ee04c8f3c6120cde868ea57c1af96a779125e41f5e572f8",
+    "quota-before-reload.png": "504d19ab78c15c5047a8b0dfb472fb170b9a45e4fae54bc8d5f08e75db05bf7b",
+    "quota-after-reload.png": "b45d2bf32ff93eb3845abe5a04fac42113905733f0532f21ddd3956d8be11998"
+  }
+}

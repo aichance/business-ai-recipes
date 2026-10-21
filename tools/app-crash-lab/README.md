@@ -20,6 +20,13 @@ notice and empty visible store after a mocked Tauri IPC rejection. Copy one
 test into its existing suite; two controls pass and the rejection case fails.
 This store-level check does not run SQLite or the desktop app.
 
+**A new attendee clock appears, then disappears after reload.** The
+[Meet Clocks native example](examples/meet-clocks-native/README.md) uses the actual
+unpacked extension and real Chrome sync-storage API: a valid 8,166-byte record
+plus one attendee exceeds the 8,192-byte per-item quota. Two controls pass; the
+silent-refusal check fails. Older saved data remains intact. It uses a synthetic
+Meet host and a separate Playwright package, without a real meeting or account.
+
 Describe one working save flow and the values worth keeping. App Crash Lab
 checks **reload** and **rejected updates**, then gives you the changed values,
 a browser trace and ordinary Playwright tests you can rerun after a fix.
