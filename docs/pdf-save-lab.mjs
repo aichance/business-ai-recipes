@@ -1,5 +1,4 @@
 const PIN = '87160462e342c039235531be49883113b1265e49';
-const SOURCE = `https://raw.githubusercontent.com/yoshiki2024/PDF_Studio/${PIN}/`;
 const FILES = {
   "index.html": {
     "sha": "45ce527f6c9537ecc95bce1b025f2e489455b32d",
@@ -45,13 +44,22 @@ const FILES = {
 const FIXTURE = 'JVBERi0xLjMKJZOMi54gUmVwb3J0TGFiIEdlbmVyYXRlZCBQREYgZG9jdW1lbnQgKG9wZW5zb3VyY2UpCjEgMCBvYmoKPDwKL0YxIDIgMCBSIC9GMiAzIDAgUgo+PgplbmRvYmoKMiAwIG9iago8PAovQmFzZUZvbnQgL0hlbHZldGljYSAvRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZyAvTmFtZSAvRjEgL1N1YnR5cGUgL1R5cGUxIC9UeXBlIC9Gb250Cj4+CmVuZG9iagozIDAgb2JqCjw8Ci9CYXNlRm9udCAvSGVsdmV0aWNhLUJvbGQgL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcgL05hbWUgL0YyIC9TdWJ0eXBlIC9UeXBlMSAvVHlwZSAvRm9udAo+PgplbmRvYmoKNCAwIG9iago8PAovQ29udGVudHMgOSAwIFIgL01lZGlhQm94IFsgMCAwIDQyMCA1OTUgXSAvUGFyZW50IDggMCBSIC9SZXNvdXJjZXMgPDwKL0ZvbnQgMSAwIFIgL1Byb2NTZXQgWyAvUERGIC9UZXh0IC9JbWFnZUIgL0ltYWdlQyAvSW1hZ2VJIF0KPj4gL1JvdGF0ZSAwIC9UcmFucyA8PAoKPj4gCiAgL1R5cGUgL1BhZ2UKPj4KZW5kb2JqCjUgMCBvYmoKPDwKL0NvbnRlbnRzIDEwIDAgUiAvTWVkaWFCb3ggWyAwIDAgNDIwIDU5NSBdIC9QYXJlbnQgOCAwIFIgL1Jlc291cmNlcyA8PAovRm9udCAxIDAgUiAvUHJvY1NldCBbIC9QREYgL1RleHQgL0ltYWdlQiAvSW1hZ2VDIC9JbWFnZUkgXQo+PiAvUm90YXRlIDAgL1RyYW5zIDw8Cgo+PiAKICAvVHlwZSAvUGFnZQo+PgplbmRvYmoKNiAwIG9iago8PAovUGFnZU1vZGUgL1VzZU5vbmUgL1BhZ2VzIDggMCBSIC9UeXBlIC9DYXRhbG9nCj4+CmVuZG9iago3IDAgb2JqCjw8Ci9BdXRob3IgKGFub255bW91cykgL0NyZWF0aW9uRGF0ZSAoRDoyMDAwMDEwMTAwMDAwMCswMCcwMCcpIC9DcmVhdG9yIChhbm9ueW1vdXMpIC9LZXl3b3JkcyAoKSAvTW9kRGF0ZSAoRDoyMDAwMDEwMTAwMDAwMCswMCcwMCcpIC9Qcm9kdWNlciAoUmVwb3J0TGFiIFBERiBMaWJyYXJ5IC0gXChvcGVuc291cmNlXCkpIAogIC9TdWJqZWN0ICh1bnNwZWNpZmllZCkgL1RpdGxlICh1bnRpdGxlZCkgL1RyYXBwZWQgL0ZhbHNlCj4+CmVuZG9iago4IDAgb2JqCjw8Ci9Db3VudCAyIC9LaWRzIFsgNCAwIFIgNSAwIFIgXSAvVHlwZSAvUGFnZXMKPj4KZW5kb2JqCjkgMCBvYmoKPDwKL0ZpbHRlciBbIC9BU0NJSTg1RGVjb2RlIC9GbGF0ZURlY29kZSBdIC9MZW5ndGggMjcwCj4+CnN0cmVhbQpHYXJvOjk1Qi9WJjtCbFMna2MyOEBkaShXYF5MXEVDX0FHKE9QKy9lLkRiWS0pSklwZWhlMUgjLXJfZyhMO1NEcikxbiNBaDdwLkQ9MnNoTkpNZC0lWkBOMGw4OXJlSilXXEpXRURQZ0swRkgpU0UucycsYW8kPlZjRSEyXU05azNubEprRCgwRE9lL3FTLUpmVUwnNzlJTUoiYyYoJF4oRktWLCVVQTxLOy44Qz40RmE1JHQjNmwuJHJaJl04RlE4VzFdTFpocmUyMVZNQG1nXDs3NyQuNyZfWkNccm5vYk8vIzVOQ0pLITdaYUs+aVdOIWIlPFtaXCkrPGlCRSNJT1pZYGxpUWtKPXFxfj5lbmRzdHJlYW0KZW5kb2JqCjEwIDAgb2JqCjw8Ci9GaWx0ZXIgWyAvQVNDSUk4NURlY29kZSAvRmxhdGVEZWNvZGUgXSAvTGVuZ3RoIDI2OQo+PgpzdHJlYW0KR2Fybzk5bCNBWCY0UT9oJ21KPUZDPlFUNmUzdC9sQ2EuTGlpLCNdRidKWDtwMXNpYlNeW0oqSTEhaFUuJSRzITsmc05lNl00dWtcWiQ3RlIjNEZmOFlpI1IjY1w+XFdnbFAlWFBsOmVUXylWWzpuO28xLz9aK2JHU1QyQzlScS5mW0Y6UzlTNUAuPWg9JW0wXmF1MUA9KUItWWVYPSdPYEQ+LjFXP1BVMEtlRF0lJGNGO3FtXzFtK2VVZCF1LmVMTyg1UUlgak5xaFUpSCZNNk5uI0dKYmphTm9cMzQiIUkoK1dZazlbKlRSWElTSGQmPDs8Rmk5JXFgdFRuLydAbFFAb29eXE49Xik/fj5lbmRzdHJlYW0KZW5kb2JqCnhyZWYKMCAxMQowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwNjEgMDAwMDAgbiAKMDAwMDAwMDEwMiAwMDAwMCBuIAowMDAwMDAwMjA5IDAwMDAwIG4gCjAwMDAwMDAzMjEgMDAwMDAgbiAKMDAwMDAwMDUxNCAwMDAwMCBuIAowMDAwMDAwNzA4IDAwMDAwIG4gCjAwMDAwMDA3NzYgMDAwMDAgbiAKMDAwMDAwMTAzNyAwMDAwMCBuIAowMDAwMDAxMTAyIDAwMDAwIG4gCjAwMDAwMDE0NjIgMDAwMDAgbiAKdHJhaWxlcgo8PAovSUQgCls8MWMxNzgxOThmYmRmYTUxYjI1OTk1ZDg5ZDQxMDIwNDM+PDFjMTc4MTk4ZmJkZmE1MWIyNTk5NWQ4OWQ0MTAyMDQzPl0KJSBSZXBvcnRMYWIgZ2VuZXJhdGVkIFBERiBkb2N1bWVudCAtLSBkaWdlc3QgKG9wZW5zb3VyY2UpCgovSW5mbyA3IDAgUgovUm9vdCA2IDAgUgovU2l6ZSAxMQo+PgpzdGFydHhyZWYKMTgyMgolJUVPRgo=';
 const TEXT = ['A', 'B'].map((tag, i) => [`ACL_SYNTHETIC_PAGE_${tag}`, `Page ${i + 1} of 2 - synthetic test only`, `${tag}_ITEM_001 = 12.50`, `${tag}_ITEM_002 = 99.75`, `${tag}_TOTAL = 112.25`]);
 const scriptOrder = ['js/libs/lucide.min.js', 'js/libs/pdf.min.js', 'js/libs/pdf-lib.min.js', 'js/libs/jszip.min.js', 'js/libs/pdf.worker.min.js', 'js/app.js'];
-const runButton = document.querySelector('#run'), status = document.querySelector('#status');
-let verifiedSource, generation = 0, currentFrame;
+const VARIANTS = {
+  affected: { pin: PIN, label: '修正前', files: FILES },
+  fixed: {
+    pin: '12849c4c8960ab74e1dc78dbf93589d98dfa9280', label: '作者修正版',
+    files: { ...FILES, 'js/app.js': { sha: '20f54bf1d198cf066b82b1c60f3e255be523696d', bytes: 142138, mode: '100644' } }
+  }
+};
+const runButton = document.querySelector('#run'), fixedButton = document.querySelector('#run-fixed'), status = document.querySelector('#status');
+const verifiedSources = new Map();
+let generation = 0, currentFrame;
 
-async function sources() {
-  if (verifiedSource) return verifiedSource;
-  const items = await Promise.all(Object.entries(FILES).map(async ([path, expected]) => {
-    const response = await fetch(SOURCE + path, { credentials: 'omit', referrerPolicy: 'no-referrer', signal: AbortSignal.timeout(20000) });
+async function sources(variant) {
+  if (verifiedSources.has(variant.pin)) return verifiedSources.get(variant.pin);
+  const source = `https://raw.githubusercontent.com/yoshiki2024/PDF_Studio/${variant.pin}/`;
+  const items = await Promise.all(Object.entries(variant.files).map(async ([path, expected]) => {
+    const response = await fetch(source + path, { credentials: 'omit', referrerPolicy: 'no-referrer', signal: AbortSignal.timeout(20000) });
     if (!response.ok) throw new Error(`Source unavailable: ${path}`);
     const bytes = new Uint8Array(await response.arrayBuffer());
     if (bytes.length !== expected.bytes) throw new Error(`Source length mismatch: ${path}`);
@@ -62,8 +70,9 @@ async function sources() {
     let binary = ''; for (let i = 0; i < bytes.length; i += 8192) binary += String.fromCharCode(...bytes.subarray(i, i + 8192));
     return [path, { text: new TextDecoder('utf-8', { fatal: true }).decode(bytes), base64: btoa(binary) }];
   }));
-  verifiedSource = Object.fromEntries(items);
-  return verifiedSource;
+  const verified = Object.fromEntries(items);
+  verifiedSources.set(variant.pin, verified);
+  return verified;
 }
 
 // Runs only inside an opaque sandbox. Its only input is the embedded synthetic PDF.
@@ -208,31 +217,46 @@ async function runCase(files, mode, run) {
   });
 }
 
-runButton.addEventListener('click', async () => {
+async function runVariant(id) {
   if (runButton.disabled) return;
+  const variant = VARIANTS[id], row = document.querySelector(`[data-variant="${id}"]`);
   const run = ++generation, started = performance.now(), results = [];
-  runButton.disabled = true; document.querySelector('#report-section').hidden = true;
-  for (const card of document.querySelectorAll('.check')) { card.removeAttribute('data-state'); card.querySelector('.pill').textContent = '未実行'; }
+  runButton.disabled = fixedButton.disabled = true; document.querySelector('#report-section').hidden = true;
+  document.querySelector('#report').textContent = '';
+  document.querySelector('#copy').textContent = 'レポートをコピー';
+  document.querySelector('#measured-version').textContent = `${variant.label} @ ${variant.pin.slice(0, 8)} の結果`;
+  const sourceLink = document.querySelector('#source-link');
+  sourceLink.href = `https://github.com/yoshiki2024/PDF_Studio/tree/${variant.pin}`;
+  sourceLink.textContent = `PDF_Studio@${variant.pin.slice(0, 8)} (${variant.label})`;
+  row.querySelector('[data-measured-at]').textContent = '実行中';
+  for (const cell of row.querySelectorAll('[data-result]')) { cell.removeAttribute('data-state'); cell.textContent = '測定中'; }
+  for (const card of document.querySelectorAll('.check')) { card.removeAttribute('data-state'); card.querySelector('.pill').textContent = '未実行'; card.querySelector('p').textContent = 'この版の検証を準備しています…'; }
   try {
-    status.textContent = '固定版の公開ソースを取得し、8ファイルのハッシュを確認しています…';
-    const files = await sources();
+    status.textContent = `${variant.label}の公開ソースを取得し、8ファイルのハッシュを確認しています…`;
+    const files = await sources(variant);
     for (const [i, mode] of ['success', 'write-denied', 'abort'].entries()) {
-      status.textContent = `${i + 1}/3 実アプリで検証しています…`;
+      status.textContent = `${variant.label} ${i + 1}/3 実アプリで検証しています…`;
       const result = await runCase(files, mode, run); results.push(result);
       const card = document.querySelector(`[data-case="${mode}"]`); card.dataset.state = result.state; card.querySelector('.pill').textContent = result.state === 'INCONCLUSIVE' ? '判定不能' : result.state;
       card.querySelector('p').textContent = result.state === 'INCONCLUSIVE' ? result.detail : mode === 'abort' ? result.state === 'FAIL' ? 'キャンセル後、出力0件でも保存成功を表示。再試行のPDFは全2ページ正常。' : 'キャンセル時の誤った成功表示なし。再試行のPDFは全2ページ正常。' : '全2ページ・10個のテキスト・順序・90°回転が一致しました。';
+      const cell = row.querySelector(`[data-result="${mode}"]`); cell.dataset.state = result.state; cell.textContent = result.state === 'INCONCLUSIVE' ? '判定不能' : result.state;
     }
     const counts = Object.fromEntries(['PASS', 'FAIL', 'INCONCLUSIVE'].map(s => [s, results.filter(r => r.state === s).length]));
-    document.querySelector('#summary').textContent = `${counts.PASS} PASS / ${counts.FAIL} FAIL${counts.INCONCLUSIVE ? ` / ${counts.INCONCLUSIVE} 判定不能` : ''}`;
-    const report = { tool: 'App Crash Lab / PDF save completion', measuredAt: new Date().toISOString(), sourcePin: PIN, sourceFiles: Object.keys(FILES).length, elapsedMs: Math.round(performance.now() - started), syntheticOnly: true, saveApisSimulated: true, realOsWriteTested: false, browserFallbackIntercepted: true, counts, results };
+    document.querySelector('#summary').textContent = `${variant.label}: ${counts.PASS} PASS / ${counts.FAIL} FAIL${counts.INCONCLUSIVE ? ` / ${counts.INCONCLUSIVE} 判定不能` : ''}`;
+    const report = { tool: 'App Crash Lab / PDF save completion', measuredAt: new Date().toISOString(), sourceVariant: id, sourcePin: variant.pin, sourceFiles: Object.keys(variant.files).length, sourceBlobs: variant.files, elapsedMs: Math.round(performance.now() - started), syntheticOnly: true, saveApisSimulated: true, realOsWriteTested: false, browserFallbackIntercepted: true, counts, results };
+    row.querySelector('[data-measured-at]').textContent = new Date(report.measuredAt).toLocaleTimeString('ja-JP');
     document.querySelector('#report').textContent = JSON.stringify(report, null, 2);
     document.querySelector('#report-section').hidden = false;
     status.textContent = counts.INCONCLUSIVE ? '一部の検証を完了できませんでした。準備失敗は成功に数えていません。' : '検証完了。結果はこのブラウザ内だけに保持しています。';
   } catch (e) {
     currentFrame?.remove(); status.textContent = `判定不能：${String(e.message).slice(0, 180)}`;
-    for (const card of document.querySelectorAll('.check')) { card.dataset.state = 'INCONCLUSIVE'; card.querySelector('.pill').textContent = '判定不能'; }
-  } finally { runButton.disabled = false; runButton.textContent = 'もう一度3項目を検証'; }
-});
+    for (const card of document.querySelectorAll('.check')) { card.dataset.state = 'INCONCLUSIVE'; card.querySelector('.pill').textContent = '判定不能'; card.querySelector('p').textContent = 'この版の検証を準備できませんでした。取得した結果はありません。'; }
+    for (const cell of row.querySelectorAll('[data-result]')) { cell.dataset.state = 'INCONCLUSIVE'; cell.textContent = '判定不能'; }
+    row.querySelector('[data-measured-at]').textContent = '準備失敗';
+  } finally { runButton.disabled = fixedButton.disabled = false; }
+}
+runButton.addEventListener('click', () => runVariant('affected'));
+fixedButton.addEventListener('click', () => runVariant('fixed'));
 document.querySelector('#copy').addEventListener('click', async () => {
   try { await navigator.clipboard.writeText(document.querySelector('#report').textContent); document.querySelector('#copy').textContent = 'コピーしました'; }
   catch { document.querySelector('details').open = true; document.querySelector('#copy').textContent = '下のレポートを選択してコピー'; }
