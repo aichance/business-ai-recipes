@@ -73,8 +73,66 @@
     "actual_rust_or_sqlite": false,
     "actual_desktop_or_browser_reload": false,
     "indexeddb_fallback_tested": false,
-    "author_execution": false,
-    "adoption_credit": 0,
-    "api_requests_to_fixture_urls": 0
+    "author_execution": true,
+    "adoption_credit": 1,
+    "api_requests_to_fixture_urls": 0,
+    "author_execution_basis": "Public author report and committed test; original operator measurement is preserved above."
+  },
+  "author_adoption": {
+    "observed_at": "2026-10-21T10:17:01.297841+00:00",
+    "public_author": "azlanabdulla",
+    "author_id": 177459450,
+    "evidence_type": "public own-app author execution report and incorporated test",
+    "public_report_url": "https://github.com/azlanabdulla/OpenPost/blob/447408e31e57377a48f52bd28d174e8d57ef2ee0/docs/ISSUE_10_RESPONSE.md",
+    "source_pin": "447408e31e57377a48f52bd28d174e8d57ef2ee0",
+    "incorporated_test": "tests/historyClearFailure.test.ts",
+    "only_attribution_comment_changed": true,
+    "reported_passed": 3,
+    "reported_failed": 0,
+    "os_and_runtime_for_reported_test": "not specified in author report",
+    "independently_verified_desktop_or_sqlite": false
+  },
+  "upstream_fix": {
+    "source_pin": "447408e31e57377a48f52bd28d174e8d57ef2ee0",
+    "source_sha256": "0450a27b5a91c2d48a5e49b794c0d80f235f7382de212e0d42f06cb05e7172ec",
+    "measured_at": "2026-10-21T10:13:38.696000+00:00",
+    "command": "npm test -- tests/historyClearFailure.test.ts",
+    "environment": {
+      "node": "22.16.0",
+      "vitest": "5.0.5",
+      "vite": "6.4.4",
+      "typescript": "5.7.3",
+      "tauri_api": "2.12.4",
+      "harness": "upstream Vitest + jsdom"
+    },
+    "test_sha256": "b42051ebd7cc97645604684d66694a48931345971333974bd7fab728666c3232",
+    "test_unchanged": true,
+    "exit_code": 0,
+    "passed": 3,
+    "failed": 0,
+    "skipped": 0,
+    "cases": [
+      {
+        "name": "control: successful clear remains empty after the real loadHistory path",
+        "status": "passed",
+        "duration_ms": 3.3527919999999085
+      },
+      {
+        "name": "control: a pending clear does not announce completion",
+        "status": "passed",
+        "duration_ms": 0.8029169999999795
+      },
+      {
+        "name": "rejected clear keeps full visible history and never claims it was cleared",
+        "status": "passed",
+        "duration_ms": 0.64387499999998
+      }
+    ],
+    "ci_url": "https://github.com/azlanabdulla/OpenPost/actions/runs/39571558327",
+    "ci_conclusion": "success",
+    "vitest_ci_step": "success",
+    "ci_step_status_is_not_individual_test_log": true,
+    "actual_desktop_or_browser_reload": false,
+    "actual_rust_or_sqlite": false
   }
 }
