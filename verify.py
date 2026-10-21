@@ -16,6 +16,13 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "tools/app-crash-lab/examples/meet-clocks-native/README.md",
+    "tools/app-crash-lab/examples/meet-clocks-native/RESULTS.json",
+    "tools/app-crash-lab/examples/meet-clocks-native/sync-quota.spec.mjs",
+    "tools/app-crash-lab/examples/meet-clocks-native/package.json",
+    "tools/app-crash-lab/examples/meet-clocks-native/package-lock.json",
+    "tools/app-crash-lab/examples/meet-clocks-native/quota-before-reload.png",
+    "tools/app-crash-lab/examples/meet-clocks-native/quota-after-reload.png",
     "tools/app-crash-lab/examples/stockroom-native-delete/README.md",
     "tools/app-crash-lab/examples/stockroom-native-delete/RESULTS.json",
     "tools/app-crash-lab/examples/stockroom-native-delete/delete-completion.spec.js",
