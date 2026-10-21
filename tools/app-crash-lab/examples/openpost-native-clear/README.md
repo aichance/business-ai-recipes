@@ -28,9 +28,24 @@ The existing `historyStore` and `historyPanel` tests separately passed **12/12**
 
 A separate local diagnostic restored the previous entries and returned from the `clearHistory` catch block. The **same test file** then passed **3/3**. We restored the upstream source byte for byte afterward. That diagnostic is not a production fix: concurrent history updates, Undo and actual desktop persistence were not validated.
 
+## Author adoption and fixed version
+
+[OpenPost’s author incorporated this test and reports 3/3 passing](https://github.com/azlanabdulla/OpenPost/blob/447408e31e57377a48f52bd28d174e8d57ef2ee0/docs/ISSUE_10_RESPONSE.md) in fix [`447408e3`](https://github.com/azlanabdulla/OpenPost/commit/447408e31e57377a48f52bd28d174e8d57ef2ee0). The [upstream copy](https://github.com/azlanabdulla/OpenPost/blob/447408e31e57377a48f52bd28d174e8d57ef2ee0/tests/historyClearFailure.test.ts) changes only the attribution comment; all three cases and their assertions remain intact. This is a public author execution report, separate from our local reproduction.
+
+We then ran the original file, unchanged, against the author’s fixed source using the same Node 22.16.0, locked dependencies and command above:
+
+| Source | Passed | Failed | Skipped |
+| --- | --- | --- | --- |
+| Affected `4060be5f` | 2 | 1 | 0 |
+| Author fix `447408e3` | 3 | 0 | 0 |
+
+The fixed store waits for successful backend completion before removing the selected history, and preserves it when the injected IPC clear is refused. The same three checks cover successful clear/re-read, no premature completion while pending, and full history preservation without a false completion notice after rejection. Use the pinned fix in a disposable checkout to compare this result with your installed version; the test is already included there.
+
+The [CI run for the same fix](https://github.com/azlanabdulla/OpenPost/actions/runs/39571558327) completed successfully, including its Vitest step. Its job status is separate evidence from our three-case result. The author also describes Windows desktop and SQLite checks; we have not independently reproduced those checks and do not include them in our measurement.
+
 ## Boundary and reuse
 
-This is the actual application store and real toast store with a **mocked Tauri IPC boundary**. It does not run Rust, SQLite, the real desktop/WebView, the browser IndexedDB fallback or a real browser reload. The backend refusal is deliberately injected; no natural disk failure or author execution has been observed. Results are in [RESULTS.json](RESULTS.json).
+This is the actual application store and real toast store with a **mocked Tauri IPC boundary**. It does not run Rust, SQLite, the real desktop/WebView, the browser IndexedDB fallback or a real browser reload. The backend refusal is deliberately injected; no natural disk failure is demonstrated by our test. The author’s independent execution report is linked above. Results are in [RESULTS.json](RESULTS.json).
 
 For another app, reuse the three cases rather than the OpenPost imports: successful destructive action, pending action, then refused action. Define what your app promises after refusal and check the complete selected state separately from any completion notice. Keep the regression in the test suite you already use; retain real backend or UI tests for guarantees this boundary cannot establish.
 

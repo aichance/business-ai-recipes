@@ -6,7 +6,7 @@
 
 Add one persistence regression to the test setup your app already uses. Choose Playwright for browser behavior, or explicitly choose Vitest, Node tests or a registered JavaScript selfcheck for the data layer. Start with a measured example and keep the adapted test in your release checks. These paths need no App Crash Lab runtime or JSON contract.
 
-[**Copy a native test**](#copy-one-playwright-regression) · [**Ask your coding agent**](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#native-agent) · [**Check your own app**](#check-your-own-app) · [**Try a no-install example**](https://aichance.github.io/business-ai-recipes/test-the-test.html) · [**Contract format**](tools/app-crash-lab/CONTRACT.md)
+[**Try a real-app before/after**](https://aichance.github.io/business-ai-recipes/pdf-save-lab.html) · [**Copy a native test**](#copy-one-playwright-regression) · [**Ask your coding agent**](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#native-agent)
 
 **A saved landing page can roll back after a toolbar click in another tab.**
 
@@ -19,7 +19,7 @@ complete 67-node tree; only the earlier-tab case failed. [Run the native test
 and inspect the measurements](docs/livepage-template-proof.md). This is our local
 reproduction of an existing issue, separate from independent author use below.
 
-**Independently run on three authors’ own apps:** [Sethera](https://qiita.com/cuculhart/items/f020080b2ef1331222d0#comment-79c9c450f3a54f3ba6ac) and [nvim-edu](https://qiita.com/s3onghyun/items/7966ac7e6a534a84f9db#comment-2d25dc275d61b168ee4a) used earlier CLI checks and exported tests; [PDF_Studio’s author](https://qiita.com/yoyoyo2024/items/f4f08276c835cab80b53#comment-23d925ca8772b4a0cb9a) ran the standalone Playwright spec after fixing save cancellation. [Reported environments and scope](#independent-author-reports).
+**Independently run on four authors’ own apps:** [Sethera](https://qiita.com/cuculhart/items/f020080b2ef1331222d0#comment-79c9c450f3a54f3ba6ac) and [nvim-edu](https://qiita.com/s3onghyun/items/7966ac7e6a534a84f9db#comment-2d25dc275d61b168ee4a) used earlier CLI checks and exported tests; [PDF_Studio’s author](https://qiita.com/yoyoyo2024/items/f4f08276c835cab80b53#comment-23d925ca8772b4a0cb9a) ran the standalone Playwright spec after fixing save cancellation; [OpenPost’s author](https://github.com/azlanabdulla/OpenPost/blob/447408e31e57377a48f52bd28d174e8d57ef2ee0/docs/ISSUE_10_RESPONSE.md) incorporated the supplied Vitest regression and reports 3/3 passing. [Reported environments and scope](#independent-author-reports).
 
 ## Copy one Playwright regression
 
@@ -60,7 +60,7 @@ Use a disposable **local copy of your app**, with **Node 22+ and npm**.
 2. [**Copy the setup prompt**](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#agent). It asks the agent to inspect your actual save flow, write `my-app.json` and run the pinned checks. For JSON export/import, choose the [**backup setup prompt**](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#backup-agent) instead; it explicitly runs the real-file roundtrip.
 3. Review the contract, report and generated Playwright tests. If only reload applies, select it explicitly and report that rejected updates were not tested.
 
-The runner makes no LLM calls; optional agent setup uses your existing agent. Prefer manual setup? [Create, adapt and run a config](tools/app-crash-lab/README.md). [日本語の導入手順](tools/app-crash-lab/README.md#japanese-setup).
+The runner makes no LLM calls; optional agent setup uses your existing agent. Prefer manual setup? [Create, adapt and run a config](tools/app-crash-lab/README.md) · [Contract format](tools/app-crash-lab/CONTRACT.md). [日本語の導入手順](tools/app-crash-lab/README.md#japanese-setup).
 
 **Want Codex to prepare the test for your app?**
 With an existing Playwright suite, the skill starts with a matching native
@@ -162,6 +162,8 @@ If these checks are useful, [star the repository](https://github.com/aichance/bu
 **A second independent app author:** [nvim-edu's author reports](https://qiita.com/s3onghyun/items/7966ac7e6a534a84f9db#comment-2d25dc275d61b168ee4a) both CLI reload checks and both generated Playwright tests passing on their own Vim-learning app in a Playwright container. Their setup and test-coverage feedback led to a Python ZIP-extraction command and a second-attempt completion check. [Run the two lesson-progress checks](tools/app-crash-lab/examples/nvim-edu-progress). The report covers App Crash Lab0.6.2 and the original contracts; author execution of the revised contract is unconfirmed.
 
 **A third independent app author:** [PDF_Studio’s author reports](https://qiita.com/yoyoyo2024/items/f4f08276c835cab80b53#comment-23d925ca8772b4a0cb9a) running the supplied `pdf-save.spec.mjs` locally after fixing the false success message on cancellation. Normal save, denied-write fallback and cancellation/retry all passed. This is the standalone native test; the report does not specify OS or runtime versions. Our separate rerun of the unchanged spec on upstream fix `12849c4c` also passed all three checks. [Copy one file and inspect both measurements](tools/app-crash-lab/examples/pdf-save-native/README.md#author-run-and-upstream-fix).
+
+**A fourth independent app author:** [OpenPost’s author reports](https://github.com/azlanabdulla/OpenPost/blob/447408e31e57377a48f52bd28d174e8d57ef2ee0/docs/ISSUE_10_RESPONSE.md) incorporating our three-case Vitest regression into the app’s own suite and passing all three after fixing false “History Cleared” feedback. The [upstream test](https://github.com/azlanabdulla/OpenPost/blob/447408e31e57377a48f52bd28d174e8d57ef2ee0/tests/historyClearFailure.test.ts) preserves the supplied assertions; only its attribution comment changed. Our separate rerun of the original file on that fix also passed **3/3**, compared with **2 PASS / 1 FAIL** on the affected pin. This checks real stores with mocked Tauri IPC; our rerun does not establish Rust, SQLite or desktop behavior. [Copy the test and inspect both measurements](tools/app-crash-lab/examples/openpost-native-clear/README.md#author-adoption-and-fixed-version).
 
 ## Try the seeded demo
 
