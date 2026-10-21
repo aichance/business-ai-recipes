@@ -1,0 +1,9 @@
+{
+  "name": "meet-clocks-sync-boundary",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=22" },
+  "scripts": { "test": "playwright test sync-quota.spec.mjs --workers=1 --retries=0 --reporter=list" },
+  "devDependencies": { "@playwright/test": "1.64.0" }
+}
