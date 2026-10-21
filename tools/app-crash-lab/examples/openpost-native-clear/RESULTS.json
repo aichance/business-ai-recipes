@@ -1,0 +1,80 @@
+{
+  "measured_at": "2026-10-21T02:14:22.304486+00:00",
+  "application": "azlanabdulla/OpenPost",
+  "upstream_owner_type": "User",
+  "upstream_owner_id": 177459450,
+  "upstream_repo_id": 1424018331,
+  "source_pin": "4060be5f29384fe2a68a128dc8353db6f1429cbe",
+  "source_file": "src/stores/historyStore.ts",
+  "source_sha256": "e0506b1d2b6f40346fa450be38dccb0aff86308d45ccbffb7ac269082fea4c28",
+  "test_file": "tests/historyClearFailure.test.ts",
+  "test_sha256": "b42051ebd7cc97645604684d66694a48931345971333974bd7fab728666c3232",
+  "environment": {
+    "node": "22.16.0",
+    "vitest": "5.0.5",
+    "vite": "6.4.4",
+    "typescript": "5.7.3",
+    "tauri_api": "2.12.4",
+    "harness": "upstream Vitest + jsdom"
+  },
+  "command": "npm test -- tests/historyClearFailure.test.ts",
+  "original": {
+    "exit_code": 1,
+    "passed": 2,
+    "failed": 1,
+    "skipped": 0,
+    "cases": [
+      {
+        "name": "control: successful clear remains empty after the real loadHistory path",
+        "status": "passed",
+        "duration_ms": 2.9735000000000014
+      },
+      {
+        "name": "control: a pending clear does not announce completion",
+        "status": "passed",
+        "duration_ms": 1.0565000000000282
+      },
+      {
+        "name": "rejected clear keeps full visible history and never claims it was cleared",
+        "status": "failed",
+        "duration_ms": 4.283208999999999
+      }
+    ],
+    "rejected_clear": {
+      "mock_backend_rows": 2,
+      "visible_entries_after_await": [],
+      "completion_notice": "History Cleared",
+      "real_store_load_from_mock_backend_preserves_all_fixture_fields": true
+    }
+  },
+  "existing_related_tests": {
+    "command": "npm test -- tests/historyStore.test.ts tests/historyPanel.test.tsx",
+    "passed": 12,
+    "failed": 0,
+    "skipped": 0
+  },
+  "typecheck": {
+    "command": "npm run typecheck",
+    "exit_code": 0
+  },
+  "local_diagnostic": {
+    "description": "restore previous visible entries and return in the clearHistory catch block",
+    "passed": 3,
+    "failed": 0,
+    "source_restored_byte_exact": true,
+    "production_fix": false,
+    "upstream_changed": false
+  },
+  "boundary": {
+    "actual_store_module": true,
+    "real_toast_store": true,
+    "mocked_tauri_invoke": true,
+    "synthetic_records": true,
+    "actual_rust_or_sqlite": false,
+    "actual_desktop_or_browser_reload": false,
+    "indexeddb_fallback_tested": false,
+    "author_execution": false,
+    "adoption_credit": 0,
+    "api_requests_to_fixture_urls": 0
+  }
+}

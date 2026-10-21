@@ -14,6 +14,12 @@
 
 Use an installed compatible harness, supported runtime and your app's prerequisites. These requests need no App Crash Lab runner, skill installation or JSON contract. Vitest and Node data-layer results do not establish actual browser reload, peer-tab or real-file backup preservation. The contract-driven runner remains available below.
 
+**A refused clear still says “History Cleared.”** The [OpenPost native Vitest
+case](examples/openpost-native-clear/README.md) reproduces a false completion
+notice and empty visible store after a mocked Tauri IPC rejection. Copy one
+test into its existing suite; two controls pass and the rejection case fails.
+This store-level check does not run SQLite or the desktop app.
+
 Describe one working save flow and the values worth keeping. App Crash Lab
 checks **reload** and **rejected updates**, then gives you the changed values,
 a browser trace and ordinary Playwright tests you can rerun after a fix.
