@@ -16,6 +16,9 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "tools/app-crash-lab/examples/stockroom-native-delete/README.md",
+    "tools/app-crash-lab/examples/stockroom-native-delete/RESULTS.json",
+    "tools/app-crash-lab/examples/stockroom-native-delete/delete-completion.spec.js",
     "docs/about.html",
     "tools/app-crash-lab/examples/openpost-native-clear/README.md",
     "tools/app-crash-lab/examples/openpost-native-clear/RESULTS.json",

@@ -1,0 +1,223 @@
+{
+  "application": "mikoto2000/spring-boot-jquery-playwright-demo",
+  "upstream_owner_type": "User",
+  "upstream_owner_id": 345832,
+  "upstream_repo_id": 1428097498,
+  "source_pin": "4d0f76130fcd5d97ca38956ca2a5e4fca8ac2a41",
+  "test_file": "tests/e2e/delete-completion.spec.js",
+  "test_sha256": "02f6b2ae240a3b234c30beddbd5e59864dd4a336aa1225a8f9212025dba559a3",
+  "environment": {
+    "os": "macOS",
+    "node": "22.16.0",
+    "java": "Temurin 21.0.7",
+    "spring_boot": "4.1.1",
+    "maven": "3.9.11 via upstream wrapper",
+    "playwright": "1.64.1, Chromium project",
+    "profile": "e2e",
+    "base_url": "http://127.0.0.1:18765",
+    "database": "upstream disposable in-memory H2"
+  },
+  "original_eight": {
+    "command": "npm run test:e2e -- --reporter=json",
+    "started_at": "2026-10-21T11:11:23.538Z",
+    "duration_ms": 51577.759,
+    "exit_code": 0,
+    "passed": 8,
+    "failed": 0,
+    "skipped": 0,
+    "flaky": 0,
+    "cases": [
+      {
+        "name": "初期データを表示し、名前とカテゴリで絞り込める",
+        "project": "chromium",
+        "passed": true,
+        "duration_ms": 1563
+      },
+      {
+        "name": "未入力と不正な数量は登録せず、入力エラーを表示する",
+        "project": "chromium",
+        "passed": true,
+        "duration_ms": 2567
+      },
+      {
+        "name": "登録 → 検索 → 編集 → 再読み込み → 削除のデモシナリオ",
+        "project": "chromium",
+        "passed": true,
+        "duration_ms": 2550
+      },
+      {
+        "name": "編集のキャンセルでは保存されず、ゼロ個の備品も登録できる",
+        "project": "chromium",
+        "passed": true,
+        "duration_ms": 1926
+      },
+      {
+        "name": "API の取得失敗から再試行できる",
+        "project": "chromium",
+        "passed": true,
+        "duration_ms": 1057
+      },
+      {
+        "name": "保存失敗時は入力を保持し、再送できる",
+        "project": "chromium",
+        "passed": true,
+        "duration_ms": 1590
+      },
+      {
+        "name": "入力した HTML は文字列として表示される",
+        "project": "chromium",
+        "passed": true,
+        "duration_ms": 1717
+      },
+      {
+        "name": "API も不正入力を拒否し、存在しない備品は404になる",
+        "project": "chromium",
+        "passed": true,
+        "duration_ms": 839
+      }
+    ]
+  },
+  "added_three": {
+    "command": "npm run test:e2e -- tests/e2e/delete-completion.spec.js --reporter=json",
+    "started_at": "2026-10-21T11:23:22.459Z",
+    "duration_ms": 8281.114,
+    "exit_code": 0,
+    "passed": 3,
+    "failed": 0,
+    "skipped": 0,
+    "flaky": 0,
+    "cases": [
+      {
+        "name": "control: successful delete removes only the selected full record after reload",
+        "project": "chromium",
+        "passed": true,
+        "duration_ms": 859
+      },
+      {
+        "name": "control: a browser-paused delete preserves every record and claims no success",
+        "project": "chromium",
+        "passed": true,
+        "duration_ms": 567
+      },
+      {
+        "name": "refused delete preserves all full records, shows failure and can retry after reload",
+        "project": "chromium",
+        "passed": true,
+        "duration_ms": 843
+      }
+    ]
+  },
+  "combined_eleven": {
+    "command": "npm run test:e2e -- --reporter=json",
+    "started_at": "2026-10-21T11:24:59.002Z",
+    "duration_ms": 10579.508,
+    "exit_code": 0,
+    "passed": 11,
+    "failed": 0,
+    "skipped": 0,
+    "flaky": 0,
+    "cases": [
+      {
+        "name": "control: successful delete removes only the selected full record after reload",
+        "project": "chromium",
+        "passed": true,
+        "duration_ms": 617
+      },
+      {
+        "name": "control: a browser-paused delete preserves every record and claims no success",
+        "project": "chromium",
+        "passed": true,
+        "duration_ms": 367
+      },
+      {
+        "name": "refused delete preserves all full records, shows failure and can retry after reload",
+        "project": "chromium",
+        "passed": true,
+        "duration_ms": 492
+      },
+      {
+        "name": "初期データを表示し、名前とカテゴリで絞り込める",
+        "project": "chromium",
+        "passed": true,
+        "duration_ms": 452
+      },
+      {
+        "name": "未入力と不正な数量は登録せず、入力エラーを表示する",
+        "project": "chromium",
+        "passed": true,
+        "duration_ms": 1021
+      },
+      {
+        "name": "登録 → 検索 → 編集 → 再読み込み → 削除のデモシナリオ",
+        "project": "chromium",
+        "passed": true,
+        "duration_ms": 1369
+      },
+      {
+        "name": "編集のキャンセルでは保存されず、ゼロ個の備品も登録できる",
+        "project": "chromium",
+        "passed": true,
+        "duration_ms": 677
+      },
+      {
+        "name": "API の取得失敗から再試行できる",
+        "project": "chromium",
+        "passed": true,
+        "duration_ms": 451
+      },
+      {
+        "name": "保存失敗時は入力を保持し、再送できる",
+        "project": "chromium",
+        "passed": true,
+        "duration_ms": 678
+      },
+      {
+        "name": "入力した HTML は文字列として表示される",
+        "project": "chromium",
+        "passed": true,
+        "duration_ms": 555
+      },
+      {
+        "name": "API も不正入力を拒否し、存在しない備品は404になる",
+        "project": "chromium",
+        "passed": true,
+        "duration_ms": 256
+      }
+    ]
+  },
+  "source_preservation": {
+    "original_tracked_files": 30,
+    "all_committed_git_blobs_match": true,
+    "line_ending_normalization": "mvnw.cmd only: CRLF to LF for comparison, as declared by upstream .gitattributes",
+    "application_source_modified": false,
+    "new_test_file_only": true,
+    "e2e_server_stopped_after_run": true
+  },
+  "boundary": {
+    "actual_browser": true,
+    "actual_spring_boot": true,
+    "actual_h2": true,
+    "all_api_record_fields_compared": [
+      "id",
+      "name",
+      "category",
+      "quantity",
+      "status"
+    ],
+    "all_displayed_fields_compared": [
+      "name",
+      "category",
+      "quantity",
+      "status"
+    ],
+    "browser_boundary_delete_pause_and_http503": true,
+    "server_originated_503_tested": false,
+    "database_fault_or_rollback_tested": false,
+    "disk_durability_or_process_crash_tested": false,
+    "firefox_or_webkit_tested": false,
+    "independent_author_execution_verified": false,
+    "adoption_credit": 0,
+    "star_credit": 0
+  },
+  "timing_note": "Single runs with different Maven cache/compile states; not a speed comparison. Dependency downloads are additional first-run work."
+}
