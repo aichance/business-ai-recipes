@@ -17,6 +17,9 @@ from recipe import Refused, apply_local, approve, prepare, read_json, validate_p
 
 EXPECTED_FILES = {
     "docs/about.html",
+    "tools/app-crash-lab/examples/openpost-native-clear/README.md",
+    "tools/app-crash-lab/examples/openpost-native-clear/RESULTS.json",
+    "tools/app-crash-lab/examples/openpost-native-clear/historyClearFailure.test.ts",
     "tools/app-crash-lab/examples/task-packing-native/README.md",
     "tools/app-crash-lab/examples/task-packing-native/RESULTS.md",
     "tools/app-crash-lab/examples/task-packing-native/import-completion.spec.mjs",
