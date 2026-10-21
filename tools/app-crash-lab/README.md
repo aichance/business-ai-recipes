@@ -27,6 +27,13 @@ plus one attendee exceeds the 8,192-byte per-item quota. Two controls pass; the
 silent-refusal check fails. Older saved data remains intact. It uses a synthetic
 Meet host and a separate Playwright package, without a real meeting or account.
 
+**Renaming a root in an older tab removes a saved child.** The
+[NEBULARK standalone test](examples/nebulark-native/README.md) operates the real
+deployed Flutter web app, without storage mocks or an AI key. Same-tab and
+fresh-tab controls preserve every protected field; an earlier tab's root-only
+rename changes the persisted graph from two nodes to one. This is a measured
+web-bundle snapshot, not a source commit or the author's Flutter test suite.
+
 Describe one working save flow and the values worth keeping. App Crash Lab
 checks **reload** and **rejected updates**, then gives you the changed values,
 a browser trace and ordinary Playwright tests you can rerun after a fix.

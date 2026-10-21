@@ -16,6 +16,15 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "docs/app-crash-lab-nebulark-native.zip",
+    "docs/app-crash-lab-nebulark-native.zip.sha256",
+    "tools/app-crash-lab/examples/nebulark-native/README.md",
+    "tools/app-crash-lab/examples/nebulark-native/RESULTS.json",
+    "tools/app-crash-lab/examples/nebulark-native/stale-tab.spec.mjs",
+    "tools/app-crash-lab/examples/nebulark-native/package.json",
+    "tools/app-crash-lab/examples/nebulark-native/package-lock.json",
+    "tools/app-crash-lab/examples/nebulark-native/before-older-tab-save.png",
+    "tools/app-crash-lab/examples/nebulark-native/after-older-tab-save.png",
     "tools/app-crash-lab/examples/meet-clocks-native/README.md",
     "tools/app-crash-lab/examples/meet-clocks-native/RESULTS.json",
     "tools/app-crash-lab/examples/meet-clocks-native/sync-quota.spec.mjs",
@@ -771,6 +780,38 @@ def _verify_livepage_pack(root: Path) -> None:
     ):
         if results["portable"][field] != hashlib.sha256((source / file).read_bytes()).hexdigest():
             raise AssertionError(f"LivePage measured portable bytes mismatch: {file}")
+
+
+def _verify_nebulark_pack(root: Path) -> None:
+    source = root / "tools/app-crash-lab/examples/nebulark-native"
+    name = "app-crash-lab-nebulark-native.zip"
+    path = root / "docs" / name
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    if path.with_name(name + ".sha256").read_text().split() != [digest, name]:
+        raise AssertionError("NEBULARK checksum mismatch")
+    expected = {
+        "README.md",
+        "RESULTS.json",
+        "stale-tab.spec.mjs",
+        "package.json",
+        "package-lock.json",
+        "before-older-tab-save.png",
+        "after-older-tab-save.png",
+    }
+    with ZipFile(path) as archive:
+        if len(archive.namelist()) != len(expected) or set(archive.namelist()) != {
+            "nebulark-native/" + item for item in expected
+        }:
+            raise AssertionError("NEBULARK trial file set mismatch")
+        for item in expected:
+            if archive.read("nebulark-native/" + item) != (source / item).read_bytes():
+                raise AssertionError(f"NEBULARK trial differs from source: {item}")
+    result = json.loads((source / "RESULTS.json").read_text())
+    if (
+        result["nativeSpec"]["sha256"]
+        != hashlib.sha256((source / "stale-tab.spec.mjs").read_bytes()).hexdigest()
+    ):
+        raise AssertionError("NEBULARK measured spec hash mismatch")
 
 
 def _verify_native_livepage_pack(root: Path) -> None:
@@ -1793,6 +1834,7 @@ def verify(
     _verify_reading_assistant_pack(root)
     _verify_taglio_pack(root)
     _verify_livepage_pack(root)
+    _verify_nebulark_pack(root)
     _verify_native_livepage_pack(root)
     _verify_native_write_denied_pack(root)
     _verify_brainotes_native_pack(root)

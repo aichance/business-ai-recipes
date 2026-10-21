@@ -1,0 +1,262 @@
+{
+  "schema_version": 1,
+  "application": "NEBULARK",
+  "app_url": "https://nebulark.app/",
+  "author_article": "https://qiita.com/aburachudoku/items/a6d87871114d48deac8c",
+  "source_repository": null,
+  "source_commit": null,
+  "source_basis": "Unmodified deployed public web bundle; no source commit confirmed",
+  "main_dart_js_sha256": "799b678a90879a410138ba0118980462fd871595060766d1da2027c35212e295",
+  "started_at": "2026-10-21T18:20:45.860574+00:00",
+  "finished_at": "2026-10-21T18:23:46.352538+00:00",
+  "command": "NEBULARK_EXPECT_MAIN_SHA=799b678a90879a410138ba0118980462fd871595060766d1da2027c35212e295 npm test",
+  "exit_code": 1,
+  "summary": {
+    "passed": 2,
+    "failed": 1,
+    "expected_failure_annotation": false
+  },
+  "nativeSpec": {
+    "file": "stale-tab.spec.mjs",
+    "sha256": "1dac3ea2f2a6efa7ceede08c19df67e5a8602c5628d66a4a27016e32874bc2e1"
+  },
+  "environment": {
+    "node": "22.16.0",
+    "playwright": "1.64.0",
+    "chromium": "156.0.8078.4",
+    "os": "macOS arm64",
+    "viewport": {
+      "width": 1280,
+      "height": 900
+    },
+    "locale": "ja-JP",
+    "timezone": "UTC",
+    "fresh_owned_browser_context_per_case": true,
+    "existing_user_profile": false
+  },
+  "protocol": {
+    "actions": "Actual app UI pointer clicks and focused keyboard typing; foreground tab switching; wait for inline editor to close before reading real localStorage",
+    "read_storage_keys": [
+      "flutter.mindmap_index",
+      "flutter.mindmap_nodes_<map UUID>"
+    ],
+    "protected": "Complete child, root except intended title/edit timestamp, complete map index, exact node-ID set",
+    "allowed_network": "GET/HEAD public app/static Flutter renderer/fonts only; no AI/API/account requests",
+    "injected_storage_errors_or_state": false
+  },
+  "cases": [
+    {
+      "case": "stale-tab-a-previously-ope-107de-ed-child-when-renaming-root",
+      "result": "FAIL_SAVED_CHILD_REMOVED",
+      "started_at": "2026-10-21T18:22:31.397Z",
+      "finished_at": "2026-10-21T18:23:46.129Z",
+      "before_count": 2,
+      "after_reload_count": 1,
+      "same_map_and_complete_index": true,
+      "before_child": {
+        "id": "39f80c98-6c80-4675-8898-c6ef65e8a429",
+        "title": "CLAB New Child",
+        "markdownNote": "",
+        "position": {
+          "dx": 220,
+          "dy": 0
+        },
+        "childrenIds": [],
+        "isCollapsed": false,
+        "colorKey": null,
+        "updatedAt": "2026-10-21T18:23:26.389"
+      },
+      "after_child": null,
+      "before_root": {
+        "id": "ac5bebcb-a7ae-4962-a593-ce167b8b380e",
+        "title": "CLAB Root",
+        "markdownNote": "",
+        "position": {
+          "dx": 0,
+          "dy": 0
+        },
+        "childrenIds": [
+          "39f80c98-6c80-4675-8898-c6ef65e8a429"
+        ],
+        "isCollapsed": false,
+        "colorKey": null,
+        "updatedAt": "2026-10-21T18:23:18.816"
+      },
+      "after_root": {
+        "id": "ac5bebcb-a7ae-4962-a593-ce167b8b380e",
+        "title": "CLAB Older Tab",
+        "markdownNote": "",
+        "position": {
+          "dx": 0,
+          "dy": 0
+        },
+        "childrenIds": [],
+        "isCollapsed": false,
+        "colorKey": null,
+        "updatedAt": "2026-10-21T18:23:34.928"
+      },
+      "main_bundle_reads": 3,
+      "all_main_bundle_hashes_match": true,
+      "page_errors": [],
+      "owned_browser_closed": true,
+      "network_methods": [
+        "GET"
+      ],
+      "storage_state_or_error_injection": false
+    },
+    {
+      "case": "stale-tab-control-newly-op-5811b-s-child-while-renaming-root",
+      "result": "PASS",
+      "started_at": "2026-10-21T18:21:39.088Z",
+      "finished_at": "2026-10-21T18:22:30.684Z",
+      "before_count": 2,
+      "after_reload_count": 2,
+      "same_map_and_complete_index": true,
+      "before_child": {
+        "id": "e99a9f1b-8d3a-46da-af61-e2f73dfd19cb",
+        "title": "CLAB New Child",
+        "markdownNote": "",
+        "position": {
+          "dx": 220,
+          "dy": 0
+        },
+        "childrenIds": [],
+        "isCollapsed": false,
+        "colorKey": null,
+        "updatedAt": "2026-10-21T18:21:51.002"
+      },
+      "after_child": {
+        "id": "e99a9f1b-8d3a-46da-af61-e2f73dfd19cb",
+        "title": "CLAB New Child",
+        "markdownNote": "",
+        "position": {
+          "dx": 220,
+          "dy": 0
+        },
+        "childrenIds": [],
+        "isCollapsed": false,
+        "colorKey": null,
+        "updatedAt": "2026-10-21T18:21:51.002"
+      },
+      "before_root": {
+        "id": "2f7c52e2-d5ad-4e69-ab6a-e6e5ee8f5b4f",
+        "title": "CLAB Root",
+        "markdownNote": "",
+        "position": {
+          "dx": 0,
+          "dy": 0
+        },
+        "childrenIds": [
+          "e99a9f1b-8d3a-46da-af61-e2f73dfd19cb"
+        ],
+        "isCollapsed": false,
+        "colorKey": null,
+        "updatedAt": "2026-10-21T18:21:48.949"
+      },
+      "after_root": {
+        "id": "2f7c52e2-d5ad-4e69-ab6a-e6e5ee8f5b4f",
+        "title": "CLAB Fresh Tab",
+        "markdownNote": "",
+        "position": {
+          "dx": 0,
+          "dy": 0
+        },
+        "childrenIds": [
+          "e99a9f1b-8d3a-46da-af61-e2f73dfd19cb"
+        ],
+        "isCollapsed": false,
+        "colorKey": null,
+        "updatedAt": "2026-10-21T18:22:18.617"
+      },
+      "main_bundle_reads": 3,
+      "all_main_bundle_hashes_match": true,
+      "page_errors": [],
+      "owned_browser_closed": true,
+      "network_methods": [
+        "GET"
+      ],
+      "storage_state_or_error_injection": false
+    },
+    {
+      "case": "stale-tab-control-same-tab-41496-ough-root-rename-and-reload",
+      "result": "PASS",
+      "started_at": "2026-10-21T18:21:11.274Z",
+      "finished_at": "2026-10-21T18:21:38.738Z",
+      "before_count": 2,
+      "after_reload_count": 2,
+      "same_map_and_complete_index": true,
+      "before_child": {
+        "id": "18bf89e5-cccf-4b44-8cd9-7bb62eab4432",
+        "title": "CLAB New Child",
+        "markdownNote": "",
+        "position": {
+          "dx": 220,
+          "dy": 0
+        },
+        "childrenIds": [],
+        "isCollapsed": false,
+        "colorKey": null,
+        "updatedAt": "2026-10-21T18:21:30.232"
+      },
+      "after_child": {
+        "id": "18bf89e5-cccf-4b44-8cd9-7bb62eab4432",
+        "title": "CLAB New Child",
+        "markdownNote": "",
+        "position": {
+          "dx": 220,
+          "dy": 0
+        },
+        "childrenIds": [],
+        "isCollapsed": false,
+        "colorKey": null,
+        "updatedAt": "2026-10-21T18:21:30.232"
+      },
+      "before_root": {
+        "id": "fd1cd2eb-7f47-47d8-8925-bc8ce58f3e14",
+        "title": "CLAB Root",
+        "markdownNote": "",
+        "position": {
+          "dx": 0,
+          "dy": 0
+        },
+        "childrenIds": [
+          "18bf89e5-cccf-4b44-8cd9-7bb62eab4432"
+        ],
+        "isCollapsed": false,
+        "colorKey": null,
+        "updatedAt": "2026-10-21T18:21:27.765"
+      },
+      "after_root": {
+        "id": "fd1cd2eb-7f47-47d8-8925-bc8ce58f3e14",
+        "title": "CLAB Same Tab",
+        "markdownNote": "",
+        "position": {
+          "dx": 0,
+          "dy": 0
+        },
+        "childrenIds": [
+          "18bf89e5-cccf-4b44-8cd9-7bb62eab4432"
+        ],
+        "isCollapsed": false,
+        "colorKey": null,
+        "updatedAt": "2026-10-21T18:21:32.057"
+      },
+      "main_bundle_reads": 2,
+      "all_main_bundle_hashes_match": true,
+      "page_errors": [],
+      "owned_browser_closed": true,
+      "network_methods": [
+        "GET"
+      ],
+      "storage_state_or_error_injection": false
+    }
+  ],
+  "limits": [
+    "Our execution is not independent third-party adoption.",
+    "Author-reported 1118 Flutter tests were not run by us.",
+    "No source commit, general Flutter issue or fixed deployment established.",
+    "JSON backup, AI features, mobile and cloud synchronization are untested.",
+    "Fixed Japanese 1280x900 UI fixture; locator or input setup failures are not data-loss findings.",
+    "Earlier invalid harness attempts and a wrapper timeout were excluded from this accepted matrix."
+  ]
+}
