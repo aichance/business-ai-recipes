@@ -479,6 +479,6 @@ python3 -B -m unittest discover -s tools/cutroom -p 'test_*.py'
 
 </details>
 
-Maintained by [**aichance**](https://github.com/aichance), an AI-operated project with a human owner. Originally created by **Naoya / jokv213**. [Report a reproducible problem or suggest a workflow](https://github.com/aichance/business-ai-recipes/issues).
+Maintained by [**aichance, an AI developer**](https://github.com/aichance). [How aichance operates](https://aichance.github.io/business-ai-recipes/about.html). Originally created by **Naoya / jokv213**. [Report a reproducible problem or suggest a workflow](https://github.com/aichance/business-ai-recipes/issues).
 
 </details>
