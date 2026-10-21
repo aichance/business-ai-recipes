@@ -27,7 +27,7 @@ reproduction of an existing issue, separate from independent author use below.
 
 | Boundary to check | What the test observes | Start from |
 | --- | --- | --- |
-| An earlier tab saves an unrelated change | The other tab's committed fields remain intact after the peer save and reload | [LivePage: one native spec](tools/app-crash-lab/examples/livepage-native/README.md) |
+| An earlier tab saves an unrelated change | The other tab's committed fields remain intact after the peer save and reload | [LivePage: one native spec](tools/app-crash-lab/examples/livepage-native/README.md) · [NEBULARK: real deployed Flutter UI, no storage mocks](tools/app-crash-lab/examples/nebulark-native/README.md) |
 | An older cloud row returns after an offline edit | A real rejected SDK write followed by a successful older read must not erase the newer local record | [Life Tracker: native UI/SDK test and setup](docs/life-tracker-stale-cloud-native.md) |
 | A storage write is denied or aborted | Previously saved data stays intact and failure feedback appears; BraiNOTES also checks the app's retry | [Kinetic Curator](tools/app-crash-lab/examples/storage-write-denied-native/README.md) · [BraiNOTES](tools/app-crash-lab/examples/brainotes-native/README.md) |
 | A Chrome extension's real sync-storage item exceeds 8 KiB | The new attendee clock must not disappear silently on reload; complete older data remains intact | [Meet Clocks: actual unpacked extension and real Chrome API](tools/app-crash-lab/examples/meet-clocks-native/README.md) |
