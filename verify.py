@@ -16,6 +16,13 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "tools/app-crash-lab/examples/numberplace-native/README.md",
+    "tools/app-crash-lab/examples/numberplace-native/RESULTS.json",
+    "tools/app-crash-lab/examples/numberplace-native/share-url.spec.mjs",
+    "tools/app-crash-lab/examples/numberplace-native/playwright.config.mjs",
+    "tools/app-crash-lab/examples/numberplace-native/fetch-source.mjs",
+    "tools/app-crash-lab/examples/numberplace-native/before-share.png",
+    "tools/app-crash-lab/examples/numberplace-native/after-share.png",
     "tools/app-crash-lab/examples/relationship-native/README.md",
     "tools/app-crash-lab/examples/relationship-native/relations.mjs",
     "tools/app-crash-lab/examples/relationship-native/demo.mjs",

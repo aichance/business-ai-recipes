@@ -37,6 +37,13 @@ fresh-tab controls preserve every protected field; an earlier tab's root-only
 rename changes the persisted graph from two nodes to one. This is a measured
 web-bundle snapshot, not a source commit or the author's Flutter test suite.
 
+**Re-sharing a puzzle can change the puzzle.** The
+[NumberPlace clipboard test](examples/numberplace-native/README.md) compares
+all 81 cells, title and author across the real share button, a fresh context
+and reload. A special-character title moves the board data outside the query;
+the unchanged local HTML generates another puzzle. Two controls pass. This
+separate URL-transfer example does not establish saved-data durability.
+
 Describe one working save flow and the values worth keeping. App Crash Lab
 checks **reload** and **rejected updates**, then gives you the changed values,
 a browser trace and ordinary Playwright tests you can rerun after a fix.
