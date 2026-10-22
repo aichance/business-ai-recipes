@@ -212,7 +212,7 @@ Your app rejects input with a native `alert()`? The [Sethera example](tools/app-
 
 An importer asks “Replace the current document?” before parsing? The [FloorPlanner example](tools/app-crash-lab/examples/FLOORPLANNER.md) accepts one declared confirmation, then separately checks the parse error and unchanged saved data. Requires App Crash Lab 0.4+.
 
-[Saved annotation versus unfinished draft](tools/app-crash-lab/examples/extensive-reading-assistant): one real save passes; two dedicated draft regressions reproduce an already-open issue without an API key.
+[Saved annotation versus unfinished draft](tools/app-crash-lab/examples/extensive-reading-assistant): the original two draft regressions fail on the affected version and pass unchanged on the author’s fix, without an API key. [Compare the measured results](tools/app-crash-lab/examples/extensive-reading-assistant/FIXED.md).
 
 Already have a Playwright suite? [Compare the two routes on the same app](tools/app-crash-lab/examples/direct-playwright/README.md), including a runnable direct test and the tradeoffs.
 

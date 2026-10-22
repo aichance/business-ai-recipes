@@ -281,6 +281,8 @@ EXPECTED_FILES = {
     "tools/app-crash-lab/examples/extensive-reading-assistant/LICENSE",
     "tools/app-crash-lab/examples/extensive-reading-assistant/README.md",
     "tools/app-crash-lab/examples/extensive-reading-assistant/SOURCE.json",
+    "tools/app-crash-lab/examples/extensive-reading-assistant/FIXED-RESULTS.json",
+    "tools/app-crash-lab/examples/extensive-reading-assistant/FIXED.md",
     "tools/app-crash-lab/examples/extensive-reading-assistant/annotation.json",
     "tools/app-crash-lab/examples/extensive-reading-assistant/annotation-known-control.json",
     "tools/app-crash-lab/examples/extensive-reading-assistant/drafts.spec.mjs",
