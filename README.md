@@ -10,6 +10,46 @@ Our four-call demonstration: normal file → base marker received; override adde
 
 Node 22+, Codex CLI 0.163.0+, macOS/Linux, and existing gpt-6.1-sol/MAX access. Live runs consume that account's quota. No npm dependencies. The first release tests startup guidance; hooks, MCP and compaction are outside its scope.
 
+### First run: keep the check files outside your project
+
+After extracting the ZIP, open its `agent-relay-check` directory. The following works from the cloned `tools/agent-relay-check` directory too. Create a new temporary workspace and confirm it is **outside the project you intend to check**; don't put challenge or result files inside that project.
+
+```sh
+RELAY_WORK="$(mktemp -d "${TMPDIR:-/tmp}/agent-relay.XXXXXX")"
+node cli.mjs prepare --keys project_probe --out "$RELAY_WORK/before"
+```
+
+Append the diagnostic block from `$RELAY_WORK/before/instruction.md` to the existing instruction file you want to check. Do not replace the original instructions or paste `challenge.json` into the agent. Keep this shell open so `RELAY_WORK` still points to the same directory. Replace the quoted example below with your actual startup directory (the child directory when checking its guidance):
+
+```sh
+node cli.mjs run \
+  --project "/absolute/path/to/your project" \
+  --challenge "$RELAY_WORK/before/challenge.json" \
+  --out "$RELAY_WORK/result-before" \
+  --live
+```
+
+This makes **one model call**. A directory name containing spaces must stay quoted. Each output directory must be new; a rejected path or preflight is not a failed receipt. [Read the three possible results](tools/agent-relay-check/README.md#read-the-result).
+
+After a settings or CLI change, keep the same shell and marker name. Prepare a fresh block, **replace only the previous diagnostic block** in the same instruction file, and run once more:
+
+```sh
+node cli.mjs prepare --keys project_probe --out "$RELAY_WORK/after"
+# Replace the old block with the one in "$RELAY_WORK/after/instruction.md", then:
+node cli.mjs run \
+  --project "/absolute/path/to/your project" \
+  --challenge "$RELAY_WORK/after/challenge.json" \
+  --out "$RELAY_WORK/result-after" \
+  --live
+node cli.mjs compare \
+  --before "$RELAY_WORK/result-before/report.json" \
+  --after "$RELAY_WORK/result-after/report.json"
+```
+
+Keep the startup directory the same and record what changed. The second live check makes one additional model call; preparation and comparison are offline. Remove only the diagnostic block when finished. For another comparison, start a new temporary workspace so none of the output directories already exists.
+
+To start without editing your own instructions, use `node examples/override.mjs --out "$RELAY_WORK/demo" --live`. This alternative requires **Git** as well as the prerequisites above and makes **four model calls** in a disposable project. The v0.1.0 download is unchanged; these workspace examples clarify its original instructions.
+
 ---
 
 ## App Crash Lab
