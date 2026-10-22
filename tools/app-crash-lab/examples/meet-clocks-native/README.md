@@ -15,6 +15,14 @@ These are **our operator-run measurements**, separate from the author's public f
 
 The images are direct screenshots of the native extension panel on an empty synthetic host. The red banner in the fixed image is a night-time reminder for Jordan's time zone, not a storage error. Both tests use synthetic names and a fresh browser profile. [Selected measurements and complete synthetic records](RESULTS-fallback.json).
 
+## Download just this example
+
+[Download the 199 KB Playwright package (.zip)](https://github.com/user-attachments/files/33792602/meet-clocks-fallback-playwright.zip). Unzip it, open a terminal in `meet-clocks-fallback-playwright/`, then follow the setup below. You do not need to clone the whole App Crash Lab repository.
+
+The 12-file package contains the tests, pinned npm manifest and lock, measurements, screenshots and MIT license from the [measured PR #166 snapshot](https://github.com/aichance/business-ai-recipes/tree/8ab4cd3e5eb8b5a5cc03c7668d20d8d1eb44d333/tools/app-crash-lab/examples/meet-clocks-native). The extension source and installed dependencies are separate.
+
+ZIP SHA-256: `4762c13e8106bc73d70dcc6a278a447f9078f6dd92d79ca43d24c690af4e9841`.
+
 ## Run three ordinary Playwright tests
 
 The upstream project has Python/CDP QA, not an existing Playwright Test suite. This is a separate small package with one fallback-aware [test file](storage-boundary.spec.mjs). It needs Node 22+, npm and Playwright's bundled Chromium; no App Crash Lab runtime, JSON contract, Google login, relay or API key.
