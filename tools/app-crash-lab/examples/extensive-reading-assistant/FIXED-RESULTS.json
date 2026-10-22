@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-10-22T03:16:57.991Z",
+  "verificationOwner": "aichance operator, not an upstream author execution report",
+  "upstream": "https://github.com/pomodorozhong/extensive-reading-assistant",
+  "upstreamCommit": "cd75ea960fb73c23b34fe7b1d355698a429a672c",
+  "upstreamPR": "https://github.com/pomodorozhong/extensive-reading-assistant/pull/32",
+  "upstreamArchiveSha256": "9dc8d85db2f14ff39ee9650d2bb50d79cf866eb232d40f015cc97f0679dc6e1e",
+  "upstreamSourceFileCount": 75,
+  "allOriginalSourceFilesByteUnchanged": true,
+  "environment": {
+    "os": "macOS arm64",
+    "node": "22.16.0",
+    "playwright": "1.64.0",
+    "browser": "Chromium",
+    "freshContextPerCase": true,
+    "serviceWorkers": "blocked",
+    "requestsAllowed": "HTTP loopback app origin only",
+    "apiKeyEntered": false,
+    "storyGenerated": false
+  },
+  "testFiles": [
+    {
+      "file": "drafts.spec.mjs",
+      "sha256": "7f1a2fd611d92bb76f970c1f21d4901d5d12a94f45b0b8a7e767f04a4deb24b2",
+      "executedBytesMatchPublishedFile": true
+    },
+    {
+      "file": "playwright.config.mjs",
+      "sha256": "63737524b3f83002c80087da1e569f28e73a507ed867f511115241970a5375fc",
+      "executedBytesMatchPublishedFile": true
+    }
+  ],
+  "result": {
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0,
+    "flaky": 0,
+    "retries": 0,
+    "exitCode": 0,
+    "reportedSuiteDurationMs": 24377
+  },
+  "cases": [
+    {
+      "name": "unfinished draft survives a full reload",
+      "status": "passed",
+      "observation": {
+        "transition": "reload",
+        "expected": {
+          "theme": "Synthetic draft: a library on the moon",
+          "level": "B1",
+          "length": "5 min",
+          "model": "Gemini 3.1 Flash Lite"
+        },
+        "actual": {
+          "theme": "Synthetic draft: a library on the moon",
+          "level": "B1",
+          "length": "5 min",
+          "model": "Gemini 3.1 Flash Lite"
+        },
+        "savedStoryCount": 0
+      }
+    },
+    {
+      "name": "unfinished draft survives Settings navigation and return",
+      "status": "passed",
+      "observation": {
+        "transition": "Settings and return",
+        "expected": {
+          "theme": "Synthetic draft: a library on the moon",
+          "level": "B1",
+          "length": "5 min",
+          "model": "Gemini 3.1 Flash Lite"
+        },
+        "actual": {
+          "theme": "Synthetic draft: a library on the moon",
+          "level": "B1",
+          "length": "5 min",
+          "model": "Gemini 3.1 Flash Lite"
+        },
+        "savedStoryCount": 0
+      }
+    }
+  ],
+  "baseline": {
+    "commit": "e1b39449b0f5ae04d83dc650f7b1397bdbcc61b9",
+    "measuredOn": "2026-10-16",
+    "passed": 0,
+    "failed": 2,
+    "rerunOnThisDate": false,
+    "expectedFailureLocation": "post-transition draft choice comparison"
+  },
+  "notVerified": [
+    "multiple-model choice persistence: only one supported model",
+    "dedicated Back to New Story link",
+    "generation and successful-generation draft clearing",
+    "credential exclusion",
+    "saved-story/vocabulary migration",
+    "saved-annotation baseline control on this fixed pin",
+    "whole-feature, accessibility, PWA, mobile or Windows acceptance"
+  ],
+  "independentAdoptionCredit": 0,
+  "organicStarCredit": 0
+}
