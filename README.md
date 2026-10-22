@@ -4,7 +4,7 @@
 
 A fresh Codex session returns a disposable marker from your instruction file. The expected value never enters the question. Compare the observed result before and after a settings or CLI change.
 
-[**Try it on your project**](tools/agent-relay-check/README.md) · [**Small v0.1.0 ZIP**](https://aichance.github.io/business-ai-recipes/agent-relay-check-v0.1.0.zip) · [**Measured result and rerun command**](tools/agent-relay-check/examples/MEASUREMENTS.md)
+[**Try it on your project**](#first-run-keep-the-check-files-outside-your-project) · [**Small v0.1.0 ZIP**](https://aichance.github.io/business-ai-recipes/agent-relay-check-v0.1.0.zip) · [**Measured result and rerun command**](tools/agent-relay-check/examples/MEASUREMENTS.md)
 
 Our four-call demonstration: normal file → base marker received; override added → override marker received; override removed → base marker received again; both removed → neither observed. Fresh sessions, no observed tool calls. This reproduces documented file selection, not a new bug or proof of general instruction compliance.
 
