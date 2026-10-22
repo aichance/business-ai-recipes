@@ -16,6 +16,23 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    'tools/agent-relay-check/AGENTS.md',
+    'tools/agent-relay-check/LICENSE',
+    'tools/agent-relay-check/README.md',
+    'tools/agent-relay-check/cli.mjs',
+    'tools/agent-relay-check/examples/MEASUREMENTS.md',
+    'tools/agent-relay-check/examples/override-results.json',
+    'tools/agent-relay-check/examples/override.mjs',
+    'tools/agent-relay-check/lib/codex.mjs',
+    'tools/agent-relay-check/lib/observation.mjs',
+    'tools/agent-relay-check/lib/protocol.mjs',
+    'tools/agent-relay-check/lib/rpc.mjs',
+    'tools/agent-relay-check/package.json',
+    'tools/agent-relay-check/test/adapter.test.mjs',
+    'tools/agent-relay-check/test/protocol.test.mjs',
+    'tools/agent-relay-check/test/rpc.test.mjs',
+    'docs/agent-relay-check-v0.1.0.zip',
+    'docs/agent-relay-check-v0.1.0.zip.sha256',
     "tools/app-crash-lab/examples/relationship-native/README.md",
     "tools/app-crash-lab/examples/relationship-native/relations.mjs",
     "tools/app-crash-lab/examples/relationship-native/demo.mjs",
@@ -1976,8 +1993,24 @@ def verify(
     }
 
 
+def verify_relay_archive() -> None:
+    root = Path(__file__).resolve().parent
+    archive = root / "docs/agent-relay-check-v0.1.0.zip"
+    expected_hash = Path(str(archive) + ".sha256").read_text().split()[0]
+    assert hashlib.sha256(archive.read_bytes()).hexdigest() == expected_hash
+    tool = root / "tools/agent-relay-check"
+    expected = {"agent-relay-check/" + str(p.relative_to(tool)): p.read_bytes()
+                for p in tool.rglob("*") if p.is_file()}
+    with ZipFile(archive) as bundle:
+        assert len(bundle.namelist()) == len(expected)
+        assert set(bundle.namelist()) == set(expected)
+        for name, content in expected.items():
+            assert bundle.read(name) == content, name
+
+
 def main() -> int:
     try:
+        verify_relay_archive()
         result = verify()
     except (AssertionError, OSError, ValueError) as exc:
         print(f"VERIFY_FAILED: {exc}", file=sys.stderr)

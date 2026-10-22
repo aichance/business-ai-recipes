@@ -1,0 +1,197 @@
+{
+  "type": "authored synthetic demonstration; not independent adoption or a new bug",
+  "same_project_directory": true,
+  "fresh_challenge_per_case": true,
+  "cases": [
+    {
+      "name": "normal",
+      "markers": [
+        {
+          "key": "base_only",
+          "status": "RECEIVED"
+        },
+        {
+          "key": "override_only",
+          "status": "NOT_OBSERVED"
+        }
+      ],
+      "execution": {
+        "adapter": "codex-app-server",
+        "client_version": "codex-cli 0.163.0",
+        "model_requested": "gpt-6.1-sol",
+        "effort_requested": "max",
+        "model_observed": "gpt-6.1-sol",
+        "effort_observed": "max",
+        "configuration": "guidance-with-tools-and-hooks-disabled",
+        "transport_completed": true,
+        "cleanup_confirmed": true,
+        "tool_calls": 0,
+        "fresh_session": true,
+        "turn_completed": true,
+        "duration_ms": 11458
+      },
+      "report": "normal/report.json"
+    },
+    {
+      "name": "override",
+      "markers": [
+        {
+          "key": "base_only",
+          "status": "NOT_OBSERVED"
+        },
+        {
+          "key": "override_only",
+          "status": "RECEIVED"
+        }
+      ],
+      "execution": {
+        "adapter": "codex-app-server",
+        "client_version": "codex-cli 0.163.0",
+        "model_requested": "gpt-6.1-sol",
+        "effort_requested": "max",
+        "model_observed": "gpt-6.1-sol",
+        "effort_observed": "max",
+        "configuration": "guidance-with-tools-and-hooks-disabled",
+        "transport_completed": true,
+        "cleanup_confirmed": true,
+        "tool_calls": 0,
+        "fresh_session": true,
+        "turn_completed": true,
+        "duration_ms": 18032
+      },
+      "report": "override/report.json"
+    },
+    {
+      "name": "restored",
+      "markers": [
+        {
+          "key": "base_only",
+          "status": "RECEIVED"
+        },
+        {
+          "key": "override_only",
+          "status": "NOT_OBSERVED"
+        }
+      ],
+      "execution": {
+        "adapter": "codex-app-server",
+        "client_version": "codex-cli 0.163.0",
+        "model_requested": "gpt-6.1-sol",
+        "effort_requested": "max",
+        "model_observed": "gpt-6.1-sol",
+        "effort_observed": "max",
+        "configuration": "guidance-with-tools-and-hooks-disabled",
+        "transport_completed": true,
+        "cleanup_confirmed": true,
+        "tool_calls": 0,
+        "fresh_session": true,
+        "turn_completed": true,
+        "duration_ms": 18144
+      },
+      "report": "restored/report.json"
+    },
+    {
+      "name": "absent",
+      "markers": [
+        {
+          "key": "base_only",
+          "status": "NOT_OBSERVED"
+        },
+        {
+          "key": "override_only",
+          "status": "NOT_OBSERVED"
+        }
+      ],
+      "execution": {
+        "adapter": "codex-app-server",
+        "client_version": "codex-cli 0.163.0",
+        "model_requested": "gpt-6.1-sol",
+        "effort_requested": "max",
+        "model_observed": "gpt-6.1-sol",
+        "effort_observed": "max",
+        "configuration": "guidance-with-tools-and-hooks-disabled",
+        "transport_completed": true,
+        "cleanup_confirmed": true,
+        "tool_calls": 0,
+        "fresh_session": true,
+        "turn_completed": true,
+        "duration_ms": 12884
+      },
+      "report": "absent/report.json"
+    }
+  ],
+  "comparisons": [
+    {
+      "from": "normal",
+      "to": "override",
+      "result": {
+        "schema_version": 1,
+        "same_challenge": false,
+        "markers": [
+          {
+            "key": "base_only",
+            "before": "RECEIVED",
+            "after": "NOT_OBSERVED",
+            "result": "CHANGED"
+          },
+          {
+            "key": "override_only",
+            "before": "NOT_OBSERVED",
+            "after": "RECEIVED",
+            "result": "CHANGED"
+          }
+        ],
+        "runtime_changes": [],
+        "limit": "Observed differences do not establish their cause. Record what changed in the instruction path, project and client. Prefer fresh markers for each run."
+      }
+    },
+    {
+      "from": "override",
+      "to": "restored",
+      "result": {
+        "schema_version": 1,
+        "same_challenge": false,
+        "markers": [
+          {
+            "key": "base_only",
+            "before": "NOT_OBSERVED",
+            "after": "RECEIVED",
+            "result": "CHANGED"
+          },
+          {
+            "key": "override_only",
+            "before": "RECEIVED",
+            "after": "NOT_OBSERVED",
+            "result": "CHANGED"
+          }
+        ],
+        "runtime_changes": [],
+        "limit": "Observed differences do not establish their cause. Record what changed in the instruction path, project and client. Prefer fresh markers for each run."
+      }
+    },
+    {
+      "from": "restored",
+      "to": "absent",
+      "result": {
+        "schema_version": 1,
+        "same_challenge": false,
+        "markers": [
+          {
+            "key": "base_only",
+            "before": "RECEIVED",
+            "after": "NOT_OBSERVED",
+            "result": "CHANGED"
+          },
+          {
+            "key": "override_only",
+            "before": "NOT_OBSERVED",
+            "after": "NOT_OBSERVED",
+            "result": "UNCHANGED"
+          }
+        ],
+        "runtime_changes": [],
+        "limit": "Observed differences do not establish their cause. Record what changed in the instruction path, project and client. Prefer fresh markers for each run."
+      }
+    }
+  ]
+}

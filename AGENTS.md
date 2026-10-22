@@ -1,3 +1,7 @@
+# Agent Relay Check
+
+`tools/agent-relay-check/` is a dependency-free Node 22 diagnostic. Follow its local AGENTS.md. Run `npm test` there for offline checks. Live runs require explicit `--live`, authorized project guidance, Codex 0.163.0+ and the fixed gpt-6.1-sol/MAX path. Recorded demonstration results are operator evidence, not external adoption. The downloadable ZIP must match the tool source byte-for-byte.
+
 # App Crash Lab
 
 `tools/app-crash-lab/` is a Node22+ local Playwright tool. Run `npm ci --ignore-scripts`, `npx playwright install chromium`, `npm test`, `npm run demo` in that directory. `lib/contract.mjs` validates the versioned JSON; `lib/protocol.mjs` runs the checks and is copied into standalone specs; `lib/runner.mjs` owns isolated contexts and new output directories. Keep runner/spec context options and semantics identical. Test real browser behavior against deliberately broken/fixed fixtures. Only explicitly configured local origins, synthetic fixtures, fresh contexts; no profile reuse or runtime LLM. Missing baseline, rejection signal or observation is not a pass. `.crash-lab/` and `node_modules/` are local output/dependencies. Public claims distinguish authored fault fixtures, independent local compatibility checks, and third-party adoption.
