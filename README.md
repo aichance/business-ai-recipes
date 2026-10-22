@@ -41,6 +41,8 @@ separate from the independent author executions below.
 
 These files target the named apps and measured versions. Follow the selected guide's prerequisites; adapt the UI actions, selectors and storage assertions for another app. Keep the passing controls and observe the failure **after it finishes**. Use the measured versions and limits in each guide to interpret the result.
 
+**Re-sharing a puzzle changed the puzzle.** The [NumberPlace clipboard regression](tools/app-crash-lab/examples/numberplace-native/README.md) starts with a correctly encoded URL, clicks the real share button and compares all 81 cells, title and author in a fresh context and after reload. On the unchanged HTML snapshot, a title containing `#` moves the board data into the fragment and a different puzzle is generated. Ordinary sharing and an independently encoded reference URL pass. This is a separate URL-transfer check, not a saved-data or solver-wide claim.
+
 A related initial-load boundary: [VideoHost component reproduction](docs/video-host-history-native.md) measures a history-only write rejection before HLS starts. It includes two passing controls and preserves the original component source. This is a component fixture, not a complete application run.
 
 For backup export/import, use the [real-file roundtrip path](tools/app-crash-lab/BACKUP.md) instead of substituting a reload check. [Choose among eight persistence boundaries](tools/app-crash-lab/PERSISTENCE-CHECKLIST.md).
