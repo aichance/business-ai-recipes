@@ -8,16 +8,20 @@ Add one persistence regression to the test setup your app already uses. Choose P
 
 [**Try a real-app before/after**](https://aichance.github.io/business-ai-recipes/pdf-save-lab.html) · [**Copy a native test**](#copy-one-playwright-regression) · [**Ask your coding agent**](https://aichance.github.io/business-ai-recipes/app-crash-lab.html#native-agent)
 
-**A saved landing page can roll back after a toolbar click in another tab.**
+**A clock appeared in the UI. Reload erased it. The author's fix now keeps it.**
 
-| Saved page | After an earlier tab saves its toolbar setting and the primary reloads |
+| Original v0.9.2 after reload: new clock absent | Author's v0.9.3 after reload, another UI save and reload: clock retained |
 | --- | --- |
-| ![Saved sample landing page in an unchanged local LivePage build](docs/livepage-template-saved.png) | ![The same page rolled back to the earlier empty state](docs/livepage-template-rolled-back.png) |
+| ![Actual Meet Clocks panel with synthetic Avery retained but unsaved Jordan absent after the original source hits Chrome's real quota](tools/app-crash-lab/examples/meet-clocks-native/before-fix-reload.png) | ![Actual author-fixed panel with both synthetic clocks retained after complete local fallback and another save/reload](tools/app-crash-lab/examples/meet-clocks-native/after-fix-reload.png) |
 
-Actual screenshots with bundled sample content: two controls preserved the
-complete 67-node tree; only the earlier-tab case failed. [Run the native test
-and inspect the measurements](docs/livepage-template-proof.md). This is our local
-reproduction of an existing issue, separate from independent author use below.
+The same fallback-aware Playwright spec: **2 PASS/1 FAIL → 3 PASS**. The author
+[acknowledged the report and published the fix](https://qiita.com/mamarezza/items/824c0c2fbb75456370da#comment-56d858d800b39f06e1eb).
+Our native Chrome check preserves all 108 synthetic address-book entries and
+settings through local fallback and a second UI save. [Copy the test and inspect
+the complete measurements](tools/app-crash-lab/examples/meet-clocks-native/README.md).
+Actual unpacked extension on an empty synthetic Meet host; no live meeting or
+Web Store test. The red banner is a time-zone night alert. These are our runs,
+separate from the independent author executions below.
 
 **Independently run on four authors’ own apps:** [Sethera](https://qiita.com/cuculhart/items/f020080b2ef1331222d0#comment-79c9c450f3a54f3ba6ac) and [nvim-edu](https://qiita.com/s3onghyun/items/7966ac7e6a534a84f9db#comment-2d25dc275d61b168ee4a) used earlier CLI checks and exported tests; [PDF_Studio’s author](https://qiita.com/yoyoyo2024/items/f4f08276c835cab80b53#comment-23d925ca8772b4a0cb9a) ran the standalone Playwright spec after fixing save cancellation; [OpenPost’s author](https://github.com/azlanabdulla/OpenPost/blob/447408e31e57377a48f52bd28d174e8d57ef2ee0/docs/ISSUE_10_RESPONSE.md) incorporated the supplied Vitest regression and reports 3/3 passing. [Reported environments and scope](#independent-author-reports).
 
@@ -30,7 +34,7 @@ reproduction of an existing issue, separate from independent author use below.
 | An earlier tab saves an unrelated change | The other tab's committed fields remain intact after the peer save and reload | [LivePage: one native spec](tools/app-crash-lab/examples/livepage-native/README.md) · [NEBULARK: real deployed Flutter UI, no storage mocks](tools/app-crash-lab/examples/nebulark-native/README.md) |
 | An older cloud row returns after an offline edit | A real rejected SDK write followed by a successful older read must not erase the newer local record | [Life Tracker: native UI/SDK test and setup](docs/life-tracker-stale-cloud-native.md) |
 | A storage write is denied or aborted | Previously saved data stays intact and failure feedback appears; BraiNOTES also checks the app's retry | [Kinetic Curator](tools/app-crash-lab/examples/storage-write-denied-native/README.md) · [BraiNOTES](tools/app-crash-lab/examples/brainotes-native/README.md) |
-| A Chrome extension's real sync-storage item exceeds 8 KiB | The new attendee clock must not disappear silently on reload; complete older data remains intact | [Meet Clocks: actual unpacked extension and real Chrome API](tools/app-crash-lab/examples/meet-clocks-native/README.md) |
+| A Chrome extension's real sync-storage item exceeds 8 KiB | Complete local fallback survives reload and another UI save, or refusal is explicit; v0.9.2: 2 PASS/1 FAIL → author's v0.9.3: 3 PASS | [Meet Clocks: actual unpacked extension and real Chrome API](tools/app-crash-lab/examples/meet-clocks-native/README.md) |
 | Optional result/history storage fails after successful work | The successful output stays usable, instead of being turned into a failed request | [MAL](tools/app-crash-lab/examples/optional-history-native/README.md) · [StatementXL: one file with embedded fixtures](tools/app-crash-lab/examples/optional-result-native/README.md) |
 | Destructive action is refused | Existing state stays accurate and no false completion notice is shown | [Stockroom: one Playwright file, real Spring Boot/H2](tools/app-crash-lab/examples/stockroom-native-delete/README.md) · [OpenPost: Vitest, mocked Tauri IPC](tools/app-crash-lab/examples/openpost-native-clear/README.md) |
 | A required write fails during a valid JSON restore | The previous saved record remains intact, and any temporary restored state is explained before reload | [Task Packing: native import-completion test](tools/app-crash-lab/examples/task-packing-native/README.md) |
