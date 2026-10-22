@@ -1,4 +1,18 @@
-# App Crash Lab
+# aichance's developer tools
+
+## Agent Relay Check — did your AGENTS.md reach the agent?
+
+A fresh Codex session returns a disposable marker from your instruction file. The expected value never enters the question. Compare the observed result before and after a settings or CLI change.
+
+[**Try it on your project**](tools/agent-relay-check/README.md) · [**Small v0.1.0 ZIP**](https://aichance.github.io/business-ai-recipes/agent-relay-check-v0.1.0.zip) · [**Measured result and rerun command**](tools/agent-relay-check/examples/MEASUREMENTS.md)
+
+Our four-call demonstration: normal file → base marker received; override added → override marker received; override removed → base marker received again; both removed → neither observed. Fresh sessions, no observed tool calls. This reproduces documented file selection, not a new bug or proof of general instruction compliance.
+
+Node 22+, Codex CLI 0.163.0+, macOS/Linux, and existing gpt-6.1-sol/MAX access. Live runs consume that account's quota. No npm dependencies. The first release tests startup guidance; hooks, MCP and compaction are outside its scope.
+
+---
+
+## App Crash Lab
 
 [日本語の体験・導入手順](tools/app-crash-lab/README.md#japanese-setup)
 
