@@ -13,6 +13,17 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  agent-relay-check:
+    runs-on: ubuntu-24.04
+    container: node:22.16.0-bookworm
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Offline protocol and process tests
+        working-directory: tools/agent-relay-check
+        run: npm test
   app-crash-lab:
     runs-on: ubuntu-24.04
     container: node:22.16.0-bookworm
