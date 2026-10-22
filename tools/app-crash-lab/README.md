@@ -127,6 +127,13 @@ DB. It includes a passing full-record control, raw screenshots and a runnable
 server-mode Playwright diagnostic, separate from the built-in browser-local
 backup protocol.
 
+**Check relationships even when restored IDs change.** The
+[dependency-free relationship check](examples/relationship-native/README.md)
+compares reviewed semantic nodes and edges with current API IDs. Copy one module
+into an existing Node/Vitest suite; the offline controls distinguish preserved
+relations, lost edges and ambiguous identities. These are synthetic data-layer
+controls, separate from the measured WA-archiver backup and browser checks.
+
 The [EdenText review-thread checks](examples/edentext/README.md) compare the
 complete saved document, including bold text, comment IDs and reply dates,
 through reload and rejected malformed ODT/DOCX files. All three pass on the

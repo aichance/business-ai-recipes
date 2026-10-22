@@ -16,6 +16,10 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    "tools/app-crash-lab/examples/relationship-native/README.md",
+    "tools/app-crash-lab/examples/relationship-native/relations.mjs",
+    "tools/app-crash-lab/examples/relationship-native/demo.mjs",
+    "tools/app-crash-lab/tests/semantic-relations.test.mjs",
     "docs/app-crash-lab-nebulark-native.zip",
     "docs/app-crash-lab-nebulark-native.zip.sha256",
     "tools/app-crash-lab/examples/nebulark-native/README.md",
