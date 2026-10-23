@@ -15,6 +15,7 @@ export class RpcClient {
     this.stopping = false;
     this.closeObserved = false;
     this.terminationDone = true;
+    this.terminationSucceeded = true;
     this.terminate = terminate;
     this.cleanupTimeoutMs = cleanupTimeoutMs;
     this.onNotification = onNotification;
@@ -80,7 +81,9 @@ export class RpcClient {
     // closing stdin. Join BOTH the helper result and the server's observed close.
     if (!this.ended && this.child.exitCode === null && this.child.signalCode === null) {
       this.terminationDone = false;
+      this.terminationSucceeded = false;
       Promise.resolve(this.terminate(this.child)).then((ok) => {
+        this.terminationSucceeded = ok === true;
         if (!ok) this.failure ??= 'termination_error';
         this.terminationDone = true;
         this.join();

@@ -190,7 +190,7 @@ export async function runCodex({project, challenge, timeoutMs = 120000, signal, 
     execution.failure_kind = rpc.failure;
     execution.exit_code = null;
   }
-  execution.cleanup_confirmed = rpc?.closeObserved === true;
+  execution.cleanup_confirmed = rpc?.closeObserved === true && rpc.terminationDone && rpc.terminationSucceeded;
   execution.duration_ms = Math.round(performance.now() - started);
   return evaluate(challenge, execution);
 }
