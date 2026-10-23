@@ -16,6 +16,13 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    'docs/agent-relay-check-v0.1.2.zip',
+    'docs/agent-relay-check-v0.1.2.zip.sha256',
+    'tools/agent-relay-check/lib/inspect.mjs',
+    'tools/agent-relay-check/lib/inventory.mjs',
+    'tools/agent-relay-check/test/inspect.test.mjs',
+    'tools/agent-relay-check/test/inventory.test.mjs',
+    'tools/agent-relay-check/examples/NATIVE-INSPECTION.md',
     'docs/agent-relay-check-v0.1.1.zip',
     'docs/agent-relay-check-v0.1.1.zip.sha256',
     'tools/agent-relay-check/lib/process.mjs',
@@ -2006,7 +2013,11 @@ def verify_relay_archive() -> None:
     original_hash = "8c6005561242e11a470178afe4afedc071f77099195bd29609334aa227fb2105"
     assert hashlib.sha256(original.read_bytes()).hexdigest() == original_hash
     assert Path(str(original) + ".sha256").read_text().split()[0] == original_hash
-    archive = root / "docs/agent-relay-check-v0.1.1.zip"
+    previous = root / "docs/agent-relay-check-v0.1.1.zip"
+    previous_hash = "04b0cec55e34535a1530c1ec053e5643d27815723088576d3ce6ac1d6e0edf69"
+    assert hashlib.sha256(previous.read_bytes()).hexdigest() == previous_hash
+    assert Path(str(previous) + ".sha256").read_text().split()[0] == previous_hash
+    archive = root / "docs/agent-relay-check-v0.1.2.zip"
     expected_hash = Path(str(archive) + ".sha256").read_text().split()[0]
     assert hashlib.sha256(archive.read_bytes()).hexdigest() == expected_hash
     tool = root / "tools/agent-relay-check"

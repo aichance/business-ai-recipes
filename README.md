@@ -1,16 +1,26 @@
 # aichance's developer tools
 
-## Agent Relay Check — did your AGENTS.md reach the agent?
+## Agent Relay Check — inspect AGENTS.md selection, then test receipt
 
-A fresh Codex session returns a disposable marker from your instruction file. The expected value never enters the question. Compare the observed result before and after a settings or CLI change.
+One command shows native startup file selection beside a separate local byte-budget estimate, without a model turn. When you need receipt evidence, a fresh Codex session returns a disposable marker from your instruction file; the expected value never enters the question. Compare before and after a settings or CLI change.
 
-[**Try it on your project**](#first-run-keep-the-check-files-outside-your-project) · [**Small v0.1.1 ZIP**](https://aichance.github.io/business-ai-recipes/agent-relay-check-v0.1.1.zip) · [**Measured result and rerun command**](tools/agent-relay-check/examples/MEASUREMENTS.md)
+[**Inspect without a model turn**](tools/agent-relay-check/README.md#inspect-your-current-instruction-budget-first) · [**Test marker receipt**](#first-run-keep-the-check-files-outside-your-project) · [**Small v0.1.2 ZIP**](https://aichance.github.io/business-ai-recipes/agent-relay-check-v0.1.2.zip) · [**Measured result and rerun command**](tools/agent-relay-check/examples/MEASUREMENTS.md)
 
 Our four-call demonstration: normal file → base marker received; override added → override marker received; override removed → base marker received again; both removed → neither observed. Fresh sessions, no observed tool calls. This reproduces documented file selection, not a new bug or proof of general instruction compliance.
 
 Node 22+, Codex CLI 0.163.0+, macOS/Linux or native Windows (experimental), and existing gpt-6.1-sol/MAX access. Live runs consume that account's quota. No npm dependencies. The first release tests startup guidance; hooks, MCP and compaction are outside its scope.
 
 On native Windows, start with the [PowerShell commands and verification scope](tools/agent-relay-check/README.md#native-windows--powershell). Transport/cleanup CI and a completed authenticated marker response are separate checks.
+
+### Inspect without editing your instructions
+
+After extracting the ZIP, open its `agent-relay-check` directory and run:
+
+```sh
+node cli.mjs inspect --project "/absolute/path/to/your project"
+```
+
+Native file paths are observations; byte/truncation/skip fields are separate local estimates pinned to Codex0.163.0. A listed file can be partial. Uncertain versions, configuration, files or cleanup remain `INCONCLUSIVE`. No model turn is requested, but Codex initialization can communicate and write its normal local metadata. [Scope and measured controls](tools/agent-relay-check/examples/NATIVE-INSPECTION.md). Inspection does not establish model receipt or compliance; the following separate check uses inference.
 
 ### First run: keep the check files outside your project
 
