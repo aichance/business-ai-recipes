@@ -2,6 +2,7 @@ import { spawn } from 'node:child_process';
 import { question, receiptSchema, evaluate } from './protocol.mjs';
 import { RpcClient } from './rpc.mjs';
 import { TurnObservation } from './observation.mjs';
+import { resolveCodexInvocation, terminateTree } from './process.mjs';
 
 export const MODEL = 'gpt-6.1-sol';
 export const EFFORT = 'max';
@@ -37,12 +38,14 @@ export function runProcess(command, args, {cwd, timeoutMs = 120000, signal, maxB
   if (!Number.isInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > 600000) throw new Error('Invalid process timeout.');
   return new Promise((resolve) => {
     const started = performance.now();
-    const child = spawn(command, args, {cwd, shell: false, detached: process.platform !== 'win32', stdio: ['ignore', 'pipe', 'pipe']});
+    const child = spawn(command, args, {cwd, shell: false, windowsHide: true, detached: process.platform !== 'win32', stdio: ['ignore', 'pipe', 'pipe']});
     const output = {stdout: '', stderr: '', exit_code: null, timeout: false, cancelled: false, error: false};
     let bytes = 0;
     let ended = false;
     let stopping = false;
     let cleanupTimer;
+    let terminationDone = true;
+    const join = () => { if (ended && terminationDone) { clearTimeout(cleanupTimer); finish(); } };
     const finish = () => resolve({...output, duration_ms: Math.round(performance.now() - started)});
     function stop(kind) {
       if (ended || stopping) return;
@@ -54,14 +57,14 @@ export function runProcess(command, args, {cwd, timeoutMs = 120000, signal, maxB
         child.stdout.destroy(); child.stderr.destroy(); child.unref();
         signal?.removeEventListener('abort', cancel);
         finish();
-      }, 2000);
+      }, 3000);
       if (child.exitCode === null && child.signalCode === null) {
-        try {
-          if (process.platform !== 'win32' && child.pid) process.kill(-child.pid, 'SIGKILL');
-          else child.kill('SIGKILL');
-        } catch (e) {
-          if (e.code !== 'ESRCH') { output.error = true; try { child.kill('SIGKILL'); } catch {} }
-        }
+        terminationDone = false;
+        terminateTree(child).then((ok) => {
+          if (!ok) output.error = true;
+          terminationDone = true;
+          join();
+        });
       }
     }
     const timer = setTimeout(() => stop('timeout'), timeoutMs);
@@ -78,10 +81,10 @@ export function runProcess(command, args, {cwd, timeoutMs = 120000, signal, maxB
     child.on('error', () => { output.error = true; });
     child.on('close', (code) => {
       ended = true;
-      clearTimeout(timer); clearTimeout(cleanupTimer);
+      clearTimeout(timer);
       signal?.removeEventListener('abort', cancel);
       output.exit_code = code;
-      finish();
+      join();
     });
   });
 }
@@ -100,7 +103,7 @@ const startupArgs = (config = {}) => ['app-server', '--stdio',
 ];
 
 async function initialize(rpc) {
-  await rpc.request('initialize', {clientInfo: {name: 'agent-relay-check', version: '0.1.0'}, capabilities: {experimentalApi: true}});
+  await rpc.request('initialize', {clientInfo: {name: 'agent-relay-check', version: '0.1.1'}, capabilities: {experimentalApi: true}});
   rpc.send({method: 'initialized', params: {}});
 }
 
@@ -114,10 +117,10 @@ export function checkRestrictedConfig(config) {
 }
 
 export async function runCodex({project, challenge, timeoutMs = 120000, signal, binary = 'codex'}) {
-  if (process.platform === 'win32') throw new Error('The bounded live adapter currently supports macOS and Linux.');
-  const version = await runProcess(binary, ['--version'], {timeoutMs: 10000, signal});
+  const invocation = await resolveCodexInvocation(binary);
+  const version = await runProcess(invocation.command, [...invocation.prefixArgs, '--version'], {timeoutMs: 10000, signal});
   const match = version.stdout.trim().match(/^codex-cli (\d+)\.(\d+)\.(\d+)(?:\S*)?$/);
-  if (version.exit_code !== 0 || !match || Number(match[1]) === 0 && Number(match[2]) < 163) {
+  if (version.exit_code !== 0 || version.error || version.timeout || version.cancelled || !match || Number(match[1]) === 0 && Number(match[2]) < 163) {
     throw new Error('Live mode requires installed, authenticated Codex CLI 0.163.0 or newer. No login or upgrade was attempted.');
   }
   if (signal?.aborted) throw new Error('Cancelled before model invocation.');
@@ -138,7 +141,7 @@ export async function runCodex({project, challenge, timeoutMs = 120000, signal, 
   };
   try {
     // Discovery only: no thread, no turn, no MCP start/list/auth-status request.
-    rpc = new RpcClient(binary, startupArgs(), {cwd: project, timeoutMs: remaining(), signal});
+    rpc = new RpcClient(invocation.command, [...invocation.prefixArgs, ...startupArgs()], {cwd: project, timeoutMs: remaining(), signal});
     await initialize(rpc);
     const discovered = await rpc.request('config/read', {cwd: project, includeLayers: false});
     const overrides = probeConfig(discovered.config);
@@ -147,7 +150,7 @@ export async function runCodex({project, challenge, timeoutMs = 120000, signal, 
     if (rpc.failure) throw new Error(rpc.failure);
     // Startup restrictions apply before any thread; then read them back. This
     // preserves guidance settings while preventing configured MCP connections.
-    rpc = new RpcClient(binary, startupArgs(overrides), {cwd: project, timeoutMs: remaining(), signal, onNotification: notifications});
+    rpc = new RpcClient(invocation.command, [...invocation.prefixArgs, ...startupArgs(overrides)], {cwd: project, timeoutMs: remaining(), signal, onNotification: notifications});
     rpc.onFailure = rejectCompletion;
     await initialize(rpc);
     const restricted = await rpc.request('config/read', {cwd: project, includeLayers: false});
