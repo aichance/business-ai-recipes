@@ -8,9 +8,9 @@ The first adapter checks **Codex startup guidance**: `AGENTS.md`, `AGENTS.overri
 
 ## Try your own project
 
-Requires Node.js 22+, an authenticated Codex CLI **0.163.0 or newer**, macOS/Linux, and access to **gpt-6.1-sol with MAX reasoning**. Live checks use that existing account's quota or billing. No additional service, API key entry, npm dependency or global installation is needed. Unsupported model access fails; the tool never substitutes another model.
+Requires Node.js 22+, an authenticated Codex CLI **0.163.0 or newer**, macOS/Linux or native Windows, and access to **gpt-6.1-sol with MAX reasoning**. Native Windows is experimental: process and CLI transport tests are separate from an authenticated marker response; see the CI results and verification boundary below. Live checks use that existing account's quota or billing. No additional service, API key entry, npm dependency or global installation is needed. Unsupported model access fails; the tool never substitutes another model.
 
-Prefer a small download? Get the [15-file v0.1.0 ZIP](https://aichance.github.io/business-ai-recipes/agent-relay-check-v0.1.0.zip) and [SHA-256](https://aichance.github.io/business-ai-recipes/agent-relay-check-v0.1.0.zip.sha256), extract it, and open its `agent-relay-check` directory instead of cloning below. [Measured four-case result](examples/MEASUREMENTS.md).
+Prefer a small download? Get the [v0.1.1 ZIP](https://aichance.github.io/business-ai-recipes/agent-relay-check-v0.1.1.zip) and [SHA-256](https://aichance.github.io/business-ai-recipes/agent-relay-check-v0.1.1.zip.sha256), extract it, and open its `agent-relay-check` directory instead of cloning below. The original v0.1.0 archive is preserved. [Measured macOS four-case result with v0.1.0](examples/MEASUREMENTS.md).
 
 ```sh
 git clone --depth 1 https://github.com/aichance/business-ai-recipes.git relay-kit
@@ -31,6 +31,43 @@ node cli.mjs run \
 ```
 
 `--out` must be a **new directory** whose parent already exists. Challenge and output paths must be outside the tested project, including resolved symlinks. The tool does not edit your instruction files. Remove your diagnostic block when you finish.
+
+### Native Windows / PowerShell
+
+Use a native Node/Codex installation; WSL is a different environment. Check `node --version` and `codex --version` first. Relay does not upgrade the CLI or sign you in. In the extracted `agent-relay-check` directory:
+
+```powershell
+$RelayWork = Join-Path $env:TEMP ('relay-' + [guid]::NewGuid().ToString('N'))
+New-Item -ItemType Directory -Path $RelayWork | Out-Null
+node .\cli.mjs prepare --out (Join-Path $RelayWork 'before') --keys project_probe
+```
+
+Append only the generated `instruction.md` block to the instruction file you want to test, then replace the example path with your own startup directory:
+
+```powershell
+node .\cli.mjs run --project 'C:\path\to\your-project' `
+  --challenge (Join-Path $RelayWork 'before\challenge.json') `
+  --out (Join-Path $RelayWork 'result-before') --live
+```
+
+Read `report.json` locally. Keep this PowerShell session open. For a later settings or CLI change, use the same workspace and marker name:
+
+```powershell
+node .\cli.mjs prepare --out (Join-Path $RelayWork 'after') --keys project_probe
+# Replace only the previous diagnostic block with after\instruction.md, then:
+node .\cli.mjs run --project 'C:\path\to\your-project' `
+  --challenge (Join-Path $RelayWork 'after\challenge.json') `
+  --out (Join-Path $RelayWork 'result-after') --live
+node .\cli.mjs compare `
+  --before (Join-Path $RelayWork 'result-before\report.json') `
+  --after (Join-Path $RelayWork 'result-after\report.json')
+```
+
+Use the same startup directory and record what changed. Each live run makes one model call; prepare/compare are offline. Remove only the temporary instruction block after your final check. For another comparison, start a new workspace instead of reusing existing output directories.
+
+The Windows launcher respects PATH order: it uses `codex.exe`, or runs the adjacent official npm `codex.js` launcher with Node. It never starts a `.cmd`/`.bat` shell. A timeout or cancellation targets only the still-live owned process tree using Windows `taskkill /T /F`, then waits for both the helper result and stdio close. Failed or uncertain cleanup makes the observation inconclusive; do not automatically retry it. This is bounded cleanup, not Job Object containment of deliberately escaped processes.
+
+**Verification boundary:** the CI job runs real Windows process-tree tests, and an opt-in smoke test installs official Codex 0.163.0 in an isolated path with spaces. That smoke test initializes stdio and reads effective restrictions with a temporary configuration home, without a thread, model turn or credentials. CI success does not prove an authenticated Windows marker response or external adoption. The macOS v0.1.0 measurements remain historical. No Windows live receipt has been verified at this release's preparation.
 
 ## Read the result
 

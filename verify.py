@@ -16,6 +16,12 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    'docs/agent-relay-check-v0.1.1.zip',
+    'docs/agent-relay-check-v0.1.1.zip.sha256',
+    'tools/agent-relay-check/lib/process.mjs',
+    'tools/agent-relay-check/test/installed-cli.test.mjs',
+    'tools/agent-relay-check/test/process.test.mjs',
+
     'tools/agent-relay-check/AGENTS.md',
     'tools/agent-relay-check/LICENSE',
     'tools/agent-relay-check/README.md',
@@ -1995,11 +2001,16 @@ def verify(
 
 def verify_relay_archive() -> None:
     root = Path(__file__).resolve().parent
-    archive = root / "docs/agent-relay-check-v0.1.0.zip"
+    # Preserve the original public release independently of the current source.
+    original = root / "docs/agent-relay-check-v0.1.0.zip"
+    original_hash = "8c6005561242e11a470178afe4afedc071f77099195bd29609334aa227fb2105"
+    assert hashlib.sha256(original.read_bytes()).hexdigest() == original_hash
+    assert Path(str(original) + ".sha256").read_text().split()[0] == original_hash
+    archive = root / "docs/agent-relay-check-v0.1.1.zip"
     expected_hash = Path(str(archive) + ".sha256").read_text().split()[0]
     assert hashlib.sha256(archive.read_bytes()).hexdigest() == expected_hash
     tool = root / "tools/agent-relay-check"
-    expected = {"agent-relay-check/" + str(p.relative_to(tool)): p.read_bytes()
+    expected = {"agent-relay-check/" + p.relative_to(tool).as_posix(): p.read_bytes()
                 for p in tool.rglob("*") if p.is_file()}
     with ZipFile(archive) as bundle:
         assert len(bundle.namelist()) == len(expected)

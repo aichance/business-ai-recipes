@@ -1,9 +1,10 @@
 import { spawn } from 'node:child_process';
+import { terminateTree } from './process.mjs';
 
 // Private stdio transport. It never writes responses, configuration or stderr to
 // disk. One deadline covers initialization, configuration discovery and the turn.
 export class RpcClient {
-  constructor(command, args, {cwd, timeoutMs, signal, onNotification = () => {}, cleanupTimeoutMs = 2000, spawnImpl = spawn}) {
+  constructor(command, args, {cwd, timeoutMs, signal, env, onNotification = () => {}, cleanupTimeoutMs = 3000, spawnImpl = spawn, terminate = terminateTree}) {
     this.pending = new Map();
     this.nextId = 1;
     this.buffer = '';
@@ -13,9 +14,12 @@ export class RpcClient {
     this.ended = false;
     this.stopping = false;
     this.closeObserved = false;
+    this.terminationDone = true;
+    this.terminationSucceeded = true;
+    this.terminate = terminate;
     this.cleanupTimeoutMs = cleanupTimeoutMs;
     this.onNotification = onNotification;
-    this.child = spawnImpl(command, args, {cwd, shell: false, detached: true, stdio: ['pipe', 'pipe', 'pipe']});
+    this.child = spawnImpl(command, args, {cwd, env, shell: false, windowsHide: true, detached: process.platform !== 'win32', stdio: ['pipe', 'pipe', 'pipe']});
     this.closed = new Promise((resolve) => { this.resolveClosed = resolve; });
     this.timer = setTimeout(() => this.fail('timeout'), timeoutMs);
     this.cancel = () => this.fail('cancelled');
@@ -34,25 +38,18 @@ export class RpcClient {
       this.ended = true;
       this.closeObserved = true;
       clearTimeout(this.timer);
-      clearTimeout(this.cleanupTimer);
       if (this.buffer.trim()) this.fail('invalid_event_stream');
       signal?.removeEventListener('abort', this.cancel);
       if (!this.stopping) this.fail('unexpected_exit');
-      this.resolveClosed(code);
+      this.closeCode = code;
+      this.join();
     });
     if (signal?.aborted) this.cancel();
   }
-  kill(sig) {
-    if (this.child.pid) {
-      try { process.kill(-this.child.pid, sig); } catch (e) {
-        if (e.code !== 'ESRCH') {
-          this.failure ??= 'termination_error';
-          // Same owned, still-live child only; do not retry a reaped PID.
-          if (!this.ended && this.child.exitCode === null && this.child.signalCode === null) {
-            try { this.child.kill(sig); } catch { /* The bounded join below reports failure. */ }
-          }
-        }
-      }
+  join() {
+    if (this.closeObserved && this.terminationDone) {
+      clearTimeout(this.cleanupTimer);
+      this.resolveClosed(this.closeCode);
     }
   }
   fail(reason) {
@@ -76,15 +73,30 @@ export class RpcClient {
       this.child.stderr.destroy();
       this.child.unref();
       this.signal?.removeEventListener('abort', this.cancel);
-      // This does NOT certify termination. closeObserved stays false and the
-      // report is inconclusive; callers must not automatically restart it.
+      // Observed close alone does NOT certify tree termination. The report is
+      // inconclusive; callers must not automatically restart it.
       this.resolveClosed(null);
     }, this.cleanupTimeoutMs);
-    // The diagnostic owns this ephemeral server and its process group. Stop the
-    // group once, while its leader is still live. Never signal a reaped PID from
-    // the close callback (its numeric ID may already have been reused).
-    if (!this.ended && this.child.exitCode === null && this.child.signalCode === null) this.kill('SIGKILL');
-    this.child.stdin.destroy();
+    // Initiate tree termination while the owned leader is still live, before
+    // closing stdin. Join BOTH the helper result and the server's observed close.
+    if (!this.ended && this.child.exitCode === null && this.child.signalCode === null) {
+      this.terminationDone = false;
+      this.terminationSucceeded = false;
+      Promise.resolve(this.terminate(this.child)).then((ok) => {
+        this.terminationSucceeded = ok === true;
+        if (!ok) this.failure ??= 'termination_error';
+        this.terminationDone = true;
+        // Keep stdin open while taskkill is locating the live Windows tree.
+        // EOF can otherwise let the npm/native leader exit before /PID runs.
+        this.child.stdin.destroy();
+        this.join();
+      }, () => {
+        this.failure ??= 'termination_error';
+        this.terminationDone = true;
+        this.child.stdin.destroy();
+        this.join();
+      });
+    } else this.child.stdin.destroy();
   }
   send(value) {
     if (this.failure || this.ended) throw new Error(this.failure ?? 'transport_closed');

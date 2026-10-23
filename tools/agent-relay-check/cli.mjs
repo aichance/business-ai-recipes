@@ -6,7 +6,7 @@ import { resolve, relative, isAbsolute, join, dirname } from 'node:path';
 import { createChallenge, validateChallenge, instructionBlock, question, receiptSchema, compare } from './lib/protocol.mjs';
 import { runCodex } from './lib/codex.mjs';
 
-const HELP = `Agent Relay Check 0.1.0 — did this marker reach a fresh agent session?
+const HELP = `Agent Relay Check 0.1.1 — did this marker reach a fresh agent session?
 
 prepare --out DIRECTORY [--keys base_only,override_only]
   Offline. Write fresh challenge.json, instruction.md, question.txt and schema.

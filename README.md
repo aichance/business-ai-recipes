@@ -4,11 +4,13 @@
 
 A fresh Codex session returns a disposable marker from your instruction file. The expected value never enters the question. Compare the observed result before and after a settings or CLI change.
 
-[**Try it on your project**](#first-run-keep-the-check-files-outside-your-project) · [**Small v0.1.0 ZIP**](https://aichance.github.io/business-ai-recipes/agent-relay-check-v0.1.0.zip) · [**Measured result and rerun command**](tools/agent-relay-check/examples/MEASUREMENTS.md)
+[**Try it on your project**](#first-run-keep-the-check-files-outside-your-project) · [**Small v0.1.1 ZIP**](https://aichance.github.io/business-ai-recipes/agent-relay-check-v0.1.1.zip) · [**Measured result and rerun command**](tools/agent-relay-check/examples/MEASUREMENTS.md)
 
 Our four-call demonstration: normal file → base marker received; override added → override marker received; override removed → base marker received again; both removed → neither observed. Fresh sessions, no observed tool calls. This reproduces documented file selection, not a new bug or proof of general instruction compliance.
 
-Node 22+, Codex CLI 0.163.0+, macOS/Linux, and existing gpt-6.1-sol/MAX access. Live runs consume that account's quota. No npm dependencies. The first release tests startup guidance; hooks, MCP and compaction are outside its scope.
+Node 22+, Codex CLI 0.163.0+, macOS/Linux or native Windows (experimental), and existing gpt-6.1-sol/MAX access. Live runs consume that account's quota. No npm dependencies. The first release tests startup guidance; hooks, MCP and compaction are outside its scope.
+
+On native Windows, start with the [PowerShell commands and verification scope](tools/agent-relay-check/README.md#native-windows--powershell). Transport/cleanup CI and a completed authenticated marker response are separate checks.
 
 ### First run: keep the check files outside your project
 
