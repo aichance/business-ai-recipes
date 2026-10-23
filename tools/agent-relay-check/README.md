@@ -50,7 +50,20 @@ node .\cli.mjs run --project 'C:\path\to\your-project' `
   --out (Join-Path $RelayWork 'result-before') --live
 ```
 
-Read `report.json` locally and remove only the temporary block afterward. For a later change, prepare a fresh `after` directory with the same marker names, replace the previous block, run into `result-after`, and compare the reports as below.
+Read `report.json` locally. Keep this PowerShell session open. For a later settings or CLI change, use the same workspace and marker name:
+
+```powershell
+node .\cli.mjs prepare --out (Join-Path $RelayWork 'after') --keys project_probe
+# Replace only the previous diagnostic block with after\instruction.md, then:
+node .\cli.mjs run --project 'C:\path\to\your-project' `
+  --challenge (Join-Path $RelayWork 'after\challenge.json') `
+  --out (Join-Path $RelayWork 'result-after') --live
+node .\cli.mjs compare `
+  --before (Join-Path $RelayWork 'result-before\report.json') `
+  --after (Join-Path $RelayWork 'result-after\report.json')
+```
+
+Use the same startup directory and record what changed. Each live run makes one model call; prepare/compare are offline. Remove only the temporary instruction block after your final check. For another comparison, start a new workspace instead of reusing existing output directories.
 
 The Windows launcher respects PATH order: it uses `codex.exe`, or runs the adjacent official npm `codex.js` launcher with Node. It never starts a `.cmd`/`.bat` shell. A timeout or cancellation targets only the still-live owned process tree using Windows `taskkill /T /F`, then waits for both the helper result and stdio close. Failed or uncertain cleanup makes the observation inconclusive; do not automatically retry it. This is bounded cleanup, not Job Object containment of deliberately escaped processes.
 
