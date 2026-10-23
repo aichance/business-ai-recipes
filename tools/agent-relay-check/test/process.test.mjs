@@ -55,6 +55,7 @@ test('RPC close alone cannot hide a pending or failed tree-cleanup helper', asyn
   assert.equal(joined, false);
   settle(false); await rpc.closed;
   assert.equal(rpc.failure, 'termination_error');
+  assert.equal(rpc.terminationSucceeded, false);
 });
 
 test('shell-free arguments preserve spaces and metacharacters', async () => {
@@ -75,6 +76,7 @@ test('RPC helper success still waits for owned stdio close', async () => {
   assert.equal(joined, false);
   fake.emit('close', 0); await rpc.closed;
   assert.equal(rpc.failure, null);
+  assert.equal(rpc.terminationSucceeded, true);
 });
 
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
