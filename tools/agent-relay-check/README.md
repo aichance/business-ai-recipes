@@ -1,16 +1,41 @@
 # Agent Relay Check
 
-**Does a fresh Codex session actually receive the marker in your `AGENTS.md`?**
+**Which `AGENTS.md` files did Codex select? Can a fresh session return a marker from them?**
 
 Add a disposable marker to the instruction path you want to test. Agent Relay Check starts a fresh session and asks for that marker **without putting its value in the question**. A local, deterministic check compares the reply. After a configuration or CLI update, run the same check again and compare the reports.
 
 The first adapter checks **Codex startup guidance**: `AGENTS.md`, `AGENTS.override.md`, parent/child scope and configured discovery rules. It preserves your guidance settings while restricting tools and disabling configured MCP servers, Apps, plugins and hooks for the diagnostic. It does **not** test hook delivery, MCP handoff, compaction or every instruction's effect on behavior.
 
+## Inspect your current instruction budget first
+
+From the extracted `agent-relay-check` directory, or `tools/agent-relay-check` in a clone:
+
+```sh
+node cli.mjs inspect --project "/absolute/path/to/your project"
+```
+
+No marker, instruction edit, model answer or model turn is requested. This initializes installed Codex and prints JSON locally. It may contact services and write Codex's normal local metadata: **zero inference is not offline or zero side effects**. Relay does not upload the report or modify your configuration. Use a project whose guidance you are authorized to load.
+
+The report keeps two kinds of evidence separate:
+
+| Field | Meaning |
+|---|---|
+| `native_listed` | Codex returned this file's path in `thread/start.instructionSources`. It can still be only partially included. |
+| `estimated_status`, `examined_bytes` | Local snapshot plus the pinned Codex loader predicts `FULL`, `TRUNCATED`, `SKIPPED_BUDGET`, empty/whitespace or a shadowed file. These are **not native byte counts or proven causes**. |
+| `status: INSPECTED` | Native paths and the stable local estimate matched. This is not a receipt/compliance pass. |
+| `status: INCONCLUSIVE` | Version, configuration provenance, source mismatch, file change, IO or cleanup prevented a supported conclusion. |
+
+For example, with a 128-byte project budget, a 40-byte parent and 200-byte child are both natively listed, while the local estimate marks the child `TRUNCATED` at 88 examined bytes. An empty child override and a parent that exhausted the budget can produce the same native path list for different reasons. [Four measured no-turn controls and their limits](examples/NATIVE-INSPECTION.md).
+
+Requires Node22+ and installed Codex0.163.0 for byte estimates. A newer/alpha loader can return limited native observations but remains `INCONCLUSIVE`; it is not silently treated as the pinned algorithm. The supported estimate is for **one local startup environment**. Custom root markers and literal fallback filenames are supported when their provenance is known; project-layer root-marker overrides, unknown layers, unconfirmed symlinks, inaccessible/changed files, unknown external sources and very large/deep snapshots remain inconclusive. Outside-root paths are count-only; only known user-config-directory `AGENTS.md`/`AGENTS.override.md` paths are accepted as global sources without reading them. Native Windows inference remains unverified; see the separate CI boundaries below.
+
+Exit codes for `inspect`: `0` completed inspection, `3` inconclusive, `1` command error. Default timeout120seconds, configurable10–600 with `--timeout-seconds`. No automatic retry, sign-in, upgrade or model fallback. To test **actual marker receipt**, continue below; each `run --live` uses one existing model/quota turn.
+
 ## Try your own project
 
 Requires Node.js 22+, an authenticated Codex CLI **0.163.0 or newer**, macOS/Linux or native Windows, and access to **gpt-6.1-sol with MAX reasoning**. Native Windows is experimental: process and CLI transport tests are separate from an authenticated marker response; see the CI results and verification boundary below. Live checks use that existing account's quota or billing. No additional service, API key entry, npm dependency or global installation is needed. Unsupported model access fails; the tool never substitutes another model.
 
-Prefer a small download? Get the [v0.1.1 ZIP](https://aichance.github.io/business-ai-recipes/agent-relay-check-v0.1.1.zip) and [SHA-256](https://aichance.github.io/business-ai-recipes/agent-relay-check-v0.1.1.zip.sha256), extract it, and open its `agent-relay-check` directory instead of cloning below. The original v0.1.0 archive is preserved. [Measured macOS four-case result with v0.1.0](examples/MEASUREMENTS.md).
+Prefer a small download? Get the [v0.1.2 ZIP](https://aichance.github.io/business-ai-recipes/agent-relay-check-v0.1.2.zip) and [SHA-256](https://aichance.github.io/business-ai-recipes/agent-relay-check-v0.1.2.zip.sha256), extract it, and open its `agent-relay-check` directory instead of cloning below. The original v0.1.0 and v0.1.1 archives are preserved. [Measured macOS four-case result with v0.1.0](examples/MEASUREMENTS.md).
 
 ```sh
 git clone --depth 1 https://github.com/aichance/business-ai-recipes.git relay-kit
@@ -67,7 +92,7 @@ Use the same startup directory and record what changed. Each live run makes one 
 
 The Windows launcher respects PATH order: it uses `codex.exe`, or runs the adjacent official npm `codex.js` launcher with Node. It never starts a `.cmd`/`.bat` shell. A timeout or cancellation targets only the still-live owned process tree using Windows `taskkill /T /F`, then waits for both the helper result and stdio close. Failed or uncertain cleanup makes the observation inconclusive; do not automatically retry it. This is bounded cleanup, not Job Object containment of deliberately escaped processes.
 
-**Verification boundary:** the CI job runs real Windows process-tree tests, and an opt-in smoke test installs official Codex 0.163.0 in an isolated path with spaces. That smoke test initializes stdio and reads effective restrictions with a temporary configuration home, without a thread, model turn or credentials. CI success does not prove an authenticated Windows marker response or external adoption. The macOS v0.1.0 measurements remain historical. No Windows live receipt has been verified at this release's preparation.
+**Verification boundary:** the CI job runs real Windows process-tree tests, and an opt-in smoke test installs official Codex 0.163.0 in an isolated path with spaces. One smoke test initializes stdio and reads effective restrictions without a thread. A second uses the common `inspect` command on synthetic parent/child files, creates one ephemeral thread, and checks native path membership against the partial-byte estimate. Both use temporary configuration homes without copying credentials, and neither starts a model turn. Until the updated CI completes, the second check has not been verified on Windows. CI success does not prove an authenticated Windows marker response or external adoption. The macOS v0.1.0 measurements remain historical. No Windows live receipt has been verified at this release's preparation.
 
 ## Read the result
 
@@ -118,7 +143,7 @@ The same result may already be sufficient in your existing tooling. This project
 
 ## Data and execution boundaries
 
-- `prepare`, `compare` and the test suite run offline. Only `run --live` starts Codex.
+- `prepare`, `compare` and the test suite run offline. `inspect` also initializes Codex without starting a model turn; `run --live` requests inference.
 - Codex uses its existing authentication. Its normal startup can contact OpenAI and write its own local state. Project guidance is model input: use a project whose guidance you are authorized to send.
 - The adapter reads effective configuration through Codex's local stdio API, uses only MCP identifiers to disable those servers, then reads the restrictions back before creating a fresh ephemeral thread. It never calls MCP list/auth-status or reads credential files directly.
 - Shell, Apps, plugin, browser, memory and subagent features are restricted at server startup. Hooks are disabled for this run. Core tools can remain available in Codex; observed tool activity makes the check inconclusive. This is not a claim that every possible tool is unavailable.
@@ -132,4 +157,4 @@ The same result may already be sufficient in your existing tooling. This project
 npm test
 ```
 
-The suite covers exact matching, stale/wrong values, challenge leakage, ordered turn completion, tool contamination, transport restrictions and comparison consistency. No model call is made by the tests. MIT license.
+The suite covers pinned discovery/budget accounting, native mismatches, configuration provenance, snapshot changes and privacy boundaries, as well as exact matching, stale/wrong values, challenge leakage, ordered turn completion, tool contamination, transport restrictions and comparison consistency. No model call is made by the tests. MIT license.
