@@ -49,13 +49,16 @@ test('RPC close alone cannot hide a pending or failed tree-cleanup helper', asyn
   let settle;
   const rpc = new RpcClient('fixture', [], {timeoutMs: 1000, spawnImpl: () => fake,
     terminate: () => new Promise((resolve) => { settle = resolve; })});
-  rpc.stop(); fake.emit('close', 0);
+  rpc.stop();
+  assert.equal(fake.stdin.destroyed, false, 'keep EOF from racing ahead of tree termination');
+  fake.emit('close', 0);
   let joined = false; rpc.closed.then(() => { joined = true; });
   await new Promise((resolve) => setImmediate(resolve));
   assert.equal(joined, false);
   settle(false); await rpc.closed;
   assert.equal(rpc.failure, 'termination_error');
   assert.equal(rpc.terminationSucceeded, false);
+  assert.equal(fake.stdin.destroyed, true);
 });
 
 test('shell-free arguments preserve spaces and metacharacters', async () => {
