@@ -97,13 +97,13 @@ export function tomlValue(value) {
   throw new Error('Unsupported diagnostic override value.');
 }
 
-const startupArgs = (config = {}) => ['app-server', '--stdio',
+export const startupArgs = (config = {}) => ['app-server', '--stdio',
   ...DISABLED_FEATURES.flatMap((key) => ['--disable', key]),
   ...Object.entries(config).flatMap(([key, value]) => ['-c', `${key}=${tomlValue(value)}`]),
 ];
 
-async function initialize(rpc) {
-  await rpc.request('initialize', {clientInfo: {name: 'agent-relay-check', version: '0.1.1'}, capabilities: {experimentalApi: true}});
+export async function initialize(rpc) {
+  await rpc.request('initialize', {clientInfo: {name: 'agent-relay-check', version: '0.1.2'}, capabilities: {experimentalApi: true}});
   rpc.send({method: 'initialized', params: {}});
 }
 

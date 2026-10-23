@@ -5,8 +5,16 @@ import { readFile, writeFile, mkdir, realpath, stat } from 'node:fs/promises';
 import { resolve, relative, isAbsolute, join, dirname } from 'node:path';
 import { createChallenge, validateChallenge, instructionBlock, question, receiptSchema, compare } from './lib/protocol.mjs';
 import { runCodex } from './lib/codex.mjs';
+import { inspectCodex } from './lib/inspect.mjs';
 
-const HELP = `Agent Relay Check 0.1.1 — did this marker reach a fresh agent session?
+const HELP = `Agent Relay Check 0.1.2 — did this marker reach a fresh agent session?
+
+inspect --project DIRECTORY [--timeout-seconds 120]
+  No model answer/turn. Observe native startup source paths; estimate byte budget.
+  Byte estimates are pinned to Codex0.163.0 and separate from native observations.
+  Other loaders, changed files/config or mismatches are INCONCLUSIVE.
+  Initializes installed Codex; may communicate/write its normal local metadata.
+  Does NOT prove full-file delivery, actual marker receipt or rule compliance.
 
 prepare --out DIRECTORY [--keys base_only,override_only]
   Offline. Write fresh challenge.json, instruction.md, question.txt and schema.
@@ -25,6 +33,7 @@ compare --before REPORT --after REPORT
 
 Keep challenge/output outside the tested project. No project files are edited.
 RECEIVED = exact marker; NOT_OBSERVED = null/different; INCONCLUSIVE = unusable run.
+Inspect exits: 0 completed inspection (not a receipt/pass), 3 inconclusive, 1 command error.
 Run exits: 0 received, 2 not observed, 3 inconclusive, 1 command/preflight error.
 `;
 
@@ -59,7 +68,7 @@ export async function main(argv = process.argv.slice(2)) {
   const command = positionals[0];
   const allowed = {
     prepare: ['out', 'keys'], run: ['out', 'project', 'challenge', 'live', 'timeout-seconds'],
-    compare: ['before', 'after'],
+    compare: ['before', 'after'], inspect: ['project', 'timeout-seconds'],
   }[command];
   if (!allowed || Object.keys(v).some((k) => !allowed.includes(k))) throw new Error('Unknown command or option for this command; see --help.');
   if (command === 'prepare') {
@@ -79,6 +88,23 @@ export async function main(argv = process.argv.slice(2)) {
     if (!v.before || !v.after) throw new Error('compare requires --before and --after reports.');
     console.log(JSON.stringify(compare(await json(v.before), await json(v.after)), null, 2));
     return 0;
+  }
+  if (command === 'inspect') {
+    if (!v.project) throw new Error('inspect requires --project DIRECTORY.');
+    const seconds = Number(v['timeout-seconds'] ?? '120');
+    if (!Number.isInteger(seconds) || seconds < 10 || seconds > 600) throw new Error('Timeout must be an integer from 10 to 600 seconds.');
+    const project = await realpath(v.project);
+    if (!(await stat(project)).isDirectory()) throw new Error('Project must be a directory.');
+    const controller = new AbortController();
+    const stop = () => controller.abort();
+    process.once('SIGINT', stop); process.once('SIGTERM', stop);
+    try {
+      const report = await inspectCodex({project, timeoutMs: seconds * 1000, signal: controller.signal});
+      console.log(JSON.stringify(report, null, 2));
+      return report.status === 'INSPECTED' ? 0 : 3;
+    } finally {
+      process.removeListener('SIGINT', stop); process.removeListener('SIGTERM', stop);
+    }
   }
   if (!v.live) throw new Error('run requires explicit --live. Read --help for the model call and configuration scope.');
   if (!v.project || !v.challenge || !v.out) throw new Error('run requires --project, --challenge and --out.');

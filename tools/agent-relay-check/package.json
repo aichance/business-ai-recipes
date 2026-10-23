@@ -1,8 +1,8 @@
 {
   "name": "@aichance/agent-relay-check",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
-  "description": "Check whether a fresh agent session can return a synthetic marker delivered through your instruction path.",
+  "description": "Inspect native startup guidance paths and estimated byte budgets, then test marker receipt in a fresh agent session.",
   "type": "module",
   "bin": {"agent-relay-check": "cli.mjs"},
   "engines": {"node": ">=22"},
