@@ -73,8 +73,8 @@ export class RpcClient {
       this.child.stderr.destroy();
       this.child.unref();
       this.signal?.removeEventListener('abort', this.cancel);
-      // This does NOT certify termination. closeObserved stays false and the
-      // report is inconclusive; callers must not automatically restart it.
+      // Observed close alone does NOT certify tree termination. The report is
+      // inconclusive; callers must not automatically restart it.
       this.resolveClosed(null);
     }, this.cleanupTimeoutMs);
     // Initiate tree termination while the owned leader is still live, before
@@ -86,14 +86,17 @@ export class RpcClient {
         this.terminationSucceeded = ok === true;
         if (!ok) this.failure ??= 'termination_error';
         this.terminationDone = true;
+        // Keep stdin open while taskkill is locating the live Windows tree.
+        // EOF can otherwise let the npm/native leader exit before /PID runs.
+        this.child.stdin.destroy();
         this.join();
       }, () => {
         this.failure ??= 'termination_error';
         this.terminationDone = true;
+        this.child.stdin.destroy();
         this.join();
       });
-    }
-    this.child.stdin.destroy();
+    } else this.child.stdin.destroy();
   }
   send(value) {
     if (this.failure || this.ended) throw new Error(this.failure ?? 'transport_closed');
