@@ -31,6 +31,8 @@ Native file paths are observations; byte/truncation/skip fields are separate loc
 
 [**Measured project-settings example**](docs/agent-relay-project-config.md): the same `project_doc_max_bytes = 0` setting left the effective budget unchanged in one project context and changed native source selection in another. Four inspections requested zero model turns; the example keeps the unchanged result and the configuration-layer evidence.
 
+**Moving global rules with dotfiles?** [Four measured global-file/symlink controls](docs/agent-relay-global-guidance.md) show a known outside-project source count falling from1 to0 for a broken link. A target-content update leaves that count unchanged; inspection is separate from marker receipt.
+
 ### First run: keep the check files outside your project
 
 After extracting the ZIP, open its `agent-relay-check` directory. The following works from the cloned `tools/agent-relay-check` directory too. Create a new temporary workspace and confirm it is **outside the project you intend to check**; don't put challenge or result files inside that project.
