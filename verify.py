@@ -16,6 +16,7 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    'docs/agent-relay-project-config.md',
     'docs/agent-relay-check-v0.1.2.zip',
     'docs/agent-relay-check-v0.1.2.zip.sha256',
     'tools/agent-relay-check/lib/inspect.mjs',
