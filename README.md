@@ -22,6 +22,8 @@ node cli.mjs inspect --project "/absolute/path/to/your project"
 
 Native file paths are observations; byte/truncation/skip fields are separate local estimates pinned to Codex0.163.0. A listed file can be partial. Uncertain versions, configuration, files or cleanup remain `INCONCLUSIVE`. No model turn is requested, but Codex initialization can communicate and write its normal local metadata. [Scope and measured controls](tools/agent-relay-check/examples/NATIVE-INSPECTION.md). Inspection does not establish model receipt or compliance; the following separate check uses inference.
 
+[**Measured project-settings example**](docs/agent-relay-project-config.md): the same `project_doc_max_bytes = 0` setting left the effective budget unchanged in one project context and changed native source selection in another. Four inspections requested zero model turns; the example keeps the unchanged result and the configuration-layer evidence.
+
 ### First run: keep the check files outside your project
 
 After extracting the ZIP, open its `agent-relay-check` directory. The following works from the cloned `tools/agent-relay-check` directory too. Create a new temporary workspace and confirm it is **outside the project you intend to check**; don't put challenge or result files inside that project.
