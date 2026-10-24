@@ -9,6 +9,9 @@ import { fileURLToPath } from 'node:url';
 import { resolveCodexInvocation } from '../lib/process.mjs';
 import { RpcClient } from '../lib/rpc.mjs';
 import { runProcess, DISABLED_FEATURES, probeConfig, checkRestrictedConfig } from '../lib/codex.mjs';
+import { LOADER_VERSIONS } from '../lib/inventory.mjs';
+
+const expectedVersion = 'codex-cli ' + (process.env.RELAY_TEST_CODEX_VERSION ?? '0.163.0');
 
 // Opt-in CI capability smoke only: no credentials, no thread and no model turn.
 test('installed official Codex starts and reads restricted config without a model call', {
@@ -18,7 +21,8 @@ test('installed official Codex starts and reads restricted config without a mode
   const invocation = await resolveCodexInvocation();
   const version = await runProcess(invocation.command, [...invocation.prefixArgs, '--version'], {timeoutMs: 10000});
   assert.equal(version.exit_code, 0);
-  assert.match(version.stdout, /^codex-cli 0\.163\.0\s*$/);
+  assert(LOADER_VERSIONS.includes(expectedVersion), 'CI must name an exact supported version');
+  assert.equal(version.stdout.trim(), expectedVersion);
   let rpc;
   try {
     for (const config of [{}, probeConfig({})]) {
@@ -28,7 +32,7 @@ test('installed official Codex starts and reads restricted config without a mode
         ...DISABLED_FEATURES.flatMap((key) => ['--disable', key]), ...overrides], {
         cwd: root, env: {...process.env, CODEX_HOME: root}, timeoutMs: 15000,
       });
-      await rpc.request('initialize', {clientInfo: {name: 'relay-no-turn-ci', version: '0.1.2'}, capabilities: {experimentalApi: true}});
+      await rpc.request('initialize', {clientInfo: {name: 'relay-no-turn-ci', version: '0.1.3'}, capabilities: {experimentalApi: true}});
       rpc.send({method: 'initialized', params: {}});
       const result = await rpc.request('config/read', {cwd: root, includeLayers: false});
       checkRestrictedConfig(result.config);
@@ -36,7 +40,7 @@ test('installed official Codex starts and reads restricted config without a mode
       assert.equal(rpc.failure, null);
       assert.equal(rpc.closeObserved, true);
     }
-    console.log('Installed Codex 0.163.0 initialize/config-read/cleanup passed; zero thread/start and zero turn/start.');
+    console.log(expectedVersion + ' initialize/config-read/cleanup passed; zero thread/start and zero turn/start.');
   } finally { if (rpc) { rpc.stop(); await rpc.closed; } await rm(root, {recursive: true, force: true}); }
 });
 
@@ -56,7 +60,9 @@ test('installed official Codex inspects partial guidance through the common CLI 
       [fileURLToPath(new URL('../cli.mjs', import.meta.url)), 'inspect', '--project', child, '--timeout-seconds', '30'],
       {cwd: child, env, timeout: 40000, maxBuffer: 1024 * 1024});
     const report = JSON.parse(stdout);
-    assert.equal(report.status, 'INSPECTED'); assert.equal(report.observation.model_turn_requests, 0);
+    assert.equal(report.status, 'INSPECTED'); assert.equal(report.client_version, expectedVersion);
+    assert.equal(report.estimate.basis, 'local-snapshot-and-rust-v' + expectedVersion.split(' ')[1] + '-loader');
+    assert.equal(report.observation.model_turn_requests, 0);
     assert.equal(report.observation.cleanup_confirmed, true); assert.equal(report.observation.single_local_environment, true);
     assert.deepEqual(report.estimate.rows.map(x => [x.path, x.estimated_status, x.examined_bytes, x.native_listed]),
       [['AGENTS.md', 'FULL', 40, true], ['child/AGENTS.md', 'TRUNCATED', 88, true]]);
