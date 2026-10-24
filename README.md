@@ -6,6 +6,11 @@ One command shows native startup file selection beside a separate local byte-bud
 
 [**Inspect without a model turn**](tools/agent-relay-check/README.md#inspect-your-current-instruction-budget-first) · [**Test marker receipt**](#first-run-keep-the-check-files-outside-your-project) · [**Small v0.1.3 ZIP**](https://aichance.github.io/business-ai-recipes/agent-relay-check-v0.1.3.zip) · [**Measured result and rerun command**](tools/agent-relay-check/examples/MEASUREMENTS.md)
 
+### Public reports
+
+- **Own-project run, v0.1.2:** [YushiYamamoto's report](https://qiita.com/YushiYamamoto/items/5004c1bfbbba9934e953#comment-ff051270778c5e15718e) records `RECEIVED` from their existing synchronized guidance on macOS / Codex0.164.0, zero observed tool calls, and byte-for-byte restoration of the instruction file. This is one developer's public self-report for v0.1.2.
+- **A measured finding led to an upstream fix:** our [project-config comparison](docs/agent-relay-project-config.md) exposed a mismatch in Agent Guild's Codex reader. Its maintainer [confirmed the report](https://github.com/oddessentials/agent-guild/issues/189#issuecomment-6378917465) and [merged the fix](https://github.com/oddessentials/agent-guild/pull/313), released as v1.9.1. The maintainer's reported validation used Codex's debug command.
+
 Our four-call demonstration: normal file → base marker received; override added → override marker received; override removed → base marker received again; both removed → neither observed. Fresh sessions, no observed tool calls. This reproduces documented file selection, not a new bug or proof of general instruction compliance.
 
 **Inspection:** Node22+ and installed stable Codex0.163.0 or0.164.0 for the version-specific byte estimate; it requests no model turn. **Separate live marker check:** authenticated Codex CLI0.163.0+ with existing gpt-6.1-sol/MAX access and quota. macOS/Linux or experimental native Windows; no npm dependencies. Scope is startup guidance, with hooks/MCP disabled for the diagnostic and compaction untested.
