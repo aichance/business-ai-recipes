@@ -148,3 +148,17 @@ test('unknown outside native paths invalidate a matching project estimate withou
   assert.equal(unknown.selection_matches_native_paths, false); assert.equal(unknown.unknown_external_source_count, 1);
   assert(!JSON.stringify(unknown).includes('UNKNOWN-PRIVATE')); assert(!JSON.stringify(unknown).includes('credentials.txt'));
 });
+
+
+test('budget estimates identify the reviewed loader and reject unreviewed versions', async t => {
+  const root = await fixture(t); await writeFile(join(root, 'AGENTS.md'), 'known');
+  const snapshot = await inventorySnapshot(root, {});
+  for (const version of ['0.163.0', '0.164.0']) {
+    const report = budgetReport(snapshot, [join(root, 'AGENTS.md')], [], 'codex-cli ' + version);
+    assert.equal(report.basis, 'local-snapshot-and-rust-v' + version + '-loader');
+    assert.equal(report.selection_matches_native_paths, true);
+  }
+  for (const version of ['0.165.0', '0.164.0-alpha.1', '0.164.0+custom']) {
+    assert.throws(() => budgetReport(snapshot, null, [], 'codex-cli ' + version), /unsupported_loader_version/);
+  }
+});
