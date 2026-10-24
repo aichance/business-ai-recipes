@@ -8,9 +8,9 @@ One command shows native startup file selection beside a separate local byte-bud
 
 Our four-call demonstration: normal file → base marker received; override added → override marker received; override removed → base marker received again; both removed → neither observed. Fresh sessions, no observed tool calls. This reproduces documented file selection, not a new bug or proof of general instruction compliance.
 
-Node 22+, Codex CLI 0.163.0+, macOS/Linux or native Windows (experimental), and existing gpt-6.1-sol/MAX access. Live runs consume that account's quota. No npm dependencies. The first release tests startup guidance; hooks, MCP and compaction are outside its scope.
+**Inspection:** Node22+ and installed stable Codex0.163.0 for the pinned byte estimate; it requests no model turn. **Separate live marker check:** authenticated Codex CLI0.163.0+ with existing gpt-6.1-sol/MAX access and quota. macOS/Linux or experimental native Windows; no npm dependencies. Scope is startup guidance, with hooks/MCP disabled for the diagnostic and compaction untested.
 
-On native Windows, start with the [PowerShell commands and verification scope](tools/agent-relay-check/README.md#native-windows--powershell). Transport/cleanup CI and a completed authenticated marker response are separate checks.
+On native Windows, start with the [PowerShell commands and verification scope](tools/agent-relay-check/README.md#native-windows--powershell). [An external v0.1.2 Windows report](https://github.com/openai/codex/discussions/56176#discussioncomment-19155475) records a completed native inspection on Windows11 / Node24.11.1 / temporary Codex0.163.0, with zero requested model turns and both servers closed. Its live run was `INCONCLUSIVE`; the reporter cites unavailable model auth/quota. This is native-inspection evidence, **not a completed Windows marker receipt** or proof that it improves their workflow.
 
 ### Inspect without editing your instructions
 
