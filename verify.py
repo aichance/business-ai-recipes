@@ -16,6 +16,9 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    'experiments/relay-cumulative-budget/check.py',
+    '.github/workflows/relay-cumulative-budget.yml',
+    'docs/agent-relay-cumulative-budget.md',
     'docs/agent-relay-global-guidance.md',
     'docs/agent-relay-source-review.md',
     'docs/agent-relay-project-config.md',
