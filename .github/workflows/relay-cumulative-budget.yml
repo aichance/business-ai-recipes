@@ -5,11 +5,13 @@ on:
     paths:
       - 'experiments/relay-cumulative-budget/**'
       - '.github/workflows/relay-cumulative-budget.yml'
+      - 'docs/agent-relay-cumulative-budget.md'
   push:
     branches: [main, 'codex/relay-cumulative-budget-*']
     paths:
       - 'experiments/relay-cumulative-budget/**'
       - '.github/workflows/relay-cumulative-budget.yml'
+      - 'docs/agent-relay-cumulative-budget.md'
   workflow_dispatch:
 
 permissions:
