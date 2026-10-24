@@ -3,7 +3,7 @@ import { performance } from 'node:perf_hooks';
 import { RpcClient } from './rpc.mjs';
 import { resolveCodexInvocation } from './process.mjs';
 import { MODEL, EFFORT, initialize, startupArgs, threadParams, probeConfig, checkRestrictedConfig, runProcess } from './codex.mjs';
-import { LOADER_VERSION, inventorySnapshot, budgetReport, discoverySettings } from './inventory.mjs';
+import { LOADER_VERSION, LOADER_VERSIONS, inventorySnapshot, budgetReport, discoverySettings } from './inventory.mjs';
 
 const LAYER_TYPES = new Set(['packagedDefaults', 'mdm', 'system', 'enterpriseManaged', 'user', 'project', 'sessionFlags', 'legacyManagedConfigTomlFromFile', 'legacyManagedConfigTomlFromMdm']);
 const ALLOWED = new Set(['initialize', 'config/read', 'thread/start']);
@@ -39,7 +39,7 @@ function inspectionScope(response) {
 }
 
 function baseReport(clientVersion) {
-  return {schema_version: '1', tool: 'agent-relay-check', tool_version: '0.1.2', status: 'INCONCLUSIVE',
+  return {schema_version: '1', tool: 'agent-relay-check', tool_version: '0.1.3', status: 'INCONCLUSIVE',
     client_version: clientVersion, observation: {kind: 'native-startup-source-paths', model_turn_requests: 0,
       requested_model: MODEL, requested_effort: EFFORT, resolved_model: null, resolved_effort: null,
       fresh_ephemeral_thread: false, cleanup_confirmed: false, request_methods: []},
@@ -92,9 +92,9 @@ export async function inspectNative({project, clientVersion, createClient, timeo
     const effective = await request(rpc, 'config/read', {cwd: project, includeLayers: true});
     checkRestrictedConfig(effective.config);
     const knownGlobalSources = inspectionScope(effective);
-    if (clientVersion === LOADER_VERSION) {
+    if (LOADER_VERSIONS.includes(clientVersion)) {
       snapshot = await inventorySnapshot(project, effective.config, {signal: boundedSignal});
-      report.estimate = {state: 'INCONCLUSIVE', ...budgetReport(snapshot)};
+      report.estimate = {state: 'INCONCLUSIVE', ...budgetReport(snapshot, null, [], clientVersion)};
       if (snapshot.issues.length) throw new Error('snapshot_unconfirmed');
     }
     const response = await request(rpc, 'thread/start', threadParams(project, effective.config));
@@ -111,10 +111,10 @@ export async function inspectNative({project, clientVersion, createClient, timeo
       const local = response.instructionSources.filter(path => { const r = relative(project, path); return r !== '..' && !r.startsWith(`..${sep}`) && !isAbsolute(r); });
       report.observation.native_sources_within_startup_directory = local.map(x => relative(project, x).split(sep).join('/') || '.');
       report.observation.other_native_source_count = response.instructionSources.length - local.length;
-      report.estimate = {state: 'UNSUPPORTED_SOURCE_VERSION', required_version: LOADER_VERSION};
+      report.estimate = {state: 'UNSUPPORTED_SOURCE_VERSION', required_version: LOADER_VERSION, required_versions: LOADER_VERSIONS};
       throw new Error('source_version_unverified');
     }
-    report.estimate = {state: 'INCONCLUSIVE', ...budgetReport(snapshot, response.instructionSources, knownGlobalSources)};
+    report.estimate = {state: 'INCONCLUSIVE', ...budgetReport(snapshot, response.instructionSources, knownGlobalSources, clientVersion)};
     const afterConfig = await request(rpc, 'config/read', {cwd: project, includeLayers: true});
     checkRestrictedConfig(afterConfig.config);
     if (JSON.stringify(knownGlobalSources) !== JSON.stringify(inspectionScope(afterConfig))) throw new Error('settings_changed');
