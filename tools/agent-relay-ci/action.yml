@@ -1,0 +1,33 @@
+name: Agent Relay Check CI
+description: Check required Codex startup sources and separate local byte estimates without a model turn
+author: aichance
+inputs:
+  project-directory:
+    description: Startup directory, relative to the checked-out workspace
+    default: '.'
+  required-files:
+    description: Required instruction paths, one per line, relative to the project's Git root
+    default: AGENTS.md
+outputs:
+  status:
+    description: PASSED, REJECTED or INCONCLUSIVE; receipt and compliance are not tested
+    value: ${{ steps.inspect.outputs.status }}
+  report_path:
+    description: Sanitized result in the runner temporary directory; not uploaded automatically
+    value: ${{ steps.inspect.outputs.report_path }}
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      with:
+        node-version: '22'
+    - name: Check startup sources with the unchanged common package
+      id: inspect
+      shell: bash
+      env:
+        RELAY_ACTION_ROOT: ${{ github.action_path }}
+        RELAY_PROJECT_DIRECTORY: ${{ inputs.project-directory }}
+        RELAY_REQUIRED_FILES: ${{ inputs.required-files }}
+        NODE_OPTIONS: ''
+        NODE_PATH: ''
+      run: node "$RELAY_ACTION_ROOT/ci.mjs"
