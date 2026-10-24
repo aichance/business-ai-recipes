@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto';
 import { dirname, isAbsolute, join, normalize, relative, sep } from 'node:path';
 
 export const LOADER_VERSION = 'codex-cli 0.163.0';
+export const LOADER_VERSIONS = Object.freeze([LOADER_VERSION, 'codex-cli 0.164.0']);
 const MAX_DEPTH = 128;
 const MAX_BYTES = 4 * 1024 * 1024;
 const whitespace = /^\p{White_Space}+|\p{White_Space}+$/gu;
@@ -160,7 +161,8 @@ export async function inventorySnapshot(cwd, config, {signal} = {}) {
     directory_count: chain.length, examined_bytes: readBytes};
 }
 
-export function budgetReport(snapshot, nativeSources = null, knownGlobalSources = []) {
+export function budgetReport(snapshot, nativeSources = null, knownGlobalSources = [], clientVersion = LOADER_VERSION) {
+  if (!LOADER_VERSIONS.includes(clientVersion)) throw new Error('unsupported_loader_version');
   const observed = nativeSources !== null;
   if (observed && (!Array.isArray(nativeSources) || nativeSources.some(x => typeof x !== 'string' || !isAbsolute(x)))) throw new Error('invalid_native_source_paths');
   const native = new Set((nativeSources ?? []).map(x => normalize(x)));
@@ -169,7 +171,7 @@ export function budgetReport(snapshot, nativeSources = null, knownGlobalSources 
   const unknownOutside = [...native].filter(x => !inside(snapshot.root, x) && !globals.has(x));
   const expected = snapshot.rows.filter(x => x._expected).map(x => normalize(x._absolute));
   const matches = unknownOutside.length === 0 && native.size === nativeSources?.length && projectPaths.length === expected.length && projectPaths.every(x => expected.includes(x));
-  return {basis: 'local-snapshot-and-rust-v0.163.0-loader',
+  return {basis: `local-snapshot-and-${clientVersion.replace('codex-cli ', 'rust-v')}-loader`,
     native_path_membership_is_not_full_bytes_or_cause: true,
     effective_project_doc_max_bytes: snapshot.settings.budget,
     startup_directory: display(snapshot.root, snapshot.cwd),
