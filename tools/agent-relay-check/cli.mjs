@@ -7,11 +7,11 @@ import { createChallenge, validateChallenge, instructionBlock, question, receipt
 import { runCodex } from './lib/codex.mjs';
 import { inspectCodex } from './lib/inspect.mjs';
 
-const HELP = `Agent Relay Check 0.1.2 — did this marker reach a fresh agent session?
+const HELP = `Agent Relay Check 0.1.3 — did this marker reach a fresh agent session?
 
 inspect --project DIRECTORY [--timeout-seconds 120]
   No model answer/turn. Observe native startup source paths; estimate byte budget.
-  Byte estimates are pinned to Codex0.163.0 and separate from native observations.
+  Byte estimates support stable Codex0.163.0/0.164.0 and remain separate from native observations.
   Other loaders, changed files/config or mismatches are INCONCLUSIVE.
   Initializes installed Codex; may communicate/write its normal local metadata.
   Does NOT prove full-file delivery, actual marker receipt or rule compliance.

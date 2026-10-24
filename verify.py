@@ -17,6 +17,8 @@ from recipe import Refused, apply_local, approve, prepare, read_json, validate_p
 
 EXPECTED_FILES = {
     'docs/agent-relay-project-config.md',
+    'docs/agent-relay-check-v0.1.3.zip',
+    'docs/agent-relay-check-v0.1.3.zip.sha256',
     'docs/agent-relay-check-v0.1.2.zip',
     'docs/agent-relay-check-v0.1.2.zip.sha256',
     'tools/agent-relay-check/lib/inspect.mjs',
@@ -2018,7 +2020,11 @@ def verify_relay_archive() -> None:
     previous_hash = "04b0cec55e34535a1530c1ec053e5643d27815723088576d3ce6ac1d6e0edf69"
     assert hashlib.sha256(previous.read_bytes()).hexdigest() == previous_hash
     assert Path(str(previous) + ".sha256").read_text().split()[0] == previous_hash
-    archive = root / "docs/agent-relay-check-v0.1.2.zip"
+    native_previous = root / "docs/agent-relay-check-v0.1.2.zip"
+    native_previous_hash = "ea1b726566028345d4cfcffd5ba4908b2708caf5d0612541551ebb1021397b94"
+    assert hashlib.sha256(native_previous.read_bytes()).hexdigest() == native_previous_hash
+    assert Path(str(native_previous) + ".sha256").read_text().split()[0] == native_previous_hash
+    archive = root / "docs/agent-relay-check-v0.1.3.zip"
     expected_hash = Path(str(archive) + ".sha256").read_text().split()[0]
     assert hashlib.sha256(archive.read_bytes()).hexdigest() == expected_hash
     tool = root / "tools/agent-relay-check"

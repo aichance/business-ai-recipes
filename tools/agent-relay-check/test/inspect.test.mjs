@@ -55,19 +55,22 @@ function transport({root, child}, options = {}) {
 }
 
 test('native inspection distinguishes estimated bytes from source membership, with no model turn', async t => {
-  const f = await fixture(t); const x = transport(f);
-  const r = await inspectNative({project: f.child, clientVersion: 'codex-cli 0.163.0', createClient: x.createClient});
-  assert.equal(r.status, 'INSPECTED'); assert.equal(r.estimate.rows[1].estimated_status, 'TRUNCATED');
-  assert.equal(r.estimate.rows[1].native_listed, true); assert.equal(r.estimate.rows[1].examined_bytes, 88);
-  assert.equal(r.receipt, 'NOT_TESTED'); assert.equal(r.compliance, 'NOT_TESTED');
-  assert.equal(r.observation.model_turn_requests, 0); assert.equal(r.observation.cleanup_confirmed, true);
-  assert.equal(x.calls.filter(x => x.method === 'thread/start').length, 1);
-  assert(x.calls.every(x => ['initialize', 'config/read', 'thread/start'].includes(x.method)));
-  const start = x.calls.find(x => x.method === 'thread/start').params;
-  assert.equal(start.model, 'gpt-6.1-sol'); assert.equal(start.config.model_reasoning_effort, 'max');
-  assert.equal(start.sandbox, 'read-only'); assert.equal(start.approvalPolicy, 'never');
-  assert.equal(start.allowProviderModelFallback, false);
-  for (const secret of [f.root, 'PRIVATE-CREDENTIAL', 'PRIVATE-CONFIG', 'PRIVATE-HOME']) assert(!JSON.stringify(r).includes(secret));
+  for (const clientVersion of ['codex-cli 0.163.0', 'codex-cli 0.164.0']) {
+    const f = await fixture(t); const x = transport(f);
+    const r = await inspectNative({project: f.child, clientVersion, createClient: x.createClient});
+    assert.equal(r.estimate.basis, `local-snapshot-and-rust-v${clientVersion.split(' ')[1]}-loader`);
+    assert.equal(r.status, 'INSPECTED'); assert.equal(r.estimate.rows[1].estimated_status, 'TRUNCATED');
+    assert.equal(r.estimate.rows[1].native_listed, true); assert.equal(r.estimate.rows[1].examined_bytes, 88);
+    assert.equal(r.receipt, 'NOT_TESTED'); assert.equal(r.compliance, 'NOT_TESTED');
+    assert.equal(r.observation.model_turn_requests, 0); assert.equal(r.observation.cleanup_confirmed, true);
+    assert.equal(x.calls.filter(x => x.method === 'thread/start').length, 1);
+    assert(x.calls.every(x => ['initialize', 'config/read', 'thread/start'].includes(x.method)));
+    const start = x.calls.find(x => x.method === 'thread/start').params;
+    assert.equal(start.model, 'gpt-6.1-sol'); assert.equal(start.config.model_reasoning_effort, 'max');
+    assert.equal(start.sandbox, 'read-only'); assert.equal(start.approvalPolicy, 'never');
+    assert.equal(start.allowProviderModelFallback, false);
+    for (const secret of [f.root, 'PRIVATE-CREDENTIAL', 'PRIVATE-CONFIG', 'PRIVATE-HOME']) assert(!JSON.stringify(r).includes(secret));
+  }
 });
 
 test('untrusted/other native selection mismatch is inconclusive, not proof of size loss', async t => {
@@ -91,11 +94,15 @@ test('changing discovery settings is inconclusive', async t => {
 });
 
 test('unknown loader keeps native-only observations and never claims budget parity', async t => {
-  const f = await fixture(t); const x = transport(f);
-  const r = await inspectNative({project: f.child, clientVersion: 'codex-cli 0.164.0', createClient: x.createClient});
-  assert.equal(r.status, 'INCONCLUSIVE'); assert.equal(r.estimate.state, 'UNSUPPORTED_SOURCE_VERSION');
-  assert.deepEqual(r.observation.native_sources_within_startup_directory, ['AGENTS.md']);
-  assert(!JSON.stringify(r).includes('PRIVATE-HOME')); assert(!('rows' in r.estimate));
+  for (const clientVersion of ['codex-cli 0.165.0', 'codex-cli 0.164.0-alpha.1', 'codex-cli 0.163.0+custom']) {
+    const f = await fixture(t); const x = transport(f);
+    const r = await inspectNative({project: f.child, clientVersion, createClient: x.createClient});
+    assert.equal(r.status, 'INCONCLUSIVE'); assert.equal(r.estimate.state, 'UNSUPPORTED_SOURCE_VERSION');
+    assert.deepEqual(r.observation.native_sources_within_startup_directory, ['AGENTS.md']);
+    assert(!JSON.stringify(r).includes('PRIVATE-HOME')); assert(!('rows' in r.estimate));
+    assert.deepEqual(r.estimate.required_versions, ['codex-cli 0.163.0', 'codex-cli 0.164.0']);
+    assert.equal(r.observation.cleanup_confirmed, true);
+  }
 });
 
 test('native cleanup failure cannot leave INSPECTED', async t => {
@@ -151,5 +158,28 @@ test('project marker overrides or missing provenance stop before guidance scanni
     assert.equal(r.status, 'INCONCLUSIVE'); assert(!('rows' in r.estimate));
     assert(!x.calls.some(x => x.method === 'thread/start'));
     assert.equal(r.observation.cleanup_confirmed, true);
+  }
+});
+
+// Recheck guards on the newly supported exact CLI version, without weakening the old ones.
+test('Codex 0.164 inspection keeps provenance, mutation, model and cleanup guards', async t => {
+  const f = await fixture(t);
+  const cases = [
+    {sources: []}, {changedConfig: true}, {cleanupFailure: true},
+    {projectRootOverride: true}, {missingLayers: true}, {unknownLayer: true},
+    {wrongModel: true}, {unexpectedTurn: true},
+  ];
+  for (const options of cases) {
+    const x = transport(f, options);
+    const r = await inspectNative({project: f.child, clientVersion: 'codex-cli 0.164.0', createClient: x.createClient});
+    assert.equal(r.status, 'INCONCLUSIVE', JSON.stringify(options));
+    assert.equal(r.observation.model_turn_requests, 0);
+    assert(!JSON.stringify(r).includes('PRIVATE-CREDENTIAL'));
+    if (options.cleanupFailure) assert.equal(r.observation.cleanup_confirmed, false);
+    else assert.equal(r.observation.cleanup_confirmed, true);
+    if (options.projectRootOverride || options.missingLayers || options.unknownLayer) {
+      assert(!('rows' in r.estimate));
+      assert(!x.calls.some(call => call.method === 'thread/start'));
+    }
   }
 });
