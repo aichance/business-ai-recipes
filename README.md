@@ -6,6 +6,8 @@ One command shows native startup file selection beside a separate local byte-bud
 
 [**Inspect without a model turn**](tools/agent-relay-check/README.md#inspect-your-current-instruction-budget-first) · [**Test marker receipt**](#first-run-keep-the-check-files-outside-your-project) · [**Small v0.1.3 ZIP**](https://aichance.github.io/business-ai-recipes/agent-relay-check-v0.1.3.zip) · [**Measured result and rerun command**](tools/agent-relay-check/examples/MEASUREMENTS.md)
 
+Before running third-party code, use the [v0.1.3 source map, command side effects and file checksums](docs/agent-relay-source-review.md) to support your own review.
+
 ### Public reports
 
 - **Own-project run, v0.1.2:** [YushiYamamoto's report](https://qiita.com/YushiYamamoto/items/5004c1bfbbba9934e953#comment-ff051270778c5e15718e) records `RECEIVED` from their existing synchronized guidance on macOS / Codex0.164.0, zero observed tool calls, and byte-for-byte restoration of the instruction file. This is one developer's public self-report for v0.1.2.
