@@ -6,6 +6,8 @@ One command shows native startup file selection beside a separate local byte-bud
 
 [**Inspect without a model turn**](tools/agent-relay-check/README.md#inspect-your-current-instruction-budget-first) · [**Test marker receipt**](#first-run-keep-the-check-files-outside-your-project) · [**Small v0.1.3 ZIP**](https://aichance.github.io/business-ai-recipes/agent-relay-check-v0.1.3.zip) · [**Measured result and rerun command**](tools/agent-relay-check/examples/MEASUREMENTS.md)
 
+**No local CLI or API key?** [Add the startup-source check to your own GitHub Actions](docs/agent-relay-ci.md). It installs the pinned CLI on a temporary Linux runner and fails when a required file is missing or locally estimated partial. Native path membership and the separate byte estimate are checked; model receipt and compliance remain `NOT_TESTED`.
+
 Before running third-party code, use the [v0.1.3 source map, command side effects and file checksums](docs/agent-relay-source-review.md) to support your own review.
 
 ### Public reports

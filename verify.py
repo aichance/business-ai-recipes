@@ -16,6 +16,7 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    'docs/agent-relay-ci.md',
     '.github/workflows/relay-ci-entry.yml',
     'tools/agent-relay-ci/action.yml',
     'tools/agent-relay-ci/ci.mjs',
