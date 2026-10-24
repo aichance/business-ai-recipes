@@ -103,7 +103,7 @@ export const startupArgs = (config = {}) => ['app-server', '--stdio',
 ];
 
 export async function initialize(rpc) {
-  await rpc.request('initialize', {clientInfo: {name: 'agent-relay-check', version: '0.1.2'}, capabilities: {experimentalApi: true}});
+  await rpc.request('initialize', {clientInfo: {name: 'agent-relay-check', version: '0.1.3'}, capabilities: {experimentalApi: true}});
   rpc.send({method: 'initialized', params: {}});
 }
 
