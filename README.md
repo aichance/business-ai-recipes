@@ -4,11 +4,11 @@
 
 One command shows native startup file selection beside a separate local byte-budget estimate, without a model turn. When you need receipt evidence, a fresh Codex session returns a disposable marker from your instruction file; the expected value never enters the question. Compare before and after a settings or CLI change.
 
-[**Inspect without a model turn**](tools/agent-relay-check/README.md#inspect-your-current-instruction-budget-first) · [**Test marker receipt**](#first-run-keep-the-check-files-outside-your-project) · [**Small v0.1.2 ZIP**](https://aichance.github.io/business-ai-recipes/agent-relay-check-v0.1.2.zip) · [**Measured result and rerun command**](tools/agent-relay-check/examples/MEASUREMENTS.md)
+[**Inspect without a model turn**](tools/agent-relay-check/README.md#inspect-your-current-instruction-budget-first) · [**Test marker receipt**](#first-run-keep-the-check-files-outside-your-project) · [**Small v0.1.3 ZIP**](https://aichance.github.io/business-ai-recipes/agent-relay-check-v0.1.3.zip) · [**Measured result and rerun command**](tools/agent-relay-check/examples/MEASUREMENTS.md)
 
 Our four-call demonstration: normal file → base marker received; override added → override marker received; override removed → base marker received again; both removed → neither observed. Fresh sessions, no observed tool calls. This reproduces documented file selection, not a new bug or proof of general instruction compliance.
 
-**Inspection:** Node22+ and installed stable Codex0.163.0 for the pinned byte estimate; it requests no model turn. **Separate live marker check:** authenticated Codex CLI0.163.0+ with existing gpt-6.1-sol/MAX access and quota. macOS/Linux or experimental native Windows; no npm dependencies. Scope is startup guidance, with hooks/MCP disabled for the diagnostic and compaction untested.
+**Inspection:** Node22+ and installed stable Codex0.163.0 or0.164.0 for the version-specific byte estimate; it requests no model turn. **Separate live marker check:** authenticated Codex CLI0.163.0+ with existing gpt-6.1-sol/MAX access and quota. macOS/Linux or experimental native Windows; no npm dependencies. Scope is startup guidance, with hooks/MCP disabled for the diagnostic and compaction untested.
 
 On native Windows, start with the [PowerShell commands and verification scope](tools/agent-relay-check/README.md#native-windows--powershell). [An external v0.1.2 Windows report](https://github.com/openai/codex/discussions/56176#discussioncomment-19155475) records a completed native inspection on Windows11 / Node24.11.1 / temporary Codex0.163.0, with zero requested model turns and both servers closed. Its live run was `INCONCLUSIVE`; the reporter cites unavailable model auth/quota. This is native-inspection evidence, **not a completed Windows marker receipt** or proof that it improves their workflow.
 
@@ -20,7 +20,7 @@ After extracting the ZIP, open its `agent-relay-check` directory and run:
 node cli.mjs inspect --project "/absolute/path/to/your project"
 ```
 
-Native file paths are observations; byte/truncation/skip fields are separate local estimates pinned to Codex0.163.0. A listed file can be partial. Uncertain versions, configuration, files or cleanup remain `INCONCLUSIVE`. No model turn is requested, but Codex initialization can communicate and write its normal local metadata. [Scope and measured controls](tools/agent-relay-check/examples/NATIVE-INSPECTION.md). Inspection does not establish model receipt or compliance; the following separate check uses inference.
+Native file paths are observations; byte/truncation/skip fields are separate local estimates pinned to the detected stable Codex0.163.0 or0.164.0 loader. A listed file can be partial. Uncertain versions, configuration, files or cleanup remain `INCONCLUSIVE`. No model turn is requested, but Codex initialization can communicate and write its normal local metadata. [Scope and measured controls](tools/agent-relay-check/examples/NATIVE-INSPECTION.md). Inspection does not establish model receipt or compliance; the following separate check uses inference.
 
 [**Measured project-settings example**](docs/agent-relay-project-config.md): the same `project_doc_max_bytes = 0` setting left the effective budget unchanged in one project context and changed native source selection in another. Four inspections requested zero model turns; the example keeps the unchanged result and the configuration-layer evidence.
 
