@@ -33,6 +33,8 @@ Native file paths are observations; byte/truncation/skip fields are separate loc
 
 **Moving global rules with dotfiles?** [Four measured global-file/symlink controls](docs/agent-relay-global-guidance.md) show a known outside-project source count falling from1 to0 for a broken link. A target-content update leaves that count unchanged; inspection is separate from marker receipt.
 
+**Each file fits, but the child is still partial:** [Three reproducible cumulative-budget controls](docs/agent-relay-cumulative-budget.md) compare a pinned per-file checker with native startup paths and Relay's separate local estimate. Root 24,000 B + child 18,000 B pass the per-file check; startup in the child leaves 8,768 B of the shared 32,768 B budget for it. Zero model turns; operator measurements, not external adoption.
+
 ### First run: keep the check files outside your project
 
 After extracting the ZIP, open its `agent-relay-check` directory. The following works from the cloned `tools/agent-relay-check` directory too. Create a new temporary workspace and confirm it is **outside the project you intend to check**; don't put challenge or result files inside that project.
