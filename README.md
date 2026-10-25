@@ -4,11 +4,11 @@
 
 One command shows native startup file selection beside a separate local byte-budget estimate, without a model turn. When you need receipt evidence, a fresh Codex session returns a disposable marker from your instruction file; the expected value never enters the question. Compare before and after a settings or CLI change.
 
-[**Inspect without a model turn**](tools/agent-relay-check/README.md#inspect-your-current-instruction-budget-first) · [**Test marker receipt**](#first-run-keep-the-check-files-outside-your-project) · [**Small v0.1.3 ZIP**](https://aichance.github.io/business-ai-recipes/agent-relay-check-v0.1.3.zip) · [**Measured result and rerun command**](tools/agent-relay-check/examples/MEASUREMENTS.md)
+[**Inspect without a model turn**](tools/agent-relay-check/README.md#inspect-your-current-instruction-budget-first) · [**Test marker receipt**](#first-run-keep-the-check-files-outside-your-project) · [**Small v0.1.4 ZIP**](https://aichance.github.io/business-ai-recipes/agent-relay-check-v0.1.4.zip) · [**Measured result and rerun command**](tools/agent-relay-check/examples/MEASUREMENTS.md)
 
 **No local CLI or API key?** [Add the startup-source check to your own GitHub Actions](docs/agent-relay-ci.md). It installs the pinned CLI on a temporary Linux runner and fails when a required file is missing or locally estimated partial. Native path membership and the separate byte estimate are checked; model receipt and compliance remain `NOT_TESTED`.
 
-Before running third-party code, use the [v0.1.3 source map, command side effects and file checksums](docs/agent-relay-source-review.md) to support your own review.
+Before running third-party code, use the [v0.1.4 change and review map](docs/agent-relay-runtime-options.md), or the preserved [v0.1.3 source map, command side effects and file checksums](docs/agent-relay-source-review.md), to support your own review.
 
 ### Public reports
 
@@ -17,7 +17,7 @@ Before running third-party code, use the [v0.1.3 source map, command side effect
 
 Our four-call demonstration: normal file → base marker received; override added → override marker received; override removed → base marker received again; both removed → neither observed. Fresh sessions, no observed tool calls. This reproduces documented file selection, not a new bug or proof of general instruction compliance.
 
-**Inspection:** Node22+ and installed stable Codex0.163.0 or0.164.0 for the version-specific byte estimate; it requests no model turn. **Separate live marker check:** authenticated Codex CLI0.163.0+ with existing gpt-6.1-sol/MAX access and quota. macOS/Linux or experimental native Windows; no npm dependencies. Scope is startup guidance, with hooks/MCP disabled for the diagnostic and compaction untested.
+**Inspection:** Node22+ and installed stable Codex0.163.0 or0.164.0 for the version-specific byte estimate; it requests no model turn. **Separate live marker check:** authenticated Codex CLI0.163.0+ with existing model access and quota; default gpt-6.1-sol/MAX. v0.1.4 adds explicit [`run --model ID --effort LEVEL`](tools/agent-relay-check/README.md#select-your-existing-model-explicitly), without automatic fallback. Other model/effort combinations are experimental and not live-verified. macOS/Linux or experimental native Windows; no npm dependencies. Scope is startup guidance, with hooks/MCP disabled for the diagnostic and compaction untested.
 
 On native Windows, start with the [PowerShell commands and verification scope](tools/agent-relay-check/README.md#native-windows--powershell). [An external v0.1.2 Windows report](https://github.com/openai/codex/discussions/56176#discussioncomment-19155475) records a completed native inspection on Windows11 / Node24.11.1 / temporary Codex0.163.0, with zero requested model turns and both servers closed. Its live run was `INCONCLUSIVE`; the reporter cites unavailable model auth/quota. This is native-inspection evidence, **not a completed Windows marker receipt** or proof that it improves their workflow.
 
