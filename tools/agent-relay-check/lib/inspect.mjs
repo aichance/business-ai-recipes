@@ -39,7 +39,7 @@ function inspectionScope(response) {
 }
 
 function baseReport(clientVersion) {
-  return {schema_version: '1', tool: 'agent-relay-check', tool_version: '0.1.3', status: 'INCONCLUSIVE',
+  return {schema_version: '1', tool: 'agent-relay-check', tool_version: '0.1.4', status: 'INCONCLUSIVE',
     client_version: clientVersion, observation: {kind: 'native-startup-source-paths', model_turn_requests: 0,
       requested_model: MODEL, requested_effort: EFFORT, resolved_model: null, resolved_effort: null,
       fresh_ephemeral_thread: false, cleanup_confirmed: false, request_methods: []},

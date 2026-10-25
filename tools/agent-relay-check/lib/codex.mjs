@@ -6,6 +6,18 @@ import { resolveCodexInvocation, terminateTree } from './process.mjs';
 
 export const MODEL = 'gpt-6.1-sol';
 export const EFFORT = 'max';
+
+// Validate syntax only. Availability is determined by the user's installed
+// Codex and existing account; never discover, substitute or retry models here.
+export function runtimeSettings({model = MODEL, effort = EFFORT} = {}) {
+  if (typeof model !== 'string' || !/^[a-zA-Z0-9][a-zA-Z0-9._:/-]{0,127}$/.test(model)) {
+    throw new Error('Model must be an explicit identifier of 1–128 letters, digits, dots, underscores, colons, slashes or hyphens.');
+  }
+  if (typeof effort !== 'string' || !/^[a-z][a-z0-9_-]{0,31}$/.test(effort)) {
+    throw new Error('Effort must be a non-empty lowercase identifier of at most 32 characters. Use a value your selected Codex model supports.');
+  }
+  return {model, effort};
+}
 export const DISABLED_FEATURES = [
   'shell_tool', 'apps', 'plugins', 'multi_agent', 'multi_agent_v2',
   'browser_use', 'browser_use_external', 'computer_use', 'image_generation',
@@ -13,11 +25,12 @@ export const DISABLED_FEATURES = [
   'sleep_tool', 'tool_suggest',
 ];
 
-export function probeConfig(config) {
+export function probeConfig(config, runtime) {
+  const settings = runtimeSettings(runtime);
   const servers = config.mcp_servers ?? {};
   if (!servers || typeof servers !== 'object' || Array.isArray(servers)) throw new Error('Invalid MCP configuration.');
   const overrides = {
-    model_reasoning_effort: EFFORT,
+    model_reasoning_effort: settings.effort,
     web_search: 'disabled',
     features: Object.fromEntries(DISABLED_FEATURES.map((key) => [key, false])),
     mcp_servers: Object.fromEntries(Object.keys(servers).map((key) => [key, {enabled: false}])),
@@ -28,10 +41,11 @@ export function probeConfig(config) {
   return overrides;
 }
 
-export function threadParams(project, config) {
-  return {cwd: project, model: MODEL, allowProviderModelFallback: false,
+export function threadParams(project, config, runtime) {
+  const settings = runtimeSettings(runtime);
+  return {cwd: project, model: settings.model, allowProviderModelFallback: false,
     approvalPolicy: 'never', sandbox: 'read-only', ephemeral: true,
-    config: probeConfig(config)};
+    config: probeConfig(config, settings)};
 }
 
 export function runProcess(command, args, {cwd, timeoutMs = 120000, signal, maxBytes = 1024 * 1024} = {}) {
@@ -103,7 +117,7 @@ export const startupArgs = (config = {}) => ['app-server', '--stdio',
 ];
 
 export async function initialize(rpc) {
-  await rpc.request('initialize', {clientInfo: {name: 'agent-relay-check', version: '0.1.3'}, capabilities: {experimentalApi: true}});
+  await rpc.request('initialize', {clientInfo: {name: 'agent-relay-check', version: '0.1.4'}, capabilities: {experimentalApi: true}});
   rpc.send({method: 'initialized', params: {}});
 }
 
@@ -116,7 +130,8 @@ export function checkRestrictedConfig(config) {
   if (Object.values(servers).some((v) => !v || v.enabled !== false)) throw new Error('mcp_restriction_not_honored');
 }
 
-export async function runCodex({project, challenge, timeoutMs = 120000, signal, binary = 'codex'}) {
+export async function runCodex({project, challenge, timeoutMs = 120000, signal, binary = 'codex', model = MODEL, effort = EFFORT}) {
+  const settings = runtimeSettings({model, effort});
   const invocation = await resolveCodexInvocation(binary);
   const version = await runProcess(invocation.command, [...invocation.prefixArgs, '--version'], {timeoutMs: 10000, signal});
   const match = version.stdout.trim().match(/^codex-cli (\d+)\.(\d+)\.(\d+)(?:\S*)?$/);
@@ -127,7 +142,7 @@ export async function runCodex({project, challenge, timeoutMs = 120000, signal, 
   const started = performance.now();
   const execution = {adapter: 'codex-app-server', exit_code: null, completed: false, tool_calls: 0, thread_count: 0,
     message: '', configuration: 'guidance-with-tools-and-hooks-disabled',
-    client_version: version.stdout.trim(), model_requested: MODEL, effort_requested: EFFORT};
+    client_version: version.stdout.trim(), model_requested: settings.model, effort_requested: settings.effort};
   let rpc;
   let observer;
   let complete;
@@ -144,7 +159,7 @@ export async function runCodex({project, challenge, timeoutMs = 120000, signal, 
     rpc = new RpcClient(invocation.command, [...invocation.prefixArgs, ...startupArgs()], {cwd: project, timeoutMs: remaining(), signal});
     await initialize(rpc);
     const discovered = await rpc.request('config/read', {cwd: project, includeLayers: false});
-    const overrides = probeConfig(discovered.config);
+    const overrides = {...probeConfig(discovered.config, settings), model: settings.model};
     rpc.stop();
     await rpc.closed;
     if (rpc.failure) throw new Error(rpc.failure);
@@ -155,8 +170,8 @@ export async function runCodex({project, challenge, timeoutMs = 120000, signal, 
     await initialize(rpc);
     const restricted = await rpc.request('config/read', {cwd: project, includeLayers: false});
     checkRestrictedConfig(restricted.config);
-    const response = await rpc.request('thread/start', threadParams(project, restricted.config));
-    if (response.model !== MODEL || response.reasoningEffort !== EFFORT || response.sandbox?.type !== 'readOnly' || response.approvalPolicy !== 'never') {
+    const response = await rpc.request('thread/start', threadParams(project, restricted.config, settings));
+    if (response.model !== settings.model || response.reasoningEffort !== settings.effort || response.sandbox?.type !== 'readOnly' || response.approvalPolicy !== 'never') {
       throw new Error('requested_execution_settings_not_honored');
     }
     if (typeof response.thread?.id !== 'string') throw new Error('missing_fresh_thread');
@@ -165,7 +180,7 @@ export async function runCodex({project, challenge, timeoutMs = 120000, signal, 
     execution.model_observed = response.model;
     execution.effort_observed = response.reasoningEffort;
     const turn = await rpc.request('turn/start', {threadId: response.thread.id, input: [{type: 'text', text: question(challenge)}],
-      model: MODEL, effort: EFFORT, outputSchema: receiptSchema(challenge)});
+      model: settings.model, effort: settings.effort, outputSchema: receiptSchema(challenge)});
     if (typeof turn.turn?.id !== 'string' || observer.turnId && observer.turnId !== turn.turn.id) throw new Error('mismatched_turn');
     await completion;
     Object.assign(execution, observer.result);
