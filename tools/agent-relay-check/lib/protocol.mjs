@@ -89,7 +89,7 @@ export function evaluate(challenge, execution) {
   return {
     schema_version: 1,
     product: 'Agent Relay Check',
-    product_version: '0.1.3',
+    product_version: '0.1.4',
     challenge_id: challenge.challenge_id,
     observed_at: new Date().toISOString(),
     status: inconclusive ? 'INCONCLUSIVE' : markers.every((m) => m.status === 'RECEIVED') ? 'RECEIVED' : 'NOT_OBSERVED',

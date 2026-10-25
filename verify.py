@@ -27,6 +27,10 @@ EXPECTED_FILES = {
     'docs/agent-relay-global-guidance.md',
     'docs/agent-relay-source-review.md',
     'docs/agent-relay-project-config.md',
+    'docs/agent-relay-runtime-options.md',
+    'tools/agent-relay-check/test/runtime.test.mjs',
+    'docs/agent-relay-check-v0.1.4.zip',
+    'docs/agent-relay-check-v0.1.4.zip.sha256',
     'docs/agent-relay-check-v0.1.3.zip',
     'docs/agent-relay-check-v0.1.3.zip.sha256',
     'docs/agent-relay-check-v0.1.2.zip',
@@ -2034,7 +2038,11 @@ def verify_relay_archive() -> None:
     native_previous_hash = "ea1b726566028345d4cfcffd5ba4908b2708caf5d0612541551ebb1021397b94"
     assert hashlib.sha256(native_previous.read_bytes()).hexdigest() == native_previous_hash
     assert Path(str(native_previous) + ".sha256").read_text().split()[0] == native_previous_hash
-    archive = root / "docs/agent-relay-check-v0.1.3.zip"
+    ci_previous = root / "docs/agent-relay-check-v0.1.3.zip"
+    ci_previous_hash = "a2cce93178144ee535b1637ffc23a8e2592d2e4a863d058785a145ea7adf7a0c"
+    assert hashlib.sha256(ci_previous.read_bytes()).hexdigest() == ci_previous_hash
+    assert Path(str(ci_previous) + ".sha256").read_text().split()[0] == ci_previous_hash
+    archive = root / "docs/agent-relay-check-v0.1.4.zip"
     expected_hash = Path(str(archive) + ".sha256").read_text().split()[0]
     assert hashlib.sha256(archive.read_bytes()).hexdigest() == expected_hash
     tool = root / "tools/agent-relay-check"

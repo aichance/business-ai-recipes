@@ -1,10 +1,10 @@
 # Agent Relay Check
 
-`tools/agent-relay-check/` is a dependency-free Node 22 diagnostic. Follow its local AGENTS.md. Run `npm test` there for offline checks. Live runs require explicit `--live`, authorized project guidance, Codex 0.163.0+ and the fixed gpt-6.1-sol/MAX path. Recorded demonstration results are operator evidence, not external adoption. The downloadable ZIP must match the tool source byte-for-byte.
+`tools/agent-relay-check/` is a dependency-free Node 22 diagnostic. Follow its local AGENTS.md. Run `npm test` there for offline checks. Live runs require explicit `--live`, authorized project guidance and Codex 0.163.0+. Defaults and operator verification remain gpt-6.1-sol/MAX. Only `run` accepts explicit model/effort selection; no automatic fallback. Other real model/effort combinations remain unverified. Recorded demonstration results are operator evidence, not external adoption. The latest downloadable ZIP must match the tool source byte-for-byte; preserve older archives.
 
 # Agent Relay Check CI
 
-`tools/agent-relay-ci/` is a GitHub-hosted Linux consumer adapter around the checksum-pinned common v0.1.3 ZIP. Run `node --test tools/agent-relay-ci/ci.test.mjs`. Keep the common tool and ZIP unchanged. Separate the caller workspace from `github.action_path`; use temporary CLI/npm settings and do not forward credentials or publish raw configurations. A passing job confirms native path membership plus separate local FULL estimates, with receipt/compliance NOT_TESTED. `.github/workflows/relay-ci-entry.yml` runs operator fixtures, not independent adoption.
+`tools/agent-relay-ci/` is a GitHub-hosted Linux consumer adapter around the checksum-pinned common v0.1.3 ZIP. Run `node --test tools/agent-relay-ci/ci.test.mjs`. Keep that pinned v0.1.3 ZIP and consumer unchanged when releasing later common-tool versions. Separate the caller workspace from `github.action_path`; use temporary CLI/npm settings and do not forward credentials or publish raw configurations. A passing job confirms native path membership plus separate local FULL estimates, with receipt/compliance NOT_TESTED. `.github/workflows/relay-ci-entry.yml` runs operator fixtures, not independent adoption.
 
 # App Crash Lab
 

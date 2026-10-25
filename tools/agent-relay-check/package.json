@@ -1,6 +1,6 @@
 {
   "name": "@aichance/agent-relay-check",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "private": true,
   "description": "Inspect native startup guidance paths and estimated byte budgets, then test marker receipt in a fresh agent session.",
   "type": "module",

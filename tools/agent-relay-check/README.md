@@ -33,9 +33,9 @@ Exit codes for `inspect`: `0` completed inspection, `3` inconclusive, `1` comman
 
 ## Try your own project
 
-Requires Node.js 22+, an authenticated Codex CLI **0.163.0 or newer**, macOS/Linux or native Windows, and access to **gpt-6.1-sol with MAX reasoning**. Native Windows is experimental: process and CLI transport tests are separate from an authenticated marker response; see the CI results and verification boundary below. Live checks use that existing account's quota or billing. No additional service, API key entry, npm dependency or global installation is needed. Unsupported model access fails; the tool never substitutes another model.
+Requires Node.js 22+, an authenticated Codex CLI **0.163.0 or newer**, macOS/Linux or native Windows, and access/quota for the model you select. The default remains **gpt-6.1-sol with MAX reasoning**. Native Windows is experimental: process and CLI transport tests are separate from an authenticated marker response; see the CI results and verification boundary below. Live checks use your existing Codex account and configured provider's quota or billing. No additional service, API key entry, npm dependency or global installation is needed. Unsupported model access fails; the tool never substitutes another model.
 
-Prefer a small download? Get the [v0.1.3 ZIP](https://aichance.github.io/business-ai-recipes/agent-relay-check-v0.1.3.zip) and [SHA-256](https://aichance.github.io/business-ai-recipes/agent-relay-check-v0.1.3.zip.sha256), extract it, and open its `agent-relay-check` directory instead of cloning below. The v0.1.0, v0.1.1 and v0.1.2 archives are preserved unchanged. [Measured macOS four-case result with v0.1.0](examples/MEASUREMENTS.md).
+Prefer a small download? Get the [v0.1.4 ZIP](https://aichance.github.io/business-ai-recipes/agent-relay-check-v0.1.4.zip) and [SHA-256](https://aichance.github.io/business-ai-recipes/agent-relay-check-v0.1.4.zip.sha256), extract it, and open its `agent-relay-check` directory instead of cloning below. The v0.1.0, v0.1.1, v0.1.2 and v0.1.3 archives are preserved unchanged. [Measured macOS four-case result with v0.1.0](examples/MEASUREMENTS.md).
 
 ```sh
 git clone --depth 1 https://github.com/aichance/business-ai-recipes.git relay-kit
@@ -56,6 +56,22 @@ node cli.mjs run \
 ```
 
 `--out` must be a **new directory** whose parent already exists. Challenge and output paths must be outside the tested project, including resolved symlinks. The tool does not edit your instruction files. Remove your diagnostic block when you finish.
+
+### Select your existing model explicitly
+
+If your account uses another model or effort, `run` accepts **explicit** `--model ID` and `--effort LEVEL`. Use the exact identifiers from a Codex configuration that already works for you. For example, this explicitly selects the unchanged default:
+
+```sh
+node cli.mjs run --project /path/to/your-project \
+  --challenge ../relay-before/challenge.json --out ../relay-result-before \
+  --model gpt-6.1-sol --effort max --live
+```
+
+Omitting either option uses its individual default (`gpt-6.1-sol`, `max`); nothing is inferred from a failed request. Both options are valid **only for `run`**. `inspect`, `prepare`, `compare` and the four-call demonstration keep their existing behavior.
+
+The adapter requests the selected values at thread and turn startup, disables provider model fallback, and checks the client's resolved model/effort before inference. A mismatch stops before the turn and produces `INCONCLUSIVE`. An unavailable or rejected selection also fails without a lookup, sign-in, upgrade or automatic retry. The report records requested/resolved settings; `compare` reports changes in those settings.
+
+**Experimental boundary:** live operator verification uses only gpt-6.1-sol/MAX. Other model/effort combinations have **not** been live-verified; offline transport fixtures do not establish their availability, structured-output support or receipt behavior. This option does not grant model access or diagnose authentication/quota failures. Use only a project whose guidance you may send to your configured provider. See the [v0.1.4 change and review map](https://github.com/aichance/business-ai-recipes/blob/agent-relay-check-v0.1.4/docs/agent-relay-runtime-options.md).
 
 ### Native Windows / PowerShell
 

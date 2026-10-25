@@ -4,10 +4,10 @@ import { pathToFileURL } from 'node:url';
 import { readFile, writeFile, mkdir, realpath, stat } from 'node:fs/promises';
 import { resolve, relative, isAbsolute, join, dirname } from 'node:path';
 import { createChallenge, validateChallenge, instructionBlock, question, receiptSchema, compare } from './lib/protocol.mjs';
-import { runCodex } from './lib/codex.mjs';
+import { runCodex, runtimeSettings } from './lib/codex.mjs';
 import { inspectCodex } from './lib/inspect.mjs';
 
-const HELP = `Agent Relay Check 0.1.3 — did this marker reach a fresh agent session?
+const HELP = `Agent Relay Check 0.1.4 — did this marker reach a fresh agent session?
 
 inspect --project DIRECTORY [--timeout-seconds 120]
   No model answer/turn. Observe native startup source paths; estimate byte budget.
@@ -21,8 +21,11 @@ prepare --out DIRECTORY [--keys base_only,override_only]
   Place the instruction block into the guidance path you want to test yourself.
 
 run --project DIRECTORY --challenge FILE --out NEW_DIRECTORY --live
-  Run installed Codex with a fresh session, readonly sandbox and gpt-6.1-sol/MAX.
-  Uses existing Codex authentication/quota; may send project guidance to OpenAI.
+  Run installed Codex with a fresh session and readonly sandbox.
+  Defaults: gpt-6.1-sol/MAX. Optional explicit --model ID --effort LEVEL (run only).
+  Use your existing Codex model/access; no availability lookup or model fallback.
+  Other models/efforts are experimental and not live-verified by this release.
+  Uses existing Codex authentication/quota and configured provider; guidance is model input.
   Keeps guidance settings; restricts tools, disables configured MCP and hooks.
   Tests startup guidance, NOT delivery through hooks, MCP or compaction.
   Marker-bearing files may be sent as guidance. Use only a project you can share.
@@ -60,14 +63,14 @@ export async function main(argv = process.argv.slice(2)) {
   const {values: v, positionals} = parseArgs({args: argv, allowPositionals: true, options: {
     help: {type: 'boolean', short: 'h'}, out: {type: 'string'}, keys: {type: 'string'},
     project: {type: 'string'}, challenge: {type: 'string'}, live: {type: 'boolean'},
-    'timeout-seconds': {type: 'string'},
+    'timeout-seconds': {type: 'string'}, model: {type: 'string'}, effort: {type: 'string'},
     before: {type: 'string'}, after: {type: 'string'},
   }});
   if (v.help || positionals.length === 0) { console.log(HELP); return 0; }
   if (positionals.length !== 1) throw new Error('Provide one command; see --help.');
   const command = positionals[0];
   const allowed = {
-    prepare: ['out', 'keys'], run: ['out', 'project', 'challenge', 'live', 'timeout-seconds'],
+    prepare: ['out', 'keys'], run: ['out', 'project', 'challenge', 'live', 'timeout-seconds', 'model', 'effort'],
     compare: ['before', 'after'], inspect: ['project', 'timeout-seconds'],
   }[command];
   if (!allowed || Object.keys(v).some((k) => !allowed.includes(k))) throw new Error('Unknown command or option for this command; see --help.');
@@ -108,6 +111,7 @@ export async function main(argv = process.argv.slice(2)) {
   }
   if (!v.live) throw new Error('run requires explicit --live. Read --help for the model call and configuration scope.');
   if (!v.project || !v.challenge || !v.out) throw new Error('run requires --project, --challenge and --out.');
+  const settings = runtimeSettings({model: v.model, effort: v.effort});
   const seconds = Number(v['timeout-seconds'] ?? '120');
   if (!Number.isInteger(seconds) || seconds < 10 || seconds > 600) throw new Error('Timeout must be an integer from 10 to 600 seconds.');
   const project = await realpath(v.project);
@@ -123,7 +127,7 @@ export async function main(argv = process.argv.slice(2)) {
   process.once('SIGTERM', stop);
   try {
     console.error('Running a fresh Codex guidance check; tool restrictions and MCP/hooks disabled for this run.');
-    const report = await runCodex({project, challenge, workDir: out, timeoutMs: seconds * 1000, signal: controller.signal});
+    const report = await runCodex({project, challenge, timeoutMs: seconds * 1000, signal: controller.signal, ...settings});
     await writeFile(join(out, 'report.json'), JSON.stringify(report, null, 2) + '\n', {flag: 'wx', mode: 0o600});
     console.log(`${report.status}\n${report.markers.map((m) => `${m.key}: ${m.status}`).join('\n')}\nReport: ${join(out, 'report.json')}`);
     return report.status === 'RECEIVED' ? 0 : report.status === 'NOT_OBSERVED' ? 2 : 3;
