@@ -1,10 +1,12 @@
 # Check your Codex startup guidance in GitHub Actions
 
-Catch a required `AGENTS.md` disappearing or becoming locally estimated partial after a guidance/configuration change. This action inspects **your checked-out repository**, using the unchanged Agent Relay Check **v0.1.3** package and official Codex **0.164.0** on a temporary GitHub-hosted Linux runner. You do not need a local CLI, Codex login, or API key. It requests **zero model turns**; normal GitHub Actions usage limits still apply.
+Catch a required `AGENTS.md` disappearing or becoming locally estimated partial after a guidance/configuration change. This action inspects **your checked-out repository**, using the unchanged Agent Relay Check **v0.1.4** package and official Codex **0.164.0** on a temporary GitHub-hosted Linux runner. You do not need a local CLI, Codex login, or API key. It requests **zero model turns**; normal GitHub Actions usage limits still apply.
+
+The original [`tools/agent-relay-ci` consumer at its fixed v0.1.3 revision](https://github.com/aichance/business-ai-recipes/tree/406b8ae0702c5fb8c5a2221c5fd98cd39ccfe663/tools/agent-relay-ci) remains unchanged. Existing SHA-pinned workflows keep that older package. The entry below deliberately selects **the same v0.1.4** as the current local download; results from the two versions are not combined as one user cohort.
 
 ## First run on your own repository
 
-Review the [action source at the pinned revision](https://github.com/aichance/business-ai-recipes/tree/406b8ae0702c5fb8c5a2221c5fd98cd39ccfe663/tools/agent-relay-ci), then add this as `.github/workflows/check-guidance.yml` in a repository you control:
+Review the [action source at the pinned revision](https://github.com/aichance/business-ai-recipes/tree/daab5bc86f063b5cae21ce6c80d3489da72a117b/tools/agent-relay-ci-v014), then add this as `.github/workflows/check-guidance.yml` in a repository you control:
 
 ```yaml
 name: Check Codex startup guidance
@@ -19,7 +21,7 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           persist-credentials: false
-      - uses: aichance/business-ai-recipes/tools/agent-relay-ci@406b8ae0702c5fb8c5a2221c5fd98cd39ccfe663
+      - uses: aichance/business-ai-recipes/tools/agent-relay-ci-v014@daab5bc86f063b5cae21ce6c80d3489da72a117b
         with:
           project-directory: '.'
           required-files: AGENTS.md
@@ -52,9 +54,9 @@ Commit the guidance and `.codex/config.toml` that the CI job should inspect. The
 
 **Model receipt and instruction compliance are always `NOT_TESTED`.** Use the separate [marker-receipt check](../tools/agent-relay-check/README.md) in an authenticated local environment when that evidence is needed. This action does not test conditional `.agents/rules` reads, compaction, tool behavior, or general adherence.
 
-## Measured controls
+## Historical v0.1.3 controls
 
-The [first hosted integration run](https://github.com/aichance/business-ai-recipes/actions/runs/40129495148) used synthetic caller guidance, not a third-party adoption:
+The historical **v0.1.3** [first hosted integration run](https://github.com/aichance/business-ai-recipes/actions/runs/40129495148) used synthetic caller guidance, not a third-party adoption:
 
 | Caller condition | Native paths | Separate local estimate | Action result |
 | --- | --- | --- | --- |
@@ -63,12 +65,12 @@ The [first hosted integration run](https://github.com/aichance/business-ai-recip
 | Required `MISSING.md` | Missing required path | No matching row | `REJECTED` |
 | Startup directory `..` outside checkout | Inspection not started | Not estimated | `REJECTED` before download/install |
 
-The three actual inspections each requested zero model turns, confirmed two servers closed, and left the fixture files unchanged. The [workflow](../.github/workflows/relay-ci-entry.yml) also requires an immutable-SHA **remote-consumer** job: the runner downloads the action separately and must still inspect the caller's 40/80 B files. Operator CI and test counts are not independent use or reuse.
+Those three historical inspections each requested zero model turns, confirmed two servers closed, and left the fixture files unchanged. They do not establish the new v0.1.4 consumer. The current [workflow](../.github/workflows/relay-ci-v014.yml) also requires an immutable-SHA **remote-consumer** job: the runner downloads the action separately and must still inspect the caller's 40/80 B files. Operator CI and test counts are not independent use or reuse.
 
 ## Execution, output, and limits
 
 - GitHub-hosted Linux only (`ubuntu-24.04` in the example), on ordinary `push`, `pull_request`, or `workflow_dispatch`. No privileged `pull_request_target` or `workflow_run`, no self-hosted runner, and no schedule is provided. The caller sets read-only job permissions and must not add secrets or credential-dependent setup to this job.
-- Downloads the common ZIP from this project's Pages, verifies exactly 50,841 bytes and SHA-256 `a2cce93178144ee535b1637ffc23a8e2592d2e4a863d058785a145ea7adf7a0c` **before extraction**, and installs official `@openai/codex@0.164.0` from npm with lifecycle scripts disabled. It needs network access; Codex initialization can communicate and write temporary native metadata even without a model turn.
+- Downloads the common ZIP from this project's Pages, verifies exactly 54,863 bytes and SHA-256 `d21cf2f75c069b244b212f8988085d952b2159e4e07842ed806235c52998dcda` **before extraction**, and installs official `@openai/codex@0.164.0` from npm with lifecycle scripts disabled. It needs network access; Codex initialization can communicate and write temporary native metadata even without a model turn.
 - CLI home, trust configuration, npm prefix/cache/configuration, extracted code, and reports live under the runner's temporary directory. Child environments omit provider/GitHub/npm credentials and preload configuration. The wrapper does not upload raw guidance, configuration, or native stdout/stderr. Required relative path names and sanitized results appear in the run Summary; review that visibility before using it in a public repository.
 - The `status` output is `PASSED`, `REJECTED`, or `INCONCLUSIVE`. `report_path` points to sanitized JSON in the runner temporary directory. No artifact is uploaded automatically. Do not publish raw native logs/configuration when reporting a problem.
 - Temporary trust is **not a filesystem sandbox**: native path-valued project configuration may read outside the checkout before the inspection can be classified unknown. Use committed guidance/configuration you have reviewed on a disposable runner; this is not a security boundary for arbitrary hostile repositories.
