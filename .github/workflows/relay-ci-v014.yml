@@ -1,0 +1,178 @@
+name: Relay CI v0.1.4 entry
+
+on:
+  pull_request:
+    paths:
+      - 'tools/agent-relay-ci-v014/**'
+      - '.github/workflows/relay-ci-v014.yml'
+      - 'docs/agent-relay-ci.md'
+  push:
+    branches: [main, 'codex/relay-ci-entry-*']
+    paths:
+      - 'tools/agent-relay-ci-v014/**'
+      - '.github/workflows/relay-ci-v014.yml'
+      - 'docs/agent-relay-ci.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: relay-ci-v014-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - run: node --test tools/agent-relay-ci-v014/ci.test.mjs
+
+  native-consumer:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - case: full
+            project: '.relay ci fixture/child'
+            required: |
+              AGENTS.md
+              child/AGENTS.md
+          - case: partial
+            project: '.relay ci fixture/child'
+            required: |
+              AGENTS.md
+              child/AGENTS.md
+          - case: missing
+            project: '.relay ci fixture/child'
+            required: MISSING.md
+          - case: outside
+            project: '..'
+            required: AGENTS.md
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Prepare synthetic caller guidance, not an adoption claim
+        env:
+          RELAY_FIXTURE_CASE: ${{ matrix.case }}
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os, subprocess
+          from pathlib import Path
+          root = Path('.relay ci fixture')
+          (root / 'child').mkdir(parents=True)
+          subprocess.run(['git', '-c', 'init.defaultBranch=main', 'init', '-q', str(root)], check=True)
+          (root / 'AGENTS.md').write_text('R' * 40)
+          (root / 'child/AGENTS.md').write_text('C' * 80)
+          if os.environ['RELAY_FIXTURE_CASE'] == 'partial':
+              (root / '.codex').mkdir()
+              (root / '.codex/config.toml').write_text('project_doc_max_bytes = 64\n')
+          before = {str(p): hashlib.sha256(p.read_bytes()).hexdigest()
+                    for p in root.rglob('*') if p.is_file() and '.git' not in p.parts}
+          (Path(os.environ['RUNNER_TEMP']) / 'relay-fixture-before.json').write_text(json.dumps(before))
+          PY
+      - name: Use the consumer action
+        id: inspect
+        continue-on-error: true
+        uses: ./tools/agent-relay-ci-v014
+        with:
+          project-directory: ${{ matrix.project }}
+          required-files: ${{ matrix.required }}
+      - name: Verify the actual action result and preserve fixture bytes
+        env:
+          RELAY_FIXTURE_CASE: ${{ matrix.case }}
+          RELAY_ACTION_OUTCOME: ${{ steps.inspect.outcome }}
+          RELAY_RESULT_PATH: ${{ steps.inspect.outputs.report_path }}
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          case = os.environ['RELAY_FIXTURE_CASE']
+          result = json.loads(Path(os.environ['RELAY_RESULT_PATH']).read_text())
+          assert result['receipt'] == result['compliance'] == 'NOT_TESTED'
+          assert result['common_version'] == '0.1.4' and result['codex_version'] == '0.164.0'
+          assert result['status'] == ('PASSED' if case == 'full' else 'REJECTED'), result
+          assert os.environ['RELAY_ACTION_OUTCOME'] == ('success' if case == 'full' else 'failure')
+          if case == 'outside':
+              assert not result['package_download_started'] and not result['cli_install_started']
+              assert not result['inspection_started']
+          else:
+              native = result['inspection']
+              assert result['auth_file_created'] is False
+              assert result['runner_tracking_inherited'] is True
+              assert native['model_turn_requests'] == 0 and native['cleanup_confirmed'] is True
+              assert native['native_servers_started'] == native['native_servers_closed'] == 2
+              if case == 'partial':
+                  assert result['effective_project_doc_max_bytes'] == 64
+                  assert result['required'][1]['native_listed'] is True
+                  assert result['required'][1]['estimated_status'] == 'TRUNCATED'
+                  assert result['required'][1]['examined_bytes'] == 24
+              if case == 'missing':
+                  assert result['failures'][0]['code'] == 'required_source_not_listed'
+          before = json.loads((Path(os.environ['RUNNER_TEMP']) / 'relay-fixture-before.json').read_text())
+          assert all(hashlib.sha256(Path(p).read_bytes()).hexdigest() == digest for p, digest in before.items())
+          print(json.dumps({'fixture': case, 'result': result, 'input_bytes_unchanged': True}, indent=2))
+          PY
+
+  remote-consumer:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Prepare the caller checkout separately from the downloaded action
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os, subprocess
+          from pathlib import Path
+          root = Path('caller workspace')
+          (root / 'child').mkdir(parents=True)
+          subprocess.run(['git', '-c', 'init.defaultBranch=main', 'init', '-q', str(root)], check=True)
+          (root / 'AGENTS.md').write_text('R' * 40)
+          (root / 'child/AGENTS.md').write_text('C' * 80)
+          before = {str(p): hashlib.sha256(p.read_bytes()).hexdigest()
+                    for p in root.rglob('*') if p.is_file() and '.git' not in p.parts}
+          (Path(os.environ['RUNNER_TEMP']) / 'remote-fixture-before.json').write_text(json.dumps(before))
+          PY
+      - name: Call the published action at an immutable source revision
+        id: inspect
+        uses: aichance/business-ai-recipes/tools/agent-relay-ci-v014@daab5bc86f063b5cae21ce6c80d3489da72a117b
+        with:
+          project-directory: caller workspace/child
+          required-files: |
+            AGENTS.md
+            child/AGENTS.md
+      - name: Require caller guidance, zero turns and native cleanup
+        env:
+          RELAY_RESULT_PATH: ${{ steps.inspect.outputs.report_path }}
+          RELAY_STATUS: ${{ steps.inspect.outputs.status }}
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          result = json.loads(Path(os.environ['RELAY_RESULT_PATH']).read_text())
+          assert result['status'] == os.environ['RELAY_STATUS'] == 'PASSED', result
+          assert result['receipt'] == result['compliance'] == 'NOT_TESTED'
+          assert result['common_version'] == '0.1.4' and result['codex_version'] == '0.164.0'
+          assert result['auth_file_created'] is False and result['runner_tracking_inherited'] is True
+          assert [(r['path'], r['file_bytes'], r['examined_bytes']) for r in result['required']] == [
+              ('AGENTS.md', 40, 40), ('child/AGENTS.md', 80, 80)]
+          assert all(r['native_listed'] and r['full_estimate'] for r in result['required'])
+          native = result['inspection']
+          assert native['model_turn_requests'] == 0 and native['cleanup_confirmed'] is True
+          assert native['native_servers_started'] == native['native_servers_closed'] == 2
+          before = json.loads((Path(os.environ['RUNNER_TEMP']) / 'remote-fixture-before.json').read_text())
+          assert all(hashlib.sha256(Path(p).read_bytes()).hexdigest() == digest for p, digest in before.items())
+          print(json.dumps({'fixture': 'remote_full', 'result': result, 'input_bytes_unchanged': True,
+                            'action_source_ref': 'daab5bc86f063b5cae21ce6c80d3489da72a117b'}, indent=2))
+          PY
