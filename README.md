@@ -28,7 +28,17 @@ On native Windows, start with the [PowerShell commands and verification scope](t
 
 ### Inspect without editing your instructions
 
-After extracting the ZIP, open its `agent-relay-check` directory and run:
+From your project's startup directory, run the unchanged common v0.1.4 package with Node22+, npm/npx and an installed Codex CLI:
+
+```sh
+npx --yes --ignore-scripts --allow-remote=root \
+  --package="https://aichance.github.io/business-ai-recipes/agent-relay-check-v0.1.4-npx1.tgz" \
+  agent-relay-check inspect --project "$PWD"
+```
+
+This downloads the reviewed package to npm's cache and runs it; no npm dependencies or install hooks. It does not install Codex or add a project dependency. [Review/checksum, PowerShell command and troubleshooting](docs/agent-relay-one-command.md).
+
+Prefer the preserved ZIP? Extract it, open its `agent-relay-check` directory and run:
 
 ```sh
 node cli.mjs inspect --project "/absolute/path/to/your project"
