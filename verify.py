@@ -16,6 +16,10 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    'experiments/relay-package/package.py',
+    'docs/agent-relay-one-command.md',
+    'docs/agent-relay-check-v0.1.4-npx1.tgz',
+    'docs/agent-relay-check-v0.1.4-npx1.tgz.sha256',
     '.github/workflows/relay-ci-v014.yml',
     'tools/agent-relay-ci-v014/action.yml',
     'tools/agent-relay-ci-v014/ci.mjs',
@@ -2061,6 +2065,11 @@ def verify_relay_archive() -> None:
         assert set(bundle.namelist()) == set(expected)
         for name, content in expected.items():
             assert bundle.read(name) == content, name
+    packaged = subprocess.run(
+        [sys.executable, '-B', str(root / 'experiments/relay-package/package.py'), '--check'],
+        capture_output=True, text=True, check=False,
+    )
+    assert packaged.returncode == 0, packaged.stderr
 
 
 def main() -> int:

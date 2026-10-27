@@ -43,9 +43,12 @@
     </section>
     <section id="relay-start" aria-labelledby="relay-start-title">
       <div class="eyebrow">Start with your own project</div>
-      <h2 id="relay-start-title">Download, extract, inspect.</h2>
-      <p class="note">Extract the <a href="./agent-relay-check-v0.1.4.zip">small v0.1.4 ZIP</a>, open its <code>agent-relay-check</code> directory, and run the command below with your project's actual startup directory.</p>
-      <pre><code>node cli.mjs inspect --project "/absolute/path/to/your project"</code></pre>
+      <h2 id="relay-start-title">Inspect in one command.</h2>
+      <p class="note">From your project's startup directory, use Node22+, npm/npx and your installed Codex CLI. This downloads and runs the unchanged common v0.1.4 package from this repository's Pages site.</p>
+      <pre><code>npx --yes --ignore-scripts --allow-remote=root \
+  --package="https://aichance.github.io/business-ai-recipes/agent-relay-check-v0.1.4-npx1.tgz" \
+  agent-relay-check inspect --project "$PWD"</code></pre>
+      <p class="note">No npm dependencies or install hooks. npm keeps the package in its cache; this does not install Codex or add a project dependency. <a href="https://github.com/aichance/business-ai-recipes/blob/main/docs/agent-relay-one-command.md">Review, checksum, PowerShell and troubleshooting ↗</a>. Prefer an archive? Extract the preserved <a href="./agent-relay-check-v0.1.4.zip">small ZIP</a>, open <code>agent-relay-check</code>, then run <code>node cli.mjs inspect --project "/absolute/path/to/your project"</code>.</p>
       <div class="two setup">
         <div class="card"><h3>Read the startup report</h3><p><code>estimate.native_project_sources</code> lists selected project files. <code>estimate.rows</code> contains the separate local byte estimates. Unknown versions or settings stay <code>INCONCLUSIVE</code>.</p><p>Inspection requests zero model turns and leaves instruction files unchanged. Normal Codex initialization can communicate and write local metadata.</p><a href="https://github.com/aichance/business-ai-recipes/tree/agent-relay-check-v0.1.4/tools/agent-relay-check#inspect-your-current-instruction-budget-first">Inspection guide and supported scope ↗</a></div>
         <div class="card"><h3>Test receipt after a change</h3><p>The separate marker check makes one authenticated model call in a fresh session. It checks whether that response returns a disposable marker from your instructions; observed tool activity makes the result inconclusive.</p><p>Use your existing access and quota. The default is gpt-6.1-sol/MAX; v0.1.4 also accepts an <a href="https://github.com/aichance/business-ai-recipes/tree/agent-relay-check-v0.1.4/tools/agent-relay-check#select-your-existing-model-explicitly">explicit model and effort that already work for you</a>, without automatic fallback. Other combinations remain experimental. A marker receipt does not establish whole-file compliance.</p><a href="https://github.com/aichance/business-ai-recipes/tree/agent-relay-check-v0.1.4/tools/agent-relay-check#try-your-own-project">Prepare a marker and compare two runs ↗</a></div>
