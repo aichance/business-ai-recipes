@@ -38,6 +38,8 @@ Native file paths are observations; byte/truncation/skip fields are separate loc
 
 **One more parent byte can remove the child:** [Five reproducible cumulative-budget controls](docs/agent-relay-cumulative-budget.md) include a matched 32,767 B / 32,768 B parent pair with the same 60 B child. Codex 0.164.0 lists both paths in the first case and only the parent in the second; byte ranges are a separate local estimate. The guide preserves the earlier pinned per-file comparison and provides the shared runner. Zero model turns; operator measurements, not external adoption.
 
+**A public-source copy with a 32,062 B parent and 7,679 B child:** [The measured two-budget example](docs/agent-relay-cumulative-budget.md#public-source-copy-same-native-paths-different-child-budget) keeps both paths natively listed at 32 KiB and 40 KiB, while the separate child estimate changes from 706 B to 7,679 B. Includes pinned file hashes and sanitized JSON. This used the unchanged v0.1.4 ZIP on a local copy of two public guidance files, not the upstream app or its author's environment; receipt and compliance were not tested.
+
 ### First run: keep the check files outside your project
 
 After extracting the ZIP, open its `agent-relay-check` directory. The following works from the cloned `tools/agent-relay-check` directory too. Create a new temporary workspace and confirm it is **outside the project you intend to check**; don't put challenge or result files inside that project.

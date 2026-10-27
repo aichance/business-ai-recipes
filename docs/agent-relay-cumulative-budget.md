@@ -20,6 +20,75 @@ All five inspections returned `INSPECTED`, requested zero model turns and confir
 
 The runner previously required v0.1.3 while the current checkout contains v0.1.4, causing `INCONCLUSIVE/common_version` before inspection. That reproduction guard now explicitly matches **v0.1.4**; it does not accept arbitrary future versions. The two boundary controls and offline rejection checks run in the existing comparison workflow. The local JSON above remains native-only evidence even when a later CI run performs the full static comparison.
 
+## Public-source copy: same native paths, different child budget
+
+**Measured October 27, 2026 at 21:08 JST:** a local copy of two pinned public guidance files from [rat-stack](https://github.com/joelhooks/rat-stack/tree/de67d8c670cb7e10c83ef5e7a7cf7ff886ebbb2f) was inspected with unchanged common **v0.1.4**, macOS / Node22.23.4 / stable Codex0.164.0. This is an operator source-copy experiment, **not an execution of rat-stack, a reproduction of its author's environment, or independent adoption**. The [upstream issue](https://github.com/joelhooks/rat-stack/issues/145) describes a startup truncation concern; our [measured report](https://github.com/joelhooks/rat-stack/issues/145#issuecomment-6441594393) records this narrower local test.
+
+The temporary fixture contained only `AGENTS.md`, `apps/web/src/AGENTS.md` and a synthetic `.git` boundary. Startup was `apps/web/src`. A separate temporary Codex configuration set the project budget first to 32,768 B, then to 40,960 B. No credentials were copied, and the normal configuration and upstream repository were not changed. The two public files remained byte-identical. Codex startup initialized with gpt-6.1-sol/MAX but requested **zero model turns**; no application code or guidance commands were executed.
+
+| Effective project budget | Actual native project paths | Separate local estimate: parent | Separate local estimate: child |
+|---|---|---|---|
+| 32,768 B (32 KiB) | `AGENTS.md`, `apps/web/src/AGENTS.md` | FULL 32,062 B | **TRUNCATED 706 / 7,679 B** |
+| 40,960 B (40 KiB) | the same two paths | FULL 32,062 B | **FULL 7,679 / 7,679 B** |
+
+Both checks returned `INSPECTED`; each started and closed two owned native servers with cleanup confirmed. The combined file size is 39,741 B. The native response lists the child in **both** cases; the 706 B and 7,679 B values come from the separate stable-snapshot estimate pinned to the Codex0.164.0 loader. They are not native full-content telemetry. Receipt and instruction compliance remain `NOT_TESTED`. The 40 KiB condition is a comparison, **not a recommendation to enlarge a real project's configuration or evidence of cost savings**.
+
+### Pinned input identity and sanitized measurement
+
+Source commit: `de67d8c670cb7e10c83ef5e7a7cf7ff886ebbb2f`. The source Markdown bodies and local configuration are deliberately not republished here.
+
+| Public source | Bytes | Git blob | SHA-256 |
+|---|---:|---|---|
+| [Root AGENTS.md](https://github.com/joelhooks/rat-stack/blob/de67d8c670cb7e10c83ef5e7a7cf7ff886ebbb2f/AGENTS.md) | 32,062 | `8b6ca095447175dbe62fd41b81b40d36b7d3915c` | `d1eaada6729faf887e59bac0276aadd76f2d4f58511b6c2fc81a8e1e471c7352` |
+| [Child AGENTS.md](https://github.com/joelhooks/rat-stack/blob/de67d8c670cb7e10c83ef5e7a7cf7ff886ebbb2f/apps/web/src/AGENTS.md) | 7,679 | `6f8311300bbd273bda3ac2a1dd79bc810926de4d` | `5e4465ee8f49cd3a261bb68d96e5db5653c902361ee7ea1cb35c0aa40606baea` |
+
+The following is a compact transcription of the two operator reports, not a full native API response. Single-run timings are omitted because this was not a performance experiment.
+
+```json
+{
+  "type": "operator_public_source_copy",
+  "measured_at": "2026-10-27T12:08:40.503593+00:00",
+  "source_ref": "de67d8c670cb7e10c83ef5e7a7cf7ff886ebbb2f",
+  "tool_version": "0.1.4",
+  "archive_sha256": "d21cf2f75c069b244b212f8988085d952b2159e4e07842ed806235c52998dcda",
+  "runtime": {"os": "macOS", "node": "22.23.4", "codex": "0.164.0"},
+  "startup_directory": "apps/web/src",
+  "local_estimate_basis": "local-snapshot-and-rust-v0.164.0-loader",
+  "conditions": [
+    {
+      "effective_project_doc_max_bytes": 32768,
+      "status": "INSPECTED",
+      "native_project_sources": ["AGENTS.md", "apps/web/src/AGENTS.md"],
+      "local_estimated_examined_bytes": [32062, 706],
+      "local_estimated_status": ["FULL", "TRUNCATED"],
+      "model_turn_requests": 0,
+      "native_servers_started": 2,
+      "native_servers_closed": 2,
+      "cleanup_confirmed": true,
+      "receipt": "NOT_TESTED"
+    },
+    {
+      "effective_project_doc_max_bytes": 40960,
+      "status": "INSPECTED",
+      "native_project_sources": ["AGENTS.md", "apps/web/src/AGENTS.md"],
+      "local_estimated_examined_bytes": [32062, 7679],
+      "local_estimated_status": ["FULL", "FULL"],
+      "model_turn_requests": 0,
+      "native_servers_started": 2,
+      "native_servers_closed": 2,
+      "cleanup_confirmed": true,
+      "receipt": "NOT_TESTED"
+    }
+  ],
+  "input_files_unchanged": true,
+  "compliance": "NOT_TESTED"
+}
+```
+
+For a comparable source-copy experiment, review and obtain the two **pinned** public files, verify both hashes above, keep their relative paths in a new temporary fixture with a `.git` boundary, and start at `apps/web/src`. Use an isolated temporary Codex configuration for the two budgets; do not alter your normal configuration or execute the upstream app. Run the common `node cli.mjs inspect --project "/absolute/path/to/fixture/apps/web/src"` once per budget. Confirm the effective budget, stable CLI version, source identities and cleanup in each report; a mismatch is not this comparison. Codex initialization can communicate and write normal metadata even without a model turn. These steps describe the measured setup; the synthetic runner below does not download or execute this public-source case.
+
+For your own project, the [unchanged v0.1.4 quick start](../tools/agent-relay-check/README.md#inspect-your-current-instruction-budget-first) inspects the existing startup configuration without editing it. A separate explicit live marker check is needed to observe marker receipt; neither this source copy nor a successful inspection proves that all instructions are followed.
+
 ## Historical full static/native comparison
 
 **Measured October 25, 2026 at 00:54 JST, using v0.1.3:** the original three controls completed on GitHub's Ubuntu 24.04 runner with Node 22.23.3, Python 3.12 and Go 1.26.4. The [actual comparison run and complete JSON](https://github.com/aichance/business-ai-recipes/actions/runs/40109068535) record `COMPARISON_CONFIRMED`; the pinned Go module's tests and vet checks also passed. These historical results do not include the new boundary pair and are not relabeled as v0.1.4.
