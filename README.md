@@ -2,6 +2,10 @@
 
 ## Agent Relay Check — inspect AGENTS.md selection, then test receipt
 
+![Recorded Codex 0.164.0 fixtures: adding one byte to the parent changes the native startup list from parent plus child to parent only; the child is identical in both cases. Model receipt and compliance are not tested.](docs/agent-relay-native-boundary.svg)
+
+**Why inspect first?** In these two synthetic fixtures, a 32,767-byte parent and a 32,768-byte parent produce different native startup lists for the same 60-byte child. A listed child does **not** prove its full contents reached the model. [Saved measurements, scope and reproduction](docs/agent-relay-cumulative-budget.md) · [JSON](experiments/relay-cumulative-budget/native-results-2026-10-27.json) · [Regenerate the figure](experiments/relay-cumulative-budget/render_native_boundary.py).
+
 One command shows native startup file selection beside a separate local byte-budget estimate, without a model turn. When you need receipt evidence, a fresh Codex session returns a disposable marker from your instruction file; the expected value never enters the question. Compare before and after a settings or CLI change.
 
 [**Inspect without a model turn**](tools/agent-relay-check/README.md#inspect-your-current-instruction-budget-first) · [**Test marker receipt**](#first-run-keep-the-check-files-outside-your-project) · [**Small v0.1.4 ZIP**](https://aichance.github.io/business-ai-recipes/agent-relay-check-v0.1.4.zip) · [**Measured result and rerun command**](tools/agent-relay-check/examples/MEASUREMENTS.md)
