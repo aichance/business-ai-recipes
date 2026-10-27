@@ -26,6 +26,8 @@ EXPECTED_FILES = {
     'tools/agent-relay-ci/ci.mjs',
     'tools/agent-relay-ci/ci.test.mjs',
     'experiments/relay-cumulative-budget/check.py',
+    'experiments/relay-cumulative-budget/test_check.py',
+    'experiments/relay-cumulative-budget/native-results-2026-10-27.json',
     '.github/workflows/relay-cumulative-budget.yml',
     'docs/agent-relay-cumulative-budget.md',
     'docs/agent-relay-global-guidance.md',

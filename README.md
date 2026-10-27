@@ -36,7 +36,7 @@ Native file paths are observations; byte/truncation/skip fields are separate loc
 
 **Moving global rules with dotfiles?** [Four measured global-file/symlink controls](docs/agent-relay-global-guidance.md) show a known outside-project source count falling from1 to0 for a broken link. A target-content update leaves that count unchanged; inspection is separate from marker receipt.
 
-**Each file fits, but the child is still partial:** [Three reproducible cumulative-budget controls](docs/agent-relay-cumulative-budget.md) compare a pinned per-file checker with native startup paths and Relay's separate local estimate. Root 24,000 B + child 18,000 B pass the per-file check; startup in the child leaves 8,768 B of the shared 32,768 B budget for it. Zero model turns; operator measurements, not external adoption.
+**One more parent byte can remove the child:** [Five reproducible cumulative-budget controls](docs/agent-relay-cumulative-budget.md) include a matched 32,767 B / 32,768 B parent pair with the same 60 B child. Codex 0.164.0 lists both paths in the first case and only the parent in the second; byte ranges are a separate local estimate. The guide preserves the earlier pinned per-file comparison and provides the shared runner. Zero model turns; operator measurements, not external adoption.
 
 ### First run: keep the check files outside your project
 

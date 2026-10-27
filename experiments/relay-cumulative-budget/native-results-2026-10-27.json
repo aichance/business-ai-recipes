@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "at": "2026-10-27T04:55:53.863455+00:00",
+  "mode": "native-only",
+  "tool_version": "0.1.4",
+  "codex_version": "0.164.0",
+  "node_version": "v22.23.4",
+  "dropped_commit": null,
+  "project_doc_max_bytes": 32768,
+  "cases": [
+    {
+      "case": "single_below",
+      "dropped": null,
+      "relay": {
+        "status": "INSPECTED",
+        "native_project_sources": [
+          "AGENTS.md"
+        ],
+        "expectations_match": true,
+        "separate_local_estimate": [
+          {
+            "path": "AGENTS.md",
+            "file_bytes": 24000,
+            "examined_bytes": 24000,
+            "estimated_status": "FULL"
+          }
+        ],
+        "model_turn_requests": 0,
+        "servers_started": 2,
+        "servers_closed": 2,
+        "cleanup_confirmed": true,
+        "receipt": "NOT_TESTED",
+        "compliance": "NOT_TESTED"
+      },
+      "fixture_sha256": {
+        "AGENTS.md": "b9c988e9228e583da76f412050889fcc35faa8251d9a7adc736940fd0a7ea624"
+      },
+      "fixture_and_config_unchanged": true
+    },
+    {
+      "case": "nested_shared",
+      "dropped": null,
+      "relay": {
+        "status": "INSPECTED",
+        "native_project_sources": [
+          "AGENTS.md",
+          "child/AGENTS.md"
+        ],
+        "expectations_match": true,
+        "separate_local_estimate": [
+          {
+            "path": "AGENTS.md",
+            "file_bytes": 24000,
+            "examined_bytes": 24000,
+            "estimated_status": "FULL"
+          },
+          {
+            "path": "child/AGENTS.md",
+            "file_bytes": 18000,
+            "examined_bytes": 8768,
+            "estimated_status": "TRUNCATED"
+          }
+        ],
+        "model_turn_requests": 0,
+        "servers_started": 2,
+        "servers_closed": 2,
+        "cleanup_confirmed": true,
+        "receipt": "NOT_TESTED",
+        "compliance": "NOT_TESTED"
+      },
+      "fixture_sha256": {
+        "AGENTS.md": "b9c988e9228e583da76f412050889fcc35faa8251d9a7adc736940fd0a7ea624",
+        "child/AGENTS.md": "e0061e6c3ce8ed0cc33b0a0b5703c8b70947a5ccc8a56fc4048aa8a6207a8d31"
+      },
+      "fixture_and_config_unchanged": true
+    },
+    {
+      "case": "single_above",
+      "dropped": null,
+      "relay": {
+        "status": "INSPECTED",
+        "native_project_sources": [
+          "AGENTS.md"
+        ],
+        "expectations_match": true,
+        "separate_local_estimate": [
+          {
+            "path": "AGENTS.md",
+            "file_bytes": 42000,
+            "examined_bytes": 32768,
+            "estimated_status": "TRUNCATED"
+          }
+        ],
+        "model_turn_requests": 0,
+        "servers_started": 2,
+        "servers_closed": 2,
+        "cleanup_confirmed": true,
+        "receipt": "NOT_TESTED",
+        "compliance": "NOT_TESTED"
+      },
+      "fixture_sha256": {
+        "AGENTS.md": "d5f9b0d5e8b73b8f52a4ff419373d6aa24c047a6770cc947e085924b5fb4a19c"
+      },
+      "fixture_and_config_unchanged": true
+    },
+    {
+      "case": "parent_one_byte_left",
+      "dropped": null,
+      "relay": {
+        "status": "INSPECTED",
+        "native_project_sources": [
+          "AGENTS.md",
+          "child/AGENTS.md"
+        ],
+        "expectations_match": true,
+        "separate_local_estimate": [
+          {
+            "path": "AGENTS.md",
+            "file_bytes": 32767,
+            "examined_bytes": 32767,
+            "estimated_status": "FULL"
+          },
+          {
+            "path": "child/AGENTS.md",
+            "file_bytes": 60,
+            "examined_bytes": 1,
+            "estimated_status": "TRUNCATED"
+          }
+        ],
+        "model_turn_requests": 0,
+        "servers_started": 2,
+        "servers_closed": 2,
+        "cleanup_confirmed": true,
+        "receipt": "NOT_TESTED",
+        "compliance": "NOT_TESTED"
+      },
+      "fixture_sha256": {
+        "AGENTS.md": "0e9b38dc40e0d8c34b33b15bd674cfdbfc9499520ed97fe3a6628f6090e2d576",
+        "child/AGENTS.md": "ef0aff68a39ba0542783ab9dbbe64a0c5a62253b073d6c735f7a38b89ff89bfc"
+      },
+      "fixture_and_config_unchanged": true
+    },
+    {
+      "case": "parent_budget_exhausted",
+      "dropped": null,
+      "relay": {
+        "status": "INSPECTED",
+        "native_project_sources": [
+          "AGENTS.md"
+        ],
+        "expectations_match": true,
+        "separate_local_estimate": [
+          {
+            "path": "AGENTS.md",
+            "file_bytes": 32768,
+            "examined_bytes": 32768,
+            "estimated_status": "FULL"
+          },
+          {
+            "path": "child/AGENTS.md",
+            "file_bytes": 60,
+            "examined_bytes": 0,
+            "estimated_status": "SKIPPED_BUDGET"
+          }
+        ],
+        "model_turn_requests": 0,
+        "servers_started": 2,
+        "servers_closed": 2,
+        "cleanup_confirmed": true,
+        "receipt": "NOT_TESTED",
+        "compliance": "NOT_TESTED"
+      },
+      "fixture_sha256": {
+        "AGENTS.md": "f2fa007a57b541cd671646aa96d42f699277ccd8274339cbf4a14e64f54d26f1",
+        "child/AGENTS.md": "ef0aff68a39ba0542783ab9dbbe64a0c5a62253b073d6c735f7a38b89ff89bfc"
+      },
+      "fixture_and_config_unchanged": true
+    }
+  ],
+  "status": "PARTIAL_NATIVE_ONLY",
+  "limits": [
+    "Operator synthetic measurements, not independent adoption.",
+    "Native paths are observations; byte counts are separate pinned-source local estimates.",
+    "No model receipt, instruction compliance or absence of startup network/metadata effects is proved."
+  ]
+}

@@ -13,12 +13,22 @@ import sys
 import tempfile
 
 DROPPED_COMMIT = "06536a1ee332f14073df87fdd0a628a61c6ebf5c"
+TOOL_VERSION = "0.1.4"
 BUDGET = 32768
 CASES = [
-    ("single_below", {"AGENTS.md": 24000}, ".", [24000], ["FULL"], 0),
+    ("single_below", {"AGENTS.md": 24000}, ".", [24000], ["FULL"], 0,
+     ["AGENTS.md"]),
     ("nested_shared", {"AGENTS.md": 24000, "child/AGENTS.md": 18000},
-     "child", [24000, 8768], ["FULL", "TRUNCATED"], 0),
-    ("single_above", {"AGENTS.md": 42000}, ".", [32768], ["TRUNCATED"], 1),
+     "child", [24000, 8768], ["FULL", "TRUNCATED"], 0,
+     ["AGENTS.md", "child/AGENTS.md"]),
+    ("single_above", {"AGENTS.md": 42000}, ".", [32768], ["TRUNCATED"], 1,
+     ["AGENTS.md"]),
+    ("parent_one_byte_left", {"AGENTS.md": 32767, "child/AGENTS.md": 60},
+     "child", [32767, 1], ["FULL", "TRUNCATED"], 0,
+     ["AGENTS.md", "child/AGENTS.md"]),
+    ("parent_budget_exhausted", {"AGENTS.md": 32768, "child/AGENTS.md": 60},
+     "child", [32768, 0], ["FULL", "SKIPPED_BUDGET"], 0,
+     ["AGENTS.md"]),
 ]
 
 
@@ -63,10 +73,11 @@ def fixture_bytes(size):
     return head + b"x" * (size - len(head) - 1) + b"\n"
 
 
-def inspect_summary(report, files, startup, expected_bytes, expected_statuses):
+def inspect_summary(report, files, startup, expected_bytes, expected_statuses,
+                    expected_native_paths):
     observation, estimate = report.get("observation", {}), report.get("estimate", {})
     require(report.get("status") == "INSPECTED"
-            and report.get("tool_version") == "0.1.3"
+            and report.get("tool_version") == TOOL_VERSION
             and report.get("client_version") == "codex-cli 0.164.0", "inspection_status")
     require(observation.get("model_turn_requests") == 0
             and observation.get("cleanup_confirmed") is True
@@ -91,12 +102,16 @@ def inspect_summary(report, files, startup, expected_bytes, expected_statuses):
             and [row.get("path") for row in rows] == list(files)
             and [row.get("file_bytes") for row in rows] == list(files.values())
             and all(type(row.get("examined_bytes")) is int
-                    and 0 < row["examined_bytes"] <= row["file_bytes"]
-                    and row.get("estimated_status") in {"FULL", "TRUNCATED"} for row in rows)
-            and all(row.get("selected") is True and row.get("native_listed") is True
+                    and 0 <= row["examined_bytes"] <= row["file_bytes"]
+                    and row.get("estimated_status") in {"FULL", "TRUNCATED", "SKIPPED_BUDGET"}
+                    and (row["examined_bytes"] == 0)
+                    == (row["estimated_status"] == "SKIPPED_BUDGET") for row in rows)
+            and all(row.get("selected") is True
+                    and row.get("native_listed") is (row["path"] in expected_native_paths)
                     for row in rows)
-            and set(estimate.get("native_project_sources", [])) == set(files)
-            and len(estimate["native_project_sources"]) == len(files), "inspection_rows")
+            and set(estimate.get("native_project_sources", [])) == set(expected_native_paths)
+            and len(estimate["native_project_sources"]) == len(expected_native_paths),
+            "inspection_rows")
     require(report.get("receipt") == report.get("compliance") == "NOT_TESTED",
             "inspection_claim_boundary")
     return {"status": report["status"], "native_project_sources": estimate["native_project_sources"],
@@ -153,7 +168,7 @@ def main():
     require(scratch.is_dir(), "scratch_parent_missing")
     repo = Path(__file__).resolve().parents[2]
     tool = repo / "tools/agent-relay-check"
-    require(json.loads((tool / "package.json").read_text())["version"] == "0.1.3",
+    require(json.loads((tool / "package.json").read_text())["version"] == TOOL_VERSION,
             "common_version")
     env = {key: os.environ[key] for key in ["PATH", "HOME", "TMPDIR", "LANG", "LC_ALL"]
            if key in os.environ}
@@ -174,11 +189,11 @@ def main():
     workspace = Path(tempfile.mkdtemp(prefix="relay-cumulative-", dir=scratch))
     result = {"schema_version": 1, "at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
               "mode": "native-only" if args.native_only else "comparison",
-              "tool_version": "0.1.3", "codex_version": "0.164.0",
+              "tool_version": TOOL_VERSION, "codex_version": "0.164.0",
               "node_version": node_version.strip(),
               "dropped_commit": DROPPED_COMMIT if dropped else None,
               "project_doc_max_bytes": BUDGET, "cases": []}
-    for name, files, startup, expected_bytes, expected_statuses, static_exit in CASES:
+    for name, files, startup, expected_bytes, expected_statuses, static_exit, native_paths in CASES:
         project, profile = workspace / name / "project", workspace / name / "diagnostic-config"
         (project / ".git").mkdir(parents=True)
         profile.mkdir()
@@ -203,7 +218,8 @@ def main():
                             str(project / startup), "--timeout-seconds", "30"], child_env, 50)
         require(code == 0, "native_command_failed")
         report = json.loads(stdout)
-        native = inspect_summary(report, files, startup, expected_bytes, expected_statuses)
+        native = inspect_summary(report, files, startup, expected_bytes, expected_statuses,
+                                 native_paths)
         require(all(hashlib.sha256(Path(file).read_bytes()).hexdigest() == digest
                     for file, digest in before.items())
                 and not (profile / "auth.json").exists(), "fixture_or_auth_changed")
