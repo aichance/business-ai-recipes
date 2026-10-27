@@ -39,6 +39,8 @@ jobs:
         with:
           go-version: '1.26.4'
           cache: false
+      - name: Check native boundary report acceptance and refusal
+        run: python -B -m unittest discover -s experiments/relay-cumulative-budget -p 'test_*.py'
       - name: Build the pinned registry source and test it
         shell: bash
         env:
