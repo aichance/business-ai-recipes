@@ -28,6 +28,8 @@ EXPECTED_FILES = {
     'experiments/relay-cumulative-budget/check.py',
     'experiments/relay-cumulative-budget/test_check.py',
     'experiments/relay-cumulative-budget/native-results-2026-10-27.json',
+    'experiments/relay-cumulative-budget/render_native_boundary.py',
+    'docs/agent-relay-native-boundary.svg',
     '.github/workflows/relay-cumulative-budget.yml',
     'docs/agent-relay-cumulative-budget.md',
     'docs/agent-relay-global-guidance.md',
