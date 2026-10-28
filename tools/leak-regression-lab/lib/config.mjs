@@ -11,6 +11,7 @@ const simpleID = (s) => typeof s === 'string' && /^[A-Za-z0-9_-]{1,48}$/.test(s)
 const plain = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
 export const sha256 = (value) => createHash('sha256').update(value).digest('hex');
 export const equal = isDeepStrictEqual;
+export const ROW_PROJECTION = 'declared-id-and-expected-fields';
 
 export function validateConfig(input) {
   need(plain(input) && input.schema_version === 1 && input.environment === 'test');
@@ -87,5 +88,6 @@ export function credentials(config, env) {
 }
 
 export function contractFingerprint(config) {
-  return sha256(JSON.stringify({origin: config.origin, rows: config.rows, objects: config.objects}));
+  return sha256(JSON.stringify({origin: config.origin, rows: config.rows, objects: config.objects,
+    row_projection: ROW_PROJECTION}));
 }

@@ -6,7 +6,9 @@
 
 Test Supabase row **and file** isolation with two normal accounts, an anon/public client key, and known synthetic fixtures. Owner access must work; cross-user and anonymous access must not. Rerun the same contract after a policy/app change and compare local JSON/HTML reports. **No service-role key, dependencies or model calls.**
 
-[**Interactive measured replay / 試用手順**](https://aichance.github.io/business-ai-recipes/leak-regression-lab.html) · [**Setup and source**](tools/leak-regression-lab) · [**Small source ZIP**](https://aichance.github.io/business-ai-recipes/leak-regression-lab-v0.1.1.zip) · [**12 real fixture measurements and limits**](docs/leak-regression-lab-results.md) · [**26-second replay video**](https://aichance.github.io/business-ai-recipes/leak-regression-lab-demo.mp4)
+[**Interactive measured replay / 試用手順**](https://aichance.github.io/business-ai-recipes/leak-regression-lab.html) · [**Setup and source**](tools/leak-regression-lab) · [**Small source ZIP**](https://aichance.github.io/business-ai-recipes/leak-regression-lab-v0.1.2.zip) · [**12 real fixture measurements and limits**](docs/leak-regression-lab-results.md) · [**26-second replay video**](https://aichance.github.io/business-ai-recipes/leak-regression-lab-demo.mp4)
+
+**v0.1.2: preserve column-level grants.** Row requests select only the configured ID and expected fields. Actual local controls: old SELECT-all owner reads403; declared-field reads14/14 PASS; an intentionally open row policy still exposes4 cases. [Measured results and upgrade/rebaseline notes](docs/leak-regression-lab-column-results.md).
 
 **v0.1.1: use existing Supabase test-user JWTs as well as password login.** Google/anonymous-sign-in apps can supply their current test sessions without adding a password flow. Auth verifies both users before app reads; this does not test the browser login flow. [Session setup](tools/leak-regression-lab/README.md#already-using-google-magic-links-or-anonymous-sign-in) · [New supplied-JWT controls](docs/leak-regression-lab-session-results.md).
 

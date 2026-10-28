@@ -1,6 +1,6 @@
 {
   "name": "leak-regression-lab",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "description": "Two-user Supabase row and private-object read-isolation regression checks",
   "type": "module",

@@ -16,6 +16,12 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    'docs/leak-regression-lab-column-results.md',
+    'docs/leak-regression-lab-column-measurements.json',
+    'docs/leak-regression-lab-v0.1.2.zip',
+    'docs/leak-regression-lab-v0.1.2.zip.sha256',
+    'docs/leak-regression-lab-v0.1.2.tgz',
+    'docs/leak-regression-lab-v0.1.2.tgz.sha256',
     'docs/leak-regression-lab-session-results.md',
     'docs/leak-regression-lab-session-measurements.json',
     'docs/leak-regression-lab-v0.1.1.zip',
@@ -2164,6 +2170,50 @@ def verify_leak_regression_lab() -> None:
         else:
             assert control['status'] == 'INCONCLUSIVE' and control['cases'] == 0
             assert all(c['surface'].startswith('auth-') for c in control['actual_requests'])
+
+
+    columns = json.loads((root / 'docs/leak-regression-lab-column-measurements.json').read_text())
+    assert columns['version'] == '0.1.2' and columns['external_adoption'] is False
+    assert columns['evidence_kind'] == 'operator-synthetic-fixture-recording'
+    assert columns['environment']['stacks'] == 1
+    assert columns['protocol_controls']['offline_node_tests'] == 31
+    assert columns['protocol_controls']['fresh_archive_files_byte_equal'] == 18
+    assert columns['protocol_controls']['legacy_report_comparison'] == 'DIFFERENT_CHECK_CONTRACT'
+    for ext, artifact in columns['artifacts'].items():
+        assert ext in ['zip', 'tgz']
+        data = (root / 'docs' / artifact['file']).read_bytes()
+        assert len(data) == artifact['bytes']
+        assert hashlib.sha256(data).hexdigest() == artifact['sha256']
+    control = columns['column_acl_control']
+    assert control['external_adoption'] is False and control['original_acl_catalog_restored'] is True
+    assert control['original_rls_restored'] is True and control['application_writes_by_checker'] == 0
+    assert control['totals'] == {'runs': 5, 'planned_read_cases': 70, 'completed_http_read_responses': 66,
+        'dependent_checks_not_attempted_due_to_owner_control': 4, 'checker_auth_user_gets': 10,
+        'checker_password_sign_ins': 0}
+    assert [tuple(r['report']['counts'][k] for k in ['PASS', 'FAIL', 'INCONCLUSIVE']) for r in control['results']] == [
+        (14, 0, 0), (8, 0, 6), (14, 0, 0), (10, 4, 0), (14, 0, 0)]
+    for i, run in enumerate(control['results']):
+        assert run['report']['version'] == ('0.1.1' if i < 2 else '0.1.2')
+        if i > 0:
+            assert run['grants']['anon_table_select'] is False
+            assert run['grants']['authenticated_owner_id'] is False
+        if i > 1:
+            assert all(r['selected_fields'] == ['id', 'body'] for r in run['actual_requests'] if r['surface'] == 'row')
+        assert all(r['method'] == 'GET' for r in run['actual_requests'])
+    new_matrix = columns['matrix']
+    assert new_matrix['totals'] == sessions['totals']
+    assert new_matrix['application_http_responses_by_surface'] == {'row': 64, 'object': 96}
+    assert {(r['mode'], r['ownership']) for r in new_matrix['runs']} == {(m, o) for m in expected for o in ['owner', 'team']}
+    new_cases = [c for r in new_matrix['runs'] for c in r['report']['cases']]
+    assert len(new_cases) == 168 and sum(c['http_status'] is not None for c in new_cases) == 160
+    for run in new_matrix['runs']:
+        report = run['report']
+        assert report['version'] == '0.1.2'
+        assert report['row_projection'] == 'declared-id-and-expected-fields'
+        assert tuple(report['counts'][k] for k in ['PASS', 'FAIL', 'INCONCLUSIVE']) == expected[run['mode']]
+        assert set(report) <= {'schema_version', 'product', 'version', 'measured_at', 'contract_sha256',
+            'environment', 'status', 'coverage_complete', 'authentication', 'cases', 'scope', 'not_tested', 'counts', 'row_projection'}
+        assert all(set(c) == {'resource', 'surface', 'actor', 'route', 'status', 'http_status', 'reason'} for c in report['cases'])
 
 
 def main() -> int:

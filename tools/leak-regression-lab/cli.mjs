@@ -9,7 +9,7 @@ import {validateConfig, CheckError} from './lib/config.mjs';
 import {inspect, compare} from './lib/probe.mjs';
 import {html} from './lib/report.mjs';
 
-const HELP = `Leak Regression Lab0.1.1 — Node22+, no dependencies or model calls
+const HELP = `Leak Regression Lab0.1.2 — Node22+, no dependencies or model calls
   node cli.mjs check --config test-config.json --out NEW_DIR --live
   node cli.mjs check --env .env.test --config test-config.json --out NEW_DIR --live
   node --env-file=.env.test cli.mjs check --config test-config.json --out NEW_DIR --live
