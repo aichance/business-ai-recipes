@@ -1,3 +1,7 @@
+# Leak Regression Lab scope
+
+`tools/leak-regression-lab/` is the current flagship: dependency-free Node22 two-normal-user read isolation for declared synthetic Supabase test rows and private objects. Ordinary checker use is explicitly opt-in (`--live`), needs no service-role key, performs no application mutations, refuses redirects and keeps private records/credentials out of shareable reports. Local fixture administration is separate and loopback-only. `docs/leak-regression-lab-measurements.json` records real operator synthetic HTTP controls; replay/demo activity is not third-party adoption. See the tool's AGENTS and README for scope. Before release also run `node --test tools/leak-regression-lab/test/*.test.mjs` and `python3 -B tools/leak-regression-lab/package.py --check`. The default root checks remain offline and key-free. Preserve prior tool archives and CI pins.
+
 # Agent Relay Check
 
 `tools/agent-relay-check/` is a dependency-free Node 22 diagnostic. Follow its local AGENTS.md. Run `npm test` there for offline checks. Live runs require explicit `--live`, authorized project guidance and Codex 0.163.0+. Defaults and operator verification remain gpt-6.1-sol/MAX. Only `run` accepts explicit model/effort selection; no automatic fallback. Other real model/effort combinations remain unverified. Recorded demonstration results are operator evidence, not external adoption. The latest downloadable ZIP must match the tool source byte-for-byte; preserve older archives.

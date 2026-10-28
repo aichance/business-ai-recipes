@@ -16,6 +16,31 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    'docs/leak-regression-lab-demo.mp4',
+    'docs/leak-regression-lab-measurements.json',
+    'docs/leak-regression-lab-preview.png',
+    'docs/leak-regression-lab-results.md',
+    'docs/leak-regression-lab-v0.1.0.tgz',
+    'docs/leak-regression-lab-v0.1.0.tgz.sha256',
+    'docs/leak-regression-lab-v0.1.0.zip',
+    'docs/leak-regression-lab-v0.1.0.zip.sha256',
+    'docs/leak-regression-lab.html',
+    'docs/leak-regression-lab.js',
+    'tools/leak-regression-lab/AGENTS.md',
+    'tools/leak-regression-lab/README.md',
+    'tools/leak-regression-lab/cli.mjs',
+    'tools/leak-regression-lab/examples/env.example',
+    'tools/leak-regression-lab/examples/test-config.json',
+    'tools/leak-regression-lab/fixtures/run.mjs',
+    'tools/leak-regression-lab/fixtures/schema.sql',
+    'tools/leak-regression-lab/lib/config.mjs',
+    'tools/leak-regression-lab/lib/probe.mjs',
+    'tools/leak-regression-lab/lib/report.mjs',
+    'tools/leak-regression-lab/package.json',
+    'tools/leak-regression-lab/package.py',
+    'tools/leak-regression-lab/test/cli.test.mjs',
+    'tools/leak-regression-lab/test/probe.test.mjs',
+
     'experiments/relay-package/package.py',
     'docs/agent-relay-one-command.md',
     'docs/agent-relay-check-v0.1.4-npx1.tgz',
@@ -2072,9 +2097,42 @@ def verify_relay_archive() -> None:
     assert packaged.returncode == 0, packaged.stderr
 
 
+def verify_leak_regression_lab() -> None:
+    root = Path(__file__).resolve().parent
+    checked = subprocess.run([sys.executable, '-B', str(root / 'tools/leak-regression-lab/package.py'), '--check'], capture_output=True, text=True, check=False)
+    assert checked.returncode == 0, checked.stderr
+    evidence = json.loads((root / 'docs/leak-regression-lab-measurements.json').read_text())
+    assert evidence['evidence_kind'] == 'operator-synthetic-fixture-recording'
+    assert evidence['external_adoption'] is False and evidence['environment']['stacks'] == 1
+    expected = {'secure': (14, 0, 0), 'rows-leak': (10, 4, 0), 'objects-leak': (10, 4, 0), 'public-leak': (8, 6, 0), 'deny-all': (8, 0, 6), 'repaired': (14, 0, 0)}
+    runs = evidence['runs']
+    assert len(runs) == 12 and {(r['mode'], r['ownership']) for r in runs} == {(m, o) for m in expected for o in ['owner', 'team']}
+    all_cases = [case for run in runs for case in run['report']['cases']]
+    assert len(all_cases) == 168
+    assert sum(case['http_status'] is not None for case in all_cases) == 160
+    assert evidence['totals'] == {'runs': 12, 'planned_read_cases': 168, 'completed_http_read_responses': 160, 'dependent_checks_not_attempted_due_to_owner_control': 8, 'sign_ins': 24}
+    assert evidence['protocol_controls']['offline_node_tests'] == 17
+    for ext, artifact in evidence['artifacts'].items():
+        assert ext in ['zip', 'tgz']
+        assert hashlib.sha256((root / 'docs' / artifact['file']).read_bytes()).hexdigest() == artifact['sha256']
+    for run in runs:
+        report = run['report']; mode = run['mode']
+        counts = tuple(report['counts'][key] for key in ['PASS', 'FAIL', 'INCONCLUSIVE'])
+        assert counts == expected[mode] and len(report['cases']) == 14
+        assert report['status'] == ('FAIL' if counts[1] else 'INCONCLUSIVE' if counts[2] else 'PASS')
+        assert report['coverage_complete'] == (counts[2] == 0)
+        for case in report['cases']:
+            leaked = (mode == 'rows-leak' and case['surface'] == 'row' and case['actor'] != 'owner') or (mode == 'objects-leak' and case['surface'] == 'object' and case['actor'] in ['other', 'anonymous']) or (mode == 'public-leak' and case['surface'] == 'object' and case['actor'] != 'owner')
+            unknown = mode == 'deny-all' and case['surface'] == 'row'
+            assert case['status'] == ('FAIL' if leaked else 'INCONCLUSIVE' if unknown else 'PASS')
+        assert set(report) <= {'schema_version', 'product', 'version', 'measured_at', 'contract_sha256', 'environment', 'status', 'coverage_complete', 'authentication', 'cases', 'scope', 'not_tested', 'counts'}
+        assert all(set(c) == {'resource', 'surface', 'actor', 'route', 'status', 'http_status', 'reason'} for c in report['cases'])
+
+
 def main() -> int:
     try:
         verify_relay_archive()
+        verify_leak_regression_lab()
         result = verify()
     except (AssertionError, OSError, ValueError) as exc:
         print(f"VERIFY_FAILED: {exc}", file=sys.stderr)

@@ -13,6 +13,20 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  leak-regression-lab:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - name: Offline HTTP controls, redaction, compare and CLI refusals
+        run: node --test tools/leak-regression-lab/test/*.test.mjs
+      - name: Deterministic source packages
+        run: python3 -B tools/leak-regression-lab/package.py --check
   agent-relay-check:
     strategy:
       fail-fast: false
