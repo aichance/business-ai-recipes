@@ -16,6 +16,7 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    'docs/leak-regression-lab-setup-prompt.txt',
     'docs/leak-regression-lab-column-results.md',
     'docs/leak-regression-lab-column-measurements.json',
     'docs/leak-regression-lab-v0.1.2.zip',

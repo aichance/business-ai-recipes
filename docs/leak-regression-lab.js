@@ -35,7 +35,19 @@
   }
   document.querySelectorAll('[data-mode]').forEach((button)=>button.addEventListener('click',()=>{mode=button.dataset.mode;try{render();}catch{fail();}}));
   byId('layout').addEventListener('change',()=>{try{render();}catch{fail();}});
-  byId('copy').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(byId('command').textContent);byId('copy').textContent='コピーしました';}catch{byId('copy').textContent='コードを選択してコピー';}});
+  byId('copy').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(byId('command').textContent);byId('copy').textContent='Copied';}catch{byId('copy').textContent='Select the command to copy';}});
+  byId('copy-after').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(byId('command-after').textContent);byId('copy-after').textContent='Copied';}catch{byId('copy-after').textContent='Select the commands to copy';}});
+  const setupPrompt = byId('setup-prompt'), copySetup = byId('copy-setup');
+  copySetup.addEventListener('click',async()=>{
+    try{await navigator.clipboard.writeText(setupPrompt.textContent);copySetup.textContent='Copied';}
+    catch{copySetup.textContent='Select the prompt to copy';}
+  });
+  fetch('./leak-regression-lab-setup-prompt.txt',{credentials:'omit'}).then((r)=>{
+    if(!r.ok)throw Error('HTTP');return r.text();
+  }).then((text)=>{
+    if(!text.trim()||text.length>20000)throw Error('Invalid setup prompt');
+    setupPrompt.textContent=text;copySetup.disabled=false;
+  }).catch(()=>{setupPrompt.textContent='Could not load the setup prompt. Use the plain-text link below.';});
   fetch('./leak-regression-lab-measurements.json').then((r)=>{if(!r.ok)throw Error('HTTP');return r.json();}).then((data)=>{
     if(data.evidence_kind!=='operator-synthetic-fixture-recording'||data.external_adoption!==false||data.runs?.length!==12)throw Error('Invalid evidence');
     evidence=data;render();
