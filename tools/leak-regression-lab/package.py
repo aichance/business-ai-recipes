@@ -16,7 +16,7 @@ FILES = [
     "fixtures/schema.sql", "fixtures/run.mjs", "examples/test-config.json", "examples/env.example",
     "test/session.test.mjs", "examples/test-session-config.json", "examples/session-env.example",
 ]
-STEM = "leak-regression-lab-v0.1.2"
+STEM = "leak-regression-lab-v0.1.3"
 
 
 def build():
