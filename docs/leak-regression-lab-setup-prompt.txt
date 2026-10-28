@@ -1,0 +1,28 @@
+Help me run Leak Regression Lab v0.1.2 against this app's existing, authorized Supabase TEST environment, using configuration only.
+
+Download and inspect the dependency-free source ZIP and its README:
+https://aichance.github.io/business-ai-recipes/leak-regression-lab-v0.1.2.zip
+Expected ZIP SHA-256: f5f3e426ecb3f72f048a252e7acad4cc4f06c881a3f81eecf353f1c2b5bc9cc0
+Verify the hash before running it. Node 22+ is required; do not install global packages.
+
+Use a fresh ignored local work folder inside this app's repository. Keep credentials and configuration local; never print, post or send them. Do not read browser profiles or extract saved sessions. Respect this project's instructions and the test scope I have authorized.
+
+Prepare the existing example config from this app's documented schema and existing synthetic test fixtures:
+- One explicitly authorized test origin, two distinct ordinary Supabase Auth users, and one private synthetic row AND uploaded private file for each user.
+- Confirm the intended sharing rules. Two users in the same organization, or a person in two organizations, are not automatically forbidden peers. Both must be unauthorized for the other's chosen resources.
+- Map actual table/id columns, exact record IDs, expected non-sensitive test fields, bucket/object paths, and SHA-256 of each actual local test file. Do not invent fixtures, expected values or hashes.
+- Use existing ordinary password-login environment references or current test-user Supabase access-token environment references. Have me fill missing secrets locally, not in chat. Do not display environment-file contents, tokens or passwords. Do not add password login, change MFA or widen grants.
+- If a required fact, test origin, ordinary session, row or uploaded file is missing, stop with NEEDS_INPUT and list only the missing facts. If the app's auth/storage contract does not fit, explain INCOMPATIBLE rather than changing the app.
+
+Do not create database users/rows, upload/delete files, change application code or policies, or run fixtures/run.mjs. That fixture workflow is for the author's separate disposable stack, not this app.
+
+When the existing setup is complete and the test origin is explicitly authorized, run from the extracted tool directory with a NEW output folder whose parent exists:
+node cli.mjs check --env .env.test --config test-config.json --out ./leak-check-before --live
+
+Report the actual CLI version, exit code, PASS/FAIL/INCONCLUSIVE counts and the first setup obstacle. A missing owner-positive control is not PASS. This verifies only the declared reads, not whole-app security. Keep private paths, raw content, origins, identity values and credentials out of anything shared with the tool's author.
+
+On a later request AFTER an actual app or policy update, reuse the same v0.1.2 fixture contract:
+node cli.mjs check --env .env.test --config test-config.json --out ./leak-check-after --live
+node cli.mjs compare --before ./leak-check-before/report.json --after ./leak-check-after/report.json
+
+Do not alter the app merely to produce another result. A changed fixture contract or a report from v0.1.1 cannot establish a before/after repair.
