@@ -2,7 +2,7 @@
 
 These are operator-created synthetic controls, not independent adoption, a scan of someone else's application, or a newly discovered Supabase vulnerability. The interactive [recorded replay](./leak-regression-lab.html) renders the [complete sanitized measurements](./leak-regression-lab-measurements.json).
 
-The **downloaded-format source ZIP was extracted into a fresh directory**, then the unmodified extracted checker ran against real local Supabase Auth, PostgREST and Storage. One disposable stack, two ordinary identities, two authored ownership layouts (direct-user and team-membership), six states each. Layout differences are configuration-only; there is no separate checker per app. Each run includes 14 read observations and two sign-ins. CLI 2.24.3, Node 22.23.4, macOS with local Docker. Latest hosted gateways, publishable keys and native Windows have not been certified by these controls.
+The **downloaded-format source ZIP was extracted into a fresh directory**, then the unmodified extracted checker ran against real local Supabase Auth, PostgREST and Storage. One disposable stack, two ordinary identities, two authored ownership layouts (direct-user and team-membership), six states each. Layout differences are configuration-only; there is no separate checker per app. Each run plans 14 read checks and performs two sign-ins. Across 12 runs, 160 HTTP read responses were obtained; eight dependent checks were not attempted because their owner controls were unavailable. Those eight stay INCONCLUSIVE. CLI 2.24.3, Node 22.23.4, macOS with local Docker. Latest hosted gateways, publishable keys and native Windows have not been certified by these controls.
 
 For **each** ownership layout:
 
@@ -15,7 +15,7 @@ For **each** ownership layout:
 | DB owner reads denied to everyone | INCONCLUSIVE | 8 | 0 | 6 | 3 |
 | Correct policies and private buckets restored | PASS | 14 | 0 | 0 | 0 |
 
-All 168 recorded case results were asserted individually against their intended surface/actor/route. The public-bucket state leaves all six DB observations passing while exposing six private-file probes. The private-bucket/open-object-policy state exposes four object probes while the public route remains denied. The DB-deny-all state leaves Storage passing, but all six DB observations inconclusive because the owner positive controls are unavailable. This does **not** imply a successful repair.
+All 168 recorded case results (including the eight unattempted dependent checks) were asserted individually against their intended surface/actor/route. The public-bucket state leaves all six DB observations passing while exposing six private-file probes. The private-bucket/open-object-policy state exposes four object probes while the public route remains denied. The DB-deny-all state leaves Storage passing, but all six DB observations inconclusive because the owner positive controls are unavailable. This does **not** imply a successful repair.
 
 Comparing the same direct-owner contract from secure → public-bucket yields six regressions; public-bucket → repaired yields six resolved cases with no incomplete observation. The common comparator rejects changed fingerprints, omitted/duplicate case sets, empty reports and inconsistent report status. Its reports are evidence for the selected contract, not a tamper-proof attestation.
 
@@ -40,3 +40,5 @@ SQL/pgTAP policy tests remain useful for database permissions. This tool checks 
 Private resources are declared, not discovered; public buckets expose downloads by design ([official documentation](https://supabase.com/docs/guides/storage/buckets/fundamentals)). Deliberately public files do not belong in this contract. An anon/publishable client key is not itself a leaked secret.
 
 Not tested: writes/deletes, signed URLs, transforms, cache persistence, Realtime, RPC, business roles, browser sessions, arbitrary tables or all bucket contents. Use small synthetic objects (responses ≤1MiB). Exact row-ID matching currently targets UUID/text IDs. The checker cannot infer ownership intent or certify general application safety. See the [setup and scope](https://github.com/aichance/business-ai-recipes/tree/main/tools/leak-regression-lab).
+
+Authentication guard: opaque publishable keys are sent only in `apikey`, while user JWTs and legacy anon JWTs use `Authorization`. HTTP401 and embedded401 remain INCONCLUSIVE. These two regression controls are modeled offline tests, not a live hosted publishable-key certification; the real local matrix above uses legacy anon credentials. [Official limitations](https://supabase.com/docs/guides/getting-started/api-keys#known-limitations).

@@ -2,7 +2,7 @@
 (() => {
   const byId = (id) => document.getElementById(id);
   const titles = {secure:'正常な設定', 'rows-leak':'DBの許可を広げる', 'objects-leak':'ファイルの許可を広げる', 'public-leak':'バケットを公開する', 'deny-all':'DBを全員拒否', repaired:'修復後'};
-  const descriptions = {secure:'持ち主は自分のデータを取得でき、別ユーザーと匿名には返りませんでした。指定した14の観測はPASSです。', 'rows-leak':'添付ファイルは保護されていますが、DBの行を別ユーザーと匿名が取得できました。', 'objects-leak':'DBはPASSでも、非公開バケットのファイルを別ユーザーと匿名が取得できました。公開URLの拒否だけでは足りません。', 'public-leak':'DBの6観測はすべてPASS。それでも公開バケットのファイルは別ユーザー・匿名・公開URLから取得できました。', 'deny-all':'DBを全員に拒否すると、持ち主も読めません。拒否を安全性の合格にせず、DBの6観測を判定不能にします。', repaired:'同じテスト契約で再実行。持ち主の読み取りを保ったまま、6つのファイル露出が解消しました。'};
+  const descriptions = {secure:'持ち主は自分のデータを取得でき、別ユーザーと匿名には返りませんでした。指定した14の検査はPASSです。', 'rows-leak':'添付ファイルは保護されていますが、DBの行を別ユーザーと匿名が取得できました。', 'objects-leak':'DBはPASSでも、非公開バケットのファイルを別ユーザーと匿名が取得できました。公開URLの拒否だけでは足りません。', 'public-leak':'DBの6検査はすべてPASS。それでも公開バケットのファイルは別ユーザー・匿名・公開URLから取得できました。', 'deny-all':'DBを全員に拒否すると、持ち主も読めません。拒否を安全性の合格にせず、DBの6検査を判定不能にします。', repaired:'同じテスト契約で再実行。持ち主の読み取りを保ったまま、6つのファイル露出が解消しました。'};
   const actors = {owner:'持ち主',other:'別ユーザー',anonymous:'匿名','anonymous-public':'匿名'};
   const routes = {row:'DB / REST','authenticated-object':'Storage / authenticated','public-object':'Storage / public'};
   let evidence, mode='public-leak';
@@ -16,7 +16,7 @@
     byId('verdict').className='verdict status-'+report.status;
     byId('explanation').textContent=descriptions[mode];
     for (const [id,status] of [['pass','PASS'],['fail','FAIL'],['unknown','INCONCLUSIVE']]) byId(id).textContent=report.cases.filter((r)=>r.status===status).length;
-    byId('version').textContent='v'+report.version+' / 14 OBSERVATIONS';
+    byId('version').textContent='v'+report.version+' / 14 CHECKS';
     byId('timestamp').textContent='実測日時 '+new Date(report.measured_at).toLocaleString('ja-JP',{timeZone:'Asia/Tokyo'})+' JST · 同じ検査コード、設定のみ変更';
     byId('cases').replaceChildren(...report.cases.map((r)=>{
       const tr=document.createElement('tr');
