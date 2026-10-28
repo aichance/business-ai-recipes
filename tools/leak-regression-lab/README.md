@@ -10,6 +10,8 @@ No inference bill, telemetry, service-role key or package dependencies. Choose o
 
 For each user's known test row: their own read must return the expected test data, the other user must not receive it, and anonymous access must not receive it. For each known private file: the owner must download the expected bytes; the other user, anonymous authenticated-object access and anonymous public-object access must not receive them. Anonymous probes use the API's anon/publishable credential, not an authenticated user. Opaque publishable keys go only in `apikey`; user JWTs and legacy anon JWTs use `Authorization: Bearer`. HTTP401 and embedded authentication errors remain inconclusive, never a security pass. See the [official key limitations](https://supabase.com/docs/guides/getting-started/api-keys#known-limitations).
 
+Version0.1.2 requests only each row's `id_column` and the fields declared in `expect`, with duplicate names removed. It does not request `SELECT *` or require access to unrelated columns. Keep your existing grants; a missing permission on a declared field still makes the owner control inconclusive. Choose fields that the intended owner should read and that the forbidden actors must not receive. Undeclared fields and the complete column-permission matrix are outside this check.
+
 A403/404 status alone does not qualify as a policy denial. Storage needs a recognized `AccessDenied`, `NoSuchKey`, `NoSuchBucket`, legacy `not_found` or `unauthorized` response with its matching denial status. The local fixture also returns HTTP400 with `statusCode:404` and the exact legacy error `Bucket not found`; that specific form is supported. Row denial is an empty successful result or explicit PostgreSQL42501/HTTP403. Unknown codes, invalid JWTs/signatures and service errors remain inconclusive. [Official Storage error codes](https://supabase.com/docs/guides/storage/debugging/error-codes).
 
 This catches an accidentally public bucket even when database row tests pass. Public downloads bypass access control by design: [Supabase bucket documentation](https://supabase.com/docs/guides/storage/buckets/fundamentals). Do not put deliberately public files in this private-resource contract. An anon/publishable API key is expected client configuration, not itself a leaked secret.
@@ -65,6 +67,8 @@ node cli.mjs compare --before ./leak-check-before/report.json --after ./leak-che
 ```
 
 Changing expected resources/content changes the contract fingerprint. Different contracts, omitted cases and incomplete observations cannot silently certify a repair. Comparison is local with no network or model call.
+
+**Upgrading from0.1.1:** the row projection is part of the contract fingerprint. Reports from0.1.1 and0.1.2 deliberately refuse comparison (`DIFFERENT_CHECK_CONTRACT`), even with the same config. Take a fresh baseline with0.1.2 and use0.1.2 for subsequent checks. This avoids comparing `SELECT *` observations with declared-field observations as though they were the same request.
 
 ## Validation status
 
