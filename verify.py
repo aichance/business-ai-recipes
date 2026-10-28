@@ -2107,6 +2107,11 @@ def verify_leak_regression_lab() -> None:
     expected = {'secure': (14, 0, 0), 'rows-leak': (10, 4, 0), 'objects-leak': (10, 4, 0), 'public-leak': (8, 6, 0), 'deny-all': (8, 0, 6), 'repaired': (14, 0, 0)}
     runs = evidence['runs']
     assert len(runs) == 12 and {(r['mode'], r['ownership']) for r in runs} == {(m, o) for m in expected for o in ['owner', 'team']}
+    all_cases = [case for run in runs for case in run['report']['cases']]
+    assert len(all_cases) == 168
+    assert sum(case['http_status'] is not None for case in all_cases) == 160
+    assert evidence['totals'] == {'runs': 12, 'planned_read_cases': 168, 'completed_http_read_responses': 160, 'dependent_checks_not_attempted_due_to_owner_control': 8, 'sign_ins': 24}
+    assert evidence['protocol_controls']['offline_node_tests'] == 17
     for ext, artifact in evidence['artifacts'].items():
         assert ext in ['zip', 'tgz']
         assert hashlib.sha256((root / 'docs' / artifact['file']).read_bytes()).hexdigest() == artifact['sha256']
