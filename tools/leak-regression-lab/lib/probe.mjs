@@ -1,13 +1,22 @@
-import {CheckError, equal, sha256, credentials, contractFingerprint, ROW_PROJECTION} from './config.mjs';
+import {CheckError, equal, sha256, credentials, contractFingerprint, ROW_PROJECTION, ROW_DENIAL_POLICY} from './config.mjs';
 
 const LIMIT = 1024 * 1024;
 // An authentication failure does not prove the intended anonymous/user policy ran.
 const storageDenials = new Map([['not_found', 404], ['NoSuchKey', 404], ['NoSuchBucket', 404],
   ['unauthorized', 403], ['AccessDenied', 403]]);
-function denied(r, kind) {
+function denied(r, kind, actor) {
   // A status alone can also describe an expired JWT, a bad signature or a
   // broken gateway. Only documented policy/missing-object responses count.
-  if (kind === 'row') return r.status === 403 && r.json?.code === '42501';
+  if (kind === 'row') {
+    if (r.json?.code !== '42501') return false;
+    if (r.status === 403) return true;
+    // PostgREST maps insufficient_privilege to 401 for its anonymous role.
+    // This is only an anonymous row probe, after the owner positive control;
+    // a user/Storage 401 or an authentication-error envelope is still unknown.
+    return actor === 'anonymous' && r.status === 401 &&
+      typeof r.json.message === 'string' && r.json.message.trim().length > 0 &&
+      ['error', 'error_description', 'statusCode', 'httpStatusCode'].every((field) => !Object.hasOwn(r.json, field));
+  }
   if (r.json?.error === 'Bucket not found') return r.status === 400 && Number(r.json.statusCode) === 404 &&
     r.json.code === undefined && r.json.httpStatusCode === undefined;
   const status = r.status === 400 ? Number(r.json?.statusCode ?? r.json?.httpStatusCode) : r.status;
@@ -28,9 +37,9 @@ const observed = (r, resource, kind) => {
   if (kind === 'row') return Array.isArray(r.json) && r.json.some((x) => x?.[resource.id_column] === resource.record_id && Object.entries(resource.expect).every(([k, v]) => equal(x[k], v)));
   return r.digest === resource.sha256;
 };
-function classify(r, resource, kind) {
+function classify(r, resource, kind, actor) {
   if (observed(r, resource, kind)) return 'present';
-  if (denied(r, kind) || (kind === 'row' && r.status === 200 && Array.isArray(r.json) && r.json.length === 0)) return 'denied';
+  if (denied(r, kind, actor) || (kind === 'row' && r.status === 200 && Array.isArray(r.json) && r.json.length === 0)) return 'denied';
   return 'unknown';
 }
 
@@ -81,9 +90,10 @@ export async function request(config, path, {token, publicKey, body, fetchImpl =
 
 export async function inspect(config, env, {fetchImpl = fetch, now = () => new Date().toISOString()} = {}) {
   const secret = credentials(config, env);
-  const report = {schema_version: 1, product: 'leak-regression-lab', version: '0.1.2', measured_at: now(),
+  const report = {schema_version: 1, product: 'leak-regression-lab', version: '0.1.3', measured_at: now(),
     contract_sha256: contractFingerprint(config), environment: 'test', status: 'INCONCLUSIVE',
     row_projection: ROW_PROJECTION,
+    row_denial_policy: ROW_DENIAL_POLICY,
     coverage_complete: false, authentication: 'NOT_TESTED', cases: [],
     scope: ['known-row-read-isolation', 'known-private-object-read-isolation', 'public-object-route'],
     not_tested: ['undeclared-row-fields', 'column-permission-matrix', 'write/delete', 'signed-URLs', 'cache-persistence', 'Realtime', 'RPC', 'browser-sessions', 'general-app-security']};
@@ -134,7 +144,7 @@ export async function inspect(config, env, {fetchImpl = fetch, now = () => new D
           status: 'INCONCLUSIVE', http_status: null, reason: 'OWNER_CONTROL_NOT_AVAILABLE'};
         if (ownerOK) {
           const r = await request(config, targetPath, {token, publicKey: secret.publicKey, fetchImpl});
-          const state = classify(r, resource, kind); entry.http_status = r.status;
+          const state = classify(r, resource, kind, actor); entry.http_status = r.status;
           entry.status = state === 'present' ? 'FAIL' : state === 'denied' ? 'PASS' : 'INCONCLUSIVE';
           entry.reason = state === 'present' ? 'PRIVATE_TEST_DATA_RETURNED' : state === 'denied' ? 'ACCESS_DENIED' : (r.error ?? 'UNEXPECTED_RESPONSE');
         }
