@@ -22,9 +22,17 @@ export function validateConfig(input) {
   need(origin.hostname !== '169.254.169.254', 'INVALID_ORIGIN');
   need(envName(input.public_key_env) && plain(input.actors));
   need(equal(Object.keys(input.actors).sort(), ['a', 'b']));
+  const actors = {};
   for (const who of ['a', 'b']) {
     const a = input.actors[who];
-    need(plain(a) && envName(a.email_env) && envName(a.password_env));
+    need(plain(a));
+    if (Object.hasOwn(a, 'access_token_env')) {
+      need(envName(a.access_token_env) && !Object.hasOwn(a, 'email_env') && !Object.hasOwn(a, 'password_env'), 'ONE_ACTOR_AUTH_METHOD_REQUIRED');
+      actors[who] = {access_token_env: a.access_token_env};
+    } else {
+      need(envName(a.email_env) && envName(a.password_env), 'ONE_ACTOR_AUTH_METHOD_REQUIRED');
+      actors[who] = {email_env: a.email_env, password_env: a.password_env};
+    }
   }
   const seen = new Set();
   for (const group of ['rows', 'objects']) {
@@ -52,7 +60,7 @@ export function validateConfig(input) {
   return {
     schema_version: 1, environment: 'test', origin: origin.origin,
     public_key_env: input.public_key_env,
-    actors: structuredClone(input.actors), rows: structuredClone(input.rows),
+    actors, rows: structuredClone(input.rows),
     objects: structuredClone(input.objects), timeout_ms: timeoutMs,
   };
 }
@@ -69,9 +77,12 @@ export function credentials(config, env) {
   }
   const actors = {};
   for (const who of ['a', 'b']) {
-    actors[who] = {email: read(config.actors[who].email_env), password: read(config.actors[who].password_env)};
+    const actor = config.actors[who];
+    actors[who] = Object.hasOwn(actor, 'access_token_env')
+      ? {accessToken: read(actor.access_token_env)}
+      : {email: read(actor.email_env), password: read(actor.password_env)};
   }
-  need(actors.a.email.toLowerCase() !== actors.b.email.toLowerCase(), 'DISTINCT_USERS_REQUIRED');
+  if (actors.a.email && actors.b.email) need(actors.a.email.toLowerCase() !== actors.b.email.toLowerCase(), 'DISTINCT_USERS_REQUIRED');
   return {publicKey, actors};
 }
 
