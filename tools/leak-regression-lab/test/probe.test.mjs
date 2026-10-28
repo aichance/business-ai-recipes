@@ -61,6 +61,57 @@ test('cross-account row leak is visible while Storage controls still pass', asyn
   assert.ok(r.cases.filter((x) => x.surface === 'object').every((x) => x.status === 'PASS'));
 });
 
+test('column-restricted reads work without granting unused fields and still expose row leaks', async () => {
+  for (const mode of ['secure', 'rows-leak']) {
+    const b = backend(mode); const projections = [];
+    const r = await inspect(config(), environment, {fetchImpl: (url, options) => {
+      const u = new URL(url);
+      if (u.pathname.startsWith('/rest/')) {
+        const fields = u.searchParams.get('select').split(','); projections.push(fields);
+        if (fields.some((field) => !['id', 'text'].includes(field))) return json({code: '42501'}, 403);
+      }
+      return b.fetchImpl(url, options);
+    }});
+    assert.equal(projections.length, 6);
+    assert.ok(projections.every((fields) => fields.includes('id') && fields.includes('text')));
+    assert.deepEqual(r.counts, mode === 'secure'
+      ? {PASS: 14, FAIL: 0, INCONCLUSIVE: 0} : {PASS: 10, FAIL: 4, INCONCLUSIVE: 0});
+    assert.equal(r.row_projection, 'declared-id-and-expected-fields');
+    assert.ok(r.not_tested.includes('undeclared-row-fields'));
+  }
+});
+
+test('denying a declared field leaves owner controls inconclusive, never green', async () => {
+  const b = backend(); let rowReads = 0;
+  const r = await inspect(config(), environment, {fetchImpl: (url, options) => {
+    if (new URL(url).pathname.startsWith('/rest/')) { rowReads++; return json({code: '42501'}, 403); }
+    return b.fetchImpl(url, options);
+  }});
+  assert.equal(rowReads, 2);
+  assert.equal(r.status, 'INCONCLUSIVE');
+  assert.deepEqual(r.counts, {PASS: 8, FAIL: 0, INCONCLUSIVE: 6});
+  assert.ok(r.cases.filter((c) => c.surface === 'row' && c.actor !== 'owner').every((c) => c.http_status === null));
+});
+
+test('an ID repeated in expected fields is requested once and invalid selector names are refused', async () => {
+  const c = config(); c.rows.forEach((row) => { row.expect.id = row.record_id; });
+  const b = backend(); let rowReads = 0;
+  const r = await inspect(validateConfig(c), environment, {fetchImpl: (url, options) => {
+    const u = new URL(url);
+    if (u.pathname.startsWith('/rest/')) {
+      rowReads++; const fields = u.searchParams.get('select').split(',');
+      assert.equal(fields.filter((field) => field === 'id').length, 1);
+      assert.equal(fields.length, 2);
+    }
+    return b.fetchImpl(url, options);
+  }});
+  assert.equal(rowReads, 6); assert.equal(r.status, 'PASS');
+  for (const field of ['*', 'text,secret', 'related(secret)', 'secret:internal']) {
+    const invalid = config(); invalid.rows[0].expect[field] = 'test';
+    assert.throws(() => validateConfig(invalid), {code: 'INVALID_CONFIG'});
+  }
+});
+
 test('opaque publishable keys stay in apikey while user JWTs stay in Authorization', async () => {
   const publicKey = 'sb_publishable_synthetic-test-key';
   const b = backend('public-leak');
@@ -209,4 +260,14 @@ test('compare catches a regression and a repair only within the same test contra
   assert.throws(() => compare(a, {...b, cases: []}), {code: 'INVALID_OR_INCOMPLETE_REPORT'});
   assert.throws(() => compare(a, {...b, coverage_complete: false}), {code: 'INVALID_OR_INCOMPLETE_REPORT'});
   assert.throws(() => compare(a, {...b, cases: b.cases.map((r, i) => i ? r : {...r, resource: 'replacement'})}), {code: 'DIFFERENT_CASE_SET'});
+});
+
+test('reports from the old SELECT-all policy cannot silently compare with declared-field reads', async () => {
+  const c = config(); const r = await inspect(c, environment, backend());
+  const legacy = {...r, version: '0.1.1',
+    contract_sha256: sha256(JSON.stringify({origin: c.origin, rows: c.rows, objects: c.objects}))};
+  delete legacy.row_projection;
+  assert.notEqual(r.contract_sha256, legacy.contract_sha256);
+  assert.throws(() => compare(legacy, r), {code: 'DIFFERENT_CHECK_CONTRACT'});
+  assert.deepEqual(compare(r, r).regressions, []);
 });
