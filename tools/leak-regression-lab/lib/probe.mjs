@@ -1,8 +1,9 @@
 import {CheckError, equal, sha256, credentials, contractFingerprint} from './config.mjs';
 
 const LIMIT = 1024 * 1024;
-const denied = (r) => [401, 403, 404].includes(r.status) ||
-  (r.status === 400 && r.json && [401, 403, 404].includes(Number(r.json.statusCode)) && typeof r.json.error === 'string');
+// An authentication failure does not prove the intended anonymous/user policy ran.
+const denied = (r) => [403, 404].includes(r.status) ||
+  (r.status === 400 && r.json && [403, 404].includes(Number(r.json.statusCode)) && typeof r.json.error === 'string');
 const rowPath = (r) => {
   const q = new URLSearchParams({select: '*', [r.id_column]: `eq.${r.record_id}`});
   return `/rest/v1/${r.table}?${q}`;
@@ -22,9 +23,10 @@ function classify(r, resource, kind) {
 export async function request(config, path, {token, publicKey, body, fetchImpl = fetch} = {}) {
   const url = new URL(path, config.origin);
   if (url.origin !== config.origin || !path.startsWith('/')) throw new CheckError('CROSS_ORIGIN_REFUSED');
-  // Supabase's unauthenticated client still sends its anon/publishable credential.
-  // Omitting it can produce a malformed-request400 rather than testing anon access.
-  const headers = {apikey: publicKey, Authorization: `Bearer ${token ?? publicKey}`, 'Cache-Control': 'no-cache'};
+  // Only user JWTs and legacy anon JWTs belong in Authorization. Opaque
+  // publishable keys use apikey only; treating them as JWTs can mask anon leaks.
+  const headers = {apikey: publicKey, 'Cache-Control': 'no-cache'};
+  if (token || !publicKey.startsWith('sb_publishable_')) headers.Authorization = `Bearer ${token ?? publicKey}`;
   if (body) headers['Content-Type'] = 'application/json';
   const method = body ? 'POST' : 'GET';
   let response;
