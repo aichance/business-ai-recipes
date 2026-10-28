@@ -23,7 +23,7 @@ function backend(mode = 'secure') {
       const who = JSON.parse(options.body).email === environment.A_EMAIL ? 'a' : 'b';
       if (mode === 'auth-fail') return json({error: 'secret server diagnostics'}, 400);
       const id = mode === 'same-user' ? 'same-user' : `user-${who}`;
-      return json({access_token: jwt({role: mode === 'privileged-token' ? 'service_role' : 'authenticated', sub: id}), user: {id}});
+      return json({access_token: jwt({role: mode === 'privileged-token' ? 'service_role' : 'authenticated', sub: id}), user: {id, role: 'authenticated'}});
     }
     const token = options.headers.Authorization?.split(' ')[1];
     const who = token ? JSON.parse(Buffer.from(token.split('.')[1], 'base64url')).sub?.split('-').at(-1) : null;
@@ -87,6 +87,44 @@ test('anonymous 401 and embedded authentication errors cannot become a security 
     }});
     assert.equal(r.status, 'INCONCLUSIVE'); assert.equal(r.counts.INCONCLUSIVE, 6);
     assert.equal(r.coverage_complete, false);
+  }
+});
+
+test('a late cross-user authentication failure or unknown denial status cannot become PASS', async () => {
+  for (const status of [400, 403, 404]) {
+    for (const error of ['InvalidJWT', 'InvalidSignature', 'TenantNotFound', 'unrecognized-error']) {
+      const b = backend();
+      const r = await inspect(config(), environment, {fetchImpl: (url, options) => {
+        if (new URL(url).pathname.endsWith('/b/private.txt') &&
+            options.headers.Authorization === `Bearer ${jwt({role: 'authenticated', sub: 'user-a'})}`) {
+          return json({statusCode: String(status === 400 ? 403 : status), error}, status);
+        }
+        return b.fetchImpl(url, options);
+      }});
+      assert.equal(r.status, 'INCONCLUSIVE'); assert.equal(r.coverage_complete, false);
+      const cross = r.cases.find((x) => x.resource === 'file-b' && x.actor === 'other');
+      assert.equal(cross.status, 'INCONCLUSIVE'); assert.equal(cross.reason, 'UNEXPECTED_RESPONSE');
+    }
+  }
+});
+
+test('only recognized Storage policy/missing-object codes qualify as denied', async () => {
+  const accepted = [
+    [400, {statusCode: '404', error: 'not_found'}],
+    [400, {statusCode: '404', error: 'Bucket not found'}],
+    [400, {httpStatusCode: 403, code: 'unauthorized'}],
+    [403, {code: 'AccessDenied'}], [404, {code: 'NoSuchKey'}], [404, {code: 'NoSuchBucket'}],
+  ];
+  const rejected = [[403, {}], [404, null], [404, {error: 'not_found', code: 'InvalidJWT'}],
+    [400, {statusCode: '403', error: 'not_found'}], [404, {error: 'Bucket not found'}],
+    [400, {httpStatusCode: 404, error: 'Bucket not found'}], [400, {statusCode: 404, code: 'Bucket not found'}]];
+  for (const [status, body] of [...accepted, ...rejected]) {
+    const b = backend();
+    const r = await inspect(config(), environment, {fetchImpl: (url, options) => {
+      if (String(url).includes('/storage/') && options.headers.Authorization === `Bearer ${pub}`) return json(body, status);
+      return b.fetchImpl(url, options);
+    }});
+    assert.equal(r.status, accepted.some((v) => v[1] === body) ? 'PASS' : 'INCONCLUSIVE');
   }
 });
 

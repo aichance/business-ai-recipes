@@ -16,6 +16,15 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    'docs/leak-regression-lab-session-results.md',
+    'docs/leak-regression-lab-session-measurements.json',
+    'docs/leak-regression-lab-v0.1.1.zip',
+    'docs/leak-regression-lab-v0.1.1.zip.sha256',
+    'docs/leak-regression-lab-v0.1.1.tgz',
+    'docs/leak-regression-lab-v0.1.1.tgz.sha256',
+    'tools/leak-regression-lab/test/session.test.mjs',
+    'tools/leak-regression-lab/examples/test-session-config.json',
+    'tools/leak-regression-lab/examples/session-env.example',
     'docs/leak-regression-lab-demo.mp4',
     'docs/leak-regression-lab-measurements.json',
     'docs/leak-regression-lab-preview.png',
@@ -2127,6 +2136,34 @@ def verify_leak_regression_lab() -> None:
             assert case['status'] == ('FAIL' if leaked else 'INCONCLUSIVE' if unknown else 'PASS')
         assert set(report) <= {'schema_version', 'product', 'version', 'measured_at', 'contract_sha256', 'environment', 'status', 'coverage_complete', 'authentication', 'cases', 'scope', 'not_tested', 'counts'}
         assert all(set(c) == {'resource', 'surface', 'actor', 'route', 'status', 'http_status', 'reason'} for c in report['cases'])
+
+    sessions = json.loads((root / 'docs/leak-regression-lab-session-measurements.json').read_text())
+    assert sessions['version'] == '0.1.1' and sessions['external_adoption'] is False
+    assert sessions['evidence_kind'] == 'operator-synthetic-fixture-recording'
+    assert sessions['environment']['stacks'] == 1 and sessions['environment']['oauth_browser_flow_tested'] is False
+    assert sessions['protocol_controls']['offline_node_tests'] == 27
+    assert sessions['protocol_controls']['fresh_archive_files_byte_equal'] == 18
+    assert sessions['actual_http_requests'] == {'auth-password POST': 2, 'auth-user GET': 24, 'row GET': 64, 'object GET': 96}
+    assert sessions['totals'] == {'runs': 12, 'planned_read_cases': 168, 'completed_http_read_responses': 160,
+        'dependent_checks_not_attempted_due_to_owner_control': 8, 'fixture_setup_password_sign_ins': 2,
+        'checker_auth_user_gets': 24, 'checker_password_sign_ins': 0}
+    assert {(r['mode'], r['ownership']) for r in sessions['runs']} == {(m, o) for m in expected for o in ['owner', 'team']}
+    session_cases = [c for r in sessions['runs'] for c in r['report']['cases']]
+    assert len(session_cases) == 168 and sum(c['http_status'] is not None for c in session_cases) == 160
+    for run in sessions['runs']:
+        assert run['report']['version'] == '0.1.1'
+        assert tuple(run['report']['counts'][k] for k in ['PASS', 'FAIL', 'INCONCLUSIVE']) == expected[run['mode']]
+    for ext, artifact in sessions['artifacts'].items():
+        assert ext in ['zip', 'tgz']
+        assert hashlib.sha256((root / 'docs' / artifact['file']).read_bytes()).hexdigest() == artifact['sha256']
+    controls = sessions['protocol_controls']['additional_live_controls']
+    assert len(controls) == 6
+    for control in controls:
+        if control['control'] in ['password-only', 'mixed-session-password']:
+            assert control['status'] == 'PASS' and control['cases'] == 14
+        else:
+            assert control['status'] == 'INCONCLUSIVE' and control['cases'] == 0
+            assert all(c['surface'].startswith('auth-') for c in control['actual_requests'])
 
 
 def main() -> int:

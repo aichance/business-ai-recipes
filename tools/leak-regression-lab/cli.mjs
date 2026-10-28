@@ -9,13 +9,14 @@ import {validateConfig, CheckError} from './lib/config.mjs';
 import {inspect, compare} from './lib/probe.mjs';
 import {html} from './lib/report.mjs';
 
-const HELP = `Leak Regression Lab0.1.0 — Node22+, no dependencies or model calls
+const HELP = `Leak Regression Lab0.1.1 — Node22+, no dependencies or model calls
   node cli.mjs check --config test-config.json --out NEW_DIR --live
   node cli.mjs check --env .env.test --config test-config.json --out NEW_DIR --live
   node --env-file=.env.test cli.mjs check --config test-config.json --out NEW_DIR --live
   node cli.mjs compare --before BEFORE/report.json --after AFTER/report.json
 Uses two normal test users and a publishable/anon key from named environment variables.
-Read-only application probes; authentication creates normal login sessions.
+Choose password login or existing Supabase test-user access tokens; see examples.
+Read-only application probes; session input verifies users with Auth GET requests.
 Only authorized test environments and known synthetic rows/objects. No auto-repair.
 Exit0=all scoped controls pass;2=observed exposure;3=inconclusive;1=refused/setup.
 Read the README before --live. This does not certify general application security.`;

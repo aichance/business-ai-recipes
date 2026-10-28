@@ -1,5 +1,7 @@
 # Leak Regression Lab 0.1.0 — measured controls
 
+These original recordings and archives are preserved. The current [v0.1.1 supplied-session input and additional controls](./leak-regression-lab-session-results.md) are separate evidence.
+
 These are operator-created synthetic controls, not independent adoption, a scan of someone else's application, or a newly discovered Supabase vulnerability. The interactive [recorded replay](./leak-regression-lab.html) renders the [complete sanitized measurements](./leak-regression-lab-measurements.json).
 
 The **downloaded-format source ZIP was extracted into a fresh directory**, then the unmodified extracted checker ran against real local Supabase Auth, PostgREST and Storage. One disposable stack, two ordinary identities, two authored ownership layouts (direct-user and team-membership), six states each. Layout differences are configuration-only; there is no separate checker per app. Each run plans 14 read checks and performs two sign-ins. Across 12 runs, 160 HTTP read responses were obtained; eight dependent checks were not attempted because their owner controls were unavailable. Those eight stay INCONCLUSIVE. CLI 2.24.3, Node 22.23.4, macOS with local Docker. Latest hosted gateways, publishable keys and native Windows have not been certified by these controls.

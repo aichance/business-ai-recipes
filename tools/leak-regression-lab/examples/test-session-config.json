@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "environment": "test",
+  "origin": "https://YOUR-TEST-PROJECT.supabase.co",
+  "public_key_env": "LEAK_LAB_PUBLIC_KEY",
+  "actors": {
+    "a": {
+      "access_token_env": "LEAK_LAB_A_TOKEN"
+    },
+    "b": {
+      "access_token_env": "LEAK_LAB_B_TOKEN"
+    }
+  },
+  "rows": [
+    {
+      "id": "note-a",
+      "table": "notes",
+      "id_column": "id",
+      "record_id": "YOUR-A-TEST-ROW-ID",
+      "owner": "a",
+      "expect": {
+        "body": "LEAK_LAB_TEST_NOTE_A"
+      }
+    },
+    {
+      "id": "note-b",
+      "table": "notes",
+      "id_column": "id",
+      "record_id": "YOUR-B-TEST-ROW-ID",
+      "owner": "b",
+      "expect": {
+        "body": "LEAK_LAB_TEST_NOTE_B"
+      }
+    }
+  ],
+  "objects": [
+    {
+      "id": "attachment-a",
+      "bucket": "private-test-files",
+      "path": "A-TEST-FOLDER/private.txt",
+      "owner": "a",
+      "sha256": "REPLACE_WITH_64_LOWERCASE_HEX_SHA256_OF_A_FILE"
+    },
+    {
+      "id": "attachment-b",
+      "bucket": "private-test-files",
+      "path": "B-TEST-FOLDER/private.txt",
+      "owner": "b",
+      "sha256": "REPLACE_WITH_64_LOWERCASE_HEX_SHA256_OF_B_FILE"
+    }
+  ]
+}

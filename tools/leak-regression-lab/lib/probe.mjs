@@ -2,8 +2,19 @@ import {CheckError, equal, sha256, credentials, contractFingerprint} from './con
 
 const LIMIT = 1024 * 1024;
 // An authentication failure does not prove the intended anonymous/user policy ran.
-const denied = (r) => [403, 404].includes(r.status) ||
-  (r.status === 400 && r.json && [403, 404].includes(Number(r.json.statusCode)) && typeof r.json.error === 'string');
+const storageDenials = new Map([['not_found', 404], ['NoSuchKey', 404], ['NoSuchBucket', 404],
+  ['unauthorized', 403], ['AccessDenied', 403]]);
+function denied(r, kind) {
+  // A status alone can also describe an expired JWT, a bad signature or a
+  // broken gateway. Only documented policy/missing-object responses count.
+  if (kind === 'row') return r.status === 403 && r.json?.code === '42501';
+  if (r.json?.error === 'Bucket not found') return r.status === 400 && Number(r.json.statusCode) === 404 &&
+    r.json.code === undefined && r.json.httpStatusCode === undefined;
+  const status = r.status === 400 ? Number(r.json?.statusCode ?? r.json?.httpStatusCode) : r.status;
+  const codes = [r.json?.code, r.json?.error].filter((x) => typeof x === 'string');
+  return [400, 403, 404].includes(r.status) && codes.length > 0 &&
+    codes.every((code) => storageDenials.get(code) === status);
+}
 const rowPath = (r) => {
   const q = new URLSearchParams({select: '*', [r.id_column]: `eq.${r.record_id}`});
   return `/rest/v1/${r.table}?${q}`;
@@ -16,8 +27,21 @@ const observed = (r, resource, kind) => {
 };
 function classify(r, resource, kind) {
   if (observed(r, resource, kind)) return 'present';
-  if (denied(r) || (kind === 'row' && r.status === 200 && Array.isArray(r.json) && r.json.length === 0)) return 'denied';
+  if (denied(r, kind) || (kind === 'row' && r.status === 200 && Array.isArray(r.json) && r.json.length === 0)) return 'denied';
   return 'unknown';
+}
+
+// Decoding only rejects unsuitable input; the Auth server must verify supplied
+// session JWTs. No decoded subject is trusted as the authenticated identity.
+function ordinaryClaims(token) {
+  try {
+    if (typeof token !== 'string' || token.length > 16384) return null;
+    const fields = token.split('.');
+    if (fields.length !== 3 || !fields.every((s) => /^[A-Za-z0-9_-]+$/.test(s))) return null;
+    const payload = JSON.parse(Buffer.from(fields[1], 'base64url'));
+    if (payload?.role !== 'authenticated' || typeof payload.sub !== 'string' || !payload.sub || payload.sub.length > 200) return null;
+    return payload;
+  } catch { return null; }
 }
 
 export async function request(config, path, {token, publicKey, body, fetchImpl = fetch} = {}) {
@@ -54,23 +78,37 @@ export async function request(config, path, {token, publicKey, body, fetchImpl =
 
 export async function inspect(config, env, {fetchImpl = fetch, now = () => new Date().toISOString()} = {}) {
   const secret = credentials(config, env);
-  const report = {schema_version: 1, product: 'leak-regression-lab', version: '0.1.0', measured_at: now(),
+  const report = {schema_version: 1, product: 'leak-regression-lab', version: '0.1.1', measured_at: now(),
     contract_sha256: contractFingerprint(config), environment: 'test', status: 'INCONCLUSIVE',
     coverage_complete: false, authentication: 'NOT_TESTED', cases: [],
     scope: ['known-row-read-isolation', 'known-private-object-read-isolation', 'public-object-route'],
     not_tested: ['write/delete', 'signed-URLs', 'cache-persistence', 'Realtime', 'RPC', 'browser-sessions', 'general-app-security']};
   const tokens = {}; const userIDs = [];
   for (const who of ['a', 'b']) {
-    const r = await request(config, '/auth/v1/token?grant_type=password', {publicKey: secret.publicKey, body: secret.actors[who], fetchImpl});
-    const data = r.json;
+    const actor = secret.actors[who];
+    let r; let data;
+    if (actor.accessToken) {
+      const claims = ordinaryClaims(actor.accessToken);
+      if (!claims) { report.authentication = 'INCONCLUSIVE'; report.reason = 'NORMAL_USER_TOKEN_REQUIRED'; return report; }
+      const seconds = Date.now() / 1000;
+      if (!Number.isFinite(claims.exp) || claims.exp <= seconds ||
+          (claims.nbf !== undefined && (!Number.isFinite(claims.nbf) || claims.nbf > seconds))) {
+        report.authentication = 'INCONCLUSIVE'; report.reason = 'CURRENT_SESSION_TOKEN_REQUIRED'; return report;
+      }
+      r = await request(config, '/auth/v1/user', {publicKey: secret.publicKey, token: actor.accessToken, fetchImpl});
+      data = {access_token: actor.accessToken, user: r.json};
+    } else {
+      r = await request(config, '/auth/v1/token?grant_type=password', {publicKey: secret.publicKey, body: actor, fetchImpl});
+      data = r.json;
+    }
     if (r.status !== 200 || typeof data?.access_token !== 'string' || !data.access_token || typeof data?.user?.id !== 'string') {
       report.authentication = 'INCONCLUSIVE'; report.reason = 'AUTH_FAILED'; return report;
     }
     // A privileged/malformed account token must never stand in for an ordinary test user.
-    try {
-      const payload = JSON.parse(Buffer.from(data.access_token.split('.')[1], 'base64url'));
-      if (payload.role !== 'authenticated' || payload.sub !== data.user.id) throw new Error();
-    } catch { report.authentication = 'INCONCLUSIVE'; report.reason = 'NORMAL_USER_TOKEN_REQUIRED'; return report; }
+    const payload = ordinaryClaims(data.access_token);
+    if (!payload || payload.sub !== data.user.id || data.user.role !== 'authenticated') {
+      report.authentication = 'INCONCLUSIVE'; report.reason = 'NORMAL_USER_TOKEN_REQUIRED'; return report;
+    }
     tokens[who] = data.access_token; userIDs.push(data.user.id);
   }
   if (userIDs[0] === userIDs[1]) { report.authentication = 'INCONCLUSIVE'; report.reason = 'DISTINCT_USERS_REQUIRED'; return report; }

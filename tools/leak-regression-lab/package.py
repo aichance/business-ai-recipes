@@ -14,8 +14,9 @@ FILES = [
     "package.json", "AGENTS.md", "README.md", "cli.mjs", "package.py",
     "lib/config.mjs", "lib/probe.mjs", "lib/report.mjs", "test/probe.test.mjs", "test/cli.test.mjs",
     "fixtures/schema.sql", "fixtures/run.mjs", "examples/test-config.json", "examples/env.example",
+    "test/session.test.mjs", "examples/test-session-config.json", "examples/session-env.example",
 ]
-STEM = "leak-regression-lab-v0.1.0"
+STEM = "leak-regression-lab-v0.1.1"
 
 
 def build():
