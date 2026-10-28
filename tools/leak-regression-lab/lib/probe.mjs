@@ -1,4 +1,4 @@
-import {CheckError, equal, sha256, credentials, contractFingerprint} from './config.mjs';
+import {CheckError, equal, sha256, credentials, contractFingerprint, ROW_PROJECTION} from './config.mjs';
 
 const LIMIT = 1024 * 1024;
 // An authentication failure does not prove the intended anonymous/user policy ran.
@@ -16,7 +16,10 @@ function denied(r, kind) {
     codes.every((code) => storageDenials.get(code) === status);
 }
 const rowPath = (r) => {
-  const q = new URLSearchParams({select: '*', [r.id_column]: `eq.${r.record_id}`});
+  // Request only fields this contract observes, preserving column-level grants.
+  // Config validation restricts every selected name to a plain identifier.
+  const fields = [...new Set([r.id_column, ...Object.keys(r.expect)])];
+  const q = new URLSearchParams({select: fields.join(','), [r.id_column]: `eq.${r.record_id}`});
   return `/rest/v1/${r.table}?${q}`;
 };
 const objectPath = (r, publicRoute = false) => `/storage/v1/object/${publicRoute ? 'public' : 'authenticated'}/${encodeURIComponent(r.bucket)}/${r.path.split('/').map(encodeURIComponent).join('/')}`;
@@ -78,11 +81,12 @@ export async function request(config, path, {token, publicKey, body, fetchImpl =
 
 export async function inspect(config, env, {fetchImpl = fetch, now = () => new Date().toISOString()} = {}) {
   const secret = credentials(config, env);
-  const report = {schema_version: 1, product: 'leak-regression-lab', version: '0.1.1', measured_at: now(),
+  const report = {schema_version: 1, product: 'leak-regression-lab', version: '0.1.2', measured_at: now(),
     contract_sha256: contractFingerprint(config), environment: 'test', status: 'INCONCLUSIVE',
+    row_projection: ROW_PROJECTION,
     coverage_complete: false, authentication: 'NOT_TESTED', cases: [],
     scope: ['known-row-read-isolation', 'known-private-object-read-isolation', 'public-object-route'],
-    not_tested: ['write/delete', 'signed-URLs', 'cache-persistence', 'Realtime', 'RPC', 'browser-sessions', 'general-app-security']};
+    not_tested: ['undeclared-row-fields', 'column-permission-matrix', 'write/delete', 'signed-URLs', 'cache-persistence', 'Realtime', 'RPC', 'browser-sessions', 'general-app-security']};
   const tokens = {}; const userIDs = [];
   for (const who of ['a', 'b']) {
     const actor = secret.actors[who];
