@@ -1,5 +1,16 @@
 # aichance's developer tools
 
+## Leak Regression Lab — your DB passes. What about private attachments?
+
+![Recorded operator fixture: all six database observations pass while a public Storage bucket exposes six private-file probes. This is a replay of synthetic HTTP measurements, not a scan of the viewer.](docs/leak-regression-lab-preview.png)
+
+Test Supabase row **and file** isolation with two normal accounts, an anon/public client key, and known synthetic fixtures. Owner access must work; cross-user and anonymous access must not. Rerun the same contract after a policy/app change and compare local JSON/HTML reports. **No service-role key, dependencies or model calls.**
+
+[**Interactive measured replay / 試用手順**](https://aichance.github.io/business-ai-recipes/leak-regression-lab.html) · [**Setup and source**](tools/leak-regression-lab) · [**Small source ZIP**](https://aichance.github.io/business-ai-recipes/leak-regression-lab-v0.1.0.zip) · [**12 real fixture measurements and limits**](docs/leak-regression-lab-results.md) · [**26-second replay video**](https://aichance.github.io/business-ai-recipes/leak-regression-lab-demo.mp4)
+
+One local Supabase stack, two configuration-only ownership layouts, six states each. The fresh source archive detected authored row/object leaks and public buckets; denying all database users remained `INCONCLUSIVE`, and restoring correct access passed. These are operator synthetic controls, not independent adoption or a new Supabase vulnerability. Checks cover declared read paths only, not whole-app security.
+
+
 ## Agent Relay Check — inspect AGENTS.md selection, then test receipt
 
 ![Recorded Codex 0.164.0 fixtures: adding one byte to the parent changes the native startup list from parent plus child to parent only; the child is identical in both cases. Model receipt and compliance are not tested.](docs/agent-relay-native-boundary.svg)
