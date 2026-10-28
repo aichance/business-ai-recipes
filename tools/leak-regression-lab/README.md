@@ -8,7 +8,7 @@ No inference bill, telemetry, service-role key or package dependencies. The chec
 
 ## What is checked
 
-For each user's known test row: their own read must return the expected test data, the other user must not receive it, and anonymous access must not receive it. For each known private file: the owner must download the expected bytes; the other user, anonymous authenticated-object access and anonymous public-object access must not receive them. Anonymous probes use the API's anon/publishable credential, not an authenticated user.
+For each user's known test row: their own read must return the expected test data, the other user must not receive it, and anonymous access must not receive it. For each known private file: the owner must download the expected bytes; the other user, anonymous authenticated-object access and anonymous public-object access must not receive them. Anonymous probes use the API's anon/publishable credential, not an authenticated user. Opaque publishable keys go only in `apikey`; user JWTs and legacy anon JWTs use `Authorization: Bearer`. HTTP401 and embedded authentication errors remain inconclusive, never a security pass. See the [official key limitations](https://supabase.com/docs/guides/getting-started/api-keys#known-limitations).
 
 This catches an accidentally public bucket even when database row tests pass. Public downloads bypass access control by design: [Supabase bucket documentation](https://supabase.com/docs/guides/storage/buckets/fundamentals). Do not put deliberately public files in this private-resource contract. An anon/publishable API key is expected client configuration, not itself a leaked secret.
 
