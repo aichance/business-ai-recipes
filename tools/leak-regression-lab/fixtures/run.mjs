@@ -4,12 +4,12 @@ import {readFile, writeFile, mkdir} from 'node:fs/promises';
 import {spawnSync, spawn} from 'node:child_process';
 import {resolve, dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {parseArgs} from 'node:util';
+import {parseArgs, parseEnv} from 'node:util';
 import {randomUUID, randomBytes, createHash} from 'node:crypto';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, '..');
-const {values} = parseArgs({options: {status: {type: 'string'}, out: {type: 'string'}, 'existing-fixture': {type: 'string'}}});
+const {values} = parseArgs({options: {status: {type: 'string'}, out: {type: 'string'}, 'existing-fixture': {type: 'string'}, 'session-tokens': {type: 'boolean', default: false}}});
 if (!values.status || !values.out) throw new Error('Usage: node fixtures/run.mjs --status PRIVATE_LOCAL_STATUS_JSON --out NEW_DIR');
 const s = JSON.parse(await readFile(resolve(values.status), 'utf8'));
 const api = new URL(s.API_URL); const db = new URL(s.DB_URL);
@@ -66,6 +66,28 @@ for (const kind of ['owner', 'team']) {
   await writeFile(resolve(out, `${kind}.json`), JSON.stringify(config, null, 2), {flag: 'wx', mode: 0o600});
 }
 }
+// Operator-only fixture setup obtains two ordinary sessions once. The checker
+// then verifies these supplied JWTs with Auth /user; it never uses admin keys.
+if (values['session-tokens']) {
+  const env = parseEnv(await readFile(resolve(fixtureDir, '.env.fixture'), 'utf8'));
+  let sessionEnv = `LEAK_LAB_PUBLIC_KEY=${env.LEAK_LAB_PUBLIC_KEY}\n`;
+  for (const who of ['A', 'B']) {
+    const response = await fetch(new URL('/auth/v1/token?grant_type=password', api), {
+      method: 'POST', redirect: 'error', signal: AbortSignal.timeout(15000),
+      headers: {apikey: env.LEAK_LAB_PUBLIC_KEY, 'Content-Type': 'application/json'},
+      body: JSON.stringify({email: env[`LEAK_LAB_${who}_EMAIL`], password: env[`LEAK_LAB_${who}_PASSWORD`]}),
+    });
+    const data = await response.json();
+    if (response.status !== 200 || typeof data.access_token !== 'string' || data.user?.role !== 'authenticated') throw new Error('Owned normal-user fixture sign-in failed');
+    sessionEnv += `LEAK_LAB_${who}_TOKEN=${data.access_token}\n`;
+  }
+  await writeFile(resolve(out, '.env.sessions'), sessionEnv, {flag: 'wx', mode: 0o600});
+  for (const kind of ['owner', 'team']) {
+    const config = JSON.parse(await readFile(resolve(fixtureDir, `${kind}.json`), 'utf8'));
+    config.actors = {a: {access_token_env: 'LEAK_LAB_A_TOKEN'}, b: {access_token_env: 'LEAK_LAB_B_TOKEN'}};
+    await writeFile(resolve(out, `${kind}-session.json`), JSON.stringify(config, null, 2), {flag: 'wx', mode: 0o600});
+  }
+}
 const secure = `
 create policy leak_lab_notes_own on public.leak_lab_notes for select to authenticated using(owner_id=auth.uid());
 create policy leak_lab_team_notes_own on public.leak_lab_team_notes for select to authenticated using(exists(select 1 from public.leak_lab_members m where m.team_id=leak_lab_team_notes.team_id and m.user_id=auth.uid()));
@@ -85,7 +107,7 @@ for (const mode of ['secure', 'rows-leak', 'objects-leak', 'public-leak', 'deny-
     commit;`);
   for (const kind of ['owner', 'team']) {
     const dest = resolve(out, `${mode}-${kind}`);
-    const args = [`--env-file=${resolve(fixtureDir, '.env.fixture')}`, resolve(root, 'cli.mjs'), 'check', '--config', resolve(fixtureDir, `${kind}.json`), '--out', dest, '--live'];
+    const args = [`--env-file=${resolve(values['session-tokens'] ? out : fixtureDir, values['session-tokens'] ? '.env.sessions' : '.env.fixture')}`, resolve(root, 'cli.mjs'), 'check', '--config', resolve(values['session-tokens'] ? out : fixtureDir, `${kind}${values['session-tokens'] ? '-session' : ''}.json`), '--out', dest, '--live'];
     const result = await new Promise((res, rej) => {
       const p = spawn(process.execPath, args, {stdio: ['ignore', 'pipe', 'pipe']}); let text = '';
       p.stdout.on('data', (v) => { text += v; }); p.stderr.resume(); p.once('error', rej); p.once('close', (exit) => res({exit, text}));
@@ -93,7 +115,9 @@ for (const mode of ['secure', 'rows-leak', 'objects-leak', 'public-leak', 'deny-
     const report = JSON.parse(await readFile(resolve(dest, 'report.json'), 'utf8'));
     const expected = ['secure', 'repaired'].includes(mode) ? 'PASS' : mode === 'deny-all' ? 'INCONCLUSIVE' : 'FAIL';
     results.push({mode, ownership: kind, exit: result.exit, status: report.status, expected, counts: report.counts, coverage_complete: report.coverage_complete});
-    await writeFile(resolve(out, 'measurements.json'), JSON.stringify({operator_synthetic_not_external_adoption: true, real_supabase_rest: true, results}, null, 2));
+    await writeFile(resolve(out, 'measurements.json'), JSON.stringify({operator_synthetic_not_external_adoption: true, real_supabase_rest: true,
+      authentication_input: values['session-tokens'] ? 'existing-test-user-jwt' : 'password-grant',
+      fixture_setup_password_sign_ins: values['session-tokens'] ? 2 : 0, planned_checker_auth_user_gets: values['session-tokens'] ? results.length * 2 : 0, results}, null, 2));
     if (report.status !== expected) throw new Error(`Fixture ${mode}/${kind}: expected ${expected}, got ${report.status}`);
   }
 }
