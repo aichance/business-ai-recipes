@@ -32,5 +32,6 @@ test('npm-style symlink executes help rather than silently importing and exiting
   const dir = await mkdtemp(join(tmpdir(), 'leak-cli-')); t.after(() => rm(dir, {recursive: true, force: true}));
   const bin = join(dir, 'leak-check'); await symlink(cli, bin);
   const p = spawnSync(process.execPath, [bin, '--help'], {encoding: 'utf8', timeout: 5000});
-  assert.equal(p.status, 0); assert.match(p.stdout, /Leak Regression Lab0\.1\.2/);
+  const {version} = JSON.parse(await readFile(resolve(dirname(cli), 'package.json'), 'utf8'));
+  assert.equal(p.status, 0); assert.ok(p.stdout.startsWith(`Leak Regression Lab${version} —`));
 });

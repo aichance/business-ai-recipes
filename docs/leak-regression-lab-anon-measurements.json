@@ -1,0 +1,3255 @@
+{
+  "evidence_kind": "operator-synthetic-fixture-recording",
+  "external_adoption": false,
+  "version": "0.1.3",
+  "legacy_version": "0.1.2",
+  "environment": {
+    "stacks": 1,
+    "node": "22.23.4",
+    "fixture_created_with_supabase_cli": "2.24.3",
+    "data": "synthetic",
+    "loopback_only": true,
+    "ordinary_session_input": true,
+    "oauth_browser_flow_tested": false,
+    "latest_hosted_gateway_verified": false,
+    "native_windows_verified": false
+  },
+  "source_sha256": {
+    "lib/config.mjs": "b64a76c1c1bddd6a5b78ffe193bfc27965921687694222fe4f5de244ac2f08eb",
+    "lib/probe.mjs": "531c3ae0a078ec83b3504aeb5c8796335e28dee27165c89bfaaf85a93512fc01",
+    "test/probe.test.mjs": "2bad5223267e26ef2d91ee471c6447cd71848f52fb19af9f92e5db3332dcfbb3",
+    "cli.mjs": "987269987d607e3cce5ba5d41ec4f9ad50179ab66ff3e018555c47c255fa777f",
+    "test/cli.test.mjs": "9fc55ccfebe0d9006a82849bf0690b9e34b58e9afad298bdaa326279fe124dcf"
+  },
+  "protocol_controls": {
+    "offline_node_tests": 37,
+    "legacy_report_comparison": "DIFFERENT_CHECK_CONTRACT",
+    "same_version_row_regressions": 2,
+    "same_version_resolved_row_regressions": 2,
+    "fresh_archive_files_byte_equal": 18
+  },
+  "application_writes_by_checker": 0,
+  "fixture_setup_password_sign_ins": 2,
+  "original_acl_set_restored": true,
+  "original_rls_restored": true,
+  "runs": [
+    {
+      "state": "v013-original-grants",
+      "version": "0.1.3",
+      "report": {
+        "schema_version": 1,
+        "product": "leak-regression-lab",
+        "version": "0.1.3",
+        "measured_at": "2026-10-28T20:09:54.648Z",
+        "contract_sha256": "8bbf74a8edaaff0a4fa14e26a6cbd694f592745f32ae0e404c774b4be9105d8a",
+        "environment": "test",
+        "status": "PASS",
+        "row_projection": "declared-id-and-expected-fields",
+        "row_denial_policy": "postgrest-anonymous-42501-with-owner-control-v1",
+        "coverage_complete": true,
+        "authentication": "TWO_DISTINCT_NORMAL_USERS",
+        "cases": [
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          }
+        ],
+        "scope": [
+          "known-row-read-isolation",
+          "known-private-object-read-isolation",
+          "public-object-route"
+        ],
+        "not_tested": [
+          "undeclared-row-fields",
+          "column-permission-matrix",
+          "write/delete",
+          "signed-URLs",
+          "cache-persistence",
+          "Realtime",
+          "RPC",
+          "browser-sessions",
+          "general-app-security"
+        ],
+        "counts": {
+          "PASS": 14,
+          "FAIL": 0,
+          "INCONCLUSIVE": 0
+        }
+      },
+      "actual_requests": [
+        {
+          "surface": "auth-user",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "auth-user",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        }
+      ],
+      "grants": {
+        "anon_select": true,
+        "authenticated_select": true,
+        "rls_enabled": true
+      },
+      "rls_policies_unchanged": true
+    },
+    {
+      "state": "v012-anon-no-table-grant",
+      "version": "0.1.2",
+      "report": {
+        "schema_version": 1,
+        "product": "leak-regression-lab",
+        "version": "0.1.2",
+        "measured_at": "2026-10-28T20:09:54.997Z",
+        "contract_sha256": "4693b4ee7e1aa8311ce8a144f471ec5b11203622f1555c4282ea4bd67d3cdc99",
+        "environment": "test",
+        "status": "INCONCLUSIVE",
+        "row_projection": "declared-id-and-expected-fields",
+        "coverage_complete": false,
+        "authentication": "TWO_DISTINCT_NORMAL_USERS",
+        "cases": [
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "INCONCLUSIVE",
+            "http_status": 401,
+            "reason": "UNEXPECTED_RESPONSE"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "INCONCLUSIVE",
+            "http_status": 401,
+            "reason": "UNEXPECTED_RESPONSE"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          }
+        ],
+        "scope": [
+          "known-row-read-isolation",
+          "known-private-object-read-isolation",
+          "public-object-route"
+        ],
+        "not_tested": [
+          "undeclared-row-fields",
+          "column-permission-matrix",
+          "write/delete",
+          "signed-URLs",
+          "cache-persistence",
+          "Realtime",
+          "RPC",
+          "browser-sessions",
+          "general-app-security"
+        ],
+        "counts": {
+          "PASS": 12,
+          "FAIL": 0,
+          "INCONCLUSIVE": 2
+        }
+      },
+      "actual_requests": [
+        {
+          "surface": "auth-user",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "auth-user",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 401,
+          "postgres_or_gateway_code": "42501",
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 401,
+          "postgres_or_gateway_code": "42501",
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        }
+      ],
+      "grants": {
+        "anon_select": false,
+        "authenticated_select": true,
+        "rls_enabled": true
+      },
+      "rls_policies_unchanged": true
+    },
+    {
+      "state": "v013-anon-no-table-grant",
+      "version": "0.1.3",
+      "report": {
+        "schema_version": 1,
+        "product": "leak-regression-lab",
+        "version": "0.1.3",
+        "measured_at": "2026-10-28T20:09:55.183Z",
+        "contract_sha256": "8bbf74a8edaaff0a4fa14e26a6cbd694f592745f32ae0e404c774b4be9105d8a",
+        "environment": "test",
+        "status": "PASS",
+        "row_projection": "declared-id-and-expected-fields",
+        "row_denial_policy": "postgrest-anonymous-42501-with-owner-control-v1",
+        "coverage_complete": true,
+        "authentication": "TWO_DISTINCT_NORMAL_USERS",
+        "cases": [
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 401,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 401,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          }
+        ],
+        "scope": [
+          "known-row-read-isolation",
+          "known-private-object-read-isolation",
+          "public-object-route"
+        ],
+        "not_tested": [
+          "undeclared-row-fields",
+          "column-permission-matrix",
+          "write/delete",
+          "signed-URLs",
+          "cache-persistence",
+          "Realtime",
+          "RPC",
+          "browser-sessions",
+          "general-app-security"
+        ],
+        "counts": {
+          "PASS": 14,
+          "FAIL": 0,
+          "INCONCLUSIVE": 0
+        }
+      },
+      "actual_requests": [
+        {
+          "surface": "auth-user",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "auth-user",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 401,
+          "postgres_or_gateway_code": "42501",
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 401,
+          "postgres_or_gateway_code": "42501",
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        }
+      ],
+      "grants": {
+        "anon_select": false,
+        "authenticated_select": true,
+        "rls_enabled": true
+      },
+      "rls_policies_unchanged": true
+    },
+    {
+      "state": "v013-anon-invalid-signature",
+      "version": "0.1.3",
+      "report": {
+        "schema_version": 1,
+        "product": "leak-regression-lab",
+        "version": "0.1.3",
+        "measured_at": "2026-10-28T20:09:55.398Z",
+        "contract_sha256": "8bbf74a8edaaff0a4fa14e26a6cbd694f592745f32ae0e404c774b4be9105d8a",
+        "environment": "test",
+        "status": "INCONCLUSIVE",
+        "row_projection": "declared-id-and-expected-fields",
+        "row_denial_policy": "postgrest-anonymous-42501-with-owner-control-v1",
+        "coverage_complete": false,
+        "authentication": "TWO_DISTINCT_NORMAL_USERS",
+        "cases": [
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "INCONCLUSIVE",
+            "http_status": 401,
+            "reason": "UNEXPECTED_RESPONSE"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "INCONCLUSIVE",
+            "http_status": 401,
+            "reason": "UNEXPECTED_RESPONSE"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          }
+        ],
+        "scope": [
+          "known-row-read-isolation",
+          "known-private-object-read-isolation",
+          "public-object-route"
+        ],
+        "not_tested": [
+          "undeclared-row-fields",
+          "column-permission-matrix",
+          "write/delete",
+          "signed-URLs",
+          "cache-persistence",
+          "Realtime",
+          "RPC",
+          "browser-sessions",
+          "general-app-security"
+        ],
+        "counts": {
+          "PASS": 12,
+          "FAIL": 0,
+          "INCONCLUSIVE": 2
+        }
+      },
+      "actual_requests": [
+        {
+          "surface": "auth-user",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "auth-user",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 401,
+          "postgres_or_gateway_code": "PGRST301",
+          "anonymous_signature_intentionally_invalid": true
+        },
+        {
+          "surface": "row",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 401,
+          "postgres_or_gateway_code": "PGRST301",
+          "anonymous_signature_intentionally_invalid": true
+        },
+        {
+          "surface": "object",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        }
+      ],
+      "grants": {
+        "anon_select": false,
+        "authenticated_select": true,
+        "rls_enabled": true
+      },
+      "rls_policies_unchanged": true
+    },
+    {
+      "state": "v013-anon-no-grant-open-row-policy",
+      "version": "0.1.3",
+      "report": {
+        "schema_version": 1,
+        "product": "leak-regression-lab",
+        "version": "0.1.3",
+        "measured_at": "2026-10-28T20:09:55.672Z",
+        "contract_sha256": "8bbf74a8edaaff0a4fa14e26a6cbd694f592745f32ae0e404c774b4be9105d8a",
+        "environment": "test",
+        "status": "FAIL",
+        "row_projection": "declared-id-and-expected-fields",
+        "row_denial_policy": "postgrest-anonymous-42501-with-owner-control-v1",
+        "coverage_complete": true,
+        "authentication": "TWO_DISTINCT_NORMAL_USERS",
+        "cases": [
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "FAIL",
+            "http_status": 200,
+            "reason": "PRIVATE_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 401,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "FAIL",
+            "http_status": 200,
+            "reason": "PRIVATE_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 401,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          }
+        ],
+        "scope": [
+          "known-row-read-isolation",
+          "known-private-object-read-isolation",
+          "public-object-route"
+        ],
+        "not_tested": [
+          "undeclared-row-fields",
+          "column-permission-matrix",
+          "write/delete",
+          "signed-URLs",
+          "cache-persistence",
+          "Realtime",
+          "RPC",
+          "browser-sessions",
+          "general-app-security"
+        ],
+        "counts": {
+          "PASS": 12,
+          "FAIL": 2,
+          "INCONCLUSIVE": 0
+        }
+      },
+      "actual_requests": [
+        {
+          "surface": "auth-user",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "auth-user",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 401,
+          "postgres_or_gateway_code": "42501",
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 401,
+          "postgres_or_gateway_code": "42501",
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        }
+      ],
+      "grants": {
+        "anon_select": false,
+        "authenticated_select": true,
+        "rls_enabled": true
+      },
+      "rls_policies_unchanged": false
+    },
+    {
+      "state": "v013-anon-no-grant-row-policy-restored",
+      "version": "0.1.3",
+      "report": {
+        "schema_version": 1,
+        "product": "leak-regression-lab",
+        "version": "0.1.3",
+        "measured_at": "2026-10-28T20:09:55.962Z",
+        "contract_sha256": "8bbf74a8edaaff0a4fa14e26a6cbd694f592745f32ae0e404c774b4be9105d8a",
+        "environment": "test",
+        "status": "PASS",
+        "row_projection": "declared-id-and-expected-fields",
+        "row_denial_policy": "postgrest-anonymous-42501-with-owner-control-v1",
+        "coverage_complete": true,
+        "authentication": "TWO_DISTINCT_NORMAL_USERS",
+        "cases": [
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 401,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 401,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          }
+        ],
+        "scope": [
+          "known-row-read-isolation",
+          "known-private-object-read-isolation",
+          "public-object-route"
+        ],
+        "not_tested": [
+          "undeclared-row-fields",
+          "column-permission-matrix",
+          "write/delete",
+          "signed-URLs",
+          "cache-persistence",
+          "Realtime",
+          "RPC",
+          "browser-sessions",
+          "general-app-security"
+        ],
+        "counts": {
+          "PASS": 14,
+          "FAIL": 0,
+          "INCONCLUSIVE": 0
+        }
+      },
+      "actual_requests": [
+        {
+          "surface": "auth-user",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "auth-user",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 401,
+          "postgres_or_gateway_code": "42501",
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 401,
+          "postgres_or_gateway_code": "42501",
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        }
+      ],
+      "grants": {
+        "anon_select": false,
+        "authenticated_select": true,
+        "rls_enabled": true
+      },
+      "rls_policies_unchanged": true
+    },
+    {
+      "state": "v013-owner-table-grant-also-missing",
+      "version": "0.1.3",
+      "report": {
+        "schema_version": 1,
+        "product": "leak-regression-lab",
+        "version": "0.1.3",
+        "measured_at": "2026-10-28T20:09:56.205Z",
+        "contract_sha256": "8bbf74a8edaaff0a4fa14e26a6cbd694f592745f32ae0e404c774b4be9105d8a",
+        "environment": "test",
+        "status": "INCONCLUSIVE",
+        "row_projection": "declared-id-and-expected-fields",
+        "row_denial_policy": "postgrest-anonymous-42501-with-owner-control-v1",
+        "coverage_complete": false,
+        "authentication": "TWO_DISTINCT_NORMAL_USERS",
+        "cases": [
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "INCONCLUSIVE",
+            "http_status": 403,
+            "reason": "OWNER_CONTROL_NOT_AVAILABLE"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "INCONCLUSIVE",
+            "http_status": null,
+            "reason": "OWNER_CONTROL_NOT_AVAILABLE"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "INCONCLUSIVE",
+            "http_status": null,
+            "reason": "OWNER_CONTROL_NOT_AVAILABLE"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "INCONCLUSIVE",
+            "http_status": 403,
+            "reason": "OWNER_CONTROL_NOT_AVAILABLE"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "INCONCLUSIVE",
+            "http_status": null,
+            "reason": "OWNER_CONTROL_NOT_AVAILABLE"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "INCONCLUSIVE",
+            "http_status": null,
+            "reason": "OWNER_CONTROL_NOT_AVAILABLE"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          }
+        ],
+        "scope": [
+          "known-row-read-isolation",
+          "known-private-object-read-isolation",
+          "public-object-route"
+        ],
+        "not_tested": [
+          "undeclared-row-fields",
+          "column-permission-matrix",
+          "write/delete",
+          "signed-URLs",
+          "cache-persistence",
+          "Realtime",
+          "RPC",
+          "browser-sessions",
+          "general-app-security"
+        ],
+        "counts": {
+          "PASS": 8,
+          "FAIL": 0,
+          "INCONCLUSIVE": 6
+        }
+      },
+      "actual_requests": [
+        {
+          "surface": "auth-user",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "auth-user",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 403,
+          "postgres_or_gateway_code": "42501",
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 403,
+          "postgres_or_gateway_code": "42501",
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        }
+      ],
+      "grants": {
+        "anon_select": false,
+        "authenticated_select": false,
+        "rls_enabled": true
+      },
+      "rls_policies_unchanged": true
+    },
+    {
+      "state": "v013-original-grants-restored",
+      "version": "0.1.3",
+      "report": {
+        "schema_version": 1,
+        "product": "leak-regression-lab",
+        "version": "0.1.3",
+        "measured_at": "2026-10-28T20:09:56.729Z",
+        "contract_sha256": "8bbf74a8edaaff0a4fa14e26a6cbd694f592745f32ae0e404c774b4be9105d8a",
+        "environment": "test",
+        "status": "PASS",
+        "row_projection": "declared-id-and-expected-fields",
+        "row_denial_policy": "postgrest-anonymous-42501-with-owner-control-v1",
+        "coverage_complete": true,
+        "authentication": "TWO_DISTINCT_NORMAL_USERS",
+        "cases": [
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          }
+        ],
+        "scope": [
+          "known-row-read-isolation",
+          "known-private-object-read-isolation",
+          "public-object-route"
+        ],
+        "not_tested": [
+          "undeclared-row-fields",
+          "column-permission-matrix",
+          "write/delete",
+          "signed-URLs",
+          "cache-persistence",
+          "Realtime",
+          "RPC",
+          "browser-sessions",
+          "general-app-security"
+        ],
+        "counts": {
+          "PASS": 14,
+          "FAIL": 0,
+          "INCONCLUSIVE": 0
+        }
+      },
+      "actual_requests": [
+        {
+          "surface": "auth-user",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "auth-user",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "row",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 200,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": false,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        },
+        {
+          "surface": "object",
+          "anonymous": true,
+          "method": "GET",
+          "http_status": 400,
+          "postgres_or_gateway_code": null,
+          "anonymous_signature_intentionally_invalid": false
+        }
+      ],
+      "grants": {
+        "anon_select": true,
+        "authenticated_select": true,
+        "rls_enabled": true
+      },
+      "rls_policies_unchanged": true
+    }
+  ],
+  "totals": {
+    "runs": 8,
+    "planned_read_cases": 112,
+    "completed_application_http_responses": 108,
+    "checker_auth_user_gets": 16,
+    "dependent_checks_not_attempted_due_to_owner_control": 4
+  },
+  "artifacts": {
+    "zip": {
+      "file": "leak-regression-lab-v0.1.3.zip",
+      "bytes": 34587,
+      "sha256": "05d41fec352eb92c83ec07c7eaf977a841e052c7f9beecf5a7b3d116dc6cd9ef"
+    },
+    "tgz": {
+      "file": "leak-regression-lab-v0.1.3.tgz",
+      "bytes": 26733,
+      "sha256": "adc90f58355c4077c7c2da63bec2ee92d5133213367e60eac18958b4eed86beb"
+    }
+  },
+  "fresh_archive_controls": {
+    "auth_input": "ordinary-password",
+    "trace_instrumentation": "metadata-only fetch delegate; request and response content unchanged",
+    "results": [
+      {
+        "state": "fresh-cli-anon-no-grant",
+        "exit_code": 0,
+        "report": {
+          "schema_version": 1,
+          "product": "leak-regression-lab",
+          "version": "0.1.3",
+          "measured_at": "2026-10-28T20:24:59.762Z",
+          "contract_sha256": "8bbf74a8edaaff0a4fa14e26a6cbd694f592745f32ae0e404c774b4be9105d8a",
+          "environment": "test",
+          "status": "PASS",
+          "row_projection": "declared-id-and-expected-fields",
+          "row_denial_policy": "postgrest-anonymous-42501-with-owner-control-v1",
+          "coverage_complete": true,
+          "authentication": "TWO_DISTINCT_NORMAL_USERS",
+          "cases": [
+            {
+              "resource": "note-a",
+              "surface": "row",
+              "actor": "owner",
+              "route": "row",
+              "status": "PASS",
+              "http_status": 200,
+              "reason": "EXPECTED_TEST_DATA_RETURNED"
+            },
+            {
+              "resource": "note-a",
+              "surface": "row",
+              "actor": "other",
+              "route": "row",
+              "status": "PASS",
+              "http_status": 200,
+              "reason": "ACCESS_DENIED"
+            },
+            {
+              "resource": "note-a",
+              "surface": "row",
+              "actor": "anonymous",
+              "route": "row",
+              "status": "PASS",
+              "http_status": 401,
+              "reason": "ACCESS_DENIED"
+            },
+            {
+              "resource": "note-b",
+              "surface": "row",
+              "actor": "owner",
+              "route": "row",
+              "status": "PASS",
+              "http_status": 200,
+              "reason": "EXPECTED_TEST_DATA_RETURNED"
+            },
+            {
+              "resource": "note-b",
+              "surface": "row",
+              "actor": "other",
+              "route": "row",
+              "status": "PASS",
+              "http_status": 200,
+              "reason": "ACCESS_DENIED"
+            },
+            {
+              "resource": "note-b",
+              "surface": "row",
+              "actor": "anonymous",
+              "route": "row",
+              "status": "PASS",
+              "http_status": 401,
+              "reason": "ACCESS_DENIED"
+            },
+            {
+              "resource": "attachment-a",
+              "surface": "object",
+              "actor": "owner",
+              "route": "authenticated-object",
+              "status": "PASS",
+              "http_status": 200,
+              "reason": "EXPECTED_TEST_DATA_RETURNED"
+            },
+            {
+              "resource": "attachment-a",
+              "surface": "object",
+              "actor": "other",
+              "route": "authenticated-object",
+              "status": "PASS",
+              "http_status": 400,
+              "reason": "ACCESS_DENIED"
+            },
+            {
+              "resource": "attachment-a",
+              "surface": "object",
+              "actor": "anonymous",
+              "route": "authenticated-object",
+              "status": "PASS",
+              "http_status": 400,
+              "reason": "ACCESS_DENIED"
+            },
+            {
+              "resource": "attachment-a",
+              "surface": "object",
+              "actor": "anonymous-public",
+              "route": "public-object",
+              "status": "PASS",
+              "http_status": 400,
+              "reason": "ACCESS_DENIED"
+            },
+            {
+              "resource": "attachment-b",
+              "surface": "object",
+              "actor": "owner",
+              "route": "authenticated-object",
+              "status": "PASS",
+              "http_status": 200,
+              "reason": "EXPECTED_TEST_DATA_RETURNED"
+            },
+            {
+              "resource": "attachment-b",
+              "surface": "object",
+              "actor": "other",
+              "route": "authenticated-object",
+              "status": "PASS",
+              "http_status": 400,
+              "reason": "ACCESS_DENIED"
+            },
+            {
+              "resource": "attachment-b",
+              "surface": "object",
+              "actor": "anonymous",
+              "route": "authenticated-object",
+              "status": "PASS",
+              "http_status": 400,
+              "reason": "ACCESS_DENIED"
+            },
+            {
+              "resource": "attachment-b",
+              "surface": "object",
+              "actor": "anonymous-public",
+              "route": "public-object",
+              "status": "PASS",
+              "http_status": 400,
+              "reason": "ACCESS_DENIED"
+            }
+          ],
+          "scope": [
+            "known-row-read-isolation",
+            "known-private-object-read-isolation",
+            "public-object-route"
+          ],
+          "not_tested": [
+            "undeclared-row-fields",
+            "column-permission-matrix",
+            "write/delete",
+            "signed-URLs",
+            "cache-persistence",
+            "Realtime",
+            "RPC",
+            "browser-sessions",
+            "general-app-security"
+          ],
+          "counts": {
+            "PASS": 14,
+            "FAIL": 0,
+            "INCONCLUSIVE": 0
+          }
+        },
+        "actual_requests": [
+          {
+            "surface": "auth-password",
+            "method": "POST",
+            "http_status": 200,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "auth-password",
+            "method": "POST",
+            "http_status": 200,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "row",
+            "method": "GET",
+            "http_status": 200,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "row",
+            "method": "GET",
+            "http_status": 200,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "row",
+            "method": "GET",
+            "http_status": 401,
+            "postgres_or_gateway_code": "42501"
+          },
+          {
+            "surface": "row",
+            "method": "GET",
+            "http_status": 200,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "row",
+            "method": "GET",
+            "http_status": 200,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "row",
+            "method": "GET",
+            "http_status": 401,
+            "postgres_or_gateway_code": "42501"
+          },
+          {
+            "surface": "object",
+            "method": "GET",
+            "http_status": 200,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "object",
+            "method": "GET",
+            "http_status": 400,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "object",
+            "method": "GET",
+            "http_status": 400,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "object",
+            "method": "GET",
+            "http_status": 400,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "object",
+            "method": "GET",
+            "http_status": 200,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "object",
+            "method": "GET",
+            "http_status": 400,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "object",
+            "method": "GET",
+            "http_status": 400,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "object",
+            "method": "GET",
+            "http_status": 400,
+            "postgres_or_gateway_code": null
+          }
+        ]
+      },
+      {
+        "state": "fresh-cli-row-policy-open",
+        "exit_code": 2,
+        "report": {
+          "schema_version": 1,
+          "product": "leak-regression-lab",
+          "version": "0.1.3",
+          "measured_at": "2026-10-28T20:25:00.161Z",
+          "contract_sha256": "8bbf74a8edaaff0a4fa14e26a6cbd694f592745f32ae0e404c774b4be9105d8a",
+          "environment": "test",
+          "status": "FAIL",
+          "row_projection": "declared-id-and-expected-fields",
+          "row_denial_policy": "postgrest-anonymous-42501-with-owner-control-v1",
+          "coverage_complete": true,
+          "authentication": "TWO_DISTINCT_NORMAL_USERS",
+          "cases": [
+            {
+              "resource": "note-a",
+              "surface": "row",
+              "actor": "owner",
+              "route": "row",
+              "status": "PASS",
+              "http_status": 200,
+              "reason": "EXPECTED_TEST_DATA_RETURNED"
+            },
+            {
+              "resource": "note-a",
+              "surface": "row",
+              "actor": "other",
+              "route": "row",
+              "status": "FAIL",
+              "http_status": 200,
+              "reason": "PRIVATE_TEST_DATA_RETURNED"
+            },
+            {
+              "resource": "note-a",
+              "surface": "row",
+              "actor": "anonymous",
+              "route": "row",
+              "status": "PASS",
+              "http_status": 401,
+              "reason": "ACCESS_DENIED"
+            },
+            {
+              "resource": "note-b",
+              "surface": "row",
+              "actor": "owner",
+              "route": "row",
+              "status": "PASS",
+              "http_status": 200,
+              "reason": "EXPECTED_TEST_DATA_RETURNED"
+            },
+            {
+              "resource": "note-b",
+              "surface": "row",
+              "actor": "other",
+              "route": "row",
+              "status": "FAIL",
+              "http_status": 200,
+              "reason": "PRIVATE_TEST_DATA_RETURNED"
+            },
+            {
+              "resource": "note-b",
+              "surface": "row",
+              "actor": "anonymous",
+              "route": "row",
+              "status": "PASS",
+              "http_status": 401,
+              "reason": "ACCESS_DENIED"
+            },
+            {
+              "resource": "attachment-a",
+              "surface": "object",
+              "actor": "owner",
+              "route": "authenticated-object",
+              "status": "PASS",
+              "http_status": 200,
+              "reason": "EXPECTED_TEST_DATA_RETURNED"
+            },
+            {
+              "resource": "attachment-a",
+              "surface": "object",
+              "actor": "other",
+              "route": "authenticated-object",
+              "status": "PASS",
+              "http_status": 400,
+              "reason": "ACCESS_DENIED"
+            },
+            {
+              "resource": "attachment-a",
+              "surface": "object",
+              "actor": "anonymous",
+              "route": "authenticated-object",
+              "status": "PASS",
+              "http_status": 400,
+              "reason": "ACCESS_DENIED"
+            },
+            {
+              "resource": "attachment-a",
+              "surface": "object",
+              "actor": "anonymous-public",
+              "route": "public-object",
+              "status": "PASS",
+              "http_status": 400,
+              "reason": "ACCESS_DENIED"
+            },
+            {
+              "resource": "attachment-b",
+              "surface": "object",
+              "actor": "owner",
+              "route": "authenticated-object",
+              "status": "PASS",
+              "http_status": 200,
+              "reason": "EXPECTED_TEST_DATA_RETURNED"
+            },
+            {
+              "resource": "attachment-b",
+              "surface": "object",
+              "actor": "other",
+              "route": "authenticated-object",
+              "status": "PASS",
+              "http_status": 400,
+              "reason": "ACCESS_DENIED"
+            },
+            {
+              "resource": "attachment-b",
+              "surface": "object",
+              "actor": "anonymous",
+              "route": "authenticated-object",
+              "status": "PASS",
+              "http_status": 400,
+              "reason": "ACCESS_DENIED"
+            },
+            {
+              "resource": "attachment-b",
+              "surface": "object",
+              "actor": "anonymous-public",
+              "route": "public-object",
+              "status": "PASS",
+              "http_status": 400,
+              "reason": "ACCESS_DENIED"
+            }
+          ],
+          "scope": [
+            "known-row-read-isolation",
+            "known-private-object-read-isolation",
+            "public-object-route"
+          ],
+          "not_tested": [
+            "undeclared-row-fields",
+            "column-permission-matrix",
+            "write/delete",
+            "signed-URLs",
+            "cache-persistence",
+            "Realtime",
+            "RPC",
+            "browser-sessions",
+            "general-app-security"
+          ],
+          "counts": {
+            "PASS": 12,
+            "FAIL": 2,
+            "INCONCLUSIVE": 0
+          }
+        },
+        "actual_requests": [
+          {
+            "surface": "auth-password",
+            "method": "POST",
+            "http_status": 200,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "auth-password",
+            "method": "POST",
+            "http_status": 200,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "row",
+            "method": "GET",
+            "http_status": 200,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "row",
+            "method": "GET",
+            "http_status": 200,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "row",
+            "method": "GET",
+            "http_status": 401,
+            "postgres_or_gateway_code": "42501"
+          },
+          {
+            "surface": "row",
+            "method": "GET",
+            "http_status": 200,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "row",
+            "method": "GET",
+            "http_status": 200,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "row",
+            "method": "GET",
+            "http_status": 401,
+            "postgres_or_gateway_code": "42501"
+          },
+          {
+            "surface": "object",
+            "method": "GET",
+            "http_status": 200,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "object",
+            "method": "GET",
+            "http_status": 400,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "object",
+            "method": "GET",
+            "http_status": 400,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "object",
+            "method": "GET",
+            "http_status": 400,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "object",
+            "method": "GET",
+            "http_status": 200,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "object",
+            "method": "GET",
+            "http_status": 400,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "object",
+            "method": "GET",
+            "http_status": 400,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "object",
+            "method": "GET",
+            "http_status": 400,
+            "postgres_or_gateway_code": null
+          }
+        ]
+      },
+      {
+        "state": "fresh-cli-row-policy-restored",
+        "exit_code": 0,
+        "report": {
+          "schema_version": 1,
+          "product": "leak-regression-lab",
+          "version": "0.1.3",
+          "measured_at": "2026-10-28T20:25:00.453Z",
+          "contract_sha256": "8bbf74a8edaaff0a4fa14e26a6cbd694f592745f32ae0e404c774b4be9105d8a",
+          "environment": "test",
+          "status": "PASS",
+          "row_projection": "declared-id-and-expected-fields",
+          "row_denial_policy": "postgrest-anonymous-42501-with-owner-control-v1",
+          "coverage_complete": true,
+          "authentication": "TWO_DISTINCT_NORMAL_USERS",
+          "cases": [
+            {
+              "resource": "note-a",
+              "surface": "row",
+              "actor": "owner",
+              "route": "row",
+              "status": "PASS",
+              "http_status": 200,
+              "reason": "EXPECTED_TEST_DATA_RETURNED"
+            },
+            {
+              "resource": "note-a",
+              "surface": "row",
+              "actor": "other",
+              "route": "row",
+              "status": "PASS",
+              "http_status": 200,
+              "reason": "ACCESS_DENIED"
+            },
+            {
+              "resource": "note-a",
+              "surface": "row",
+              "actor": "anonymous",
+              "route": "row",
+              "status": "PASS",
+              "http_status": 401,
+              "reason": "ACCESS_DENIED"
+            },
+            {
+              "resource": "note-b",
+              "surface": "row",
+              "actor": "owner",
+              "route": "row",
+              "status": "PASS",
+              "http_status": 200,
+              "reason": "EXPECTED_TEST_DATA_RETURNED"
+            },
+            {
+              "resource": "note-b",
+              "surface": "row",
+              "actor": "other",
+              "route": "row",
+              "status": "PASS",
+              "http_status": 200,
+              "reason": "ACCESS_DENIED"
+            },
+            {
+              "resource": "note-b",
+              "surface": "row",
+              "actor": "anonymous",
+              "route": "row",
+              "status": "PASS",
+              "http_status": 401,
+              "reason": "ACCESS_DENIED"
+            },
+            {
+              "resource": "attachment-a",
+              "surface": "object",
+              "actor": "owner",
+              "route": "authenticated-object",
+              "status": "PASS",
+              "http_status": 200,
+              "reason": "EXPECTED_TEST_DATA_RETURNED"
+            },
+            {
+              "resource": "attachment-a",
+              "surface": "object",
+              "actor": "other",
+              "route": "authenticated-object",
+              "status": "PASS",
+              "http_status": 400,
+              "reason": "ACCESS_DENIED"
+            },
+            {
+              "resource": "attachment-a",
+              "surface": "object",
+              "actor": "anonymous",
+              "route": "authenticated-object",
+              "status": "PASS",
+              "http_status": 400,
+              "reason": "ACCESS_DENIED"
+            },
+            {
+              "resource": "attachment-a",
+              "surface": "object",
+              "actor": "anonymous-public",
+              "route": "public-object",
+              "status": "PASS",
+              "http_status": 400,
+              "reason": "ACCESS_DENIED"
+            },
+            {
+              "resource": "attachment-b",
+              "surface": "object",
+              "actor": "owner",
+              "route": "authenticated-object",
+              "status": "PASS",
+              "http_status": 200,
+              "reason": "EXPECTED_TEST_DATA_RETURNED"
+            },
+            {
+              "resource": "attachment-b",
+              "surface": "object",
+              "actor": "other",
+              "route": "authenticated-object",
+              "status": "PASS",
+              "http_status": 400,
+              "reason": "ACCESS_DENIED"
+            },
+            {
+              "resource": "attachment-b",
+              "surface": "object",
+              "actor": "anonymous",
+              "route": "authenticated-object",
+              "status": "PASS",
+              "http_status": 400,
+              "reason": "ACCESS_DENIED"
+            },
+            {
+              "resource": "attachment-b",
+              "surface": "object",
+              "actor": "anonymous-public",
+              "route": "public-object",
+              "status": "PASS",
+              "http_status": 400,
+              "reason": "ACCESS_DENIED"
+            }
+          ],
+          "scope": [
+            "known-row-read-isolation",
+            "known-private-object-read-isolation",
+            "public-object-route"
+          ],
+          "not_tested": [
+            "undeclared-row-fields",
+            "column-permission-matrix",
+            "write/delete",
+            "signed-URLs",
+            "cache-persistence",
+            "Realtime",
+            "RPC",
+            "browser-sessions",
+            "general-app-security"
+          ],
+          "counts": {
+            "PASS": 14,
+            "FAIL": 0,
+            "INCONCLUSIVE": 0
+          }
+        },
+        "actual_requests": [
+          {
+            "surface": "auth-password",
+            "method": "POST",
+            "http_status": 200,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "auth-password",
+            "method": "POST",
+            "http_status": 200,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "row",
+            "method": "GET",
+            "http_status": 200,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "row",
+            "method": "GET",
+            "http_status": 200,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "row",
+            "method": "GET",
+            "http_status": 401,
+            "postgres_or_gateway_code": "42501"
+          },
+          {
+            "surface": "row",
+            "method": "GET",
+            "http_status": 200,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "row",
+            "method": "GET",
+            "http_status": 200,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "row",
+            "method": "GET",
+            "http_status": 401,
+            "postgres_or_gateway_code": "42501"
+          },
+          {
+            "surface": "object",
+            "method": "GET",
+            "http_status": 200,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "object",
+            "method": "GET",
+            "http_status": 400,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "object",
+            "method": "GET",
+            "http_status": 400,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "object",
+            "method": "GET",
+            "http_status": 400,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "object",
+            "method": "GET",
+            "http_status": 200,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "object",
+            "method": "GET",
+            "http_status": 400,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "object",
+            "method": "GET",
+            "http_status": 400,
+            "postgres_or_gateway_code": null
+          },
+          {
+            "surface": "object",
+            "method": "GET",
+            "http_status": 400,
+            "postgres_or_gateway_code": null
+          }
+        ]
+      }
+    ],
+    "totals": {
+      "runs": 3,
+      "planned_read_cases": 42,
+      "completed_application_http_responses": 42,
+      "checker_password_sign_ins": 6,
+      "checker_auth_user_gets": 0,
+      "dependent_checks_not_attempted_due_to_owner_control": 0
+    },
+    "comparisons": {
+      "same_version_regressions": 2,
+      "same_version_resolved": 2,
+      "regression_exit_code": 2,
+      "repair_exit_code": 0,
+      "legacy_comparison_exit_code": 1,
+      "legacy_report_comparison": "DIFFERENT_CHECK_CONTRACT"
+    },
+    "original_acl_set_restored": true,
+    "original_rls_restored": true
+  }
+}

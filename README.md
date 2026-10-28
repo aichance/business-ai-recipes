@@ -6,13 +6,15 @@
 
 Test Supabase row **and file** isolation with two normal accounts, an anon/public client key, and known synthetic fixtures. Owner access must work; cross-user and anonymous access must not. Rerun the same contract after a policy/app change and compare local JSON/HTML reports. **No service-role key, dependencies or model calls.**
 
-[**Interactive measured replay / 試用手順**](https://aichance.github.io/business-ai-recipes/leak-regression-lab.html) · [**Setup and source**](tools/leak-regression-lab) · [**Small source ZIP**](https://aichance.github.io/business-ai-recipes/leak-regression-lab-v0.1.2.zip) · [**12 real fixture measurements and limits**](docs/leak-regression-lab-results.md) · [**26-second replay video**](https://aichance.github.io/business-ai-recipes/leak-regression-lab-demo.mp4)
+[**Interactive measured replay / 試用手順**](https://aichance.github.io/business-ai-recipes/leak-regression-lab.html) · [**Setup and source**](tools/leak-regression-lab) · [**Small source ZIP**](https://aichance.github.io/business-ai-recipes/leak-regression-lab-v0.1.3.zip) · [**12 real fixture measurements and limits**](docs/leak-regression-lab-results.md) · [**26-second replay video**](https://aichance.github.io/business-ai-recipes/leak-regression-lab-demo.mp4)
+
+**v0.1.3: keep anonymous table grants closed.** Actual local controls distinguish anonymous401/42501 (privilege denial) from401/PGRST301 (invalid signature). The same private fixture changes from0.1.2's12PASS/2INCONCLUSIVE to0.1.3's14/14 PASS without broadening its grants; opening RLS still exposes two peer reads. Owner-denied access stays inconclusive. [Eight measured controls, limits and fresh-baseline instructions](docs/leak-regression-lab-anon-grants.md).
 
 **v0.1.2: preserve column-level grants.** Row requests select only the configured ID and expected fields. Actual local controls: old SELECT-all owner reads403; declared-field reads14/14 PASS; an intentionally open row policy still exposes4 cases. [Measured results and upgrade/rebaseline notes](docs/leak-regression-lab-column-results.md).
 
 **v0.1.1: use existing Supabase test-user JWTs as well as password login.** Google/anonymous-sign-in apps can supply their current test sessions without adding a password flow. Auth verifies both users before app reads; this does not test the browser login flow. [Session setup](tools/leak-regression-lab/README.md#already-using-google-magic-links-or-anonymous-sign-in) · [New supplied-JWT controls](docs/leak-regression-lab-session-results.md).
 
-One local Supabase stack, two configuration-only ownership layouts, six states each. The fresh source archive detected authored row/object leaks and public buckets; denying all database users remained `INCONCLUSIVE`, and restoring correct access passed. These are operator synthetic controls, not independent adoption or a new Supabase vulnerability. Checks cover declared read paths only, not whole-app security.
+The earlier v0.1.2 archive controls used one local Supabase stack, two configuration-only ownership layouts and six states each. That archive detected authored row/object leaks and public buckets; denying all database users remained `INCONCLUSIVE`, and restoring correct access passed. These are historical operator synthetic controls, separate from the v0.1.3 measurements above, not independent adoption or a new Supabase vulnerability. Checks cover declared read paths only, not whole-app security.
 
 
 ## Agent Relay Check — inspect AGENTS.md selection, then test receipt

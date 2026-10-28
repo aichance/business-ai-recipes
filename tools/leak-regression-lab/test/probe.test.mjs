@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createServer} from 'node:http';
 import {once} from 'node:events';
-import {validateConfig, credentials, sha256} from '../lib/config.mjs';
+import {validateConfig, credentials, sha256, ROW_PROJECTION, ROW_DENIAL_POLICY} from '../lib/config.mjs';
 import {inspect, request, compare} from '../lib/probe.mjs';
 import {html} from '../lib/report.mjs';
 
@@ -141,6 +141,90 @@ test('anonymous 401 and embedded authentication errors cannot become a security 
   }
 });
 
+const privilegeDenied = {code: '42501', message: 'permission denied for table notes', details: null, hint: null};
+
+test('anonymous row privilege denial is recognized for legacy and publishable keys after owner success', async () => {
+  for (const publicKey of [pub, 'sb_publishable_synthetic-test-key']) {
+    const b = backend();
+    const r = await inspect(config(), {...environment, PUBLIC: publicKey}, {fetchImpl: (url, options) => {
+      const anonymous = !options.headers.Authorization || options.headers.Authorization === `Bearer ${publicKey}`;
+      if (new URL(url).pathname.startsWith('/rest/') && anonymous) return json(privilegeDenied, 401);
+      return b.fetchImpl(url, options);
+    }});
+    assert.deepEqual(r.counts, {PASS: 14, FAIL: 0, INCONCLUSIVE: 0});
+    assert.equal(r.status, 'PASS'); assert.equal(r.authentication, 'TWO_DISTINCT_NORMAL_USERS');
+    assert.equal(r.row_denial_policy, ROW_DENIAL_POLICY);
+    const anonymousRows = r.cases.filter(c=>c.surface === 'row' && c.actor === 'anonymous');
+    assert.equal(anonymousRows.length, 2);
+    assert.ok(anonymousRows.every(c=>c.http_status === 401 && c.reason === 'ACCESS_DENIED'));
+  }
+});
+
+test('only a complete unambiguous anonymous 42501 envelope qualifies; JWT and malformed 401s do not', async () => {
+  const bodies = [null, {}, [], {code: '42501'}, {code: '42501', message: ''},
+    {code: 'PGRST301', message: 'JWT signature is invalid'}, {code: 'PGRST302', message: 'JWT required'},
+    {code: 'PGRST303', message: 'JWT claims invalid'}, {code: 'InvalidJWT', message: 'expired'},
+    {...privilegeDenied, error: 'InvalidJWT'}, {...privilegeDenied, error_description: 'expired'},
+    {...privilegeDenied, statusCode: 401}, {...privilegeDenied, httpStatusCode: 401}];
+  for (const body of bodies) {
+    const b = backend();
+    const r = await inspect(config(), environment, {fetchImpl: (url, options) => {
+      if (new URL(url).pathname.startsWith('/rest/') && options.headers.Authorization === `Bearer ${pub}`) return json(body, 401);
+      return b.fetchImpl(url, options);
+    }});
+    assert.deepEqual(r.counts, {PASS: 12, FAIL: 0, INCONCLUSIVE: 2});
+    assert.equal(r.status, 'INCONCLUSIVE'); assert.equal(r.coverage_complete, false);
+  }
+  const b = backend();
+  const malformed = await inspect(config(), environment, {fetchImpl: (url, options) =>
+    new URL(url).pathname.startsWith('/rest/') && options.headers.Authorization === `Bearer ${pub}`
+      ? new Response('not JSON', {status: 401}) : b.fetchImpl(url, options)});
+  assert.equal(malformed.counts.INCONCLUSIVE, 2);
+});
+
+test('owner and other-user 401/42501 remain inconclusive and a failed owner suppresses peer probes', async () => {
+  for (const actor of ['owner', 'other']) {
+    const b = backend(); let rowRequests = 0;
+    const r = await inspect(config(), environment, {fetchImpl: (url, options) => {
+      const u = new URL(url);
+      if (u.pathname.startsWith('/rest/')) {
+        rowRequests++;
+        const owner = u.searchParams.get('id').split('-').at(-1);
+        const ownerBearer = `Bearer ${jwt({role: 'authenticated', sub: `user-${owner}`})}`;
+        const isUser = options.headers.Authorization !== `Bearer ${pub}`;
+        if (isUser && (actor === 'owner') === (options.headers.Authorization === ownerBearer)) return json(privilegeDenied, 401);
+      }
+      return b.fetchImpl(url, options);
+    }});
+    assert.equal(r.status, 'INCONCLUSIVE');
+    assert.equal(r.counts.INCONCLUSIVE, actor === 'owner' ? 6 : 2);
+    if (actor === 'owner') {
+      assert.equal(rowRequests, 2);
+      assert.ok(r.cases.filter(c=>c.surface === 'row' && c.actor !== 'owner').every(c=>c.http_status === null));
+    }
+  }
+});
+
+test('Storage 401/42501 is never treated as the anonymous PostgREST exception', async () => {
+  const b = backend();
+  const r = await inspect(config(), environment, {fetchImpl: (url, options) =>
+    new URL(url).pathname.startsWith('/storage/') && options.headers.Authorization === `Bearer ${pub}`
+      ? json(privilegeDenied, 401) : b.fetchImpl(url, options)});
+  assert.equal(r.status, 'INCONCLUSIVE'); assert.equal(r.counts.INCONCLUSIVE, 4);
+});
+
+test('a valid anonymous privilege denial and an unrelated auth failure do not hide a confirmed peer leak', async () => {
+  const b = backend('rows-leak');
+  const r = await inspect(config(), environment, {fetchImpl: (url, options) => {
+    const u = new URL(url), anonymous = options.headers.Authorization === `Bearer ${pub}`;
+    if (anonymous && u.pathname.startsWith('/rest/')) return json(privilegeDenied, 401);
+    if (anonymous && u.pathname.startsWith('/storage/')) return json({code: 'PGRST301', message: 'invalid signature'}, 401);
+    return b.fetchImpl(url, options);
+  }});
+  assert.equal(r.status, 'FAIL'); assert.equal(r.coverage_complete, false);
+  assert.deepEqual(r.counts, {PASS: 8, FAIL: 2, INCONCLUSIVE: 4});
+});
+
 test('a late cross-user authentication failure or unknown denial status cannot become PASS', async () => {
   for (const status of [400, 403, 404]) {
     for (const error of ['InvalidJWT', 'InvalidSignature', 'TenantNotFound', 'unrecognized-error']) {
@@ -270,4 +354,17 @@ test('reports from the old SELECT-all policy cannot silently compare with declar
   assert.notEqual(r.contract_sha256, legacy.contract_sha256);
   assert.throws(() => compare(legacy, r), {code: 'DIFFERENT_CHECK_CONTRACT'});
   assert.deepEqual(compare(r, r).regressions, []);
+});
+
+test('the changed denial contract rejects v0.1.2 comparisons and retains same-version comparisons', async () => {
+  const c = config(); const r = await inspect(c, environment, backend());
+  const legacy = {...r, version: '0.1.2', contract_sha256: sha256(JSON.stringify({
+    origin: c.origin, rows: c.rows, objects: c.objects, row_projection: ROW_PROJECTION}))};
+  delete legacy.row_denial_policy;
+  assert.equal(r.version, '0.1.3'); assert.equal(r.row_denial_policy, ROW_DENIAL_POLICY);
+  assert.notEqual(r.contract_sha256, legacy.contract_sha256);
+  assert.throws(()=>compare(legacy, r), {code: 'DIFFERENT_CHECK_CONTRACT'});
+  const leak = await inspect(c, environment, backend('rows-leak'));
+  assert.equal(compare(r, leak).regressions.length, 4);
+  assert.equal(compare(leak, r).resolved.length, 4);
 });

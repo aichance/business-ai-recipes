@@ -12,6 +12,7 @@ const plain = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
 export const sha256 = (value) => createHash('sha256').update(value).digest('hex');
 export const equal = isDeepStrictEqual;
 export const ROW_PROJECTION = 'declared-id-and-expected-fields';
+export const ROW_DENIAL_POLICY = 'postgrest-anonymous-42501-with-owner-control-v1';
 
 export function validateConfig(input) {
   need(plain(input) && input.schema_version === 1 && input.environment === 'test');
@@ -89,5 +90,5 @@ export function credentials(config, env) {
 
 export function contractFingerprint(config) {
   return sha256(JSON.stringify({origin: config.origin, rows: config.rows, objects: config.objects,
-    row_projection: ROW_PROJECTION}));
+    row_projection: ROW_PROJECTION, row_denial_policy: ROW_DENIAL_POLICY}));
 }

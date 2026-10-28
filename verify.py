@@ -16,6 +16,12 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    'docs/leak-regression-lab-anon-grants.md',
+    'docs/leak-regression-lab-anon-measurements.json',
+    'docs/leak-regression-lab-v0.1.3.zip',
+    'docs/leak-regression-lab-v0.1.3.zip.sha256',
+    'docs/leak-regression-lab-v0.1.3.tgz',
+    'docs/leak-regression-lab-v0.1.3.tgz.sha256',
     'docs/leak-regression-lab-setup-prompt.txt',
     'docs/leak-regression-lab-column-results.md',
     'docs/leak-regression-lab-column-measurements.json',
@@ -2215,6 +2221,65 @@ def verify_leak_regression_lab() -> None:
         assert set(report) <= {'schema_version', 'product', 'version', 'measured_at', 'contract_sha256',
             'environment', 'status', 'coverage_complete', 'authentication', 'cases', 'scope', 'not_tested', 'counts', 'row_projection'}
         assert all(set(c) == {'resource', 'surface', 'actor', 'route', 'status', 'http_status', 'reason'} for c in report['cases'])
+
+    anonymous = json.loads((root / 'docs/leak-regression-lab-anon-measurements.json').read_text())
+    assert anonymous['version'] == '0.1.3' and anonymous['legacy_version'] == '0.1.2'
+    assert anonymous['external_adoption'] is False
+    assert anonymous['evidence_kind'] == 'operator-synthetic-fixture-recording'
+    assert anonymous['original_acl_set_restored'] and anonymous['original_rls_restored']
+    assert anonymous['application_writes_by_checker'] == 0
+    assert anonymous['protocol_controls']['offline_node_tests'] == 37
+    assert anonymous['protocol_controls']['fresh_archive_files_byte_equal'] == 18
+    assert anonymous['protocol_controls']['legacy_report_comparison'] == 'DIFFERENT_CHECK_CONTRACT'
+    assert anonymous['totals'] == {'runs': 8, 'planned_read_cases': 112,
+        'completed_application_http_responses': 108, 'checker_auth_user_gets': 16,
+        'dependent_checks_not_attempted_due_to_owner_control': 4}
+    expected_denials = [(14, 0, 0), (12, 0, 2), (14, 0, 0), (12, 0, 2),
+        (12, 2, 0), (14, 0, 0), (8, 0, 6), (14, 0, 0)]
+    assert [tuple(r['report']['counts'][k] for k in ['PASS', 'FAIL', 'INCONCLUSIVE'])
+        for r in anonymous['runs']] == expected_denials
+    for i, run in enumerate(anonymous['runs']):
+        report = run['report']
+        assert report['version'] == ('0.1.2' if i == 1 else '0.1.3')
+        assert len(report['cases']) == 14
+        if i != 1:
+            assert report['row_denial_policy'] == 'postgrest-anonymous-42501-with-owner-control-v1'
+        assert all(r['method'] == 'GET' for r in run['actual_requests'])
+    for i, code in [(1, '42501'), (2, '42501'), (3, 'PGRST301'), (4, '42501'), (5, '42501')]:
+        responses = [r for r in anonymous['runs'][i]['actual_requests'] if r['surface'] == 'row' and r['anonymous']]
+        assert len(responses) == 2 and all(r['http_status'] == 401 and r['postgres_or_gateway_code'] == code for r in responses)
+    assert all(r['http_status'] is None for r in anonymous['runs'][6]['report']['cases']
+        if r['surface'] == 'row' and r['actor'] != 'owner')
+    for relative, digest in anonymous['source_sha256'].items():
+        assert relative in ['lib/config.mjs', 'lib/probe.mjs', 'test/probe.test.mjs', 'cli.mjs', 'test/cli.test.mjs']
+        assert hashlib.sha256((root / 'tools/leak-regression-lab' / relative).read_bytes()).hexdigest() == digest
+    for ext, artifact in anonymous['artifacts'].items():
+        assert ext in ['zip', 'tgz']
+        data = (root / 'docs' / artifact['file']).read_bytes()
+        assert len(data) == artifact['bytes']
+        assert hashlib.sha256(data).hexdigest() == artifact['sha256']
+    setup_prompt = (root / 'docs/leak-regression-lab-setup-prompt.txt').read_text()
+    zip_artifact = anonymous['artifacts']['zip']
+    assert f"https://aichance.github.io/business-ai-recipes/{zip_artifact['file']}" in setup_prompt
+    assert f"Expected ZIP SHA-256: {zip_artifact['sha256']}" in setup_prompt
+    fresh = anonymous['fresh_archive_controls']
+    assert fresh['auth_input'] == 'ordinary-password'
+    assert fresh['original_acl_set_restored'] and fresh['original_rls_restored']
+    assert fresh['totals'] == {'runs': 3, 'planned_read_cases': 42,
+        'completed_application_http_responses': 42, 'checker_password_sign_ins': 6,
+        'checker_auth_user_gets': 0, 'dependent_checks_not_attempted_due_to_owner_control': 0}
+    assert [r['exit_code'] for r in fresh['results']] == [0, 2, 0]
+    assert [tuple(r['report']['counts'][k] for k in ['PASS', 'FAIL', 'INCONCLUSIVE'])
+        for r in fresh['results']] == [(14, 0, 0), (12, 2, 0), (14, 0, 0)]
+    assert fresh['comparisons'] == {'same_version_regressions': 2, 'same_version_resolved': 2,
+        'regression_exit_code': 2, 'repair_exit_code': 0, 'legacy_comparison_exit_code': 1,
+        'legacy_report_comparison': 'DIFFERENT_CHECK_CONTRACT'}
+    for run in fresh['results']:
+        assert run['report']['version'] == '0.1.3'
+        assert len(run['report']['cases']) == 14
+        assert len(run['actual_requests']) == 16
+        assert all(r['method'] == ('POST' if r['surface'] == 'auth-password' else 'GET')
+            for r in run['actual_requests'])
 
 
 def main() -> int:

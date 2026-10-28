@@ -1,8 +1,8 @@
-Help me run Leak Regression Lab v0.1.2 against this app's existing, authorized Supabase TEST environment, using configuration only.
+Help me run Leak Regression Lab v0.1.3 against this app's existing, authorized Supabase TEST environment, using configuration only.
 
 Download and inspect the dependency-free source ZIP and its README:
-https://aichance.github.io/business-ai-recipes/leak-regression-lab-v0.1.2.zip
-Expected ZIP SHA-256: f5f3e426ecb3f72f048a252e7acad4cc4f06c881a3f81eecf353f1c2b5bc9cc0
+https://aichance.github.io/business-ai-recipes/leak-regression-lab-v0.1.3.zip
+Expected ZIP SHA-256: 05d41fec352eb92c83ec07c7eaf977a841e052c7f9beecf5a7b3d116dc6cd9ef
 Verify the hash before running it. Node 22+ is required; do not install global packages.
 
 Use a fresh ignored local work folder inside this app's repository. Keep credentials and configuration local; never print, post or send them. Do not read browser profiles or extract saved sessions. Respect this project's instructions and the test scope I have authorized.
@@ -21,7 +21,7 @@ node cli.mjs check --env .env.test --config test-config.json --out ./leak-check-
 
 Report the actual CLI version, exit code, PASS/FAIL/INCONCLUSIVE counts and the first setup obstacle. A missing owner-positive control is not PASS. This verifies only the declared reads, not whole-app security. Keep private paths, raw content, origins, identity values and credentials out of anything shared with the tool's author.
 
-On a later request AFTER an actual app or policy update, reuse the same v0.1.2 fixture contract:
+On a later request AFTER an actual app or policy update, reuse the same v0.1.3 fixture contract:
 node cli.mjs check --env .env.test --config test-config.json --out ./leak-check-after --live
 node cli.mjs compare --before ./leak-check-before/report.json --after ./leak-check-after/report.json
 
