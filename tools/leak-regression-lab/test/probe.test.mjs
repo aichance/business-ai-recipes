@@ -61,6 +61,35 @@ test('cross-account row leak is visible while Storage controls still pass', asyn
   assert.ok(r.cases.filter((x) => x.surface === 'object').every((x) => x.status === 'PASS'));
 });
 
+test('opaque publishable keys stay in apikey while user JWTs stay in Authorization', async () => {
+  const publicKey = 'sb_publishable_synthetic-test-key';
+  const b = backend('public-leak');
+  const fetchImpl = async (url, options) => {
+    assert.equal(options.headers.apikey, publicKey);
+    assert.notEqual(options.headers.Authorization, `Bearer ${publicKey}`);
+    return b.fetchImpl(url, options);
+  };
+  const r = await inspect(config(), {...environment, PUBLIC: publicKey}, {fetchImpl});
+  assert.equal(r.status, 'FAIL'); assert.equal(r.counts.FAIL, 6);
+  const reads = b.calls.filter((c) => !c.url.includes('/auth/'));
+  assert.equal(reads.filter((c) => !c.headers.Authorization).length, 6);
+  assert.ok(reads.filter((c) => c.headers.Authorization).every((c) => c.headers.Authorization.startsWith('Bearer header.')));
+});
+
+test('anonymous 401 and embedded authentication errors cannot become a security pass', async () => {
+  for (const status of [401, 400]) {
+    const b = backend();
+    const r = await inspect(config(), environment, {fetchImpl: (url, options) => {
+      if (!String(url).includes('/auth/') && options.headers.Authorization === `Bearer ${pub}`) {
+        return json({statusCode: '401', error: 'InvalidJWT'}, status);
+      }
+      return b.fetchImpl(url, options);
+    }});
+    assert.equal(r.status, 'INCONCLUSIVE'); assert.equal(r.counts.INCONCLUSIVE, 6);
+    assert.equal(r.coverage_complete, false);
+  }
+});
+
 test('object policy and accidentally public bucket are separate observable failures', async () => {
   const r = await inspect(config(), environment, backend('objects-leak'));
   assert.equal(r.counts.FAIL, 4);
