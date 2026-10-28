@@ -1,0 +1,1993 @@
+{
+  "schema_version": 1,
+  "product": "leak-regression-lab",
+  "version": "0.1.0",
+  "evidence_kind": "operator-synthetic-fixture-recording",
+  "external_adoption": false,
+  "measured_at": "2026-10-28T04:56:46.912Z",
+  "environment": {
+    "supabase_cli": "2.24.3",
+    "node": "22.23.4",
+    "platform": "macOS local Docker",
+    "stacks": 1,
+    "layouts": [
+      "direct-user-ownership",
+      "team-membership-ownership"
+    ],
+    "transport": "real Auth, PostgREST, Storage HTTP",
+    "requests_per_run": {
+      "sign_ins": 2,
+      "read_observations": 14
+    },
+    "hosted_latest_verified": false,
+    "windows_verified": false
+  },
+  "artifacts": {
+    "zip": {
+      "file": "leak-regression-lab-v0.1.0.zip",
+      "sha256": "aa783caf2da367f4b11c97962882c1cb93a852fdf515cd967910b77575fe8c45"
+    },
+    "tgz": {
+      "file": "leak-regression-lab-v0.1.0.tgz",
+      "sha256": "c9573c95007bc902db3b764b2beec8dd8bf4140fc9b5d51e5df1043f030ea44a"
+    }
+  },
+  "runs": [
+    {
+      "mode": "secure",
+      "ownership": "owner",
+      "exit_code": 0,
+      "report": {
+        "schema_version": 1,
+        "product": "leak-regression-lab",
+        "version": "0.1.0",
+        "measured_at": "2026-10-28T04:56:39.572Z",
+        "contract_sha256": "c9c18c89f3ee8db8a6a26f406acf8c6afa88bf106948327aa08a7418659678a3",
+        "environment": "test",
+        "status": "PASS",
+        "coverage_complete": true,
+        "authentication": "TWO_DISTINCT_NORMAL_USERS",
+        "cases": [
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          }
+        ],
+        "scope": [
+          "known-row-read-isolation",
+          "known-private-object-read-isolation",
+          "public-object-route"
+        ],
+        "not_tested": [
+          "write/delete",
+          "signed-URLs",
+          "cache-persistence",
+          "Realtime",
+          "RPC",
+          "browser-sessions",
+          "general-app-security"
+        ],
+        "counts": {
+          "PASS": 14,
+          "FAIL": 0,
+          "INCONCLUSIVE": 0
+        }
+      }
+    },
+    {
+      "mode": "secure",
+      "ownership": "team",
+      "exit_code": 0,
+      "report": {
+        "schema_version": 1,
+        "product": "leak-regression-lab",
+        "version": "0.1.0",
+        "measured_at": "2026-10-28T04:56:40.259Z",
+        "contract_sha256": "a174ab868cbb7a27adc3ed6a525a9a5df7a33a9592a1b10b5d70edb90107b9d3",
+        "environment": "test",
+        "status": "PASS",
+        "coverage_complete": true,
+        "authentication": "TWO_DISTINCT_NORMAL_USERS",
+        "cases": [
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          }
+        ],
+        "scope": [
+          "known-row-read-isolation",
+          "known-private-object-read-isolation",
+          "public-object-route"
+        ],
+        "not_tested": [
+          "write/delete",
+          "signed-URLs",
+          "cache-persistence",
+          "Realtime",
+          "RPC",
+          "browser-sessions",
+          "general-app-security"
+        ],
+        "counts": {
+          "PASS": 14,
+          "FAIL": 0,
+          "INCONCLUSIVE": 0
+        }
+      }
+    },
+    {
+      "mode": "rows-leak",
+      "ownership": "owner",
+      "exit_code": 2,
+      "report": {
+        "schema_version": 1,
+        "product": "leak-regression-lab",
+        "version": "0.1.0",
+        "measured_at": "2026-10-28T04:56:41.586Z",
+        "contract_sha256": "c9c18c89f3ee8db8a6a26f406acf8c6afa88bf106948327aa08a7418659678a3",
+        "environment": "test",
+        "status": "FAIL",
+        "coverage_complete": true,
+        "authentication": "TWO_DISTINCT_NORMAL_USERS",
+        "cases": [
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "FAIL",
+            "http_status": 200,
+            "reason": "PRIVATE_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "FAIL",
+            "http_status": 200,
+            "reason": "PRIVATE_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "FAIL",
+            "http_status": 200,
+            "reason": "PRIVATE_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "FAIL",
+            "http_status": 200,
+            "reason": "PRIVATE_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          }
+        ],
+        "scope": [
+          "known-row-read-isolation",
+          "known-private-object-read-isolation",
+          "public-object-route"
+        ],
+        "not_tested": [
+          "write/delete",
+          "signed-URLs",
+          "cache-persistence",
+          "Realtime",
+          "RPC",
+          "browser-sessions",
+          "general-app-security"
+        ],
+        "counts": {
+          "PASS": 10,
+          "FAIL": 4,
+          "INCONCLUSIVE": 0
+        }
+      }
+    },
+    {
+      "mode": "rows-leak",
+      "ownership": "team",
+      "exit_code": 2,
+      "report": {
+        "schema_version": 1,
+        "product": "leak-regression-lab",
+        "version": "0.1.0",
+        "measured_at": "2026-10-28T04:56:42.585Z",
+        "contract_sha256": "a174ab868cbb7a27adc3ed6a525a9a5df7a33a9592a1b10b5d70edb90107b9d3",
+        "environment": "test",
+        "status": "FAIL",
+        "coverage_complete": true,
+        "authentication": "TWO_DISTINCT_NORMAL_USERS",
+        "cases": [
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "FAIL",
+            "http_status": 200,
+            "reason": "PRIVATE_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "FAIL",
+            "http_status": 200,
+            "reason": "PRIVATE_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "FAIL",
+            "http_status": 200,
+            "reason": "PRIVATE_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "FAIL",
+            "http_status": 200,
+            "reason": "PRIVATE_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          }
+        ],
+        "scope": [
+          "known-row-read-isolation",
+          "known-private-object-read-isolation",
+          "public-object-route"
+        ],
+        "not_tested": [
+          "write/delete",
+          "signed-URLs",
+          "cache-persistence",
+          "Realtime",
+          "RPC",
+          "browser-sessions",
+          "general-app-security"
+        ],
+        "counts": {
+          "PASS": 10,
+          "FAIL": 4,
+          "INCONCLUSIVE": 0
+        }
+      }
+    },
+    {
+      "mode": "objects-leak",
+      "ownership": "owner",
+      "exit_code": 2,
+      "report": {
+        "schema_version": 1,
+        "product": "leak-regression-lab",
+        "version": "0.1.0",
+        "measured_at": "2026-10-28T04:56:43.423Z",
+        "contract_sha256": "c9c18c89f3ee8db8a6a26f406acf8c6afa88bf106948327aa08a7418659678a3",
+        "environment": "test",
+        "status": "FAIL",
+        "coverage_complete": true,
+        "authentication": "TWO_DISTINCT_NORMAL_USERS",
+        "cases": [
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "FAIL",
+            "http_status": 200,
+            "reason": "PRIVATE_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "FAIL",
+            "http_status": 200,
+            "reason": "PRIVATE_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "FAIL",
+            "http_status": 200,
+            "reason": "PRIVATE_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "FAIL",
+            "http_status": 200,
+            "reason": "PRIVATE_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          }
+        ],
+        "scope": [
+          "known-row-read-isolation",
+          "known-private-object-read-isolation",
+          "public-object-route"
+        ],
+        "not_tested": [
+          "write/delete",
+          "signed-URLs",
+          "cache-persistence",
+          "Realtime",
+          "RPC",
+          "browser-sessions",
+          "general-app-security"
+        ],
+        "counts": {
+          "PASS": 10,
+          "FAIL": 4,
+          "INCONCLUSIVE": 0
+        }
+      }
+    },
+    {
+      "mode": "objects-leak",
+      "ownership": "team",
+      "exit_code": 2,
+      "report": {
+        "schema_version": 1,
+        "product": "leak-regression-lab",
+        "version": "0.1.0",
+        "measured_at": "2026-10-28T04:56:44.015Z",
+        "contract_sha256": "a174ab868cbb7a27adc3ed6a525a9a5df7a33a9592a1b10b5d70edb90107b9d3",
+        "environment": "test",
+        "status": "FAIL",
+        "coverage_complete": true,
+        "authentication": "TWO_DISTINCT_NORMAL_USERS",
+        "cases": [
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "FAIL",
+            "http_status": 200,
+            "reason": "PRIVATE_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "FAIL",
+            "http_status": 200,
+            "reason": "PRIVATE_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "FAIL",
+            "http_status": 200,
+            "reason": "PRIVATE_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "FAIL",
+            "http_status": 200,
+            "reason": "PRIVATE_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          }
+        ],
+        "scope": [
+          "known-row-read-isolation",
+          "known-private-object-read-isolation",
+          "public-object-route"
+        ],
+        "not_tested": [
+          "write/delete",
+          "signed-URLs",
+          "cache-persistence",
+          "Realtime",
+          "RPC",
+          "browser-sessions",
+          "general-app-security"
+        ],
+        "counts": {
+          "PASS": 10,
+          "FAIL": 4,
+          "INCONCLUSIVE": 0
+        }
+      }
+    },
+    {
+      "mode": "public-leak",
+      "ownership": "owner",
+      "exit_code": 2,
+      "report": {
+        "schema_version": 1,
+        "product": "leak-regression-lab",
+        "version": "0.1.0",
+        "measured_at": "2026-10-28T04:56:44.663Z",
+        "contract_sha256": "c9c18c89f3ee8db8a6a26f406acf8c6afa88bf106948327aa08a7418659678a3",
+        "environment": "test",
+        "status": "FAIL",
+        "coverage_complete": true,
+        "authentication": "TWO_DISTINCT_NORMAL_USERS",
+        "cases": [
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "FAIL",
+            "http_status": 200,
+            "reason": "PRIVATE_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "FAIL",
+            "http_status": 200,
+            "reason": "PRIVATE_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "FAIL",
+            "http_status": 200,
+            "reason": "PRIVATE_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "FAIL",
+            "http_status": 200,
+            "reason": "PRIVATE_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "FAIL",
+            "http_status": 200,
+            "reason": "PRIVATE_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "FAIL",
+            "http_status": 200,
+            "reason": "PRIVATE_TEST_DATA_RETURNED"
+          }
+        ],
+        "scope": [
+          "known-row-read-isolation",
+          "known-private-object-read-isolation",
+          "public-object-route"
+        ],
+        "not_tested": [
+          "write/delete",
+          "signed-URLs",
+          "cache-persistence",
+          "Realtime",
+          "RPC",
+          "browser-sessions",
+          "general-app-security"
+        ],
+        "counts": {
+          "PASS": 8,
+          "FAIL": 6,
+          "INCONCLUSIVE": 0
+        }
+      }
+    },
+    {
+      "mode": "public-leak",
+      "ownership": "team",
+      "exit_code": 2,
+      "report": {
+        "schema_version": 1,
+        "product": "leak-regression-lab",
+        "version": "0.1.0",
+        "measured_at": "2026-10-28T04:56:45.131Z",
+        "contract_sha256": "a174ab868cbb7a27adc3ed6a525a9a5df7a33a9592a1b10b5d70edb90107b9d3",
+        "environment": "test",
+        "status": "FAIL",
+        "coverage_complete": true,
+        "authentication": "TWO_DISTINCT_NORMAL_USERS",
+        "cases": [
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "FAIL",
+            "http_status": 200,
+            "reason": "PRIVATE_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "FAIL",
+            "http_status": 200,
+            "reason": "PRIVATE_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "FAIL",
+            "http_status": 200,
+            "reason": "PRIVATE_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "FAIL",
+            "http_status": 200,
+            "reason": "PRIVATE_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "FAIL",
+            "http_status": 200,
+            "reason": "PRIVATE_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "FAIL",
+            "http_status": 200,
+            "reason": "PRIVATE_TEST_DATA_RETURNED"
+          }
+        ],
+        "scope": [
+          "known-row-read-isolation",
+          "known-private-object-read-isolation",
+          "public-object-route"
+        ],
+        "not_tested": [
+          "write/delete",
+          "signed-URLs",
+          "cache-persistence",
+          "Realtime",
+          "RPC",
+          "browser-sessions",
+          "general-app-security"
+        ],
+        "counts": {
+          "PASS": 8,
+          "FAIL": 6,
+          "INCONCLUSIVE": 0
+        }
+      }
+    },
+    {
+      "mode": "deny-all",
+      "ownership": "owner",
+      "exit_code": 3,
+      "report": {
+        "schema_version": 1,
+        "product": "leak-regression-lab",
+        "version": "0.1.0",
+        "measured_at": "2026-10-28T04:56:45.643Z",
+        "contract_sha256": "c9c18c89f3ee8db8a6a26f406acf8c6afa88bf106948327aa08a7418659678a3",
+        "environment": "test",
+        "status": "INCONCLUSIVE",
+        "coverage_complete": false,
+        "authentication": "TWO_DISTINCT_NORMAL_USERS",
+        "cases": [
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "INCONCLUSIVE",
+            "http_status": 200,
+            "reason": "OWNER_CONTROL_NOT_AVAILABLE"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "INCONCLUSIVE",
+            "http_status": null,
+            "reason": "OWNER_CONTROL_NOT_AVAILABLE"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "INCONCLUSIVE",
+            "http_status": null,
+            "reason": "OWNER_CONTROL_NOT_AVAILABLE"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "INCONCLUSIVE",
+            "http_status": 200,
+            "reason": "OWNER_CONTROL_NOT_AVAILABLE"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "INCONCLUSIVE",
+            "http_status": null,
+            "reason": "OWNER_CONTROL_NOT_AVAILABLE"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "INCONCLUSIVE",
+            "http_status": null,
+            "reason": "OWNER_CONTROL_NOT_AVAILABLE"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          }
+        ],
+        "scope": [
+          "known-row-read-isolation",
+          "known-private-object-read-isolation",
+          "public-object-route"
+        ],
+        "not_tested": [
+          "write/delete",
+          "signed-URLs",
+          "cache-persistence",
+          "Realtime",
+          "RPC",
+          "browser-sessions",
+          "general-app-security"
+        ],
+        "counts": {
+          "PASS": 8,
+          "FAIL": 0,
+          "INCONCLUSIVE": 6
+        }
+      }
+    },
+    {
+      "mode": "deny-all",
+      "ownership": "team",
+      "exit_code": 3,
+      "report": {
+        "schema_version": 1,
+        "product": "leak-regression-lab",
+        "version": "0.1.0",
+        "measured_at": "2026-10-28T04:56:46.037Z",
+        "contract_sha256": "a174ab868cbb7a27adc3ed6a525a9a5df7a33a9592a1b10b5d70edb90107b9d3",
+        "environment": "test",
+        "status": "INCONCLUSIVE",
+        "coverage_complete": false,
+        "authentication": "TWO_DISTINCT_NORMAL_USERS",
+        "cases": [
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "INCONCLUSIVE",
+            "http_status": 200,
+            "reason": "OWNER_CONTROL_NOT_AVAILABLE"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "INCONCLUSIVE",
+            "http_status": null,
+            "reason": "OWNER_CONTROL_NOT_AVAILABLE"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "INCONCLUSIVE",
+            "http_status": null,
+            "reason": "OWNER_CONTROL_NOT_AVAILABLE"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "INCONCLUSIVE",
+            "http_status": 200,
+            "reason": "OWNER_CONTROL_NOT_AVAILABLE"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "INCONCLUSIVE",
+            "http_status": null,
+            "reason": "OWNER_CONTROL_NOT_AVAILABLE"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "INCONCLUSIVE",
+            "http_status": null,
+            "reason": "OWNER_CONTROL_NOT_AVAILABLE"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          }
+        ],
+        "scope": [
+          "known-row-read-isolation",
+          "known-private-object-read-isolation",
+          "public-object-route"
+        ],
+        "not_tested": [
+          "write/delete",
+          "signed-URLs",
+          "cache-persistence",
+          "Realtime",
+          "RPC",
+          "browser-sessions",
+          "general-app-security"
+        ],
+        "counts": {
+          "PASS": 8,
+          "FAIL": 0,
+          "INCONCLUSIVE": 6
+        }
+      }
+    },
+    {
+      "mode": "repaired",
+      "ownership": "owner",
+      "exit_code": 0,
+      "report": {
+        "schema_version": 1,
+        "product": "leak-regression-lab",
+        "version": "0.1.0",
+        "measured_at": "2026-10-28T04:56:46.580Z",
+        "contract_sha256": "c9c18c89f3ee8db8a6a26f406acf8c6afa88bf106948327aa08a7418659678a3",
+        "environment": "test",
+        "status": "PASS",
+        "coverage_complete": true,
+        "authentication": "TWO_DISTINCT_NORMAL_USERS",
+        "cases": [
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          }
+        ],
+        "scope": [
+          "known-row-read-isolation",
+          "known-private-object-read-isolation",
+          "public-object-route"
+        ],
+        "not_tested": [
+          "write/delete",
+          "signed-URLs",
+          "cache-persistence",
+          "Realtime",
+          "RPC",
+          "browser-sessions",
+          "general-app-security"
+        ],
+        "counts": {
+          "PASS": 14,
+          "FAIL": 0,
+          "INCONCLUSIVE": 0
+        }
+      }
+    },
+    {
+      "mode": "repaired",
+      "ownership": "team",
+      "exit_code": 0,
+      "report": {
+        "schema_version": 1,
+        "product": "leak-regression-lab",
+        "version": "0.1.0",
+        "measured_at": "2026-10-28T04:56:46.912Z",
+        "contract_sha256": "a174ab868cbb7a27adc3ed6a525a9a5df7a33a9592a1b10b5d70edb90107b9d3",
+        "environment": "test",
+        "status": "PASS",
+        "coverage_complete": true,
+        "authentication": "TWO_DISTINCT_NORMAL_USERS",
+        "cases": [
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-a",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "owner",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "other",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "note-b",
+            "surface": "row",
+            "actor": "anonymous",
+            "route": "row",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-a",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "owner",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 200,
+            "reason": "EXPECTED_TEST_DATA_RETURNED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "other",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous",
+            "route": "authenticated-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          },
+          {
+            "resource": "attachment-b",
+            "surface": "object",
+            "actor": "anonymous-public",
+            "route": "public-object",
+            "status": "PASS",
+            "http_status": 400,
+            "reason": "ACCESS_DENIED"
+          }
+        ],
+        "scope": [
+          "known-row-read-isolation",
+          "known-private-object-read-isolation",
+          "public-object-route"
+        ],
+        "not_tested": [
+          "write/delete",
+          "signed-URLs",
+          "cache-persistence",
+          "Realtime",
+          "RPC",
+          "browser-sessions",
+          "general-app-security"
+        ],
+        "counts": {
+          "PASS": 14,
+          "FAIL": 0,
+          "INCONCLUSIVE": 0
+        }
+      }
+    }
+  ]
+}
