@@ -1,6 +1,6 @@
 import { writeFile } from 'node:fs/promises';
 
-const LIBRARY_VERSION = '0.3.0-experimental.1';
+const LIBRARY_VERSION = '0.4.0-experimental.1';
 
 const escape = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const describeError = error => { try { return error instanceof Error ? error.message : String(error); } catch { return 'Non-Error thrown value'; } };
@@ -24,29 +24,36 @@ async function readProbe(page, probe, timeoutMs, expectedOrigin) {
   const json = await page.evaluate(async ({ probe: p, timeout, expectedOrigin }) => {
     async function observeSelected() {
     if (location.origin !== expectedOrigin) return { status: 'INCONCLUSIVE', reason: 'Origin changed before reading the selected data' };
-    function plain(value, undefinedPaths, seen = new WeakSet(), depth = 0, path = '') {
+    function plain(value, undefinedPaths, datePaths, seen = new WeakSet(), depth = 0, path = '') {
       if (depth > 12) throw new Error('Selected value exceeds depth12');
       if (value === undefined) { undefinedPaths.push(path); return null; }
       if (value === null || ['string', 'boolean'].includes(typeof value)) return value;
       if (typeof value === 'number' && Number.isFinite(value)) return value;
+      if (typeof value === 'object' && Object.prototype.toString.call(value) === '[object Date]') {
+        if (!Number.isFinite(Date.prototype.getTime.call(value))) throw new Error('Selected Date value is invalid');
+        datePaths.push(path);
+        return Date.prototype.toISOString.call(value);
+      }
       if (typeof value !== 'object' || Object.prototype.toString.call(value) !== '[object Object]' && !Array.isArray(value)) throw new Error('Selected value is not plain JSON');
       if (seen.has(value)) throw new Error('Selected value contains a cycle');
       seen.add(value);
       if (Array.isArray(value) && (Object.keys(value).length !== value.length || Array.from({ length: value.length }, (_, i) => !Object.hasOwn(value, i)).some(Boolean))) throw new Error('Sparse or extended arrays are not plain JSON');
       const childPath = key => `${path}/${String(key).replace(/~/g, '~0').replace(/\//g, '~1')}`;
-      const result = Array.isArray(value) ? value.map((x, i) => plain(x, undefinedPaths, seen, depth + 1, childPath(i)))
-        : Object.fromEntries(Object.entries(value).map(([k, v]) => [k, plain(v, undefinedPaths, seen, depth + 1, childPath(k))]));
+      const result = Array.isArray(value) ? value.map((x, i) => plain(x, undefinedPaths, datePaths, seen, depth + 1, childPath(i)))
+        : Object.fromEntries(Object.entries(value).map(([k, v]) => [k, plain(v, undefinedPaths, datePaths, seen, depth + 1, childPath(k))]));
       seen.delete(value);
       return result;
     }
     function normalize(exists, value) {
-      const undefinedPaths = [];
-      const normalized = exists ? plain(value, undefinedPaths) : null;
-      undefinedPaths.sort();
-      const representation = undefinedPaths.length ? { value: normalized, undefinedPaths } : normalized;
+      const undefinedPaths = [], datePaths = [];
+      const normalized = exists ? plain(value, undefinedPaths, datePaths) : null;
+      undefinedPaths.sort(); datePaths.sort();
+      const annotations = { ...(undefinedPaths.length ? { undefinedPaths } : {}), ...(datePaths.length ? { datePaths } : {}) };
+      const representation = undefinedPaths.length || datePaths.length ? { value: normalized, ...annotations } : normalized;
       if (new TextEncoder().encode(JSON.stringify(representation)).byteLength > 65536) throw new Error('Selected value exceeds64KiB');
       return { status: 'OBSERVED', exists, value: normalized,
-        ...(undefinedPaths.length ? { valueEncoding: 'json-with-undefined-paths-v1', undefinedPaths } : {}) };
+        ...(datePaths.length ? { valueEncoding: 'json-with-type-paths-v1', ...annotations }
+          : undefinedPaths.length ? { valueEncoding: 'json-with-undefined-paths-v1', undefinedPaths } : {}) };
     }
     try {
       if (p.source === 'localStorage' || p.source === 'sessionStorage') {
@@ -116,8 +123,9 @@ export function renderTimeline(report) {
 <main><small>SELECTED APPLICATION DATA · LOCAL OBSERVATIONS · State Lens ${escape(report.libraryVersion ?? 'unspecified')}</small><h1>${escape(report.title)}</h1><p>UI steps beside the data they leave behind.</p><div class="layout"><nav id="steps" aria-label="Recorded checkpoints"></nav><section><h2 id="label"></h2><p id="status" class="badge"></p><div class="cards"><div><img id="screen" alt="Application screenshot at this checkpoint"><p><small id="screen-status"></small></p></div><div><h3>Changes since the preceding checkpoint</h3><pre id="changes" class="delta"></pre><h3>Selected values</h3><p id="value-note"></p><pre id="values"></pre></div></div></section></div><p><small>Snapshots are observations, not database commit timestamps, causal proof or assertions that all data is correct. INCONCLUSIVE is not absent or PASS. This file includes only the selected data and captured viewport, and stays local unless you share it.</small></p></main>
 <script type="application/json" id="data">${json}</script><script>
 const r=JSON.parse(document.getElementById('data').textContent), nav=document.getElementById('steps');
-const annotated=r.checkpoints.some(c=>Object.values(c.values).some(v=>v.valueEncoding==='json-with-undefined-paths-v1'));
-function select(i){const c=r.checkpoints[i];document.getElementById('label').textContent=c.label;document.getElementById('status').textContent=c.action.status+' · '+c.observedAt+' · '+(c.origin||'no HTTP origin')+' · '+c.scopeStatus;document.getElementById('changes').textContent=JSON.stringify(c.changes,null,2);document.getElementById('values').textContent=JSON.stringify(c.values,null,2);document.getElementById('value-note').textContent=annotated?'Annotated JSON projection: null at each undefinedPaths pointer represents an observed undefined, not a saved null. Pointers escape ~ and /; an empty pointer means the entire selected value.':'';const img=document.getElementById('screen');img.hidden=!c.screenshot;if(c.screenshot)img.src='data:image/png;base64,'+c.screenshot;else img.removeAttribute('src');document.getElementById('screen-status').textContent=c.screenshotError||'';[...nav.children].forEach((b,j)=>b.setAttribute('aria-pressed',String(j===i)));}
+const annotated=r.checkpoints.some(c=>Object.values(c.values).some(v=>v.undefinedPaths?.length));
+const dated=r.checkpoints.some(c=>Object.values(c.values).some(v=>v.datePaths?.length));
+function select(i){const c=r.checkpoints[i];document.getElementById('label').textContent=c.label;document.getElementById('status').textContent=c.action.status+' · '+c.observedAt+' · '+(c.origin||'no HTTP origin')+' · '+c.scopeStatus;document.getElementById('changes').textContent=JSON.stringify(c.changes,null,2);document.getElementById('values').textContent=JSON.stringify(c.values,null,2);document.getElementById('value-note').textContent=[annotated?'Annotated JSON projection: null at each undefinedPaths pointer represents an observed undefined, not a saved null. Pointers escape ~ and /; an empty pointer means the entire selected value.':'',dated?'Valid Date values are ISO strings at datePaths pointers, not saved plain strings. Pointers escape ~ and /; an empty pointer means the entire selected value.':''].filter(Boolean).join(' ');const img=document.getElementById('screen');img.hidden=!c.screenshot;if(c.screenshot)img.src='data:image/png;base64,'+c.screenshot;else img.removeAttribute('src');document.getElementById('screen-status').textContent=c.screenshotError||'';[...nav.children].forEach((b,j)=>b.setAttribute('aria-pressed',String(j===i)));}
 r.checkpoints.forEach((c,i)=>{const b=document.createElement('button');b.textContent=(i+1)+'. '+c.label;b.onclick=()=>select(i);nav.appendChild(b)});if(r.checkpoints.length)select(0);
 </script></html>`;
 }
@@ -165,7 +173,7 @@ export function createStateLens(page, { probes, timeoutMs = 750, screenshots = t
         catch (error) { await capture(`${label} · failed`, { status: 'FAILED', error: describeError(error) }); throw error; }
       } finally { running = false; }
     },
-    report() { return { schema: 2, libraryVersion: LIBRARY_VERSION, title, probes: structuredClone(selected), checkpoints: structuredClone(checkpoints) }; },
+    report() { return { schema: 3, libraryVersion: LIBRARY_VERSION, title, probes: structuredClone(selected), checkpoints: structuredClone(checkpoints) }; },
     async writeHTML(path) { await writeFile(path, renderTimeline(this.report()), { flag: 'wx', mode: 0o600 }); },
   };
 }
