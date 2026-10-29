@@ -86,8 +86,7 @@ standard Playwright comparisons. Open `reload-loss-state-lens.html` there.
 The consumer example
 uses the ordinary Playwright test runner and attaches its local HTML report.
 Requires Node22+, an existing Playwright browser,
-and Chromium for the measured IndexedDB behavior. Tested with Playwright1.64.0;
-other versions/browsers are not verified. The library does not import Playwright
+and Chromium for the measured IndexedDB behavior. Operator checks use Playwright1.64.0/Chromium. An author [reports 0.2.0 use with Playwright1.63.0](https://bsky.app/profile/tomu963.bsky.social/post/3myzc4bivbw2c) on one own-app workflow; broader version/browser compatibility is unverified. The library does not import Playwright
 or require an API key; the caller provides its existing `page`.
 
 ## Limits
@@ -112,8 +111,10 @@ or require an API key; the caller provides its existing `page`.
 - The report includes selected app data and viewport screenshots. It is local,
   has no upload or telemetry, and must be reviewed before sharing. Synthetic
   comparisons are separate from independent users running their own apps.
-- Experimental development package; no independent adoption or measured
-  developer time savings has been established.
+- Experimental development package. One author [reports own-app use and an
+  updated-version rerun](https://bsky.app/profile/tomu963.bsky.social/post/3myzc4bivbw2c); developer time saving has not been measured.
+  The immutable 0.2.0 tarball README predates that later report; its library is
+  unchanged. This source README contains the subsequent documentation update.
 
 ## Try it on your own app
 
