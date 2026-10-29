@@ -16,6 +16,32 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    'docs/aichance-playwright-state-lens-0.1.0-experimental.1.tgz',
+    'docs/aichance-playwright-state-lens-0.1.0-experimental.1.tgz.sha256',
+    'docs/state-lens.html',
+    'docs/state-lens-good.html',
+    'docs/state-lens-results.md',
+    'docs/state-lens-measurements.json',
+    'docs/state-lens-preview.png',
+    'docs/state-lens-demo.mp4',
+    'experiments/state-lens/prepare_replay.py',
+    'tools/edit-undo/LICENSE',
+    'tools/edit-undo/README.md',
+    'tools/edit-undo/cli.mjs',
+    'tools/edit-undo/demo.mjs',
+    'tools/edit-undo/package.json',
+    'tools/edit-undo/preview.mjs',
+    'tools/edit-undo/tests/preview.test.mjs',
+    'tools/playwright-state-lens/LICENSE',
+    'tools/playwright-state-lens/README.md',
+    'tools/playwright-state-lens/demo.mjs',
+    'tools/playwright-state-lens/demo/fixture.mjs',
+    'tools/playwright-state-lens/examples/consumer.spec.mjs',
+    'tools/playwright-state-lens/lens.mjs',
+    'tools/playwright-state-lens/package-lock.json',
+    'tools/playwright-state-lens/package.json',
+    'tools/playwright-state-lens/playwright.config.mjs',
+    'tools/playwright-state-lens/tests/lens.test.mjs',
     'docs/leak-regression-lab-anon-grants.md',
     'docs/leak-regression-lab-anon-measurements.json',
     'docs/leak-regression-lab-v0.1.3.zip',
@@ -734,6 +760,10 @@ _MISSING = object()
 _WORKSPACE_DIRS = frozenset({".demo-forge-output", ".demo-forge-venv"})
 _DOTS_WORKSPACE_PATHS = frozenset(
     {
+        "tools/playwright-state-lens/node_modules",
+        "tools/playwright-state-lens/.state-lens-output",
+        "tools/playwright-state-lens/test-results",
+        "tools/edit-undo/.edit-undo-output",
         "tools/dots-studio/node_modules",
         "tools/dots-studio/dist",
         "tools/app-crash-lab/node_modules",
