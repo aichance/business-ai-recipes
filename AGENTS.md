@@ -1,3 +1,20 @@
+# Developer-tool comparison
+
+This checkout starts from a verified public-source commit. Preserve all existing products.
+
+- Scope: `tools/edit-undo/`, `tools/playwright-state-lens/`, their synthetic comparison fixtures, and focused documentation.
+- Runtime: Node22+, Git, existing Playwright. Prefer built-ins and pinned existing dependencies.
+- Run each tool's `npm test` and synthetic comparison command before reporting behavior. User adoption is separate from operator testing.
+- Edit Undo begins as a preview-only prototype. It must not mutate the target project or Git index. Reject unsafe paths, ambiguous states and unsupported file types. Do not add arbitrary-project apply before recovery/drift/conflict tests and independent review.
+- State Lens observes explicitly selected application storage. Use synthetic local apps for tests. Record unavailable observations separately from absent data. Do not claim commit timing or root-cause proof.
+- No network Git operations, generic GitHub writes, auth changes, company/private repository access, security experiments, new automations or external messages from this checkout. Publication uses the already-authorized dedicated browser route after verification.
+- Review model restriction: gpt-6.1-sol/MAX for delegated review; no other-model CLI probe.
+- Commit only scoped, reviewed source/tests/docs. Keep local reports, captured app data and dependencies out of Git.
+
+# Preserved product instructions
+
+The following product-specific instructions remain in place for their respective tools. This task changes only the two new prototypes; it does not restart the earlier security product or its experiments.
+
 # Leak Regression Lab scope
 
 `tools/leak-regression-lab/` is the current flagship: dependency-free Node22 two-normal-user read isolation for declared synthetic Supabase test rows and private objects. Ordinary checker use is explicitly opt-in (`--live`), needs no service-role key, performs no application mutations, refuses redirects and keeps private records/credentials out of shareable reports. Local fixture administration is separate and loopback-only. `docs/leak-regression-lab-measurements.json` records real operator synthetic HTTP controls; replay/demo activity is not third-party adoption. See the tool's AGENTS and README for scope. Before release also run `node --test tools/leak-regression-lab/test/*.test.mjs` and `python3 -B tools/leak-regression-lab/package.py --check`. The default root checks remain offline and key-free. Preserve prior tool archives and CI pins.

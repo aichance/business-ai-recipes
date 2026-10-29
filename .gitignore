@@ -5,3 +5,9 @@ __pycache__/
 .cutroom/
 .demo-forge-output/
 .demo-forge-venv/
+
+# Local prototype dependencies and captured project data
+/tools/playwright-state-lens/node_modules/
+/tools/playwright-state-lens/.state-lens-output/
+/tools/playwright-state-lens/test-results/
+/tools/edit-undo/.edit-undo-output/

@@ -1,5 +1,33 @@
 # aichance's developer tools
 
+## State Lens — which save step changed your draft?
+
+Put selected **localStorage / IndexedDB values, field changes and screenshots**
+beside the actions in your existing Playwright test. Open one local HTML report
+when a save/reload flow fails. Experimental, MIT, no account or API key.
+
+[![Actual selected-state timeline from an authored broken save/reload fixture](docs/state-lens-preview.png)](https://aichance.github.io/business-ai-recipes/state-lens.html)
+
+[**Replay the recorded example**](https://aichance.github.io/business-ai-recipes/state-lens.html) · [**Add to your own Playwright test**](tools/playwright-state-lens#add-it-to-your-existing-playwright-test) · [**26-second measured replay**](https://aichance.github.io/business-ai-recipes/state-lens-demo.mp4)
+
+```sh
+npm install --save-dev https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.1.0-experimental.1.tgz
+```
+
+Use this from a Node22+ project that already has Playwright. Select a known
+storage key, wrap the test's actions with `lens.step`, and keep its normal
+assertions. [Copy the integration](tools/playwright-state-lens). Reports stay
+local and include selected data/screenshots; review them before sharing.
+
+**Measured example:** the authored broken app says "Saved", then reload changes
+the selected draft body to an empty string. The normal control retains it.
+Standard Playwright snapshots contain the same values; State Lens adds selected
+step-by-step field differences and the viewport in one HTML. Time savings and
+independent adoption are still unproven. [Results and limits](docs/state-lens-results.md).
+
+<details>
+<summary>Earlier experiment: Leak Regression Lab</summary>
+
 ## Leak Regression Lab — your DB passes. What about private attachments?
 
 ![Recorded operator fixture: all six database observations pass while a public Storage bucket exposes six private-file probes. This is a replay of synthetic HTTP measurements, not a scan of the viewer.](docs/leak-regression-lab-preview.png)
@@ -16,6 +44,8 @@ Test Supabase row **and file** isolation with two normal accounts, an anon/publi
 
 The earlier v0.1.2 archive controls used one local Supabase stack, two configuration-only ownership layouts and six states each. That archive detected authored row/object leaks and public buckets; denying all database users remained `INCONCLUSIVE`, and restoring correct access passed. These are historical operator synthetic controls, separate from the v0.1.3 measurements above, not independent adoption or a new Supabase vulnerability. Checks cover declared read paths only, not whole-app security.
 
+
+</details>
 
 ## Agent Relay Check — inspect AGENTS.md selection, then test receipt
 
