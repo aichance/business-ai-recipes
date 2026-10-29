@@ -7,12 +7,11 @@ import html
 import io
 import json
 from pathlib import Path
+import re
 import shutil
 import subprocess
+import tarfile
 import tempfile
-
-from PIL import Image, ImageDraw, ImageFont
-
 
 def main():
     parser = argparse.ArgumentParser()
@@ -22,19 +21,47 @@ def main():
     parser.add_argument('--font', default='/System/Library/Fonts/Supplemental/Arial.ttf')
     parser.add_argument('--pages-only', action='store_true')
     args = parser.parse_args()
+    if not args.pages_only:
+        from PIL import Image, ImageDraw, ImageFont
+
     out = args.out.resolve()
     out.mkdir(parents=True, exist_ok=True)
-    name = 'aichance-playwright-state-lens-0.1.0-experimental.1.tgz'
-    archive = out / name
-    digest = hashlib.sha256(archive.read_bytes()).hexdigest()
-    (out / (name + '.sha256')).write_text(f'{digest}  {name}\n')
-    standalone = 'state-lens-v0.1.0-experimental.1.mjs'
     source = Path(__file__).resolve().parents[2] / 'tools' / 'playwright-state-lens'
+    version = json.loads((source / 'package.json').read_text())['version']
+    if not re.fullmatch(r'\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?', version):
+        raise SystemExit('Refusing an invalid package version')
+    reported = re.search(r"^const LIBRARY_VERSION = '([^']+)';$", (source / 'lens.mjs').read_text(), re.MULTILINE)
+    if not reported or reported.group(1) != version:
+        raise SystemExit('Refusing library-report/package version mismatch')
+    name = f'aichance-playwright-state-lens-{version}.tgz'
+    archive = out / name
+    with tarfile.open(archive) as bundle:
+        for filename in ['package.json', 'lens.mjs', 'LICENSE']:
+            member = bundle.getmember('package/' + filename)
+            if not member.isfile() or bundle.extractfile(member).read() != (source / filename).read_bytes():
+                raise SystemExit(f'Refusing package/source mismatch: {filename}')
+    digest = hashlib.sha256(archive.read_bytes()).hexdigest()
+    standalone = f'state-lens-v{version}.mjs'
     license_bytes = (source / 'LICENSE').read_bytes().rstrip()
     assert b'*/' not in license_bytes
     module = b'/*\n' + license_bytes + b'\n*/\n' + (source / 'lens.mjs').read_bytes()
-    (out / standalone).write_bytes(module)
-    (out / (standalone + '.sha256')).write_text(hashlib.sha256(module).hexdigest() + '  ' + standalone + '\n')
+    recordings = ['state-lens-recorded-v0.1.0-experimental.1.html', 'state-lens-good-recorded-v0.1.0-experimental.1.html']
+    immutable = {
+        name + '.sha256': f'{digest}  {name}\n'.encode(),
+        standalone: module,
+        standalone + '.sha256': (hashlib.sha256(module).hexdigest() + '  ' + standalone + '\n').encode(),
+        **{filename: (source.parents[1] / 'docs' / filename).read_bytes() for filename in recordings},
+    }
+    # Check all conflicts before writing; never put current code under an older version name.
+    for filename, content in immutable.items():
+        path = out / filename
+        if path.exists() and path.read_bytes() != content:
+            raise SystemExit(f'Refusing to replace immutable asset: {filename}')
+    for filename, content in immutable.items():
+        path = out / filename
+        if not path.exists():
+            with path.open('xb') as output:
+                output.write(content)
     comparison = json.loads((args.input / 'comparison.json').read_text())
     assert len(comparison['outcomes']) == 2
     assert all(x['valuesAgree'] and x['standardAlsoContainsData'] for x in comparison['outcomes'])
@@ -42,8 +69,9 @@ def main():
     command = "import { createStateLens } from './" + standalone + "';"
     banner = '''<section class="trial"><strong>STATE LENS · EXPERIMENTAL</strong>
 <p>Recorded save/reload observations from an authored synthetic app. Choose a checkpoint below. This page does not run against your app.</p>
+<p>Current download: ''' + html.escape(version) + '''. The recorded observations below are separate from the download version. Preserved earlier recording: <a href="''' + recordings[0] + '''">broken</a> / <a href="''' + recordings[1] + '''">normal</a>.</p>
 <p><a href="#start">Add to your Playwright test</a> · <a href="state-lens.html">Broken control</a> · <a href="state-lens-good.html">Normal control</a> · <a href="https://github.com/aichance/business-ai-recipes/tree/main/tools/playwright-state-lens">Source</a></p>
-<details id="start"><summary>Use it in your own app</summary><p>Already use Playwright with Node22+? <a href="''' + standalone + '''" download>Download the one-file library</a> (<a href="''' + standalone + '''.sha256">SHA256</a>). Place it next to your test without replacing an existing copy, then import:</p><pre>''' + html.escape(command) + '''</pre>
+<details><summary>Use it in your own app</summary><p id="start">Already use Playwright with Node22+? <a href="''' + standalone + '''" download>Download the one-file library</a> (<a href="''' + standalone + '''.sha256">SHA256</a>). Place it next to your test without replacing an existing copy, then import:</p><pre>''' + html.escape(command) + '''</pre>
 <p>Import createStateLens, select a known storage key and wrap your existing UI actions with lens.step. Keep your normal assertions. Attach the local HTML in finally.</p>
 <p><a href="https://github.com/aichance/business-ai-recipes/blob/main/docs/state-lens-install.md">Copy the integration and full example</a> · <a href="https://github.com/aichance/business-ai-recipes/blob/main/docs/state-lens-results.md">Measurements and limits</a> · <a href="https://github.com/aichance/business-ai-recipes/issues/new?title=%5BState%20Lens%5D%20Own-app%20trial">Report a trial or blocker</a></p>
 <p>Standard Trace/storageState already contain the underlying data. This experiment adds selected per-step field differences and screenshots in one HTML. Reports contain selected app data and stay local unless shared.</p></details></section>'''
