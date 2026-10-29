@@ -1,0 +1,45 @@
+{
+  "observedAt": "2026-10-29T04:41:37.971Z",
+  "scope": "synthetic operator measurements, not external adoption",
+  "outcomes": [
+    {
+      "mode": "reload-loss",
+      "baselineCheckpoints": 4,
+      "lensCheckpoints": 4,
+      "baselineFinal": {
+        "body": "",
+        "revision": 2
+      },
+      "lensFinal": {
+        "body": "",
+        "revision": 2
+      },
+      "valuesAgree": true,
+      "selectedChangePaths": [
+        "$.localDraft.value.body",
+        "$.localDraft.value.revision",
+        "$.persistedDraft.value.body",
+        "$.persistedDraft.value.revision"
+      ],
+      "standardAlsoContainsData": true,
+      "lensAdds": "Selected per-step field differences and viewport in one local HTML; standard snapshots already contain the data."
+    },
+    {
+      "mode": "good",
+      "baselineCheckpoints": 4,
+      "lensCheckpoints": 4,
+      "baselineFinal": {
+        "body": "Keep this launch draft",
+        "revision": 1
+      },
+      "lensFinal": {
+        "body": "Keep this launch draft",
+        "revision": 1
+      },
+      "valuesAgree": true,
+      "selectedChangePaths": [],
+      "standardAlsoContainsData": true,
+      "lensAdds": "Selected per-step field differences and viewport in one local HTML; standard snapshots already contain the data."
+    }
+  ]
+}
