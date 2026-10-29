@@ -1,6 +1,9 @@
 # State Lens: selected values beside the UI steps
 
-Version: **0.1.0-experimental.1**. [Recorded report and trial entry](https://aichance.github.io/business-ai-recipes/state-lens.html).
+Current download: **0.4.0-experimental.1**. The authored control below began in0.1;
+its preserved recordings remain linked on the replay page. The current0.4
+synthetic rerun retains both native-agreement outcomes. [Date values and type
+annotations](state-lens-dates.md). [Recorded report and trial entry](https://aichance.github.io/business-ai-recipes/state-lens.html).
 
 The use case is an existing Playwright test whose UI says Saved, but a later
 operation changes a draft. Select known localStorage/IndexedDB values and wrap
@@ -53,7 +56,9 @@ comparison. Opening the static public page replays those recorded observations;
 it does not run against your browser's storage or another app.
 
 The local checks used Node22.23.4 and Playwright1.64.0 with actual Chromium:
-14 behavior tests and one ordinary Playwright-runner consumer test passed.
+The original0.1 verification passed14 behavior tests and one ordinary
+Playwright-runner consumer test. Current0.4 includes additional Date, undefined
+and sessionStorage regressions; the bundled source tests reproduce them.
 An extracted npm tarball omits package-lock by npm design; use
 `npm install --ignore-scripts` there. An existing app can
 [install the same common package directly](../tools/playwright-state-lens/README.md#add-it-to-your-existing-playwright-test).

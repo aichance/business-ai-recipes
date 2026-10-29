@@ -1,5 +1,8 @@
 # State Lens0.2.0: optional undefined fields
 
+This page records the0.2 change. The current0.4 release adds [valid Date values
+with explicit type paths](state-lens-dates.md) and reports schema3.
+
 An external developer [reported](https://bsky.app/profile/tomu963.bsky.social/post/3myz3cehsmv2g)
 trying State Lens in an existing Playwright transaction edit/reload/delete flow.
 Test-seeded records could be read, but app-saved records with eight optional

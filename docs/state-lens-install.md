@@ -23,10 +23,10 @@ Follow the project's instructions and preserve its current test runner.
    browser-persisted workflow are missing, report that blocker and stop;
    do not upgrade dependencies or substitute the library's demo.
 
-2. Use the common MIT 0.3.0-experimental.1 module:
-   https://aichance.github.io/business-ai-recipes/state-lens-v0.3.0-experimental.1.mjs
+2. Use the common MIT 0.4.0-experimental.1 module:
+   https://aichance.github.io/business-ai-recipes/state-lens-v0.4.0-experimental.1.mjs
    Expected SHA256:
-   31c563caf9a7cac9ce7dc5aae7b9906ba1d7888ae01f14867b283243884f1025
+   9714c7c2bc11a591a4a90e3b20bb9e51d61fa65e325473da0e118644d760d604
    Review it and verify the bytes before importing it in the Node-side test.
    Save it beside the test without overwriting an existing file. Do not
    change npm settings, package metadata, app code or the existing test data.
@@ -34,7 +34,7 @@ Follow the project's instructions and preserve its current test runner.
 3. Select ONE known localStorage/sessionStorage key or IndexedDB database,
    store and key already exercised by that test, using its synthetic data.
    Raw storage text is allowed; use json:true only for known JSON text.
-   IndexedDB records must be plain JSON plus explicit undefined, depth<=12,
+   IndexedDB records may contain plain JSON, explicit undefined and valid Date values, depth<=12,
    <=64KiB including metadata. If unsupported, report the limit and stop.
 
 4. Create one lens for the existing Page. Wrap its existing UI actions in
@@ -60,14 +60,14 @@ Playwright/`node:test`.
 
 ## Copy one versioned file
 
-1. [Download state-lens-v0.3.0-experimental.1.mjs](https://aichance.github.io/business-ai-recipes/state-lens-v0.3.0-experimental.1.mjs) and its [SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.3.0-experimental.1.mjs.sha256).
+1. [Download state-lens-v0.4.0-experimental.1.mjs](https://aichance.github.io/business-ai-recipes/state-lens-v0.4.0-experimental.1.mjs) and its [SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.4.0-experimental.1.mjs.sha256).
 2. Read the file, then place it next to an existing Playwright test. Keep an
    existing file instead of overwriting it. The file contains its MIT license
-   and the same implementation as the common 0.3.0-experimental.1 package.
+   and the same implementation as the common 0.4.0-experimental.1 package.
 3. Import it **in the Node-side test**, not in your app's browser bundle:
 
 ```js
-import { createStateLens } from './state-lens-v0.3.0-experimental.1.mjs';
+import { createStateLens } from './state-lens-v0.4.0-experimental.1.mjs';
 ```
 
 There is no additional npm installation, account, model or API key. Your
@@ -141,9 +141,9 @@ report. Your existing assertions and browser lifecycle stay in the test.
 
 ## Common package alternative
 
-The [current common tgz](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.3.0-experimental.1.tgz)
-and [checksum](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.3.0-experimental.1.tgz.sha256)
-contain the same0.3.0 library, tests, demo and examples. npm setups that permit
+The [current common tgz](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.4.0-experimental.1.tgz)
+and [checksum](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.4.0-experimental.1.tgz.sha256)
+contain the same0.4.0 library, tests, demo and examples. npm setups that permit
 URL dependencies can install it as a development dependency, changing their
 package metadata. npm12 may refuse remote URL dependencies; the one-file route
 avoids changing that setting. It is the same common library for each app.
@@ -161,11 +161,20 @@ existing Playwright Page; it does not synchronize or restore tabs.
 
 Version0.2.0 accepts plain records/dense arrays with explicit `undefined` values.
 The JSON report uses annotated null placeholders and a separate `undefinedPaths`
-list so `undefined`, stored null and absent fields remain distinct. `report()`
-now emits schema2 and `libraryVersion`; account for that if parsing the report
-programmatically. [Exact representation, synthetic checks and limitations](state-lens-undefined.md).
-The64KiB limit counts UTF8 JSON bytes including undefined metadata; Date/Map/Set,
-BigInt, cycles, sparse/extended arrays and depth>12 remain INCONCLUSIVE.
+list so `undefined`, stored null and absent fields remain distinct. This was
+introduced in schema2; the current `report()` emits schema3 and `libraryVersion`.
+Handle the schema explicitly if parsing the report programmatically. [Exact representation, synthetic checks and limitations](state-lens-undefined.md).
+The64KiB limit counts UTF8 JSON bytes including path metadata. Map/Set, BigInt,
+cycles, sparse/extended arrays, invalid Date and depth>12 remain INCONCLUSIVE.
+
+## Date values in IndexedDB
+
+Version0.4.0 records valid Date values as UTC ISO text plus `datePaths`, so a
+Date and an ordinary string containing the same text remain different. This is
+an annotated JSON projection; it does not rewrite or revive application values.
+A record containing Date uses `valueEncoding: "json-with-type-paths-v1"`; any
+undefined annotations remain in `undefinedPaths`. [Representation, direct-read
+comparison and limits](state-lens-dates.md). Pinned0.3 files remain unchanged.
 
 ## Read the result
 
