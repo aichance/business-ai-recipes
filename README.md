@@ -8,15 +8,17 @@ when a save/reload flow fails. Experimental, MIT, no account or API key.
 
 [![Actual selected-state timeline from an authored broken save/reload fixture](docs/state-lens-preview.png)](https://aichance.github.io/business-ai-recipes/state-lens.html)
 
-[**Replay the recorded example**](https://aichance.github.io/business-ai-recipes/state-lens.html) · [**Add to your own Playwright test**](tools/playwright-state-lens#add-it-to-your-existing-playwright-test) · [**26-second measured replay**](https://aichance.github.io/business-ai-recipes/state-lens-demo.mp4)
+[**Replay the recorded example**](https://aichance.github.io/business-ai-recipes/state-lens.html) · [**Copy one file into your Playwright test**](docs/state-lens-install.md) · [**26-second measured replay**](https://aichance.github.io/business-ai-recipes/state-lens-demo.mp4)
 
-```sh
-npm install --save-dev https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.1.0-experimental.1.tgz
+Download the [versioned library](https://aichance.github.io/business-ai-recipes/state-lens-v0.1.0-experimental.1.mjs) ([SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.1.0-experimental.1.mjs.sha256)) next to your existing test, then:
+
+```js
+import { createStateLens } from './state-lens-v0.1.0-experimental.1.mjs';
 ```
 
 Use this from a Node22+ project that already has Playwright. Select a known
 storage key, wrap the test's actions with `lens.step`, and keep its normal
-assertions. [Copy the integration](tools/playwright-state-lens). Reports stay
+assertions. No new npm dependency is needed. [Copy the integration](docs/state-lens-install.md). Reports stay
 local and include selected data/screenshots; review them before sharing.
 
 **Measured example:** the authored broken app says "Saved", then reload changes
