@@ -1,0 +1,13 @@
+{
+  "name": "@aichance/playwright-state-lens",
+  "version": "0.1.0-experimental.1",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "exports": { ".": "./lens.mjs" },
+  "scripts": { "test": "node --test --test-concurrency=1 tests/*.test.mjs", "test:consumer": "playwright test", "demo": "node demo.mjs" },
+  "peerDependencies": { "@playwright/test": ">=1.51 <2" },
+  "devDependencies": { "@playwright/test": "1.64.0" },
+  "files": ["lens.mjs", "demo.mjs", "demo", "tests", "examples", "playwright.config.mjs", "README.md", "LICENSE"],
+  "license": "MIT"
+}
