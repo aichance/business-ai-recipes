@@ -8,12 +8,12 @@ when a save/reload flow fails. Experimental, MIT, no account or API key.
 
 [![Actual selected-state timeline from an authored broken save/reload fixture](docs/state-lens-preview.png)](https://aichance.github.io/business-ai-recipes/state-lens.html)
 
-[**Replay the recorded example**](https://aichance.github.io/business-ai-recipes/state-lens.html) · [**Copy one file into your Playwright test**](docs/state-lens-install.md) · [**26-second measured replay**](https://aichance.github.io/business-ai-recipes/state-lens-demo.mp4)
+[**Replay the recorded example**](https://aichance.github.io/business-ai-recipes/state-lens.html) · [**Copy one file into your Playwright test**](docs/state-lens-install.md) · [**26-second replay (original0.1 recording)**](https://aichance.github.io/business-ai-recipes/state-lens-demo.mp4)
 
-Download the [versioned library](https://aichance.github.io/business-ai-recipes/state-lens-v0.3.0-experimental.1.mjs) ([SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.3.0-experimental.1.mjs.sha256)) next to your existing test, then:
+Download the [versioned library](https://aichance.github.io/business-ai-recipes/state-lens-v0.4.0-experimental.1.mjs) ([SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.4.0-experimental.1.mjs.sha256)) next to your existing test, then:
 
 ```js
-import { createStateLens } from './state-lens-v0.3.0-experimental.1.mjs';
+import { createStateLens } from './state-lens-v0.4.0-experimental.1.mjs';
 ```
 
 Use this from a Node22+ project that already has Playwright. Select a known
@@ -30,6 +30,10 @@ savings have not been measured. [Results and limits](docs/state-lens-results.md)
 **Existing test integration:** nvim-edu’s native regression keeps 43 passing checks
 with the common helper; an authored best-record overwrite gives the same four
 failures in both variants. [Real app timelines, caller-owned tests and scope](docs/state-lens-nvim-native.md). Operator runs with synthetic progress.
+
+**Dated IndexedDB records:** version0.4.0 keeps Date values distinct from ISO
+strings using explicit type paths, including alongside undefined fields.
+[Representation and native comparison](docs/state-lens-dates.md).
 
 **Tab-specific drafts:** version0.3.0 adds selected `sessionStorage` values. Use
 one lens per existing Playwright Page; compare its own save/reload steps while

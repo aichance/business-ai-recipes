@@ -1,4 +1,4 @@
-# Playwright State Lens 0.3.0-experimental.1
+# Playwright State Lens 0.4.0-experimental.1
 
 Put explicitly selected application storage beside your normal UI steps.
 The local HTML shows the viewport, selected localStorage/sessionStorage/IndexedDB values and
@@ -15,11 +15,11 @@ or [read the comparison and limits](../../docs/state-lens-results.md).
 
 From your app's project directory, with Node22+ and Playwright already installed:
 
-Download the [versioned MIT file](https://aichance.github.io/business-ai-recipes/state-lens-v0.3.0-experimental.1.mjs) and its [SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.3.0-experimental.1.mjs.sha256), review it, and place it beside your existing test without overwriting an older file. No additional npm dependency, account, model or API key is needed.
+Download the [versioned MIT file](https://aichance.github.io/business-ai-recipes/state-lens-v0.4.0-experimental.1.mjs) and its [SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.4.0-experimental.1.mjs.sha256), review it, and place it beside your existing test without overwriting an older file. No additional npm dependency, account, model or API key is needed.
 In your existing test, after opening your app, choose a storage key you know:
 
 ```js
-import { createStateLens } from './state-lens-v0.3.0-experimental.1.mjs';
+import { createStateLens } from './state-lens-v0.4.0-experimental.1.mjs';
 
 const lens = createStateLens(page, {
   probes: [{ name: 'draft', source: 'localStorage', key: 'app-draft', json: true }],
@@ -58,6 +58,18 @@ Keep your own reload/readiness/assertion steps. Missing values, saved JSON null,
 and refused reads remain different observations. The existing size/depth limits
 apply. [Usage and measured browser checks](https://github.com/aichance/business-ai-recipes/blob/main/docs/state-lens-session-storage.md).
 
+## Date values: report schema3
+
+Version0.4.0 accepts valid Date values in a selected IndexedDB record. The JSON
+projection stores their UTC ISO text and lists their RFC6901 pointers in
+`datePaths`. A Date and a stored string with identical text stay distinct in
+per-step differences. Records containing Date use
+`valueEncoding: "json-with-type-paths-v1"`; mixed undefined values keep their
+`undefinedPaths` annotations. An invalid Date remains INCONCLUSIVE. The observer
+does not rewrite stored values or revive strings into Date.
+[Native comparison, representation and limits](../../docs/state-lens-dates.md).
+Earlier0.3 files remain available unchanged.
+
 ## Undefined fields: report schema2
 
 Version0.2.0-experimental.1 records `quantity: undefined` without dropping the
@@ -67,13 +79,13 @@ and `valueEncoding: "json-with-undefined-paths-v1"` identify its actual type.
 A stored null has no undefined annotation; a missing field is absent in `value`.
 Pointers use RFC6901 escaping (`~` becomes `~0`, `/` becomes `~1`); `""` means
 the entire selected value. The HTML explains the projection beside its values.
-`report()` now emits `schema: 2` and `libraryVersion`. Consumers that parse its
-JSON must handle this version explicitly. The exported API is unchanged.
+This encoding was introduced in schema2. Current `report()` emits `schema: 3`
+and `libraryVersion`; JSON consumers must handle the schema explicitly. The exported API is unchanged.
 [Representation, synthetic checks and limitations](../../docs/state-lens-undefined.md).
 The older0.1.0 files and recorded example reports remain available unchanged.
 
 For npm environments allowing remote URL dependencies, the optional
-[versioned tgz](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.3.0-experimental.1.tgz)
+[versioned tgz](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.4.0-experimental.1.tgz)
 contains the same library, tests and examples. It changes package metadata if
 installed. npm12 may reject remote dependencies; the one-file route needs no
 npm setting change. When using the package, import from `@aichance/playwright-state-lens`.
@@ -105,9 +117,9 @@ or require an API key; the caller provides its existing `page`.
 
 - Up to16 selected probes. localStorage/sessionStorage may be raw text or parsed JSON; IndexedDB
   keys are string/finite number. Selected values may be plain JSON plus explicit
-  `undefined` fields or dense-array slots, depth<=12, <=64KiB of UTF8 JSON
-  including undefined-path metadata. Date/Map/Set/BigInt/cycles/sparse arrays
-  remain unsupported.
+  `undefined` fields or dense-array slots and valid Date values, depth<=12,
+  <=64KiB of UTF8 JSON including path metadata. Invalid Date, Map/Set/BigInt,
+  cycles and sparse arrays remain unsupported.
 - Probes and the screenshot are sequential observations, not one atomic snapshot,
   commit timestamps, cause proof or a guarantee of persistence.
 - Missing databases/stores, unsupported values and failed reads are

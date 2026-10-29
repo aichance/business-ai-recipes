@@ -76,8 +76,8 @@ test('undefined-valued records retain explicit types without changing IndexedDB'
   assert.deepEqual(await inspectRaw(), before);
   assert.deepEqual(before, { body: 'Synthetic transaction', quantityPresent: true, quantityType: 'undefined',
     nestedPresent: true, nestedType: 'undefined', arraySlotPresent: true, arraySlotType: 'undefined', nullSlot: null });
-  assert.equal(lens.report().schema, 2);
-  assert.equal(lens.report().libraryVersion, '0.3.0-experimental.1');
+  assert.equal(lens.report().schema, 3);
+  assert.equal(lens.report().libraryVersion, '0.4.0-experimental.1');
   const view = await page.context().newPage();
   await view.setContent(renderTimeline(lens.report()));
   assert.match(await view.locator('#value-note').textContent(), /undefinedPaths.*observed undefined/);
@@ -145,13 +145,13 @@ test('undefined-path ordering is stable and metadata counts toward the UTF8 limi
   assert.match(metadata.values.selectedRecord.reason, /64KiB/);
 });
 
-test('supporting undefined does not turn other structured-clone values into JSON', async t => {
+test('unsupported structured-clone values remain INCONCLUSIVE', async t => {
   const { page } = await setup(t);
   const lens = createStateLens(page, { probes: [probes[1]], screenshots: false });
-  for (const kind of ['date', 'map', 'set', 'bigint', 'cycle', 'depth']) {
+  for (const kind of ['invalid-date', 'map', 'set', 'bigint', 'cycle', 'depth']) {
     await page.evaluate(async kind => {
       let value;
-      if (kind === 'date') value = new Date(0);
+      if (kind === 'invalid-date') value = new Date(NaN);
       if (kind === 'map') value = new Map([['quantity', undefined]]);
       if (kind === 'set') value = new Set([undefined]);
       if (kind === 'bigint') value = 1n;
