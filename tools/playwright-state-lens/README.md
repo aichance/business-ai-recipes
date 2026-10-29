@@ -73,10 +73,12 @@ JSON must handle this version explicitly. The exported API is unchanged.
 The older0.1.0 files and recorded example reports remain available unchanged.
 
 For npm environments allowing remote URL dependencies, the optional
-[versioned tgz](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.2.0-experimental.1.tgz)
+[versioned tgz](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.3.0-experimental.1.tgz)
 contains the same library, tests and examples. It changes package metadata if
 installed. npm12 may reject remote dependencies; the one-file route needs no
 npm setting change. When using the package, import from `@aichance/playwright-state-lens`.
+Use this source README for current setup steps; published archives retain their
+release-time documentation.
 
 ## Run the bundled example
 
