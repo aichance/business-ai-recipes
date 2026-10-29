@@ -27,6 +27,11 @@ Standard Playwright snapshots contain the same values; State Lens adds selected
 step-by-step field differences and the viewport in one HTML. Time savings and
 independent adoption are still unproven. [Results and limits](docs/state-lens-results.md).
 
+**Existing test integration:** nvim-edu’s native regression keeps 43 passing checks
+with the common helper; an authored best-record overwrite gives the same four
+failures in both variants. [Real app timelines, caller-owned tests and scope](docs/state-lens-nvim-native.md). Operator runs with synthetic progress.
+
+
 <details>
 <summary>Earlier experiment: Leak Regression Lab</summary>
 
