@@ -20,6 +20,7 @@ def main():
     parser.add_argument('--preview', required=True, type=Path)
     parser.add_argument('--out', required=True, type=Path)
     parser.add_argument('--font', default='/System/Library/Fonts/Supplemental/Arial.ttf')
+    parser.add_argument('--pages-only', action='store_true')
     args = parser.parse_args()
     out = args.out.resolve()
     out.mkdir(parents=True, exist_ok=True)
@@ -27,17 +28,24 @@ def main():
     archive = out / name
     digest = hashlib.sha256(archive.read_bytes()).hexdigest()
     (out / (name + '.sha256')).write_text(f'{digest}  {name}\n')
+    standalone = 'state-lens-v0.1.0-experimental.1.mjs'
+    source = Path(__file__).resolve().parents[2] / 'tools' / 'playwright-state-lens'
+    license_bytes = (source / 'LICENSE').read_bytes().rstrip()
+    assert b'*/' not in license_bytes
+    module = b'/*\n' + license_bytes + b'\n*/\n' + (source / 'lens.mjs').read_bytes()
+    (out / standalone).write_bytes(module)
+    (out / (standalone + '.sha256')).write_text(hashlib.sha256(module).hexdigest() + '  ' + standalone + '\n')
     comparison = json.loads((args.input / 'comparison.json').read_text())
     assert len(comparison['outcomes']) == 2
     assert all(x['valuesAgree'] and x['standardAlsoContainsData'] for x in comparison['outcomes'])
     (out / 'state-lens-measurements.json').write_text(json.dumps(comparison, indent=2) + '\n')
-    command = 'npm install --save-dev https://aichance.github.io/business-ai-recipes/' + name
+    command = "import { createStateLens } from './" + standalone + "';"
     banner = '''<section class="trial"><strong>STATE LENS · EXPERIMENTAL</strong>
 <p>Recorded save/reload observations from an authored synthetic app. Choose a checkpoint below. This page does not run against your app.</p>
 <p><a href="#start">Add to your Playwright test</a> · <a href="state-lens.html">Broken control</a> · <a href="state-lens-good.html">Normal control</a> · <a href="https://github.com/aichance/business-ai-recipes/tree/main/tools/playwright-state-lens">Source</a></p>
-<details id="start"><summary>Use it in your own app</summary><p>From a Node22+ project that already uses Playwright:</p><pre>''' + html.escape(command) + '''</pre>
+<details id="start"><summary>Use it in your own app</summary><p>Already use Playwright with Node22+? <a href="''' + standalone + '''" download>Download the one-file library</a> (<a href="''' + standalone + '''.sha256">SHA256</a>). Place it next to your test without replacing an existing copy, then import:</p><pre>''' + html.escape(command) + '''</pre>
 <p>Import createStateLens, select a known storage key and wrap your existing UI actions with lens.step. Keep your normal assertions. Attach the local HTML in finally.</p>
-<p><a href="https://github.com/aichance/business-ai-recipes/tree/main/tools/playwright-state-lens#add-it-to-your-existing-playwright-test">Copy the integration and full example</a> · <a href="https://github.com/aichance/business-ai-recipes/blob/main/docs/state-lens-results.md">Measurements and limits</a> · <a href="https://github.com/aichance/business-ai-recipes/issues/new?title=%5BState%20Lens%5D%20Own-app%20trial">Report a trial or blocker</a></p>
+<p><a href="https://github.com/aichance/business-ai-recipes/blob/main/docs/state-lens-install.md">Copy the integration and full example</a> · <a href="https://github.com/aichance/business-ai-recipes/blob/main/docs/state-lens-results.md">Measurements and limits</a> · <a href="https://github.com/aichance/business-ai-recipes/issues/new?title=%5BState%20Lens%5D%20Own-app%20trial">Report a trial or blocker</a></p>
 <p>Standard Trace/storageState already contain the underlying data. This experiment adds selected per-step field differences and screenshots in one HTML. Reports contain selected app data and stay local unless shared.</p></details></section>'''
     style = '.trial{border:1px solid #354d61;background:#142432;padding:18px;border-radius:12px;margin-bottom:24px}.trial a{color:#b3f16d}.trial summary{cursor:pointer;font-weight:650}.trial p{line-height:1.6}.trial pre{font-size:13px}a{overflow-wrap:anywhere}'
     for mode, target in [('reload-loss', 'state-lens.html'), ('good', 'state-lens-good.html')]:
@@ -48,6 +56,9 @@ def main():
         content = content.replace('if(r.checkpoints.length)select(0);', 'if(r.checkpoints.length)select(r.checkpoints.length-1);', 1)
         (out / target).write_text(content)
     shutil.copyfile(args.preview, out / 'state-lens-preview.png')
+    if args.pages_only:
+        print(json.dumps({'package_unchanged_sha256': digest, 'standalone_sha256': hashlib.sha256(module).hexdigest(), 'mode': 'pages-only'}))
+        return
 
     broken = json.loads((args.input / 'reload-loss-state-lens.json').read_text())['checkpoints']
     normal = json.loads((args.input / 'good-state-lens.json').read_text())['checkpoints']
