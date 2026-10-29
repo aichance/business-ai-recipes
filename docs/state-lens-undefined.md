@@ -4,8 +4,7 @@ An external developer [reported](https://bsky.app/profile/tomu963.bsky.social/po
 trying State Lens in an existing Playwright transaction edit/reload/delete flow.
 Test-seeded records could be read, but app-saved records with eight optional
 undefined fields were INCONCLUSIVE. The report prompted this compatibility fix.
-Their exact installed version/runtime and successful rerun are not yet confirmed.
-This page describes our synthetic reproduction, not execution of their app.
+The author later [reported a successful 0.2.0 rerun](https://bsky.app/profile/tomu963.bsky.social/post/3myzc4bivbw2c) of the same own-app workflow: saved values, eight undefined paths, amount/allocation changes and the deletion tombstone were visible. They confirmed the earlier 0.1.0 run used Node24.14.0 / Playwright1.64.0; the updated run used Playwright1.63.0 (updated Node version was not specified). These are public self-reports; we did not access or execute their app. The checks below describe our separate synthetic reproduction.
 
 ## Read the annotated values
 
@@ -51,8 +50,7 @@ Known limits remain: Node22+, an existing Playwright page, Chromium with Playwri
 16probes, selected string/finite-number keys, depth12 and64KiB. Sequential
 observations/screenshots can affect timing; COMPLETED is not a data assertion.
 Keep normal app readiness and assertions. Reports contain selected data and
-screenshots and stay local unless shared. No measured developer time saving
-or external successful rerun is established by these operator checks.
+screenshots and stay local unless shared. Developer time saving has not been measured. The external rerun above is a separate author report, not a result of our operator checks.
 
 [Copy the common file](state-lens-install.md) or inspect the
 [implementation and tests](../tools/playwright-state-lens/). Earlier0.1.0 modules,
