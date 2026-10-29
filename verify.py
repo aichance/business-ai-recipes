@@ -16,6 +16,9 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    'docs/state-lens-recorded-v0.1.0-experimental.1.html',
+    'docs/state-lens-good-recorded-v0.1.0-experimental.1.html',
+    'experiments/state-lens/test_prepare_replay.py',
     'docs/state-lens-undefined.md',
     'docs/state-lens-v0.2.0-experimental.1.mjs',
     'docs/state-lens-v0.2.0-experimental.1.mjs.sha256',
@@ -2335,10 +2338,17 @@ def main() -> int:
         verify_relay_archive()
         verify_leak_regression_lab()
         result = verify()
+        replay = subprocess.run(
+            [sys.executable, '-B', str(Path(__file__).resolve().parent / 'experiments/state-lens/test_prepare_replay.py')],
+            capture_output=True, text=True, check=False,
+        )
+        if replay.returncode:
+            raise AssertionError('State Lens release regression failed: ' + replay.stdout + replay.stderr)
     except (AssertionError, OSError, ValueError) as exc:
         print(f"VERIFY_FAILED: {exc}", file=sys.stderr)
         return 1
     print(f"PASS: candidate boundary and synthetic fixture labels; files={result['files']}")
+    print('PASS: State Lens current-download and immutable-release regression checks')
     print("PASS: separate human-reviewed evidence boundary")
     print("PASS: deterministic prepare and schema validation")
     print("PASS: Jev line judgment fixture, abstention, keyless live refusal, and write boundary")

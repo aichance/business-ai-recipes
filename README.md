@@ -24,13 +24,15 @@ local and include selected data/screenshots; review them before sharing.
 **Measured example:** the authored broken app says "Saved", then reload changes
 the selected draft body to an empty string. The normal control retains it.
 Standard Playwright snapshots contain the same values; State Lens adds selected
-step-by-step field differences and the viewport in one HTML. Time savings and
-independent adoption are still unproven. [Results and limits](docs/state-lens-results.md).
+step-by-step field differences and the viewport in one HTML. Developer time
+savings have not been measured. [Results and limits](docs/state-lens-results.md).
 
 **Existing test integration:** nvim-edu’s native regression keeps 43 passing checks
 with the common helper; an authored best-record overwrite gives the same four
 failures in both variants. [Real app timelines, caller-owned tests and scope](docs/state-lens-nvim-native.md). Operator runs with synthetic progress.
 
+
+**An external own-app report:** [Tomu reports using 0.2.0 in an existing Playwright transaction edit/reload/delete flow](https://bsky.app/profile/tomu963.bsky.social/post/3myzc4bivbw2c). After the common-library update, saved-field changes, eight optional undefined fields and a deletion tombstone were visible. This follows the author's 0.1.0 trial; it is one author's self-report of use and an updated-version rerun, not proof of financial correctness or measured time saving.
 
 Version0.2.0 also records optional IndexedDB `undefined` fields distinctly from null or absent fields. [Representation and synthetic checks](docs/state-lens-undefined.md). Earlier recorded demos retain their original version.
 
