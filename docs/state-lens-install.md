@@ -4,6 +4,60 @@ Requires Node22+, an existing Playwright test project and its browser. The
 library adds selected localStorage/sessionStorage/IndexedDB observations and screenshots to
 your own UI steps. Your existing assertions still decide correctness.
 
+## Try with your coding agent
+
+Paste the request below into an agent already authorized to work on your app.
+It asks for one existing test, the same public library and a local report.
+Review the resulting test diff before keeping it. This is an optional setup
+recipe, not an autonomous installer or a promise of compatibility/time saving.
+For manual setup, [copy the versioned file](#copy-one-versioned-file).
+
+```text
+Add State Lens to ONE existing Playwright save/reload test in this project.
+Follow the project's instructions and preserve its current test runner.
+
+1. Inspect the relevant test and storage implementation. Do not read secrets,
+   browser profiles, user databases or unrelated projects. Confirm Node22+
+   and an existing Playwright installation/browser. Run the selected original
+   test and record its command/exit result. If prerequisites or a suitable
+   browser-persisted workflow are missing, report that blocker and stop;
+   do not upgrade dependencies or substitute the library's demo.
+
+2. Use the common MIT 0.3.0-experimental.1 module:
+   https://aichance.github.io/business-ai-recipes/state-lens-v0.3.0-experimental.1.mjs
+   Expected SHA256:
+   31c563caf9a7cac9ce7dc5aae7b9906ba1d7888ae01f14867b283243884f1025
+   Review it and verify the bytes before importing it in the Node-side test.
+   Save it beside the test without overwriting an existing file. Do not
+   change npm settings, package metadata, app code or the existing test data.
+
+3. Select ONE known localStorage/sessionStorage key or IndexedDB database,
+   store and key already exercised by that test, using its synthetic data.
+   Raw storage text is allowed; use json:true only for known JSON text.
+   IndexedDB records must be plain JSON plus explicit undefined, depth<=12,
+   <=64KiB including metadata. If unsupported, report the limit and stop.
+
+4. Create one lens for the existing Page. Wrap its existing UI actions in
+   lens.step, keeping all readiness waits INSIDE each step callback and
+   preserving the original assertions. In finally, write HTML once before
+   the existing browser cleanup; attach it with testInfo when available,
+   otherwise write to a new output directory. Keep the ordinary Trace.
+   Reference: https://github.com/aichance/business-ai-recipes/blob/main/docs/state-lens-install.md
+
+5. Rerun that same test. Report the library/Node/Playwright versions, command,
+   original and instrumented exit results, changed files, local HTML path,
+   and whether the selected differences add anything to the normal Trace.
+   A failed original assertion must stay a failure; INCONCLUSIVE is not PASS.
+   Do not publish source, app data, screenshots or the report. Do not count
+   a demo, --help or an operator-run fixture as use in my real project.
+```
+
+This request deliberately leaves your app's labels, keys and test command to
+its existing code. It does not generate a replacement app or a per-user fork
+of the helper. If your normal Trace is already sufficient, that is a useful
+result too. The manual sections below cover both Playwright Test and plain
+Playwright/`node:test`.
+
 ## Copy one versioned file
 
 1. [Download state-lens-v0.3.0-experimental.1.mjs](https://aichance.github.io/business-ai-recipes/state-lens-v0.3.0-experimental.1.mjs) and its [SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.3.0-experimental.1.mjs.sha256).
