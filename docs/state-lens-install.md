@@ -1,19 +1,19 @@
 # Use State Lens in your existing Playwright test
 
 Requires Node22+, an existing Playwright test project and its browser. The
-library adds selected localStorage/IndexedDB observations and screenshots to
+library adds selected localStorage/sessionStorage/IndexedDB observations and screenshots to
 your own UI steps. Your existing assertions still decide correctness.
 
 ## Copy one versioned file
 
-1. [Download state-lens-v0.2.0-experimental.1.mjs](https://aichance.github.io/business-ai-recipes/state-lens-v0.2.0-experimental.1.mjs) and its [SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.2.0-experimental.1.mjs.sha256).
+1. [Download state-lens-v0.3.0-experimental.1.mjs](https://aichance.github.io/business-ai-recipes/state-lens-v0.3.0-experimental.1.mjs) and its [SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.3.0-experimental.1.mjs.sha256).
 2. Read the file, then place it next to an existing Playwright test. Keep an
    existing file instead of overwriting it. The file contains its MIT license
-   and the same implementation as the common 0.2.0-experimental.1 package.
+   and the same implementation as the common 0.3.0-experimental.1 package.
 3. Import it **in the Node-side test**, not in your app's browser bundle:
 
 ```js
-import { createStateLens } from './state-lens-v0.2.0-experimental.1.mjs';
+import { createStateLens } from './state-lens-v0.3.0-experimental.1.mjs';
 ```
 
 There is no additional npm installation, account, model or API key. Your
@@ -87,14 +87,21 @@ report. Your existing assertions and browser lifecycle stay in the test.
 
 ## Common package alternative
 
-The [current common tgz](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.2.0-experimental.1.tgz)
-and [checksum](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.2.0-experimental.1.tgz.sha256)
-contain the same0.2.0 library, tests, demo and examples. npm setups that permit
+The [current common tgz](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.3.0-experimental.1.tgz)
+and [checksum](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.3.0-experimental.1.tgz.sha256)
+contain the same0.3.0 library, tests, demo and examples. npm setups that permit
 URL dependencies can install it as a development dependency, changing their
 package metadata. npm12 may refuse remote URL dependencies; the one-file route
 avoids changing that setting. It is the same common library for each app.
 The [previous0.1.0 file](state-lens-v0.1.0-experimental.1.mjs) and its recorded
 native-case reports remain unchanged.
+
+## Tab-specific sessionStorage
+
+Version0.3.0 also accepts `source: 'sessionStorage'` with a string key. Add
+`json: true` for JSON text and omit it for a raw string. Create one lens per
+existing Playwright Page; it does not synchronize or restore tabs.
+[Example, browser checks and limits](state-lens-session-storage.md).
 
 ## Optional fields in IndexedDB
 

@@ -1,7 +1,7 @@
-# Playwright State Lens 0.2.0-experimental.1
+# Playwright State Lens 0.3.0-experimental.1
 
 Put explicitly selected application storage beside your normal UI steps.
-The local HTML shows the viewport, selected localStorage/IndexedDB values and
+The local HTML shows the viewport, selected localStorage/sessionStorage/IndexedDB values and
 field differences at each checkpoint, including failed actions.
 
 This is an observation helper, not an automatic correctness checker. Standard
@@ -15,11 +15,11 @@ or [read the comparison and limits](../../docs/state-lens-results.md).
 
 From your app's project directory, with Node22+ and Playwright already installed:
 
-Download the [versioned MIT file](https://aichance.github.io/business-ai-recipes/state-lens-v0.2.0-experimental.1.mjs) and its [SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.2.0-experimental.1.mjs.sha256), review it, and place it beside your existing test without overwriting an older file. No additional npm dependency, account, model or API key is needed.
+Download the [versioned MIT file](https://aichance.github.io/business-ai-recipes/state-lens-v0.3.0-experimental.1.mjs) and its [SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.3.0-experimental.1.mjs.sha256), review it, and place it beside your existing test without overwriting an older file. No additional npm dependency, account, model or API key is needed.
 In your existing test, after opening your app, choose a storage key you know:
 
 ```js
-import { createStateLens } from './state-lens-v0.2.0-experimental.1.mjs';
+import { createStateLens } from './state-lens-v0.3.0-experimental.1.mjs';
 
 const lens = createStateLens(page, {
   probes: [{ name: 'draft', source: 'localStorage', key: 'app-draft', json: true }],
@@ -47,6 +47,16 @@ For IndexedDB, select a known database/store/key:
 ```js
 { name: 'draft', source: 'indexedDB', database: 'notes', store: 'drafts', key: 'current' }
 ```
+
+## Tab-specific sessionStorage
+
+Version0.3.0 adds `{ name: 'draft', source: 'sessionStorage', key: 'draft-key', json: true }`.
+Omit `json: true` for raw text. Use a separate lens for each existing Playwright
+`Page`, even when those pages share a BrowserContext and HTTP origin. The helper
+observes the supplied page; it does not copy, restore or synchronize tab storage.
+Keep your own reload/readiness/assertion steps. Missing values, saved JSON null,
+and refused reads remain different observations. The existing size/depth limits
+apply. [Usage and measured browser checks](https://github.com/aichance/business-ai-recipes/blob/main/docs/state-lens-session-storage.md).
 
 ## Undefined fields: report schema2
 
@@ -91,7 +101,7 @@ or require an API key; the caller provides its existing `page`.
 
 ## Limits
 
-- Up to16 selected probes. localStorage may be raw text or parsed JSON; IndexedDB
+- Up to16 selected probes. localStorage/sessionStorage may be raw text or parsed JSON; IndexedDB
   keys are string/finite number. Selected values may be plain JSON plus explicit
   `undefined` fields or dense-array slots, depth<=12, <=64KiB of UTF8 JSON
   including undefined-path metadata. Date/Map/Set/BigInt/cycles/sparse arrays

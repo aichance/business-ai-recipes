@@ -2,7 +2,7 @@
 
 ## State Lens — which save step changed your draft?
 
-Put selected **localStorage / IndexedDB values, field changes and screenshots**
+Put selected **localStorage / sessionStorage / IndexedDB values, field changes and screenshots**
 beside the actions in your existing Playwright test. Open one local HTML report
 when a save/reload flow fails. Experimental, MIT, no account or API key.
 
@@ -10,10 +10,10 @@ when a save/reload flow fails. Experimental, MIT, no account or API key.
 
 [**Replay the recorded example**](https://aichance.github.io/business-ai-recipes/state-lens.html) · [**Copy one file into your Playwright test**](docs/state-lens-install.md) · [**26-second measured replay**](https://aichance.github.io/business-ai-recipes/state-lens-demo.mp4)
 
-Download the [versioned library](https://aichance.github.io/business-ai-recipes/state-lens-v0.2.0-experimental.1.mjs) ([SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.2.0-experimental.1.mjs.sha256)) next to your existing test, then:
+Download the [versioned library](https://aichance.github.io/business-ai-recipes/state-lens-v0.3.0-experimental.1.mjs) ([SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.3.0-experimental.1.mjs.sha256)) next to your existing test, then:
 
 ```js
-import { createStateLens } from './state-lens-v0.2.0-experimental.1.mjs';
+import { createStateLens } from './state-lens-v0.3.0-experimental.1.mjs';
 ```
 
 Use this from a Node22+ project that already has Playwright. Select a known
@@ -30,6 +30,13 @@ savings have not been measured. [Results and limits](docs/state-lens-results.md)
 **Existing test integration:** nvim-edu’s native regression keeps 43 passing checks
 with the common helper; an authored best-record overwrite gives the same four
 failures in both variants. [Real app timelines, caller-owned tests and scope](docs/state-lens-nvim-native.md). Operator runs with synthetic progress.
+
+**Tab-specific drafts:** version0.3.0 adds selected `sessionStorage` values. Use
+one lens per existing Playwright Page; compare its own save/reload steps while
+another page in the same BrowserContext keeps a different value under the same
+key. [Usage, native browser comparisons and limits](docs/state-lens-session-storage.md).
+These are authored operator checks; ordinary page evaluation remains a valid
+baseline and no additional independent use is claimed.
 
 
 **An external own-app report:** [Tomu reports using 0.2.0 in an existing Playwright transaction edit/reload/delete flow](https://bsky.app/profile/tomu963.bsky.social/post/3myzc4bivbw2c). After the common-library update, saved-field changes, eight optional undefined fields and a deletion tombstone were visible. This follows the author's 0.1.0 trial; it is one author's self-report of use and an updated-version rerun, not proof of financial correctness or measured time saving.

@@ -1,6 +1,6 @@
 import { writeFile } from 'node:fs/promises';
 
-const LIBRARY_VERSION = '0.2.0-experimental.1';
+const LIBRARY_VERSION = '0.3.0-experimental.1';
 
 const escape = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const describeError = error => { try { return error instanceof Error ? error.message : String(error); } catch { return 'Non-Error thrown value'; } };
@@ -12,8 +12,8 @@ function validate(probes, timeoutMs) {
   for (const p of probes) {
     if (typeof p?.name !== 'string' || !p.name || names.has(p.name)) throw new Error('Probe names must be nonempty and unique');
     names.add(p.name);
-    if (!['localStorage', 'indexedDB'].includes(p.source)) throw new Error('Unsupported probe source');
-    if (p.source === 'localStorage' && typeof p.key !== 'string') throw new Error('localStorage requires a string key');
+    if (!['localStorage', 'sessionStorage', 'indexedDB'].includes(p.source)) throw new Error('Unsupported probe source');
+    if (['localStorage', 'sessionStorage'].includes(p.source) && typeof p.key !== 'string') throw new Error(`${p.source} requires a string key`);
     if (p.source === 'indexedDB' && (typeof p.database !== 'string' || !p.database || typeof p.store !== 'string' || !p.store
         || !(typeof p.key === 'string' || (typeof p.key === 'number' && Number.isFinite(p.key))))) throw new Error('IndexedDB requires database, store and a string/number key');
   }
@@ -49,8 +49,9 @@ async function readProbe(page, probe, timeoutMs, expectedOrigin) {
         ...(undefinedPaths.length ? { valueEncoding: 'json-with-undefined-paths-v1', undefinedPaths } : {}) };
     }
     try {
-      if (p.source === 'localStorage') {
-        const value = localStorage.getItem(p.key);
+      if (p.source === 'localStorage' || p.source === 'sessionStorage') {
+        const area = p.source === 'localStorage' ? localStorage : sessionStorage;
+        const value = area.getItem(p.key);
         return normalize(value !== null, value === null ? null : p.json === true ? JSON.parse(value) : value);
       }
       if (typeof indexedDB.databases !== 'function') throw new Error('Database existence cannot be checked');
