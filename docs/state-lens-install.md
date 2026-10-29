@@ -21,7 +21,7 @@ existing Playwright installation remains necessary.
 
 ## Wrap existing actions and keep assertions
 
-After your existing test has opened its app:
+After your existing test has opened its app and awaited its normal ready state:
 
 ```js
 const lens = createStateLens(page, {
@@ -32,8 +32,11 @@ try {
     await page.getByRole('button', { name: 'Save' }).click();
     await page.getByText('Saved', { exact: true }).waitFor();
   });
-  await lens.step('Reload', () => page.reload());
-  // Keep your existing assertions and app-readiness waits.
+  await lens.step('Reload', async () => {
+    await page.reload();
+    await page.getByText('Ready', { exact: true }).waitFor();
+  });
+  // Keep your existing final assertions here.
 } finally {
   const path = testInfo.outputPath('state-lens.html');
   await lens.writeHTML(path);
@@ -41,8 +44,11 @@ try {
 }
 ```
 
-Use your app's known key, UI labels and readiness conditions. `page` and
-`testInfo` come from your existing Playwright test. Write the report once.
+`Saved` and `Ready` illustrate the authored example's labels. Use your app's
+known key, UI labels and existing readiness conditions. Keep the readiness wait
+**inside the step callback**: the after-observation happens when that callback
+returns. Waiting only after `lens.step` can leave a pre-ready state in the report.
+`page` and `testInfo` come from your existing Playwright test. Write the report once.
 For IndexedDB, a probe selects a known record:
 
 ```js
@@ -52,6 +58,32 @@ For IndexedDB, a probe selects a known record:
 [The complete consumer example](../tools/playwright-state-lens/examples/consumer.spec.mjs)
 uses the same implementation with an authored local fixture. The example's
 fixture import is for its demo app; it is not required in your own test.
+
+### Plain Playwright or `node:test`
+
+Keep your existing test runner. The library accepts the same Playwright `page`
+and does not require `testInfo`. Use the same probes and steps above; in your
+existing `finally`, write the HTML before the test's normal browser cleanup.
+Reuse or add these Node built-in imports at the top of that test file:
+
+```js
+import { mkdtemp } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+```
+
+Replace the `testInfo.outputPath` / `testInfo.attach` lines in the `finally`
+block with:
+
+```js
+const reportDir = await mkdtemp(join(tmpdir(), 'state-lens-'));
+const reportPath = join(reportDir, 'selected-state.html');
+await lens.writeHTML(reportPath);
+console.log('State Lens report:', reportPath);
+```
+
+This creates a fresh output directory instead of overwriting an earlier
+report. Your existing assertions and browser lifecycle stay in the test.
 
 ## Common package alternative
 
