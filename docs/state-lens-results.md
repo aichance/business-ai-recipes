@@ -21,11 +21,19 @@ Both flows record four checkpoints. The broken report selects the body and
 revision changes in both chosen stores. The normal report has no post-reload
 field difference. [Machine-readable comparison](state-lens-measurements.json).
 
-**Standard Trace and `storageState({ indexedDB: true })` already contain the
-underlying data.** State Lens adds explicitly selected per-step field differences
+**Explicit native `storageState({ indexedDB: true })` snapshots captured the
+same selected values in these controls.** State Lens adds explicitly selected per-step field differences
 and the captured viewport in one HTML. It does not discover hidden database
 events, infer commit timestamps or guarantee a root cause. Developer time savings
 and independent adoption have not been measured.
+
+## Existing plain-Playwright consumer
+
+[The nvim-edu native integration](state-lens-nvim-native.md) retains the existing
+assertions: 43 PASS normally and the same four failures in an authored overwrite
+control. Both 16-checkpoint HTML reports and the executed harness bodies are
+available. Its eight explicit native storage snapshots agree with the selected
+values. This is an operator integration experiment, separate from adoption.
 
 ## Reproduce
 

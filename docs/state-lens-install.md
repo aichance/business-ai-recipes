@@ -101,7 +101,9 @@ library behavior; it is not a separate checker for each app.
 `COMPLETED` is action completion, not PASS. Inaccessible/unsupported data stays
 INCONCLUSIVE. Snapshots are sequential observations, not commit timestamps or
 proof of cause. The report includes selected data and screenshots and remains
-local unless shared. [Scope and measured controls](state-lens-results.md).
+local unless shared. Reads and screenshots add work and can change timing,
+including app timers and races. [An existing plain-Playwright integration and
+its recorded conditions](state-lens-nvim-native.md). [Scope and measured controls](state-lens-results.md).
 
 If you try it, report the version, your workflow, whether it was your own app,
 how you found it, and whether the report helped compared with your normal trace.

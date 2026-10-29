@@ -1,0 +1,140 @@
+{
+  "schema": 1,
+  "scope": "Operator experiment with synthetic empty browser profiles; no independent adoption credited. Authored bad-best-record control is an intentional one-line source change, not an upstream defect report.",
+  "observed_date": "2026-10-29",
+  "upstream": "https://github.com/s3onghyun/nvim-edu",
+  "upstream_sha": "9c8df5951459e491071f39452f67c4251c1d1868",
+  "native_test": "tests/regress.e2e.mjs",
+  "native_test_sha256": "4a7943d01784bd9a237417bf9fcdf3702409bc410d3f7e3222725ea79b12c0d9",
+  "state_lens_version": "0.1.0-experimental.1",
+  "common_module_sha256": "3cb9b29b4d52fe975538aa6922faab599a94d620571e0576a169615dbf4a0886",
+  "node": "22.16.0",
+  "playwright_core": "1.64.0",
+  "browser": "Chromium",
+  "upstream_dependency_patch_applied": true,
+  "runs": [
+    {
+      "label": "native-normal",
+      "exit_code": 0,
+      "seconds": 43.958,
+      "pass_lines": 43,
+      "fail_lines": 0,
+      "completed_native_summary": true
+    },
+    {
+      "label": "lens-normal",
+      "exit_code": 0,
+      "seconds": 48.006,
+      "pass_lines": 43,
+      "fail_lines": 0,
+      "completed_native_summary": true
+    },
+    {
+      "label": "native-authored-control",
+      "exit_code": 1,
+      "seconds": 43.815,
+      "pass_lines": 39,
+      "fail_lines": 4,
+      "completed_native_summary": false
+    },
+    {
+      "label": "lens-authored-control",
+      "exit_code": 1,
+      "seconds": 44.0,
+      "pass_lines": 39,
+      "fail_lines": 4,
+      "completed_native_summary": false
+    }
+  ],
+  "selected_comparisons": {
+    "lens-normal": {
+      "checkpoints": 16,
+      "screenshots": 16,
+      "native_storage_state_matches": 8,
+      "all_selected_observations": "OBSERVED",
+      "slower_second_after_values": {
+        "progress": {
+          "status": "OBSERVED",
+          "exists": true,
+          "value": {
+            "x": 3
+          }
+        },
+        "records": {
+          "status": "OBSERVED",
+          "exists": true,
+          "value": {
+            "mission-move": {
+              "time": 2.5898000000715258,
+              "keys": 73
+            }
+          }
+        }
+      },
+      "slower_second_after_changes": []
+    },
+    "lens-authored-control": {
+      "checkpoints": 16,
+      "screenshots": 16,
+      "native_storage_state_matches": 8,
+      "all_selected_observations": "OBSERVED",
+      "slower_second_after_values": {
+        "progress": {
+          "status": "OBSERVED",
+          "exists": true,
+          "value": {
+            "x": 3
+          }
+        },
+        "records": {
+          "status": "OBSERVED",
+          "exists": true,
+          "value": {
+            "mission-move": {
+              "time": 4.105700000047683,
+              "keys": 72
+            }
+          }
+        }
+      },
+      "slower_second_after_changes": [
+        {
+          "path": "$.records.value.mission-move.time",
+          "before": 2.5701999999284744,
+          "after": 4.105700000047683
+        },
+        {
+          "path": "$.records.value.mission-move.keys",
+          "before": 70,
+          "after": 72
+        }
+      ]
+    }
+  },
+  "source_restoration": {
+    "original_files": 55,
+    "changed_originals": [],
+    "main_restored": true
+  },
+  "native_expect_expressions_preserved": true,
+  "harness": [
+    "BrowserContext routing for loopback-only app HTTP requests, including Service Worker requests",
+    "Desktop native Trace; phone-context checks run without tracing",
+    "Cleanup nested finally; TERM/KILL fallback statically reviewed, abnormal teardown not failure-injected"
+  ],
+  "trace_scope": "desktop context only",
+  "runtime_interpretation": "Single sequential run timings include screenshot/observation work and eight extra native storageState captures in helper cases; not isolated SDK overhead or developer time saved.",
+  "observer_effect": "Reads and screenshots can change app/test timing, including timed drills; observations are not commit timing or cause proof.",
+  "authored_mutation": {
+    "file": "src/main.js",
+    "original": "const isBest = !best || time < best.time",
+    "control": "const isBest = true // authored benchmark mutation",
+    "restored": true
+  },
+  "executed_mjs_body_hashes": {
+    "state-lens-nvim-native-baseline.mjs": "8aec4e14d48e6a51fd54d6b699deade664b0526d5ad77910eabd9a58d0bc5968",
+    "state-lens-nvim-native-consumer.mjs": "a038d331b801620993699d482a86408a59354fd17c502281cb17305f6731da28",
+    "state-lens-nvim-native-control.mjs": "9d64bde0e01ee7b0c08a8c3cfc6f1e5ce2783673276bac5acbbad9972c671360"
+  },
+  "published_mjs_difference": "Only an attribution/MIT comment is prepended to the executed body."
+}
