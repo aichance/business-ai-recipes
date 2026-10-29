@@ -1,4 +1,4 @@
-# Playwright State Lens 0.1.0-experimental.1
+# Playwright State Lens 0.2.0-experimental.1
 
 Put explicitly selected application storage beside your normal UI steps.
 The local HTML shows the viewport, selected localStorage/IndexedDB values and
@@ -15,15 +15,11 @@ or [read the comparison and limits](../../docs/state-lens-results.md).
 
 From your app's project directory, with Node22+ and Playwright already installed:
 
-```sh
-npm install --save-dev https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.1.0-experimental.1.tgz
-```
-
-This updates that project's package files. No account, model or API key is needed.
+Download the [versioned MIT file](https://aichance.github.io/business-ai-recipes/state-lens-v0.2.0-experimental.1.mjs) and its [SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.2.0-experimental.1.mjs.sha256), review it, and place it beside your existing test without overwriting an older file. No additional npm dependency, account, model or API key is needed.
 In your existing test, after opening your app, choose a storage key you know:
 
 ```js
-import { createStateLens } from '@aichance/playwright-state-lens';
+import { createStateLens } from './state-lens-v0.2.0-experimental.1.mjs';
 
 const lens = createStateLens(page, {
   probes: [{ name: 'draft', source: 'localStorage', key: 'app-draft', json: true }],
@@ -52,6 +48,26 @@ For IndexedDB, select a known database/store/key:
 { name: 'draft', source: 'indexedDB', database: 'notes', store: 'drafts', key: 'current' }
 ```
 
+## Undefined fields: report schema2
+
+Version0.2.0-experimental.1 records `quantity: undefined` without dropping the
+field or changing stored data. The report is an **annotated JSON projection**:
+`value.quantity` is a null placeholder, while `undefinedPaths: ["/quantity"]`
+and `valueEncoding: "json-with-undefined-paths-v1"` identify its actual type.
+A stored null has no undefined annotation; a missing field is absent in `value`.
+Pointers use RFC6901 escaping (`~` becomes `~0`, `/` becomes `~1`); `""` means
+the entire selected value. The HTML explains the projection beside its values.
+`report()` now emits `schema: 2` and `libraryVersion`. Consumers that parse its
+JSON must handle this version explicitly. The exported API is unchanged.
+[Representation, synthetic checks and limitations](../../docs/state-lens-undefined.md).
+The older0.1.0 files and recorded example reports remain available unchanged.
+
+For npm environments allowing remote URL dependencies, the optional
+[versioned tgz](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.2.0-experimental.1.tgz)
+contains the same library, tests and examples. It changes package metadata if
+installed. npm12 may reject remote dependencies; the one-file route needs no
+npm setting change. When using the package, import from `@aichance/playwright-state-lens`.
+
 ## Run the bundled example
 
 In a **source checkout**, use `npm ci --ignore-scripts`. In an **extracted tgz**,
@@ -77,7 +93,10 @@ or require an API key; the caller provides its existing `page`.
 ## Limits
 
 - Up to16 selected probes. localStorage may be raw text or parsed JSON; IndexedDB
-  keys are string/finite number and values must be plain JSON, depth<=12, <=64KiB.
+  keys are string/finite number. Selected values may be plain JSON plus explicit
+  `undefined` fields or dense-array slots, depth<=12, <=64KiB of UTF8 JSON
+  including undefined-path metadata. Date/Map/Set/BigInt/cycles/sparse arrays
+  remain unsupported.
 - Probes and the screenshot are sequential observations, not one atomic snapshot,
   commit timestamps, cause proof or a guarantee of persistence.
 - Missing databases/stores, unsupported values and failed reads are

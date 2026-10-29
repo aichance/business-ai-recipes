@@ -52,6 +52,119 @@ test('normal app retains selected data after reload', async t => {
   assert.equal(lens.report().checkpoints[1].values.selectedRecord.value.body, 'Keep me');
 });
 
+test('undefined-valued records retain explicit types without changing IndexedDB', async t => {
+  const { page } = await setup(t);
+  await page.evaluate(() => window.fixture.seed({ body: 'Synthetic transaction', revision: 1,
+    quantity: undefined, nested: { 'a/b~c': undefined }, items: [undefined, null] }));
+  const inspectRaw = () => page.evaluate(async () => {
+    const value = await window.fixture.read();
+    return { body: value.body, quantityPresent: Object.hasOwn(value, 'quantity'), quantityType: typeof value.quantity,
+      nestedPresent: Object.hasOwn(value.nested, 'a/b~c'), nestedType: typeof value.nested['a/b~c'],
+      arraySlotPresent: Object.hasOwn(value.items, 0), arraySlotType: typeof value.items[0], nullSlot: value.items[1] };
+  });
+  const before = await inspectRaw();
+  const lens = createStateLens(page, { probes: [probes[1]], screenshots: false });
+  const c = await lens.checkpoint('App saved optional fields');
+  const observed = c.values.selectedRecord;
+  assert.equal(observed.status, 'OBSERVED');
+  assert.equal(observed.valueEncoding, 'json-with-undefined-paths-v1');
+  assert.deepEqual(observed.undefinedPaths, ['/items/0', '/nested/a~1b~0c', '/quantity']);
+  assert.equal(observed.value.quantity, null);
+  assert.equal(observed.value.nested['a/b~c'], null);
+  assert.deepEqual(observed.value.items, [null, null]);
+  assert.equal(Object.hasOwn(observed.value, 'neverHad'), false);
+  assert.deepEqual(await inspectRaw(), before);
+  assert.deepEqual(before, { body: 'Synthetic transaction', quantityPresent: true, quantityType: 'undefined',
+    nestedPresent: true, nestedType: 'undefined', arraySlotPresent: true, arraySlotType: 'undefined', nullSlot: null });
+  assert.equal(lens.report().schema, 2);
+  assert.equal(lens.report().libraryVersion, '0.2.0-experimental.1');
+  const view = await page.context().newPage();
+  await view.setContent(renderTimeline(lens.report()));
+  assert.match(await view.locator('#value-note').textContent(), /undefinedPaths.*observed undefined/);
+  assert.match(await view.locator('#values').textContent(), /a~1b~0c/);
+});
+
+test('undefined, null, absent fields and missing records produce distinct observations', async t => {
+  const { page } = await setup(t);
+  const lens = createStateLens(page, { probes: [probes[1]], screenshots: false });
+  await page.evaluate(() => window.fixture.seed({ body: 'Synthetic', revision: 1, quantity: undefined }));
+  const u = await lens.checkpoint('Undefined field');
+  await page.evaluate(() => window.fixture.seed({ body: 'Synthetic', revision: 1, quantity: null }));
+  const n = await lens.checkpoint('Null field');
+  await page.evaluate(() => window.fixture.seed({ body: 'Synthetic', revision: 1 }));
+  const a = await lens.checkpoint('Absent field');
+  assert.deepEqual(u.values.selectedRecord.undefinedPaths, ['/quantity']);
+  assert.equal(Object.hasOwn(n.values.selectedRecord, 'undefinedPaths'), false);
+  assert.equal(n.values.selectedRecord.value.quantity, null);
+  assert.ok(n.changes.some(x => x.path.endsWith('.undefinedPaths') && x.before.includes('/quantity')));
+  assert.equal(Object.hasOwn(a.values.selectedRecord.value, 'quantity'), false);
+  assert.ok(a.changes.some(x => x.path.endsWith('.value.quantity') && x.before === null && x.after === '(missing)'));
+  assert.equal(await page.evaluate(async () => (await window.fixture.read()).quantity), undefined);
+  await page.evaluate(async () => { const tx = window.fixture.db.transaction('notes', 'readwrite'); tx.objectStore('notes').delete('current'); await new Promise(r => tx.oncomplete = r); });
+  const missing = await lens.checkpoint('Deleted record');
+  assert.deepEqual(missing.values.selectedRecord, { status: 'OBSERVED', exists: false, value: null });
+  const view = await page.context().newPage();
+  await view.setContent(renderTimeline(lens.report()));
+  await view.getByRole('button', { name: '3. Absent field', exact: true }).click();
+  assert.match(await view.locator('#value-note').textContent(), /undefinedPaths/);
+  assert.match(await view.locator('#changes').textContent(), /quantity/);
+});
+
+test('root undefined and special-key metadata survive the browser JSON boundary', async t => {
+  const { page } = await setup(t);
+  const lens = createStateLens(page, { probes: [probes[1]], screenshots: false });
+  await page.evaluate(async () => { const tx = window.fixture.db.transaction('notes', 'readwrite'); tx.objectStore('notes').put(undefined, 'current'); await new Promise(r => tx.oncomplete = r); });
+  const root = await lens.checkpoint('Root undefined');
+  assert.deepEqual(root.values.selectedRecord, { status: 'OBSERVED', exists: true, value: null,
+    valueEncoding: 'json-with-undefined-paths-v1', undefinedPaths: [''] });
+  await page.evaluate(() => window.fixture.seed(Object.fromEntries([['__proto__', undefined], ['', undefined], ['constructor', undefined]])));
+  const names = await lens.checkpoint('Special property names');
+  assert.deepEqual(names.values.selectedRecord.undefinedPaths, ['/', '/__proto__', '/constructor']);
+  assert.equal(Object.hasOwn(names.values.selectedRecord.value, '__proto__'), true);
+  assert.equal(names.values.selectedRecord.value.__proto__, null);
+  assert.equal(names.values.selectedRecord.value[''], null);
+  assert.equal(names.values.selectedRecord.value.constructor, null);
+});
+
+test('undefined-path ordering is stable and metadata counts toward the UTF8 limit', async t => {
+  const { page } = await setup(t);
+  const lens = createStateLens(page, { probes: [probes[1]], screenshots: false });
+  await page.evaluate(() => window.fixture.seed({ body: 'Synthetic', revision: 1, beta: undefined, alpha: undefined }));
+  await lens.checkpoint('First insertion order');
+  await page.evaluate(() => window.fixture.seed({ alpha: undefined, beta: undefined, revision: 1, body: 'Synthetic' }));
+  const reordered = await lens.checkpoint('Reordered properties');
+  assert.deepEqual(reordered.values.selectedRecord.undefinedPaths, ['/alpha', '/beta']);
+  assert.deepEqual(reordered.changes, []);
+  await page.evaluate(() => window.fixture.seed({ body: '\u3042'.repeat(22000), revision: 1 }));
+  const unicode = await lens.checkpoint('Oversized UTF8');
+  assert.equal(unicode.values.selectedRecord.status, 'INCONCLUSIVE');
+  assert.match(unicode.values.selectedRecord.reason, /64KiB/);
+  await page.evaluate(() => window.fixture.seed(Object.fromEntries(Array.from({ length: 3000 }, (_, i) => ['field' + i, undefined]))));
+  const metadata = await lens.checkpoint('Oversized type metadata');
+  assert.equal(metadata.values.selectedRecord.status, 'INCONCLUSIVE');
+  assert.match(metadata.values.selectedRecord.reason, /64KiB/);
+});
+
+test('supporting undefined does not turn other structured-clone values into JSON', async t => {
+  const { page } = await setup(t);
+  const lens = createStateLens(page, { probes: [probes[1]], screenshots: false });
+  for (const kind of ['date', 'map', 'set', 'bigint', 'cycle', 'depth']) {
+    await page.evaluate(async kind => {
+      let value;
+      if (kind === 'date') value = new Date(0);
+      if (kind === 'map') value = new Map([['quantity', undefined]]);
+      if (kind === 'set') value = new Set([undefined]);
+      if (kind === 'bigint') value = 1n;
+      if (kind === 'cycle') { value = {}; value.self = value; }
+      if (kind === 'depth') { value = { quantity: undefined }; for (let i = 0; i < 13; i++) value = { child: value }; }
+      const tx = window.fixture.db.transaction('notes', 'readwrite'); tx.objectStore('notes').put(value, 'current');
+      await new Promise(r => tx.oncomplete = r);
+    }, kind);
+    const c = await lens.checkpoint(kind);
+    assert.equal(c.values.selectedRecord.status, 'INCONCLUSIVE', kind);
+  }
+});
+
 test('capture another tab overwriting a newer draft while this UI still displays it', async t => {
   const { page, context, server } = await setup(t, 'stale-tab');
   await page.evaluate(() => window.fixture.seed({ body: 'Old draft', revision: 1 }));

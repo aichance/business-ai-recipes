@@ -6,14 +6,14 @@ your own UI steps. Your existing assertions still decide correctness.
 
 ## Copy one versioned file
 
-1. [Download state-lens-v0.1.0-experimental.1.mjs](https://aichance.github.io/business-ai-recipes/state-lens-v0.1.0-experimental.1.mjs) and its [SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.1.0-experimental.1.mjs.sha256).
+1. [Download state-lens-v0.2.0-experimental.1.mjs](https://aichance.github.io/business-ai-recipes/state-lens-v0.2.0-experimental.1.mjs) and its [SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.2.0-experimental.1.mjs.sha256).
 2. Read the file, then place it next to an existing Playwright test. Keep an
    existing file instead of overwriting it. The file contains its MIT license
-   and the same implementation as the common 0.1.0-experimental.1 package.
+   and the same implementation as the common 0.2.0-experimental.1 package.
 3. Import it **in the Node-side test**, not in your app's browser bundle:
 
 ```js
-import { createStateLens } from './state-lens-v0.1.0-experimental.1.mjs';
+import { createStateLens } from './state-lens-v0.2.0-experimental.1.mjs';
 ```
 
 There is no additional npm installation, account, model or API key. Your
@@ -87,14 +87,24 @@ report. Your existing assertions and browser lifecycle stay in the test.
 
 ## Common package alternative
 
-The [original common tgz](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.1.0-experimental.1.tgz)
-and [checksum](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.1.0-experimental.1.tgz.sha256)
-are unchanged. Its source belongs to release commit
-`735d00c71af54e3aa6c0ead70c81bdcec726825f`. It includes tests, the demo app and
-the library. npm setups that permit URL dependencies can use its README's
-package install command. [npm12 defaults to refusing remote URL dependencies](https://docs.npmjs.com/cli/using-npm/config/#allow-remote).
-The one-file route avoids changing that setting. It preserves the complete
-library behavior; it is not a separate checker for each app.
+The [current common tgz](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.2.0-experimental.1.tgz)
+and [checksum](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.2.0-experimental.1.tgz.sha256)
+contain the same0.2.0 library, tests, demo and examples. npm setups that permit
+URL dependencies can install it as a development dependency, changing their
+package metadata. npm12 may refuse remote URL dependencies; the one-file route
+avoids changing that setting. It is the same common library for each app.
+The [previous0.1.0 file](state-lens-v0.1.0-experimental.1.mjs) and its recorded
+native-case reports remain unchanged.
+
+## Optional fields in IndexedDB
+
+Version0.2.0 accepts plain records/dense arrays with explicit `undefined` values.
+The JSON report uses annotated null placeholders and a separate `undefinedPaths`
+list so `undefined`, stored null and absent fields remain distinct. `report()`
+now emits schema2 and `libraryVersion`; account for that if parsing the report
+programmatically. [Exact representation, synthetic checks and limitations](state-lens-undefined.md).
+The64KiB limit counts UTF8 JSON bytes including undefined metadata; Date/Map/Set,
+BigInt, cycles, sparse/extended arrays and depth>12 remain INCONCLUSIVE.
 
 ## Read the result
 
