@@ -1,4 +1,4 @@
-# Playwright State Lens 0.5.0-experimental.1
+# Playwright State Lens 0.6.0-experimental.1
 
 Put explicitly selected application storage beside your normal UI steps.
 The local HTML shows the viewport, selected localStorage/sessionStorage/IndexedDB values and
@@ -11,15 +11,23 @@ evidence; this experiment tests whether selecting and aligning it reduces work.
 [Replay the measured example](https://aichance.github.io/business-ai-recipes/state-lens.html)
 or [read the comparison and limits](../../docs/state-lens-results.md).
 
+## Record your own app without writing a test
+
+With Node22+ and Playwright/Chromium already installed, use the same package's
+`capture.mjs` entry. Open your own app, perform its normal actions, and name the
+checkpoints in your terminal. It records selected values and screenshots into a
+new local HTML; it does not click Save, mutate storage, or assert correctness.
+[Download and run the manual entry](../../docs/state-lens-manual.md).
+
 ## Add it to your existing Playwright test
 
 From your app's project directory, with Node22+ and Playwright already installed:
 
-Download the [versioned MIT file](https://aichance.github.io/business-ai-recipes/state-lens-v0.5.0-experimental.1.mjs) and its [SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.5.0-experimental.1.mjs.sha256), review it, and place it beside your existing test without overwriting an older file. No additional npm dependency, account, model or API key is needed.
+Download the [versioned MIT file](https://aichance.github.io/business-ai-recipes/state-lens-v0.6.0-experimental.1.mjs) and its [SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.6.0-experimental.1.mjs.sha256), review it, and place it beside your existing test without overwriting an older file. No additional npm dependency, account, model or API key is needed.
 In your existing test, after opening your app, choose a storage key you know:
 
 ```js
-import { createStateLens } from './state-lens-v0.5.0-experimental.1.mjs';
+import { createStateLens } from './state-lens-v0.6.0-experimental.1.mjs';
 
 const lens = createStateLens(page, {
   probes: [{ name: 'draft', source: 'localStorage', key: 'app-draft', json: true }],
@@ -29,7 +37,10 @@ try {
     await page.getByRole('button', { name: 'Save' }).click();
     await page.getByText('Saved', { exact: true }).waitFor();
   });
-  await lens.step('Reload', () => page.reload());
+  await lens.step('Reload', async () => {
+    await page.reload();
+    await page.getByText('Ready', { exact: true }).waitFor();
+  });
   // Keep your existing Playwright assertions here.
 } finally {
   const path = testInfo.outputPath('state-lens.html');
@@ -38,6 +49,7 @@ try {
 }
 ```
 
+Use your app's existing labels and readiness waits in both callbacks.
 Keep your normal Playwright assertions. The `finally` block attaches the report
 when those assertions fail too. Write the report once per test. The complete runnable
 [consumer example](examples/consumer.spec.mjs) shows the `try`/`finally` placement.
@@ -184,4 +196,4 @@ app data, source, screenshots and traces are not required.
 
 ## TypeScript checks
 
-Version0.4.1 adds explicit input JSDoc and optional matching declarations. Strict projects with `allowJs: false` can place `state-lens-v0.5.0-experimental.1.d.mts` beside the downloaded `.mjs`; package imports resolve `lens.d.mts` through the types export. [Measured blocker, setup and limits](../../docs/state-lens-typescript.md). Run `npm run test:types` for both declaration modes and the JSDoc-only consumer. These are development checks; the runtime has no additional dependency.
+Version0.4.1 adds explicit input JSDoc and optional matching declarations. Strict projects with `allowJs: false` can place `state-lens-v0.6.0-experimental.1.d.mts` beside the downloaded `.mjs`; package imports resolve `lens.d.mts` through the types export. [Measured blocker, setup and limits](../../docs/state-lens-typescript.md). Run `npm run test:types` for both declaration modes and the JSDoc-only consumer. These are development checks; the runtime has no additional dependency.
