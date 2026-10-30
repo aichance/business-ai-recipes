@@ -48,7 +48,7 @@ test('nested and array Dates remain typed across reload without changing Indexed
   await page.reload(); await page.waitForFunction(() => window.fixture?.ready);
   const reloaded = await lens.checkpoint('Reloaded dated note');
   assert.deepEqual(reloaded.changes, []); assert.deepEqual(await nativeRead(), before);
-  assert.equal(lens.report().schema, 3); assert.equal(lens.report().libraryVersion, '0.4.0-experimental.1');
+  assert.equal(lens.report().schema, 3); assert.equal(lens.report().libraryVersion, '0.4.1-experimental.1');
   const viewer = await context.newPage(); await viewer.setContent(renderTimeline(lens.report()));
   assert.match(await viewer.locator('#value-note').textContent(), /datePaths.*not saved plain strings/);
   assert.match(await viewer.locator('#value-note').textContent(), /undefinedPaths.*observed undefined/);
