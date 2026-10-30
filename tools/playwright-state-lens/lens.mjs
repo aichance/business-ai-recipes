@@ -1,6 +1,6 @@
 import { writeFile } from 'node:fs/promises';
 
-const LIBRARY_VERSION = '0.5.0-experimental.1';
+const LIBRARY_VERSION = '0.6.0-experimental.1';
 
 const escape = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const describeError = error => { try { return error instanceof Error ? error.message : String(error); } catch { return 'Non-Error thrown value'; } };
