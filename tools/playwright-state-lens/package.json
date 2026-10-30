@@ -1,13 +1,43 @@
 {
   "name": "@aichance/playwright-state-lens",
-  "version": "0.4.0-experimental.1",
+  "version": "0.4.1-experimental.1",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=22" },
-  "exports": { ".": "./lens.mjs" },
-  "scripts": { "test": "node --test --test-concurrency=1 tests/*.test.mjs", "test:consumer": "playwright test", "demo": "node demo.mjs" },
-  "peerDependencies": { "@playwright/test": ">=1.51 <2" },
-  "devDependencies": { "@playwright/test": "1.64.0" },
-  "files": ["lens.mjs", "demo.mjs", "demo", "tests", "examples", "playwright.config.mjs", "README.md", "LICENSE"],
-  "license": "MIT"
+  "engines": {
+    "node": ">=22"
+  },
+  "exports": {
+    ".": {
+      "types": "./lens.d.mts",
+      "import": "./lens.mjs",
+      "default": "./lens.mjs"
+    }
+  },
+  "scripts": {
+    "test": "node --test --test-concurrency=1 tests/*.test.mjs",
+    "test:consumer": "playwright test",
+    "demo": "node demo.mjs",
+    "test:types": "tsc -p tests/types/tsconfig.json && tsc -p tests/types/tsconfig-allowjs.json && node tests/types/single-file.mjs"
+  },
+  "peerDependencies": {
+    "@playwright/test": ">=1.51 <2"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.0",
+    "typescript": "5.9.3",
+    "@types/node": "22.20.5"
+  },
+  "files": [
+    "lens.mjs",
+    "lens.d.mts",
+    "demo.mjs",
+    "demo",
+    "tests",
+    "examples",
+    "playwright.config.mjs",
+    "README.md",
+    "LICENSE"
+  ],
+  "license": "MIT",
+  "types": "./lens.d.mts"
 }

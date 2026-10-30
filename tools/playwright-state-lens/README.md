@@ -1,4 +1,4 @@
-# Playwright State Lens 0.4.0-experimental.1
+# Playwright State Lens 0.4.1-experimental.1
 
 Put explicitly selected application storage beside your normal UI steps.
 The local HTML shows the viewport, selected localStorage/sessionStorage/IndexedDB values and
@@ -15,11 +15,11 @@ or [read the comparison and limits](../../docs/state-lens-results.md).
 
 From your app's project directory, with Node22+ and Playwright already installed:
 
-Download the [versioned MIT file](https://aichance.github.io/business-ai-recipes/state-lens-v0.4.0-experimental.1.mjs) and its [SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.4.0-experimental.1.mjs.sha256), review it, and place it beside your existing test without overwriting an older file. No additional npm dependency, account, model or API key is needed.
+Download the [versioned MIT file](https://aichance.github.io/business-ai-recipes/state-lens-v0.4.1-experimental.1.mjs) and its [SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.4.1-experimental.1.mjs.sha256), review it, and place it beside your existing test without overwriting an older file. No additional npm dependency, account, model or API key is needed.
 In your existing test, after opening your app, choose a storage key you know:
 
 ```js
-import { createStateLens } from './state-lens-v0.4.0-experimental.1.mjs';
+import { createStateLens } from './state-lens-v0.4.1-experimental.1.mjs';
 
 const lens = createStateLens(page, {
   probes: [{ name: 'draft', source: 'localStorage', key: 'app-draft', json: true }],
@@ -85,7 +85,7 @@ and `libraryVersion`; JSON consumers must handle the schema explicitly. The expo
 The older0.1.0 files and recorded example reports remain available unchanged.
 
 For npm environments allowing remote URL dependencies, the optional
-[versioned tgz](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.4.0-experimental.1.tgz)
+[versioned tgz](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.4.1-experimental.1.tgz)
 contains the same library, tests and examples. It changes package metadata if
 installed. npm12 may reject remote dependencies; the one-file route needs no
 npm setting change. When using the package, import from `@aichance/playwright-state-lens`.
@@ -157,3 +157,7 @@ demo, the workflow you used it for, whether the HTML helped compared with your
 usual trace, and any setup blocker. A short sanitized summary is enough; raw
 app data, source, screenshots and traces are not required.
 [Report a result or blocker](https://github.com/aichance/business-ai-recipes/issues/new?title=%5BState%20Lens%5D%20Own-app%20trial).
+
+## TypeScript checks
+
+Version0.4.1 adds explicit input JSDoc and optional matching declarations. Strict projects with `allowJs: false` can place `state-lens-v0.4.1-experimental.1.d.mts` beside the downloaded `.mjs`; package imports resolve `lens.d.mts` through the types export. [Measured blocker, setup and limits](../../docs/state-lens-typescript.md). Run `npm run test:types` for both declaration modes and the JSDoc-only consumer. These are development checks; the runtime has no additional dependency.

@@ -1,6 +1,6 @@
 import { writeFile } from 'node:fs/promises';
 
-const LIBRARY_VERSION = '0.4.0-experimental.1';
+const LIBRARY_VERSION = '0.4.1-experimental.1';
 
 const escape = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const describeError = error => { try { return error instanceof Error ? error.message : String(error); } catch { return 'Non-Error thrown value'; } };
@@ -130,6 +130,11 @@ r.checkpoints.forEach((c,i)=>{const b=document.createElement('button');b.textCon
 </script></html>`;
 }
 
+/**
+ * @typedef {{name:string, source:'localStorage'|'sessionStorage', key:string, json?:boolean} | {name:string, source:'indexedDB', database:string, store:string, key:string|number}} StateLensProbe
+ * @typedef {{probes?:ReadonlyArray<StateLensProbe>, timeoutMs?:number, screenshots?:boolean, title?:string}} StateLensOptions
+ */
+/** @param {any} page An existing Playwright Page. @param {StateLensOptions} [options] */
 export function createStateLens(page, { probes, timeoutMs = 750, screenshots = true, title = 'What happened to the saved data?' } = {}) {
   validate(probes, timeoutMs);
   const selected = structuredClone(probes), checkpoints = [];
