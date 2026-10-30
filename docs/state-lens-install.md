@@ -39,8 +39,10 @@ Follow the project's instructions and preserve its current test runner.
 
 4. Create one lens for the existing Page. Wrap its existing UI actions in
    lens.step, keeping all readiness waits INSIDE each step callback and
-   preserving the original assertions. In finally, write HTML once before
-   the existing browser cleanup; attach it with testInfo when available,
+   preserving the original assertions. If the test deliberately holds an
+   IndexedDB write, release the gate and await commit before a checkpoint;
+   do not wrap that release in a step probing the held store. In finally,
+   write HTML once before the existing browser cleanup; attach it with testInfo when available,
    otherwise write to a new output directory. Keep the ordinary Trace.
    Reference: https://github.com/aichance/business-ai-recipes/blob/main/docs/state-lens-install.md
 
@@ -76,6 +78,10 @@ existing Playwright installation remains necessary.
 ## Wrap existing actions and keep assertions
 
 After your existing test has opened its app and awaited its normal ready state:
+
+For tests with a deliberately held IndexedDB write, keep the gate release
+unobserved, await the existing commit assertion, then add a checkpoint.
+[Measured placement and executable fixture](state-lens-held-writes.md).
 
 ```js
 const lens = createStateLens(page, {

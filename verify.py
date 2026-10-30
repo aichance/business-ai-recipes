@@ -16,6 +16,8 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    'docs/state-lens-held-writes.md',
+    'tools/playwright-state-lens/examples/held-write.mjs',
     'docs/state-lens-dates.md',
     'docs/state-lens-v0.4.0-experimental.1.mjs',
     'docs/state-lens-v0.4.0-experimental.1.mjs.sha256',
