@@ -4,6 +4,12 @@ Requires Node22+, an existing Playwright test project and its browser. The
 library adds selected localStorage/sessionStorage/IndexedDB observations and screenshots to
 your own UI steps. Your existing assertions still decide correctness.
 
+**Rerunning a plain script?** `writeHTML` refuses to replace an existing file
+(`EEXIST`). Use a fresh report directory on each run; keep the earlier report.
+[Copy the rerun-safe output block](#rerun-without-replacing-a-report).
+For a real use case and the limits that surfaced, see the
+[Sethera author's Windows report](state-lens-sethera-ownapp.md).
+
 ## TypeScript projects
 
 The current0.4.1 file includes explicit input JSDoc. If your project does not infer imported JavaScript, place the matching [state-lens-v0.4.1-experimental.1.d.mts](state-lens-v0.4.1-experimental.1.d.mts) ([SHA256](state-lens-v0.4.1-experimental.1.d.mts.sha256)) next to the `.mjs`, retaining both filenames. Package users get the type export automatically. Run your existing typecheck as well as the test. [The reproduced blocker and measured settings](state-lens-typescript.md).
@@ -157,8 +163,23 @@ await lens.writeHTML(reportPath);
 console.log('State Lens report:', reportPath);
 ```
 
-This creates a fresh output directory instead of overwriting an earlier
-report. Your existing assertions and browser lifecycle stay in the test.
+### Rerun without replacing a report
+
+Use the `mkdtemp` block above on **each invocation**, not a fixed
+`report.html` path. `writeHTML(path)` writes with exclusive creation (`wx`),
+so a second write to the same path fails with `EEXIST`. It does not replace the
+earlier report or mean the application's save/reload assertion failed.
+
+The block creates a fresh temporary directory, prints the exact HTML path and
+leaves earlier reports intact. This recipe uses a new directory and file;
+it does not require deleting the previous output. Keep report creation
+inside your existing `finally`, before browser cleanup. With Playwright Test,
+use its existing `testInfo.outputPath` and attach once per test as shown above;
+use a fresh filename if your test deliberately writes more than one report.
+
+The [Sethera own-app report](state-lens-sethera-ownapp.md) surfaced this plain-script
+rerun issue. The output recipe works with the unchanged 0.4.1 library; no app,
+test assertion, package setting or library option needs to change.
 
 ## Common package alternative
 
