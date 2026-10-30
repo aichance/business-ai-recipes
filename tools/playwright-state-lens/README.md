@@ -42,6 +42,10 @@ Keep your normal Playwright assertions. The `finally` block attaches the report
 when those assertions fail too. Write the report once per test. The complete runnable
 [consumer example](examples/consumer.spec.mjs) shows the `try`/`finally` placement.
 
+For plain Playwright or `node:test`, [use a fresh report directory on every run](../../docs/state-lens-install.md#rerun-without-replacing-a-report).
+`writeHTML` does not replace an existing file: a reused path fails with `EEXIST`.
+Keep prior reports; no deletion or library change is needed.
+
 For IndexedDB, select a known database/store/key:
 
 ```js
@@ -139,8 +143,12 @@ or require an API key; the caller provides its existing `page`.
 - The report includes selected app data and viewport screenshots. It is local,
   has no upload or telemetry, and must be reviewed before sharing. Synthetic
   comparisons are separate from independent users running their own apps.
-- Experimental development package. One author [reports own-app use and an
-  updated-version rerun](https://bsky.app/profile/tomu963.bsky.social/post/3myzc4bivbw2c); developer time saving has not been measured.
+- Experimental development package. Tomu [reports own-app use and an
+  updated-version rerun](https://bsky.app/profile/tomu963.bsky.social/post/3myzc4bivbw2c).
+  A second author [reports 0.4.1 use on Sethera v2.0.0 under Windows](../../docs/state-lens-sethera-ownapp.md),
+  including a qualitative Trace comparison and output/size limitations.
+  These are author self-reports, not general compatibility tests; developer
+  time saving has not been measured.
   The immutable 0.2.0 tarball README predates that later report; its library is
   unchanged. This source README contains the subsequent documentation update.
 
