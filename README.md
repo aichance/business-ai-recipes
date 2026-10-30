@@ -47,6 +47,8 @@ baseline and no additional independent use is claimed.
 
 **An external own-app report:** [Tomu reports using 0.2.0 in an existing Playwright transaction edit/reload/delete flow](https://bsky.app/profile/tomu963.bsky.social/post/3myzc4bivbw2c). After the common-library update, saved-field changes, eight optional undefined fields and a deletion tombstone were visible. This follows the author's 0.1.0 trial; it is one author's self-report of use and an updated-version rerun, not proof of financial correctness or measured time saving.
 
+**A second own-app report:** [Sethera's author reports running the common 0.4.1 file on Windows](docs/state-lens-sethera-ownapp.md) to check that display rounding changes format fields while preserving the numeric value across reload. The author found the field differences and screenshots easier to inspect than digging into Trace snapshots, and reported two limits: a fixed HTML path fails on rerun, and a selected document over 64KiB is inconclusive. [Use a fresh output directory on each run](docs/state-lens-install.md#rerun-without-replacing-a-report). This is the author's report on one application and environment, without a measured time-saving or general Windows-compatibility claim.
+
 Version0.2.0 also records optional IndexedDB `undefined` fields distinctly from null or absent fields. [Representation and synthetic checks](docs/state-lens-undefined.md). Earlier recorded demos retain their original version.
 
 <details>

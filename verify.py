@@ -16,6 +16,7 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    'docs/state-lens-sethera-ownapp.md',
     'docs/aichance-playwright-state-lens-0.4.1-experimental.1.tgz',
     'docs/aichance-playwright-state-lens-0.4.1-experimental.1.tgz.sha256',
     'docs/state-lens-bloggr-consumer.mjs',
