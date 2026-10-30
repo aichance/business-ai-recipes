@@ -399,7 +399,10 @@ jobs:
                               "-o", "Acquire::http::Timeout=30", "-o", "Acquire::https::Timeout=30",
                               "update"], check=True, timeout=120)
               subprocess.run(["sudo", "apt-get", "-o", "DPkg::Lock::Timeout=30",
-                              "install", "-y", "ffmpeg"], check=True, timeout=180)
+                              "-o", "Acquire::Retries=1", "-o", "Acquire::http::Timeout=30",
+                              "-o", "Acquire::https::Timeout=30",
+                              "install", "-y", "--no-install-recommends", "ffmpeg"],
+                             check=True, timeout=300)
           for tool in ("ffmpeg", "ffprobe"):
               subprocess.run([tool, "-version"], check=True, timeout=10,
                              stdout=subprocess.DEVNULL)
