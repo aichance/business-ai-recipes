@@ -129,6 +129,10 @@ or require an API key; the caller provides its existing `page`.
   used by the observer. App actions may write their own data as usual.
 - Do not run overlapping lens steps. Navigation/action failures are recorded and
   rethrown. Await application readiness within your action when needed.
+- For a deliberately held IndexedDB write, release the gate and await its commit
+  before a checkpoint on that store. `lens.step` observes before its action,
+  so wrapping the release can delay it until the read times out.
+  [Measured placement example](../../docs/state-lens-held-writes.md).
 - A lens binds to its first HTTP(S) origin. Other origins are not probed or
   screenshotted and are marked INCONCLUSIVE; comparisons reset across origins.
   Use a separate lens for another application. Origin and scope are visible.
