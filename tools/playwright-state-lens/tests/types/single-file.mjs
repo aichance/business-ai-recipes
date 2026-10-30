@@ -14,8 +14,11 @@ declare const page: any;
 createStateLens(page, { probes: [
   { name: 'draft', source: 'localStorage', key: 'draft', json: true },
   { name: 'tab', source: 'sessionStorage', key: 'draft' },
+  { name: 'field', source: 'sessionStorage', key: 'draft', json: true, pointer: '/body' },
   { name: 'record', source: 'indexedDB', database: 'notes', store: 'drafts', key: 1 },
 ] });
+// @ts-expect-error JSON pointer selection needs json:true on Web Storage.
+createStateLens(page, { probes: [{ name: 'bad', source: 'localStorage', key: 'draft', pointer: '/body' }] });
 // @ts-expect-error The single-file contract also rejects a numeric localStorage key.
 createStateLens(page, { probes: [{ name: 'bad', source: 'localStorage', key: 1 }] });
 `);
