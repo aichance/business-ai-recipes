@@ -10,13 +10,19 @@ when a save/reload flow fails. Experimental, MIT, no account or API key.
 
 [**Replay the recorded example**](https://aichance.github.io/business-ai-recipes/state-lens.html) · [**Copy one file into your Playwright test**](docs/state-lens-install.md) · [**26-second replay (original0.1 recording)**](https://aichance.github.io/business-ai-recipes/state-lens-demo.mp4)
 
-Download the [versioned library](https://aichance.github.io/business-ai-recipes/state-lens-v0.4.1-experimental.1.mjs) ([SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.4.1-experimental.1.mjs.sha256)) next to your existing test, then:
+Download the [versioned library](https://aichance.github.io/business-ai-recipes/state-lens-v0.5.0-experimental.1.mjs) ([SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.5.0-experimental.1.mjs.sha256)) next to your existing test, then:
 
 ```js
-import { createStateLens } from './state-lens-v0.4.1-experimental.1.mjs';
+import { createStateLens } from './state-lens-v0.5.0-experimental.1.mjs';
 ```
 
-**TypeScript:** 0.4.1 fixes the inferred `probes` option. Projects that need declarations can also copy the matching [`.d.mts` file](https://aichance.github.io/business-ai-recipes/state-lens-v0.4.1-experimental.1.d.mts). [Before/after typecheck and setup](docs/state-lens-typescript.md).
+**TypeScript:** 0.4.1 fixes the inferred `probes` option. Projects that need declarations can also copy the matching [`.d.mts` file](https://aichance.github.io/business-ai-recipes/state-lens-v0.5.0-experimental.1.d.mts). [Before/after typecheck and setup](docs/state-lens-typescript.md).
+
+**Large saved records:** 0.5 adds an optional JSON pointer so you can observe
+one known field without exporting the entire record. In an authored162,130-byte
+JSON fixture, the full probe remains inconclusive while three selected fields
+are observed across commit/reload. [Configuration, measurements and scope](docs/state-lens-selected-fields.md).
+This is operator verification; no author rerun of0.5 is claimed.
 
 Use this from a Node22+ project that already has Playwright. Select a known
 storage key, wrap the test's actions with `lens.step`, and keep its normal

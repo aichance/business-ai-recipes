@@ -5,6 +5,7 @@ declare const page: Page;
 const probes = [
   { name: 'draft', source: 'localStorage', key: 'draft', json: true },
   { name: 'tab', source: 'sessionStorage', key: 'draft' },
+  { name: 'field', source: 'localStorage', key: 'draft', json: true, pointer: '/nodes/0/data/value' },
   { name: 'record', source: 'indexedDB', database: 'notes', store: 'drafts', key: 1 },
 ] as const satisfies readonly StateLensProbe[];
 const lens = createStateLens(page, { probes, title: 'Existing test', timeoutMs: 750, screenshots: false });
@@ -13,7 +14,7 @@ const asyncResult: Promise<number> = lens.step('Save', async () => { await page.
 const syncResult: Promise<string> = lens.step('Read', () => 'done');
 declare const thenable: PromiseLike<number>;
 const thenableResult: Promise<number> = lens.step('Thenable', () => thenable);
-const schema: 3 = lens.report().schema;
+const schema: 4 = lens.report().schema;
 const html: string = renderTimeline(lens.report());
 const oldHTML: string = renderTimeline({ schema: 1, title: 'Earlier report', checkpoints: [
   { label: 'Earlier checkpoint', action: { status: 'CHECKPOINT' }, values: { draft: { status: 'OBSERVED', exists: true, value: {} } }, changes: [] },
@@ -29,3 +30,6 @@ createStateLens(page, { probes: [{ name: 'bad', source: 'cookie', key: 'draft' }
 createStateLens(page, { probes, timeoutMs: '750' });
 // @ts-expect-error A callback returning string cannot promise a number.
 const wrongResult: Promise<number> = lens.step('Value', () => 'text');
+
+// @ts-expect-error A raw Web Storage string cannot select JSON fields.
+createStateLens(page, { probes: [{ name: 'bad', source: 'localStorage', key: 'draft', pointer: '/body' }] });

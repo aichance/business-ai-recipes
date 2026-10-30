@@ -1,6 +1,6 @@
 import { writeFile } from 'node:fs/promises';
 
-const LIBRARY_VERSION = '0.4.1-experimental.1';
+const LIBRARY_VERSION = '0.5.0-experimental.1';
 
 const escape = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const describeError = error => { try { return error instanceof Error ? error.message : String(error); } catch { return 'Non-Error thrown value'; } };
@@ -16,6 +16,12 @@ function validate(probes, timeoutMs) {
     if (['localStorage', 'sessionStorage'].includes(p.source) && typeof p.key !== 'string') throw new Error(`${p.source} requires a string key`);
     if (p.source === 'indexedDB' && (typeof p.database !== 'string' || !p.database || typeof p.store !== 'string' || !p.store
         || !(typeof p.key === 'string' || (typeof p.key === 'number' && Number.isFinite(p.key))))) throw new Error('IndexedDB requires database, store and a string/number key');
+    if (p.pointer !== undefined) {
+      if (typeof p.pointer !== 'string' || (p.pointer !== '' && !p.pointer.startsWith('/'))
+          || /~(?![01])/.test(p.pointer) || p.pointer.split('/').length > 33
+          || new TextEncoder().encode(p.pointer).byteLength > 2048) throw new Error('pointer must be an RFC6901 JSON pointer with at most32 segments and2048 UTF8 bytes');
+      if (p.source !== 'indexedDB' && p.json !== true) throw new Error('Web Storage pointer selection requires json:true');
+    }
   }
   if (!Number.isInteger(timeoutMs) || timeoutMs < 50 || timeoutMs > 5000) throw new Error('timeoutMs must be50–5000');
 }
@@ -45,13 +51,25 @@ async function readProbe(page, probe, timeoutMs, expectedOrigin) {
       return result;
     }
     function normalize(exists, value) {
+      const pointed = p.pointer !== undefined;
+      let selectedExists = exists;
+      if (pointed && exists && p.pointer !== '') {
+        for (const part of p.pointer.slice(1).split('/').map(x => x.replace(/~1/g, '/').replace(/~0/g, '~'))) {
+          if (value === null || typeof value !== 'object' || !Object.hasOwn(value, part)
+              || (Array.isArray(value) && (!/^(0|[1-9][0-9]*)$/.test(part) || !Number.isSafeInteger(Number(part)) || Number(part) >= value.length))) {
+            selectedExists = false; break;
+          }
+          value = value[part];
+        }
+      }
       const undefinedPaths = [], datePaths = [];
-      const normalized = exists ? plain(value, undefinedPaths, datePaths) : null;
+      const normalized = selectedExists ? plain(value, undefinedPaths, datePaths) : null;
       undefinedPaths.sort(); datePaths.sort();
       const annotations = { ...(undefinedPaths.length ? { undefinedPaths } : {}), ...(datePaths.length ? { datePaths } : {}) };
-      const representation = undefinedPaths.length || datePaths.length ? { value: normalized, ...annotations } : normalized;
+      const selection = pointed ? { selection: { pointer: p.pointer, exists: selectedExists } } : {};
+      const representation = pointed || undefinedPaths.length || datePaths.length ? { value: normalized, ...annotations, ...selection } : normalized;
       if (new TextEncoder().encode(JSON.stringify(representation)).byteLength > 65536) throw new Error('Selected value exceeds64KiB');
-      return { status: 'OBSERVED', exists, value: normalized,
+      return { status: 'OBSERVED', exists, value: normalized, ...selection,
         ...(datePaths.length ? { valueEncoding: 'json-with-type-paths-v1', ...annotations }
           : undefinedPaths.length ? { valueEncoding: 'json-with-undefined-paths-v1', undefinedPaths } : {}) };
     }
@@ -59,7 +77,12 @@ async function readProbe(page, probe, timeoutMs, expectedOrigin) {
       if (p.source === 'localStorage' || p.source === 'sessionStorage') {
         const area = p.source === 'localStorage' ? localStorage : sessionStorage;
         const value = area.getItem(p.key);
-        return normalize(value !== null, value === null ? null : p.json === true ? JSON.parse(value) : value);
+        if (value === null || p.json !== true) return normalize(value !== null, value);
+        if (p.pointer !== undefined && new TextEncoder().encode(value).byteLength > 4 * 1024 * 1024) throw new Error('Selected JSON text exceeds4MiB input limit');
+        let parsed;
+        try { parsed = JSON.parse(value); }
+        catch (error) { if (p.pointer !== undefined) throw new Error('Selected JSON text is malformed'); throw error; }
+        return normalize(true, parsed);
       }
       if (typeof indexedDB.databases !== 'function') throw new Error('Database existence cannot be checked');
       // Never enumerate or export app records; check that the selected database exists first.
@@ -125,13 +148,13 @@ export function renderTimeline(report) {
 const r=JSON.parse(document.getElementById('data').textContent), nav=document.getElementById('steps');
 const annotated=r.checkpoints.some(c=>Object.values(c.values).some(v=>v.undefinedPaths?.length));
 const dated=r.checkpoints.some(c=>Object.values(c.values).some(v=>v.datePaths?.length));
-function select(i){const c=r.checkpoints[i];document.getElementById('label').textContent=c.label;document.getElementById('status').textContent=c.action.status+' · '+c.observedAt+' · '+(c.origin||'no HTTP origin')+' · '+c.scopeStatus;document.getElementById('changes').textContent=JSON.stringify(c.changes,null,2);document.getElementById('values').textContent=JSON.stringify(c.values,null,2);document.getElementById('value-note').textContent=[annotated?'Annotated JSON projection: null at each undefinedPaths pointer represents an observed undefined, not a saved null. Pointers escape ~ and /; an empty pointer means the entire selected value.':'',dated?'Valid Date values are ISO strings at datePaths pointers, not saved plain strings. Pointers escape ~ and /; an empty pointer means the entire selected value.':''].filter(Boolean).join(' ');const img=document.getElementById('screen');img.hidden=!c.screenshot;if(c.screenshot)img.src='data:image/png;base64,'+c.screenshot;else img.removeAttribute('src');document.getElementById('screen-status').textContent=c.screenshotError||'';[...nav.children].forEach((b,j)=>b.setAttribute('aria-pressed',String(j===i)));}
+function select(i){const c=r.checkpoints[i];document.getElementById('label').textContent=c.label;document.getElementById('status').textContent=c.action.status+' · '+c.observedAt+' · '+(c.origin||'no HTTP origin')+' · '+c.scopeStatus;document.getElementById('changes').textContent=JSON.stringify(c.changes,null,2);document.getElementById('values').textContent=JSON.stringify(c.values,null,2);document.getElementById('value-note').textContent=[(r.probes||[]).some(p=>typeof p.pointer==='string')?'JSON pointer selection: only configured paths are observed, not the whole saved record. exists describes the storage key; selection.exists describes the path. When that path is absent, value:null is a placeholder. Type paths below are relative to the selected value.':'',annotated?'Annotated JSON projection: null at each undefinedPaths pointer represents an observed undefined, not a saved null. Pointers escape ~ and /; an empty pointer means the entire selected value.':'',dated?'Valid Date values are ISO strings at datePaths pointers, not saved plain strings. Pointers escape ~ and /; an empty pointer means the entire selected value.':''].filter(Boolean).join(' ');const img=document.getElementById('screen');img.hidden=!c.screenshot;if(c.screenshot)img.src='data:image/png;base64,'+c.screenshot;else img.removeAttribute('src');document.getElementById('screen-status').textContent=c.screenshotError||'';[...nav.children].forEach((b,j)=>b.setAttribute('aria-pressed',String(j===i)));}
 r.checkpoints.forEach((c,i)=>{const b=document.createElement('button');b.textContent=(i+1)+'. '+c.label;b.onclick=()=>select(i);nav.appendChild(b)});if(r.checkpoints.length)select(0);
 </script></html>`;
 }
 
 /**
- * @typedef {{name:string, source:'localStorage'|'sessionStorage', key:string, json?:boolean} | {name:string, source:'indexedDB', database:string, store:string, key:string|number}} StateLensProbe
+ * @typedef {({name:string, source:'localStorage'|'sessionStorage', key:string} & ({json?:boolean, pointer?:never} | {json:true, pointer:string})) | {name:string, source:'indexedDB', database:string, store:string, key:string|number, pointer?:string}} StateLensProbe
  * @typedef {{probes?:ReadonlyArray<StateLensProbe>, timeoutMs?:number, screenshots?:boolean, title?:string}} StateLensOptions
  */
 /** @param {any} page An existing Playwright Page. @param {StateLensOptions} [options] */
@@ -178,7 +201,7 @@ export function createStateLens(page, { probes, timeoutMs = 750, screenshots = t
         catch (error) { await capture(`${label} · failed`, { status: 'FAILED', error: describeError(error) }); throw error; }
       } finally { running = false; }
     },
-    report() { return { schema: 3, libraryVersion: LIBRARY_VERSION, title, probes: structuredClone(selected), checkpoints: structuredClone(checkpoints) }; },
+    report() { return { schema: 4, libraryVersion: LIBRARY_VERSION, title, probes: structuredClone(selected), checkpoints: structuredClone(checkpoints) }; },
     async writeHTML(path) { await writeFile(path, renderTimeline(this.report()), { flag: 'wx', mode: 0o600 }); },
   };
 }

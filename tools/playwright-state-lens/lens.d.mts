@@ -1,7 +1,8 @@
 /** Types only; the runtime remains the common lens.mjs. MIT. */
 export type StateLensProbe =
-  | { name: string; source: 'localStorage' | 'sessionStorage'; key: string; json?: boolean }
-  | { name: string; source: 'indexedDB'; database: string; store: string; key: string | number };
+  | ({ name: string; source: 'localStorage' | 'sessionStorage'; key: string }
+      & ({ json?: boolean; pointer?: never } | { json: true; pointer: string }))
+  | { name: string; source: 'indexedDB'; database: string; store: string; key: string | number; pointer?: string };
 export interface StateLensOptions {
   /** Runtime validation still requires 1–16 valid probes, including when options are omitted. */
   probes?: readonly StateLensProbe[];
@@ -11,6 +12,8 @@ export interface StateLensOptions {
 }
 export type StateLensObservation =
   | { status: 'OBSERVED'; exists: boolean; value: unknown;
+      /** exists above describes the storage key; this describes the selected JSON pointer. */
+      selection?: { pointer: string; exists: boolean };
       valueEncoding?: 'json-with-undefined-paths-v1' | 'json-with-type-paths-v1';
       undefinedPaths?: string[]; datePaths?: string[] }
   | { status: 'INCONCLUSIVE'; reason: string };
@@ -31,7 +34,7 @@ export interface StateLensCheckpoint {
   screenshotError: string | null;
 }
 export interface StateLensReport {
-  schema: 3;
+  schema: 4;
   libraryVersion: string;
   title: string;
   probes: StateLensProbe[];

@@ -16,6 +16,16 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    'docs/aichance-playwright-state-lens-0.5.0-experimental.1.tgz',
+    'docs/aichance-playwright-state-lens-0.5.0-experimental.1.tgz.sha256',
+    'docs/state-lens-fields-measurements.json',
+    'docs/state-lens-selected-fields.md',
+    'docs/state-lens-v0.5.0-experimental.1.d.mts',
+    'docs/state-lens-v0.5.0-experimental.1.d.mts.sha256',
+    'docs/state-lens-v0.5.0-experimental.1.mjs',
+    'docs/state-lens-v0.5.0-experimental.1.mjs.sha256',
+    'experiments/state-lens/selected-fields-case.mjs',
+    'tools/playwright-state-lens/tests/selected-fields.test.mjs',
     'docs/state-lens-sethera-ownapp.md',
     'docs/aichance-playwright-state-lens-0.4.1-experimental.1.tgz',
     'docs/aichance-playwright-state-lens-0.4.1-experimental.1.tgz.sha256',
