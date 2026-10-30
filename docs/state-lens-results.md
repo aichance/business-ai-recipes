@@ -10,6 +10,11 @@ operation changes a draft. Select known localStorage/IndexedDB values and wrap
 the existing actions. One local HTML aligns screenshots and field differences.
 Keep the test's normal assertions. This is an observation helper.
 
+**Held IndexedDB writes:** a selected read can wait behind an unfinished write.
+In an authored fixture, wrapping the gate release delayed that callback793ms
+with the default750ms read timeout. Release and await commit before observing
+that store. [Four placement controls and runnable example](state-lens-held-writes.md).
+
 ## Measured broken and normal controls
 
 These are operator-authored, synthetic Draft Desk apps on loopback. They are
