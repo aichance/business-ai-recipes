@@ -139,3 +139,7 @@ enough; no private app data or source is needed. Demo runs and our own tests are
 not counted as independent adoption.
 
 [Report a result or blocker](https://github.com/aichance/business-ai-recipes/issues/new?title=%5BState%20Lens%5D%20Own-app%20trial).
+
+## TypeScript integration, 0.4.1
+
+The runtime test alone was insufficient: adding common0.4 to a pinned Bloggr test passed the browser run but failed its unchanged TypeScript check with TS2353. Common0.4.1 passed both after explicit input JSDoc and matching declarations. [Exact settings and type checks](state-lens-typescript.md) · [Native case, original assertions and recorded timeline](state-lens-bloggr-native.md). This is operator verification with synthetic routes, not a new upstream bug or an external user.

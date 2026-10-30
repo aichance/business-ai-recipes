@@ -1,0 +1,77 @@
+{
+  "recorded_at": "2026-10-30T08:40:31.590380+00:00",
+  "repository": "Antibody/bloggr",
+  "owner_type": "User",
+  "source_commit": "cf95e5ca8e44cca1dab52396cc0d1380e7d1799a",
+  "test": "a lost rename response can reconcile the old address and preserve new text",
+  "operator_environment": {
+    "platform": "macOS",
+    "node": "24.22.1",
+    "playwright": "1.64.1",
+    "typescript": "5.9.3",
+    "app_mode": "upstream local Next.js development server with synthetic route fixtures"
+  },
+  "baseline": {
+    "version": "unchanged upstream test",
+    "exit_code": 0,
+    "expected_tests": 1
+  },
+  "common040": {
+    "runtime_exit_code": 0,
+    "expected_tests": 1,
+    "typecheck_exit_code": 2,
+    "diagnostic": "TS2353"
+  },
+  "common041": {
+    "version": "0.4.1-experimental.1",
+    "runtime_exit_code": 0,
+    "expected_tests": 1,
+    "typecheck_exit_code": 0,
+    "schema": 3,
+    "checkpoints": 8,
+    "selected_probes": 3,
+    "selected_observations": 24,
+    "final_native_matches": [
+      {
+        "name": "old-address",
+        "matches_native_final": true,
+        "exists": true,
+        "final_title": "Text kept after rename loss"
+      },
+      {
+        "name": "stable-id",
+        "matches_native_final": true,
+        "exists": true,
+        "final_title": "Text kept after rename loss"
+      },
+      {
+        "name": "new-address",
+        "matches_native_final": true,
+        "exists": true,
+        "final_title": "Text kept after rename loss"
+      }
+    ]
+  },
+  "source_identity": {
+    "compared_original_files": 115,
+    "framework_generated_type_refs_changed": [
+      "next-env.d.ts: two .next/types imports become .next/dev/types"
+    ],
+    "other_original_files_changed": [],
+    "application_original_test_tsconfig_unchanged": true,
+    "env_config_files_excluded_without_reading": true
+  },
+  "runtime_change": "Input JSDoc plus reported library version; executable function body unchanged",
+  "report_html_sha256": "e08104ae913337c2104f3829c9c74de8f73f0995c72ca0735999f37a179e9adf",
+  "module_sha256": "b0cac73e52f6d4e404211feae08e7425e50fe81e6ea8f78d526d736a8f678e8c",
+  "declarations_sha256": "48c73700e9c815aa5f0743d7fbe9b32cfadb582e1c924cf584939da87fdbacac",
+  "real_backend_or_model_calls": 0,
+  "independent_adoption_credit": 0,
+  "known_limits": [
+    "One synthetic mock-backed test, not the production backend or full app suite",
+    "Observers add reads/screenshots/awaits and can change timing",
+    "Final native reads are sequential, not an atomic snapshot",
+    "No benchmark, upstream defect, general platform or independent user claim"
+  ],
+  "final_typecheck_confirmed_at": "2026-10-30T09:04:21.125526+00:00"
+}
