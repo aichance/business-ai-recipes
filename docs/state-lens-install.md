@@ -12,7 +12,7 @@ For a real use case and the limits that surfaced, see the
 
 ## TypeScript projects
 
-The current0.4.1 file includes explicit input JSDoc. If your project does not infer imported JavaScript, place the matching [state-lens-v0.4.1-experimental.1.d.mts](state-lens-v0.4.1-experimental.1.d.mts) ([SHA256](state-lens-v0.4.1-experimental.1.d.mts.sha256)) next to the `.mjs`, retaining both filenames. Package users get the type export automatically. Run your existing typecheck as well as the test. [The reproduced blocker and measured settings](state-lens-typescript.md).
+The current0.5.0 file includes explicit input JSDoc. If your project does not infer imported JavaScript, place the matching [state-lens-v0.5.0-experimental.1.d.mts](state-lens-v0.5.0-experimental.1.d.mts) ([SHA256](state-lens-v0.5.0-experimental.1.d.mts.sha256)) next to the `.mjs`, retaining both filenames. Package users get the type export automatically. Run your existing typecheck as well as the test. [The reproduced blocker and measured settings](state-lens-typescript.md).
 
 ## Try with your coding agent
 
@@ -34,16 +34,16 @@ Follow the project's instructions and preserve its current test runner.
    browser-persisted workflow are missing, report that blocker and stop;
    do not upgrade dependencies or substitute the library's demo.
 
-2. Use the common MIT 0.4.1-experimental.1 module:
-   https://aichance.github.io/business-ai-recipes/state-lens-v0.4.1-experimental.1.mjs
+2. Use the common MIT 0.5.0-experimental.1 module:
+   https://aichance.github.io/business-ai-recipes/state-lens-v0.5.0-experimental.1.mjs
    Expected SHA256:
-   b0cac73e52f6d4e404211feae08e7425e50fe81e6ea8f78d526d736a8f678e8c
+   6283dafe8a56dfb943d34367b5773757587b9d8eb4fa8c590b6a7a2293352bc2
    Review it and verify the bytes before importing it in the Node-side test.
    Save it beside the test without overwriting an existing file. Do not
    change npm settings, package metadata, app code or the existing test data.
    For a TypeScript project needing declarations, download the matching
-   state-lens-v0.4.1-experimental.1.d.mts beside that file (SHA256
-   48c73700e9c815aa5f0743d7fbe9b32cfadb582e1c924cf584939da87fdbacac).
+   state-lens-v0.5.0-experimental.1.d.mts beside that file (SHA256
+   42a12b3982e675d1b0033153186eef1adfdde34cde05ce03c674b08e2376a281).
    Keep the caller compiler settings unchanged.
 
 3. Select ONE known localStorage/sessionStorage key or IndexedDB database,
@@ -51,6 +51,14 @@ Follow the project's instructions and preserve its current test runner.
    Raw storage text is allowed; use json:true only for known JSON text.
    IndexedDB records may contain plain JSON, explicit undefined and valid Date values, depth<=12,
    <=64KiB including metadata. If unsupported, report the limit and stop.
+
+   For a large record, optionally add a known RFC6901 `pointer` such as
+   `/nodes/0/data/value` to the probe (Web Storage also needs `json: true`).
+   This observes that path only, not the entire record. Keep assertions that
+   identify the intended object when selecting an array position.
+   JSON Web Storage input must fit4MiB; the selected representation including
+   metadata must still fit64KiB/depth12. Schema4 distinguishes the storage
+   key's `exists` from `selection.exists`; missing paths are not saved nulls.
 
 4. Create one lens for the existing Page. Wrap its existing UI actions in
    lens.step, keeping all readiness waits INSIDE each step callback and
@@ -78,18 +86,26 @@ Playwright/`node:test`.
 
 ## Copy one versioned file
 
-1. [Download state-lens-v0.4.1-experimental.1.mjs](https://aichance.github.io/business-ai-recipes/state-lens-v0.4.1-experimental.1.mjs) and its [SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.4.1-experimental.1.mjs.sha256).
+1. [Download state-lens-v0.5.0-experimental.1.mjs](https://aichance.github.io/business-ai-recipes/state-lens-v0.5.0-experimental.1.mjs) and its [SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.5.0-experimental.1.mjs.sha256).
 2. Read the file, then place it next to an existing Playwright test. Keep an
    existing file instead of overwriting it. The file contains its MIT license
-   and the same implementation as the common 0.4.1-experimental.1 package.
+   and the same implementation as the common 0.5.0-experimental.1 package.
 3. Import it **in the Node-side test**, not in your app's browser bundle:
 
 ```js
-import { createStateLens } from './state-lens-v0.4.1-experimental.1.mjs';
+import { createStateLens } from './state-lens-v0.5.0-experimental.1.mjs';
 ```
 
 There is no additional npm installation, account, model or API key. Your
 existing Playwright installation remains necessary.
+
+## Observe a field in a large record
+
+Add `pointer: '/nodes/0/data/value'` to a probe for that known path.
+Web Storage needs `json: true`; an IndexedDB probe works on its named record.
+Use one explicit pointer per probe, up to the existing16-probe limit. Array
+positions are literal: keep your own assertion that it is the intended item.
+[Bounds, missing paths and schema4](state-lens-selected-fields.md).
 
 ## Wrap existing actions and keep assertions
 
@@ -183,8 +199,8 @@ test assertion, package setting or library option needs to change.
 
 ## Common package alternative
 
-The [current common tgz](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.4.1-experimental.1.tgz)
-and [checksum](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.4.1-experimental.1.tgz.sha256)
+The [current common tgz](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.5.0-experimental.1.tgz)
+and [checksum](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.5.0-experimental.1.tgz.sha256)
 contain the same0.4.1 library, tests, demo and examples. npm setups that permit
 URL dependencies can install it as a development dependency, changing their
 package metadata. npm12 may refuse remote URL dependencies; the one-file route

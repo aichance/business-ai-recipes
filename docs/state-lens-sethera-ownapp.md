@@ -75,3 +75,10 @@ a setup blocker, or confirmation that Trace already answers your question.
 The Windows outcome above remains the author's report for this environment
 and workflow. It is not an operator-run Windows verification or a broad
 browser/platform support guarantee.
+
+## Later optional field-selection experiment
+
+The separate0.5 release adds explicit JSON-pointer observations while retaining
+the64KiB selected-output limit. [Configuration and synthetic operator evidence](state-lens-selected-fields.md).
+The report above is still the author's0.4.1 run. No0.5 author execution,
+full-document coverage or improved diagnosis time is established by that report.

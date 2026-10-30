@@ -1,0 +1,39 @@
+{
+  "observed_at": "2026-10-30T19:15:50.586Z",
+  "kind": "AUTHORED_SYNTHETIC_OPERATOR_FIXTURE_NOT_ADOPTION",
+  "library": "0.5.0-experimental.1",
+  "schema": 4,
+  "node": "v22.23.4",
+  "playwright": "1.64.0",
+  "chromium": "156.0.8078.4",
+  "savedBytes": 162130,
+  "nativeChangedFields": [
+    {
+      "path": "$.nodes.0.data.digits",
+      "before": "(missing)",
+      "after": 2
+    },
+    {
+      "path": "$.nodes.0.data.dispRound",
+      "before": "(missing)",
+      "after": "floor"
+    }
+  ],
+  "wholeProbe": {
+    "status": "INCONCLUSIVE",
+    "reason": "Selected value exceeds64KiB"
+  },
+  "selectedProbeCount": 3,
+  "checkpoints": 5,
+  "selectedObservedValues": 15,
+  "selectedValueBytes": 1840,
+  "reportBytesWithoutScreenshots": 4323,
+  "dataBeforeSHA256": "cf1e3dbbd0760eb1f84243b81a176aa61fd747253951819eee72b76a62fcc10e",
+  "dataAfterSHA256": "dfe4eb709c042963759325c75bcefc39482faa62c0f593c0020d3a5989255dbd",
+  "unselectedPaddingNotSerialized": true,
+  "reloadSelectedDifferenceCount": 0,
+  "new_use_credit": 0,
+  "local_html": "selected-fields.html",
+  "reproduce": "node experiments/state-lens/selected-fields-case.mjs",
+  "scope": "Synthetic operator fixture; HTML and selected report are written to a fresh local output directory. Not an external user or a real Sethera run."
+}
