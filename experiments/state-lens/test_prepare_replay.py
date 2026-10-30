@@ -17,6 +17,7 @@ SCRIPT = Path(__file__).with_name('prepare_replay.py')
 VERSION = json.loads((SOURCE / 'package.json').read_text())['version']
 ARCHIVE = f'aichance-playwright-state-lens-{VERSION}.tgz'
 MODULE = f'state-lens-v{VERSION}.mjs'
+DECLARATIONS = f'state-lens-v{VERSION}.d.mts'
 
 
 class ReplayReleaseTests(unittest.TestCase):
@@ -48,16 +49,31 @@ class ReplayReleaseTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual((self.out / MODULE).read_bytes(),
                          (ROOT / 'docs' / MODULE).read_bytes())
+        self.assertEqual((self.out / DECLARATIONS).read_bytes(),
+                         (ROOT / 'docs' / DECLARATIONS).read_bytes())
         self.assertFalse((self.out / 'state-lens-v0.1.0-experimental.1.mjs').exists())
         for name in ['state-lens.html', 'state-lens-good.html']:
             page = (self.out / name).read_text()
             self.assertIn(f'href="{MODULE}"', page)
+            self.assertIn(f'href="{DECLARATIONS}"', page)
             self.assertIn('Current download: ' + VERSION, page)
             self.assertIn(self.recording[self.recording.index('<script type="application/json"'):].replace('select(0)', 'select(r.checkpoints.length-1)'), page)
         for name in ['state-lens-recorded-v0.1.0-experimental.1.html', 'state-lens-good-recorded-v0.1.0-experimental.1.html']:
             self.assertEqual((self.out / name).read_bytes(), (ROOT / 'docs' / name).read_bytes())
         digest = hashlib.sha256((self.out / MODULE).read_bytes()).hexdigest()
         self.assertEqual((self.out / (MODULE + '.sha256')).read_text(), digest + '  ' + MODULE + '\n')
+
+    def test_published_entrypoints_offer_current_assets_without_relabeling_recordings(self):
+        for name in ['state-lens.html', 'state-lens-good.html']:
+            page = (ROOT / 'docs' / name).read_text()
+            banner = page.split('<section class="trial">', 1)[1].split('</section>', 1)[0]
+            self.assertIn('Current download: ' + VERSION, banner)
+            for filename in [MODULE, MODULE + '.sha256', DECLARATIONS]:
+                self.assertIn(f'href="{filename}"', banner)
+                self.assertTrue((ROOT / 'docs' / filename).is_file())
+            recording = json.loads(page.split('<script type="application/json" id="data">', 1)[1].split('</script>', 1)[0])
+            self.assertEqual(recording['libraryVersion'], '0.4.0-experimental.1')
+            self.assertEqual(recording['schema'], 3)
 
     def test_conflicting_immutable_file_is_not_overwritten(self):
         conflict = b'Previous independently reviewed content; retain it.'
