@@ -1,4 +1,4 @@
-# Playwright State Lens 0.4.1-experimental.1
+# Playwright State Lens 0.5.0-experimental.1
 
 Put explicitly selected application storage beside your normal UI steps.
 The local HTML shows the viewport, selected localStorage/sessionStorage/IndexedDB values and
@@ -15,11 +15,11 @@ or [read the comparison and limits](../../docs/state-lens-results.md).
 
 From your app's project directory, with Node22+ and Playwright already installed:
 
-Download the [versioned MIT file](https://aichance.github.io/business-ai-recipes/state-lens-v0.4.1-experimental.1.mjs) and its [SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.4.1-experimental.1.mjs.sha256), review it, and place it beside your existing test without overwriting an older file. No additional npm dependency, account, model or API key is needed.
+Download the [versioned MIT file](https://aichance.github.io/business-ai-recipes/state-lens-v0.5.0-experimental.1.mjs) and its [SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.5.0-experimental.1.mjs.sha256), review it, and place it beside your existing test without overwriting an older file. No additional npm dependency, account, model or API key is needed.
 In your existing test, after opening your app, choose a storage key you know:
 
 ```js
-import { createStateLens } from './state-lens-v0.4.1-experimental.1.mjs';
+import { createStateLens } from './state-lens-v0.5.0-experimental.1.mjs';
 
 const lens = createStateLens(page, {
   probes: [{ name: 'draft', source: 'localStorage', key: 'app-draft', json: true }],
@@ -52,6 +52,20 @@ For IndexedDB, select a known database/store/key:
 { name: 'draft', source: 'indexedDB', database: 'notes', store: 'drafts', key: 'current' }
 ```
 
+## Fields inside large saved records
+
+Version0.5.0 adds an optional RFC6901 `pointer` to one probe. For a JSON Web
+Storage value, also use `json: true`. For example, `pointer: '/nodes/0/data/value'`
+observes that value without exporting the rest of the saved document. The
+64KiB output limit is unchanged. This is a partial observation, not evidence
+that every field was retained. Keep your native assertions and Trace.
+
+Schema4 keeps `exists` for the storage key and adds `selection.exists` for the
+pointer. An absent path uses a null placeholder; a saved null has
+`selection.exists: true`. Existing undefined/Date type paths are relative to
+the selected value. Probes without a pointer keep their whole-value behavior.
+[Configuration, bounds and the measured synthetic case](../../docs/state-lens-selected-fields.md).
+
 ## Tab-specific sessionStorage
 
 Version0.3.0 adds `{ name: 'draft', source: 'sessionStorage', key: 'draft-key', json: true }`.
@@ -83,13 +97,13 @@ and `valueEncoding: "json-with-undefined-paths-v1"` identify its actual type.
 A stored null has no undefined annotation; a missing field is absent in `value`.
 Pointers use RFC6901 escaping (`~` becomes `~0`, `/` becomes `~1`); `""` means
 the entire selected value. The HTML explains the projection beside its values.
-This encoding was introduced in schema2. Current `report()` emits `schema: 3`
+This encoding was introduced in schema2. Current `report()` emits `schema: 4`
 and `libraryVersion`; JSON consumers must handle the schema explicitly. The exported API is unchanged.
 [Representation, synthetic checks and limitations](../../docs/state-lens-undefined.md).
 The older0.1.0 files and recorded example reports remain available unchanged.
 
 For npm environments allowing remote URL dependencies, the optional
-[versioned tgz](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.4.1-experimental.1.tgz)
+[versioned tgz](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.5.0-experimental.1.tgz)
 contains the same library, tests and examples. It changes package metadata if
 installed. npm12 may reject remote dependencies; the one-file route needs no
 npm setting change. When using the package, import from `@aichance/playwright-state-lens`.
@@ -122,7 +136,9 @@ or require an API key; the caller provides its existing `page`.
 - Up to16 selected probes. localStorage/sessionStorage may be raw text or parsed JSON; IndexedDB
   keys are string/finite number. Selected values may be plain JSON plus explicit
   `undefined` fields or dense-array slots and valid Date values, depth<=12,
-  <=64KiB of UTF8 JSON including path metadata. Invalid Date, Map/Set/BigInt,
+  <=64KiB of UTF8 JSON including path metadata. Optional pointer selection
+  has at most32 segments/2048 UTF8 bytes; JSON Web Storage input is capped at4MiB.
+  IndexedDB still reads the named record inside the browser before selecting. Invalid Date, Map/Set/BigInt,
   cycles and sparse arrays remain unsupported.
 - Probes and the screenshot are sequential observations, not one atomic snapshot,
   commit timestamps, cause proof or a guarantee of persistence.
@@ -168,4 +184,4 @@ app data, source, screenshots and traces are not required.
 
 ## TypeScript checks
 
-Version0.4.1 adds explicit input JSDoc and optional matching declarations. Strict projects with `allowJs: false` can place `state-lens-v0.4.1-experimental.1.d.mts` beside the downloaded `.mjs`; package imports resolve `lens.d.mts` through the types export. [Measured blocker, setup and limits](../../docs/state-lens-typescript.md). Run `npm run test:types` for both declaration modes and the JSDoc-only consumer. These are development checks; the runtime has no additional dependency.
+Version0.4.1 adds explicit input JSDoc and optional matching declarations. Strict projects with `allowJs: false` can place `state-lens-v0.5.0-experimental.1.d.mts` beside the downloaded `.mjs`; package imports resolve `lens.d.mts` through the types export. [Measured blocker, setup and limits](../../docs/state-lens-typescript.md). Run `npm run test:types` for both declaration modes and the JSDoc-only consumer. These are development checks; the runtime has no additional dependency.
