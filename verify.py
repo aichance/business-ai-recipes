@@ -16,6 +16,22 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    'docs/aichance-playwright-state-lens-0.4.1-experimental.1.tgz',
+    'docs/aichance-playwright-state-lens-0.4.1-experimental.1.tgz.sha256',
+    'docs/state-lens-bloggr-consumer.mjs',
+    'docs/state-lens-bloggr-measurements.json',
+    'docs/state-lens-bloggr-native.md',
+    'docs/state-lens-bloggr-recovery.html',
+    'docs/state-lens-typescript.md',
+    'docs/state-lens-v0.4.1-experimental.1.d.mts',
+    'docs/state-lens-v0.4.1-experimental.1.d.mts.sha256',
+    'docs/state-lens-v0.4.1-experimental.1.mjs',
+    'docs/state-lens-v0.4.1-experimental.1.mjs.sha256',
+    'tools/playwright-state-lens/lens.d.mts',
+    'tools/playwright-state-lens/tests/types/consumer.mts',
+    'tools/playwright-state-lens/tests/types/single-file.mjs',
+    'tools/playwright-state-lens/tests/types/tsconfig-allowjs.json',
+    'tools/playwright-state-lens/tests/types/tsconfig.json',
     'docs/state-lens-held-writes.md',
     'tools/playwright-state-lens/examples/held-write.mjs',
     'docs/state-lens-dates.md',

@@ -4,6 +4,10 @@ Requires Node22+, an existing Playwright test project and its browser. The
 library adds selected localStorage/sessionStorage/IndexedDB observations and screenshots to
 your own UI steps. Your existing assertions still decide correctness.
 
+## TypeScript projects
+
+The current0.4.1 file includes explicit input JSDoc. If your project does not infer imported JavaScript, place the matching [state-lens-v0.4.1-experimental.1.d.mts](state-lens-v0.4.1-experimental.1.d.mts) ([SHA256](state-lens-v0.4.1-experimental.1.d.mts.sha256)) next to the `.mjs`, retaining both filenames. Package users get the type export automatically. Run your existing typecheck as well as the test. [The reproduced blocker and measured settings](state-lens-typescript.md).
+
 ## Try with your coding agent
 
 Paste the request below into an agent already authorized to work on your app.
@@ -19,17 +23,22 @@ Follow the project's instructions and preserve its current test runner.
 1. Inspect the relevant test and storage implementation. Do not read secrets,
    browser profiles, user databases or unrelated projects. Confirm Node22+
    and an existing Playwright installation/browser. Run the selected original
-   test and record its command/exit result. If prerequisites or a suitable
+   test and record its command/exit result. Also run the existing typecheck
+   command when present. If prerequisites or a suitable
    browser-persisted workflow are missing, report that blocker and stop;
    do not upgrade dependencies or substitute the library's demo.
 
-2. Use the common MIT 0.4.0-experimental.1 module:
-   https://aichance.github.io/business-ai-recipes/state-lens-v0.4.0-experimental.1.mjs
+2. Use the common MIT 0.4.1-experimental.1 module:
+   https://aichance.github.io/business-ai-recipes/state-lens-v0.4.1-experimental.1.mjs
    Expected SHA256:
-   9714c7c2bc11a591a4a90e3b20bb9e51d61fa65e325473da0e118644d760d604
+   b0cac73e52f6d4e404211feae08e7425e50fe81e6ea8f78d526d736a8f678e8c
    Review it and verify the bytes before importing it in the Node-side test.
    Save it beside the test without overwriting an existing file. Do not
    change npm settings, package metadata, app code or the existing test data.
+   For a TypeScript project needing declarations, download the matching
+   state-lens-v0.4.1-experimental.1.d.mts beside that file (SHA256
+   48c73700e9c815aa5f0743d7fbe9b32cfadb582e1c924cf584939da87fdbacac).
+   Keep the caller compiler settings unchanged.
 
 3. Select ONE known localStorage/sessionStorage key or IndexedDB database,
    store and key already exercised by that test, using its synthetic data.
@@ -46,7 +55,8 @@ Follow the project's instructions and preserve its current test runner.
    otherwise write to a new output directory. Keep the ordinary Trace.
    Reference: https://github.com/aichance/business-ai-recipes/blob/main/docs/state-lens-install.md
 
-5. Rerun that same test. Report the library/Node/Playwright versions, command,
+5. Rerun that same test and its existing typecheck when present. Report the
+   library/Node/Playwright versions, command,
    original and instrumented exit results, changed files, local HTML path,
    and whether the selected differences add anything to the normal Trace.
    A failed original assertion must stay a failure; INCONCLUSIVE is not PASS.
@@ -62,14 +72,14 @@ Playwright/`node:test`.
 
 ## Copy one versioned file
 
-1. [Download state-lens-v0.4.0-experimental.1.mjs](https://aichance.github.io/business-ai-recipes/state-lens-v0.4.0-experimental.1.mjs) and its [SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.4.0-experimental.1.mjs.sha256).
+1. [Download state-lens-v0.4.1-experimental.1.mjs](https://aichance.github.io/business-ai-recipes/state-lens-v0.4.1-experimental.1.mjs) and its [SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.4.1-experimental.1.mjs.sha256).
 2. Read the file, then place it next to an existing Playwright test. Keep an
    existing file instead of overwriting it. The file contains its MIT license
-   and the same implementation as the common 0.4.0-experimental.1 package.
+   and the same implementation as the common 0.4.1-experimental.1 package.
 3. Import it **in the Node-side test**, not in your app's browser bundle:
 
 ```js
-import { createStateLens } from './state-lens-v0.4.0-experimental.1.mjs';
+import { createStateLens } from './state-lens-v0.4.1-experimental.1.mjs';
 ```
 
 There is no additional npm installation, account, model or API key. Your
@@ -115,6 +125,11 @@ For IndexedDB, a probe selects a known record:
 { name: 'draft', source: 'indexedDB', database: 'notes', store: 'drafts', key: 'current' }
 ```
 
+[The Bloggr recovery case](state-lens-bloggr-native.md) shows one existing
+TypeScript test with the shared module and matching declaration. The original
+app/assertions and compiler settings were retained; the fixture uses synthetic
+route responses. This is operator verification, separate from adoption.
+
 [The complete consumer example](../tools/playwright-state-lens/examples/consumer.spec.mjs)
 uses the same implementation with an authored local fixture. The example's
 fixture import is for its demo app; it is not required in your own test.
@@ -147,9 +162,9 @@ report. Your existing assertions and browser lifecycle stay in the test.
 
 ## Common package alternative
 
-The [current common tgz](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.4.0-experimental.1.tgz)
-and [checksum](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.4.0-experimental.1.tgz.sha256)
-contain the same0.4.0 library, tests, demo and examples. npm setups that permit
+The [current common tgz](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.4.1-experimental.1.tgz)
+and [checksum](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.4.1-experimental.1.tgz.sha256)
+contain the same0.4.1 library, tests, demo and examples. npm setups that permit
 URL dependencies can install it as a development dependency, changing their
 package metadata. npm12 may refuse remote URL dependencies; the one-file route
 avoids changing that setting. It is the same common library for each app.

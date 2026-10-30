@@ -36,20 +36,24 @@ def main():
     name = f'aichance-playwright-state-lens-{version}.tgz'
     archive = out / name
     with tarfile.open(archive) as bundle:
-        for filename in ['package.json', 'lens.mjs', 'LICENSE']:
+        for filename in ['package.json', 'lens.mjs', 'lens.d.mts', 'LICENSE']:
             member = bundle.getmember('package/' + filename)
             if not member.isfile() or bundle.extractfile(member).read() != (source / filename).read_bytes():
                 raise SystemExit(f'Refusing package/source mismatch: {filename}')
     digest = hashlib.sha256(archive.read_bytes()).hexdigest()
     standalone = f'state-lens-v{version}.mjs'
+    declarations = f'state-lens-v{version}.d.mts'
     license_bytes = (source / 'LICENSE').read_bytes().rstrip()
     assert b'*/' not in license_bytes
     module = b'/*\n' + license_bytes + b'\n*/\n' + (source / 'lens.mjs').read_bytes()
+    types = b'/*\n' + license_bytes + b'\n*/\n' + (source / 'lens.d.mts').read_bytes()
     recordings = ['state-lens-recorded-v0.1.0-experimental.1.html', 'state-lens-good-recorded-v0.1.0-experimental.1.html']
     immutable = {
         name + '.sha256': f'{digest}  {name}\n'.encode(),
         standalone: module,
         standalone + '.sha256': (hashlib.sha256(module).hexdigest() + '  ' + standalone + '\n').encode(),
+        declarations: types,
+        declarations + '.sha256': (hashlib.sha256(types).hexdigest() + '  ' + declarations + '\n').encode(),
         **{filename: (source.parents[1] / 'docs' / filename).read_bytes() for filename in recordings},
     }
     # Check all conflicts before writing; never put current code under an older version name.
@@ -74,7 +78,7 @@ def main():
 <details><summary>Use it in your own app</summary><p id="start">Already use Playwright with Node22+? <a href="''' + standalone + '''" download>Download the one-file library</a> (<a href="''' + standalone + '''.sha256">SHA256</a>). Place it next to your test without replacing an existing copy, then import:</p><pre>''' + html.escape(command) + '''</pre>
 <p>Import createStateLens, select a known storage key and wrap your existing UI actions with lens.step. Keep your normal assertions. Attach the local HTML in finally.</p>
 <p><a href="https://github.com/aichance/business-ai-recipes/blob/main/docs/state-lens-install.md">Copy the integration and full example</a> · <a href="https://github.com/aichance/business-ai-recipes/blob/main/docs/state-lens-results.md">Measurements and limits</a> · <a href="https://github.com/aichance/business-ai-recipes/issues/new?title=%5BState%20Lens%5D%20Own-app%20trial">Report a trial or blocker</a></p>
-<p>For these recorded localStorage/IndexedDB examples, standard snapshots already contain the data. sessionStorage can be read explicitly with page.evaluate; <a href="https://github.com/aichance/business-ai-recipes/blob/main/docs/state-lens-session-storage.md">observe a selected tab value</a>. This helper adds selected per-step differences and screenshots in one HTML. Reports contain selected app data and stay local unless shared.</p></details></section>'''
+<p>For these recorded localStorage/IndexedDB examples, standard snapshots already contain the data. sessionStorage can be read explicitly with page.evaluate; <a href="https://github.com/aichance/business-ai-recipes/blob/main/docs/state-lens-session-storage.md">observe a selected tab value</a>. This helper adds selected per-step differences and screenshots in one HTML. Reports contain selected app data and stay local unless shared.</p></details><p>TypeScript: <a href="https://github.com/aichance/business-ai-recipes/blob/main/docs/state-lens-typescript.md">setup and measured fix</a> · <a href="''' + declarations + '''" download>matching declarations</a> · <a href="state-lens-bloggr-recovery.html">Bloggr recovery timeline</a></p></section>'''
     style = '.trial{border:1px solid #354d61;background:#142432;padding:18px;border-radius:12px;margin-bottom:24px}.trial a{color:#b3f16d}.trial summary{cursor:pointer;font-weight:650}.trial p{line-height:1.6}.trial pre{font-size:13px}a{overflow-wrap:anywhere}'
     for mode, target in [('reload-loss', 'state-lens.html'), ('good', 'state-lens-good.html')]:
         content = (args.input / (mode + '-state-lens.html')).read_text()
