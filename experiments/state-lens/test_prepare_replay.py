@@ -71,6 +71,8 @@ class ReplayReleaseTests(unittest.TestCase):
             for filename in [MODULE, MODULE + '.sha256', DECLARATIONS]:
                 self.assertIn(f'href="{filename}"', banner)
                 self.assertTrue((ROOT / 'docs' / filename).is_file())
+            self.assertIn(f'href="{ARCHIVE}"', banner)
+            self.assertIn('blob/main/docs/state-lens-manual.md', banner)
             recording = json.loads(page.split('<script type="application/json" id="data">', 1)[1].split('</script>', 1)[0])
             self.assertEqual(recording['libraryVersion'], '0.4.0-experimental.1')
             self.assertEqual(recording['schema'], 3)
@@ -107,6 +109,22 @@ class ReplayReleaseTests(unittest.TestCase):
         second = self.run_replay()
         self.assertEqual(second.returncode, 0, second.stderr)
         self.assertEqual({p.name: p.read_bytes() for p in self.out.iterdir()}, before)
+
+    def test_manual_entry_package_mismatch_stops_before_output(self):
+        archive = self.out / ARCHIVE
+        with tarfile.open(archive) as source:
+            entries = [(entry, source.extractfile(entry).read()) for entry in source.getmembers() if entry.isfile()]
+        with tarfile.open(archive, 'w:gz') as target:
+            for entry, payload in entries:
+                if entry.name == 'package/capture.mjs':
+                    payload += b'\n// Mismatching manual entry.\n'
+                entry.size = len(payload)
+                target.addfile(entry, io.BytesIO(payload))
+        result = self.run_replay()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('Refusing package/source mismatch: capture.mjs', result.stderr)
+        self.assertFalse((self.out / MODULE).exists())
+        self.assertFalse((self.out / 'state-lens.html').exists())
 
     def test_pages_only_needs_no_site_packages(self):
         result = subprocess.run([sys.executable, '-S', *self.command[1:]],

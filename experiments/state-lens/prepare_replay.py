@@ -36,7 +36,7 @@ def main():
     name = f'aichance-playwright-state-lens-{version}.tgz'
     archive = out / name
     with tarfile.open(archive) as bundle:
-        for filename in ['package.json', 'lens.mjs', 'lens.d.mts', 'LICENSE']:
+        for filename in ['package.json', 'lens.mjs', 'lens.d.mts', 'capture.mjs', 'README.md', 'LICENSE']:
             member = bundle.getmember('package/' + filename)
             if not member.isfile() or bundle.extractfile(member).read() != (source / filename).read_bytes():
                 raise SystemExit(f'Refusing package/source mismatch: {filename}')
@@ -76,6 +76,7 @@ def main():
 <p>Current download: ''' + html.escape(version) + '''. The recorded observations below are separate from the download version. Preserved earlier recording: <a href="''' + recordings[0] + '''">broken</a> / <a href="''' + recordings[1] + '''">normal</a>.</p>
 <p><a href="#start">Add to your Playwright test</a> · <a href="state-lens.html">Broken control</a> · <a href="state-lens-good.html">Normal control</a> · <a href="https://github.com/aichance/business-ai-recipes/tree/main/tools/playwright-state-lens">Source</a></p>
 <p>Own-app report: <a href="https://github.com/aichance/business-ai-recipes/blob/main/docs/state-lens-sethera-ownapp.md">Sethera formatting/reload on Windows</a>. Rerunning a plain script? <a href="https://github.com/aichance/business-ai-recipes/blob/main/docs/state-lens-install.md#rerun-without-replacing-a-report">Use a fresh report directory</a>; <code>EEXIST</code> means that output path already exists.</p>
+<p>No test yet? The same package includes a manual checkpoint entry. <a href="https://github.com/aichance/business-ai-recipes/blob/main/docs/state-lens-manual.md">Record your own app without writing a test</a>; Node22+ and an installed Playwright browser are still required. <a href="''' + html.escape(name) + '''" download>Download the common package</a>.</p>
 <p>Large saved records: <a href="https://github.com/aichance/business-ai-recipes/blob/main/docs/state-lens-selected-fields.md">observe explicit JSON pointers</a>, retaining the64KiB output limit and ordinary assertions. This is partial observation; earlier author reports used earlier versions.</p>
 <details><summary>Use it in your own app</summary><p id="start">Already use Playwright with Node22+? <a href="''' + standalone + '''" download>Download the one-file library</a> (<a href="''' + standalone + '''.sha256">SHA256</a>). Place it next to your test without replacing an existing copy, then import:</p><pre>''' + html.escape(command) + '''</pre>
 <p>Import createStateLens, select a known storage key and wrap your existing UI actions with lens.step. Keep your normal assertions. Attach the local HTML in finally.</p>
