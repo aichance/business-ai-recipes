@@ -30,6 +30,60 @@ and the captured viewport in one HTML. It does not discover hidden database
 events, infer commit timestamps or guarantee a root cause. Developer time savings
 and independent adoption have not been measured.
 
+### Inspect the native Trace values
+
+The current demo's native baseline explicitly calls
+`context.storageState({ indexedDB: true })` four times. Those return values
+also appear in the saved Trace's `after.result` records. Trace recording alone
+was not tested as an automatic IndexedDB history recorder: the baseline adds
+those four capture calls. State Lens and the baseline are separate fresh-context
+runs of the same authored fixture, not simultaneous observations of one run.
+
+From a newly generated demo output directory, this standard-library Python
+example reads only the known synthetic `drafts / notes / current` record from
+the native archive. It does not require State Lens or open an application:
+
+```sh
+python3 - reload-loss-standard-trace.zip <<'PY'
+import json, sys, zipfile
+
+with zipfile.ZipFile(sys.argv[1]) as archive:
+    events = [json.loads(line)
+              for name in archive.namelist() if name.endswith('.trace')
+              for line in archive.read(name).decode().splitlines() if line]
+calls = {event['callId'] for event in events
+         if event.get('type') == 'before'
+         and event.get('method') == 'storageState'
+         and event.get('params', {}).get('indexedDB') is True}
+for event in events:
+    if event.get('type') != 'after' or event.get('callId') not in calls:
+        continue
+    records = [record['value']
+               for origin in event.get('result', {}).get('origins', [])
+               for database in origin.get('indexedDB', []) if database['name'] == 'drafts'
+               for store in database['stores'] if store['name'] == 'notes'
+               for record in store.get('records', []) if record['key'] == 'current']
+    print(json.dumps(records[0] if records else None))
+PY
+```
+
+For this authored control the four lines are `null`,
+`{"body":"Keep this launch draft","revision":1}`, that same saved value,
+then `{"body":"","revision":2}` (JSON whitespace can differ).
+Running the example with `good-standard-trace.zip` ends with the unchanged
+saved value. All four native values agree with the corresponding State Lens
+checkpoints in each control. The broken State Lens report additionally lists
+the selected `body` and `revision` differences beside its screenshots; the
+normal report lists no post-reload difference.
+
+If explicit native snapshots or your existing logs/attachments already answer
+the question, they are a sufficient alternative. The proposed State Lens
+benefit here is selected-field organization in one HTML, not unique data
+capture, demonstrated time saving or a claim that Trace cannot show the values.
+The command reads a Playwright1.64 trace layout observed in this demo; other
+trace formats are unverified. Reproducing it is an operator experiment, not
+an external own-project trial.
+
 ## Existing plain-Playwright consumer
 
 [The nvim-edu native integration](state-lens-nvim-native.md) retains the existing
