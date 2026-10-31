@@ -1,4 +1,4 @@
-# Playwright State Lens 0.6.1-experimental.1
+# Playwright State Lens 0.7.0-experimental.1 preview
 
 Put explicitly selected application storage beside your normal UI steps.
 The local HTML shows the viewport, selected localStorage/sessionStorage/IndexedDB values and
@@ -10,6 +10,13 @@ evidence; this experiment tests whether selecting and aligning it reduces work.
 
 [Replay the measured example](https://aichance.github.io/business-ai-recipes/state-lens.html)
 or [read the comparison and limits](../../docs/state-lens-results.md).
+
+## Existing synchronous Python Playwright tests
+
+The [Python preview](python/README.md) uses your existing Page and requires no
+Node at runtime. It shares the browser collector and HTML viewer with this module.
+The hosted0.6.1 download links below remain the stable Node entry while the0.7
+source package is tested. Keep your native waits and assertions.
 
 ## Record your own app without writing a test
 
