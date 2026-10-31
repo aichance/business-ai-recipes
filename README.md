@@ -9,9 +9,9 @@ when a save/reload flow fails. Experimental, MIT, no account or API key.
 If State Lens is useful in your workflow, [star this repo](https://github.com/aichance/business-ai-recipes).
 [Share a result or blocker](https://github.com/aichance/business-ai-recipes/issues/new?title=%5BState%20Lens%5D%20Own-app%20trial) to help choose the next improvement.
 
-[![Actual synthetic fixture after reload: 1,234.57 and Saved. Both branches have the same screenshot, but only one preserves the original saved value.](docs/state-lens-format.png)](https://aichance.github.io/business-ai-recipes/state-lens-format.html)
+[![Actual common0.6.1 synthetic report: the app shows 1,234.57 and Saved while selected saved-value changes show 1234.567 to 1234.57 beside the screenshot.](docs/state-lens-format-v0.6.1-poster.png)](https://aichance.github.io/business-ai-recipes/state-lens-format.html)
 
-[**Reveal the saved-value difference**](https://aichance.github.io/business-ai-recipes/state-lens-format.html) · [**Download experimental v0.6.1**](https://github.com/aichance/business-ai-recipes/releases/tag/state-lens-v0.6.1-experimental.1) · [**Copy one file into your Playwright test**](docs/state-lens-install.md) · [**Record your own app without a test**](docs/state-lens-manual.md) · [**26-second replay (original0.1 recording)**](https://aichance.github.io/business-ai-recipes/state-lens-demo.mp4)
+[**Reveal the saved-value difference**](https://aichance.github.io/business-ai-recipes/state-lens-format.html) · [**25-second comparison replay (0.6.1)**](https://aichance.github.io/business-ai-recipes/state-lens-format-v0.6.1.mp4) · [**Download experimental v0.6.1**](https://github.com/aichance/business-ai-recipes/releases/tag/state-lens-v0.6.1-experimental.1) · [**Copy one file into your Playwright test**](docs/state-lens-install.md) · [**Record your own app without a test**](docs/state-lens-manual.md)
 
 **Same UI, different saved value:** in the new authored precision fixture,
 both branches show `1,234.57` and `Saved` after a format change and reload.
