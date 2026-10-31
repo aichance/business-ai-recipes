@@ -1,0 +1,163 @@
+{
+  "kind": "RECORDED_SYNTHETIC_COMPARISON_WALKTHROUGH_NOT_ADOPTION",
+  "recorded_at": "2026-10-31T22:05:30+09:00",
+  "source_public_commit": "026026405cf117c6545260fc7478bed03ccf1d6b",
+  "source_tree": "ad25c8941763588c1998fa510bda0fc84e782e4e",
+  "comparison_source": "experiments/state-lens/format-integrity-case.mjs",
+  "operation": "experiments/state-lens/format-replay.operation.json",
+  "assets": {
+    "docs/state-lens-format-v0.6.1.mp4": {
+      "sha256": "6305d3c81b50d57694f671336a642430c3f6726c2dea0d8a0e63ae0e5d8154a9",
+      "bytes": 2104531
+    },
+    "docs/state-lens-format-v0.6.1-poster.png": {
+      "sha256": "5de2bb6f1ac80a0ffc3a1bf663139d6b6bf45f362697f6d793060ef14a51ade6",
+      "bytes": 119807
+    },
+    "experiments/state-lens/format-replay.operation.json": {
+      "sha256": "054527d1818356e8ab6c338844f70df4ede8f8731d6eb95d748849958088b760",
+      "bytes": 1978
+    }
+  },
+  "video": {
+    "duration_seconds": 24.92,
+    "width": 1280,
+    "height": 720,
+    "codec": "h264",
+    "fps": 25,
+    "audio": false,
+    "ending_hold_seconds": 6
+  },
+  "common_library": {
+    "version": "0.6.1-experimental.1",
+    "measured_package_lens_sha256": "91a58b5a4a376b41a7d06aa7dce13109a05d2273d58cf2e532d426a376b291d3",
+    "package_lens_bytes_equal_to_measured_source": true,
+    "common_tgz_sha256": "cd9004ad7759bc686b230e2585152a336c34c54305a64f0a9233a55a3d095f84"
+  },
+  "measurement": {
+    "observedAt": "2026-10-31T13:00:42.576Z",
+    "node": "v22.23.4",
+    "playwright": "1.64.0",
+    "chromium": "156.0.8078.4",
+    "selectedKey": "precision-pad-document",
+    "freshContexts": 4,
+    "snapshotsPerContext": 4,
+    "nativeAndLensValuesEqual": true,
+    "identicalScreenshots": {
+      "save": true,
+      "reload": true
+    },
+    "consoleErrors": []
+  },
+  "measured_runs": [
+    {
+      "mode": "normal",
+      "observed": false,
+      "saved_value_assertions": [
+        {
+          "after": "save",
+          "expected": 1234.567,
+          "actual": 1234.567,
+          "passed": true
+        },
+        {
+          "after": "reload",
+          "expected": 1234.567,
+          "actual": 1234.567,
+          "passed": true
+        }
+      ],
+      "screen_sha256": {
+        "save": "7d87d61d6815c98e665b522304286fdbcb47b92a5d006dfe6fe85cac833f7c6c",
+        "reload": "ba079ee1d3472183017872e61a19a7fec819e72d948d362e8ac9ea5a8fd5224e"
+      }
+    },
+    {
+      "mode": "normal",
+      "observed": true,
+      "saved_value_assertions": [
+        {
+          "after": "save",
+          "expected": 1234.567,
+          "actual": 1234.567,
+          "passed": true
+        },
+        {
+          "after": "reload",
+          "expected": 1234.567,
+          "actual": 1234.567,
+          "passed": true
+        }
+      ],
+      "screen_sha256": {
+        "save": "7d87d61d6815c98e665b522304286fdbcb47b92a5d006dfe6fe85cac833f7c6c",
+        "reload": "ba079ee1d3472183017872e61a19a7fec819e72d948d362e8ac9ea5a8fd5224e"
+      }
+    },
+    {
+      "mode": "regression",
+      "observed": false,
+      "saved_value_assertions": [
+        {
+          "after": "save",
+          "expected": 1234.567,
+          "actual": 1234.57,
+          "passed": false
+        },
+        {
+          "after": "reload",
+          "expected": 1234.567,
+          "actual": 1234.57,
+          "passed": false
+        }
+      ],
+      "screen_sha256": {
+        "save": "7d87d61d6815c98e665b522304286fdbcb47b92a5d006dfe6fe85cac833f7c6c",
+        "reload": "ba079ee1d3472183017872e61a19a7fec819e72d948d362e8ac9ea5a8fd5224e"
+      }
+    },
+    {
+      "mode": "regression",
+      "observed": true,
+      "saved_value_assertions": [
+        {
+          "after": "save",
+          "expected": 1234.567,
+          "actual": 1234.57,
+          "passed": false
+        },
+        {
+          "after": "reload",
+          "expected": 1234.567,
+          "actual": 1234.57,
+          "passed": false
+        }
+      ],
+      "screen_sha256": {
+        "save": "7d87d61d6815c98e665b522304286fdbcb47b92a5d006dfe6fe85cac833f7c6c",
+        "reload": "ba079ee1d3472183017872e61a19a7fec819e72d948d362e8ac9ea5a8fd5224e"
+      }
+    }
+  ],
+  "native_snapshots_total": 16,
+  "lens_report_checkpoints_total": 8,
+  "recorder": {
+    "source": ".agents/skills/demo-forge/scripts/forge.py",
+    "source_sha256": "04a36ec5f43b572ec8c28b724f353d73c7ea7d11773122ab425e65a2954e3681",
+    "playwright_python": "1.63.0",
+    "status": "success",
+    "verified": {
+      "success_selector": "#changes",
+      "success_text": "[\n  {\n    \"path\": \"$.value.value\",\n    \"before\": 1234.567,\n    \"after\": 1234.57\n  },\n  {\n    \"path\": \"$.digits.value\",\n    \"before\": 3,\n    \"after\": 2\n  }\n]",
+      "operation_steps": 13
+    },
+    "chapter_cards": 6
+  },
+  "scope": "Walk-through of fresh recorded results and local HTML; not a live recording of an external app, commit-time proof, exclusive detection or measured time saving.",
+  "independent_use_credit": 0,
+  "operation_publication_normalization": {
+    "executed_source_sha256": "62cab257a2b03e67f41aa1d701b0c3023aa871c24bd0d55596f616ea108deed5",
+    "published_sha256": "054527d1818356e8ab6c338844f70df4ede8f8731d6eb95d748849958088b760",
+    "change": "Remove one trailing blank line only; parsed JSON exactly equals the executed operation."
+  }
+}
