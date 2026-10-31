@@ -5,8 +5,9 @@ State Lens0.5.0-experimental.1 adds one optional pointer per probe using the
 Unresolved paths are represented explicitly by `selection.exists: false`.
 This addresses a concrete limit reported by the [Sethera author](state-lens-sethera-ownapp.md):
 a normal saved document can exceed64KiB even without images, making the whole
-probe inconclusive. That author ran0.4.1; the0.5 evidence below is a separate
-authored operator fixture.
+probe inconclusive. The initial author report used0.4.1. The measurements below
+remain a separate authored operator fixture; a [later own-app0.5 reuse report](#later-own-app-reuse-report)
+is described separately below.
 
 ## Use your known path
 
@@ -78,6 +79,21 @@ cd tools/playwright-state-lens
 node --test tests/selected-fields.test.mjs
 ```
 
+## Later own-app reuse report
+
+On2026-10-31, the Sethera author [reported using common0.5 on their own app](state-lens-sethera-ownapp.md#updated-version-reuse-05-on-a-larger-document)
+with a document of approximately132,000bytes on Windows, Node22.23.4 and
+Playwright1.64.1. The full probe remained `INCONCLUSIVE`, while3 selected fields
+were `OBSERVED`; selected changes after reload were0. They asserted that the
+selected array position still referred to the intended piece and confirmed
+that a fresh output directory allowed another run.
+
+That is the author's updated-version self-report, separate from the162,130byte
+macOS fixture and its measurements above. It does not report an independent
+whole-document comparison or a run of the0.6 manual entry, and it establishes
+no measured time saving or broad platform guarantee. The linked report includes
+the source comment and the conditions for interpreting the result.
+
 ## Schema4: storage key and selected path
 
 `report()` now emits `schema: 4`. JSON consumers must handle that schema
@@ -117,5 +133,5 @@ Earlier report HTML and immutable0.4.1 downloads remain available.
   correctness. Keep the app's saving/commit waits and assertions.
 
 The common module performs no storage writes. The existing refusal to replace
-an HTML report is unchanged. No author execution of0.5 or broad browser/runtime
-compatibility is established by this operator fixture.
+an HTML report is unchanged. This operator fixture alone establishes no external use or broad browser/runtime
+compatibility; the later author-reported0.5 reuse is linked separately above.
