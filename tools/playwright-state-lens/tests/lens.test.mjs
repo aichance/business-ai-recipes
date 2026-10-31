@@ -77,7 +77,7 @@ test('undefined-valued records retain explicit types without changing IndexedDB'
   assert.deepEqual(before, { body: 'Synthetic transaction', quantityPresent: true, quantityType: 'undefined',
     nestedPresent: true, nestedType: 'undefined', arraySlotPresent: true, arraySlotType: 'undefined', nullSlot: null });
   assert.equal(lens.report().schema, 4);
-  assert.equal(lens.report().libraryVersion, '0.6.1-experimental.1');
+  assert.equal(lens.report().libraryVersion, '0.7.0-experimental.1');
   const view = await page.context().newPage();
   await view.setContent(renderTimeline(lens.report()));
   assert.match(await view.locator('#value-note').textContent(), /undefinedPaths.*observed undefined/);
