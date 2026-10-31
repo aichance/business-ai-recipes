@@ -1,6 +1,6 @@
 # Record your own app without writing a test
 
-State Lens0.6.1-experimental.1 includes a manual checkpoint entry in the same
+State Lens0.7.0-experimental.1 includes a manual checkpoint entry in the same
 common MIT package. You operate your own app and name the checkpoints; the
 helper observes selected storage values and screenshots into one local HTML.
 It does not click Save, alter storage, generate assertions or decide PASS.
@@ -13,8 +13,8 @@ already have a save/reload test, [keep that test and add the library](state-lens
 
 ## Run from your app's directory
 
-1. Download the [common0.6.1-experimental.1 archive](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.6.1-experimental.1.tgz)
-   and [SHA256](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.6.1-experimental.1.tgz.sha256),
+1. Download the [common0.7.0-experimental.1 archive](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.7.0-experimental.1.tgz)
+   and [SHA256](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.7.0-experimental.1.tgz.sha256),
    verify and review the source, and extract it into a **new** directory.
    Keep its `package` folder intact. Do not replace an existing tool copy.
 2. In your app's directory, create a small JSON file selecting a key you know
