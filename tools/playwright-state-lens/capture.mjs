@@ -10,7 +10,7 @@ import { createStateLens } from './lens.mjs';
 const MAX_CHECKPOINTS = 50;
 export const HELP = `State Lens: manually record your own app, without writing a test.
 
-From a project with Node22+ and Playwright/Chromium already installed:
+From a project with Node20.19+ and Playwright/Chromium already installed:
   node capture.mjs --url http://127.0.0.1:5173 --probe-file probe.json
 
 probe.json contains one normal State Lens probe, or an array of1–16 probes.

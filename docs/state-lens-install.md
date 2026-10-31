@@ -1,6 +1,6 @@
 # Use State Lens in your app
 
-Requires Node22+ and Playwright with its browser already installed.
+Requires Node20.19+ and Playwright with its browser already installed.
 Have an existing test? Follow this page. Without a test,
 [record your own manual app workflow](state-lens-manual.md) with the same package. The
 library adds selected localStorage/sessionStorage/IndexedDB observations and screenshots to
@@ -12,9 +12,11 @@ your own UI steps. Your existing assertions still decide correctness.
 For a real use case and the limits that surfaced, see the
 [Sethera author's Windows report](state-lens-sethera-ownapp.md).
 
+[Measured Node20.19/Node22 compatibility and limits](state-lens-runtime.md).
+
 ## TypeScript projects
 
-The current0.5.0 file includes explicit input JSDoc. If your project does not infer imported JavaScript, place the matching [state-lens-v0.6.0-experimental.1.d.mts](state-lens-v0.6.0-experimental.1.d.mts) ([SHA256](state-lens-v0.6.0-experimental.1.d.mts.sha256)) next to the `.mjs`, retaining both filenames. Package users get the type export automatically. Run your existing typecheck as well as the test. [The reproduced blocker and measured settings](state-lens-typescript.md).
+The current file includes explicit input JSDoc. If your project does not infer imported JavaScript, place the matching [state-lens-v0.6.1-experimental.1.d.mts](state-lens-v0.6.1-experimental.1.d.mts) ([SHA256](state-lens-v0.6.1-experimental.1.d.mts.sha256)) next to the `.mjs`, retaining both filenames. Package users get the type export automatically. Run your existing typecheck as well as the test. [The reproduced blocker and measured settings](state-lens-typescript.md).
 
 ## Try with your coding agent
 
@@ -29,22 +31,22 @@ Add State Lens to ONE existing Playwright save/reload test in this project.
 Follow the project's instructions and preserve its current test runner.
 
 1. Inspect the relevant test and storage implementation. Do not read secrets,
-   browser profiles, user databases or unrelated projects. Confirm Node22+
+   browser profiles, user databases or unrelated projects. Confirm Node20.19+
    and an existing Playwright installation/browser. Run the selected original
    test and record its command/exit result. Also run the existing typecheck
    command when present. If prerequisites or a suitable
    browser-persisted workflow are missing, report that blocker and stop;
    do not upgrade dependencies or substitute the library's demo.
 
-2. Use the common MIT 0.6.0-experimental.1 module:
-   https://aichance.github.io/business-ai-recipes/state-lens-v0.6.0-experimental.1.mjs
+2. Use the common MIT 0.6.1-experimental.1 module:
+   https://aichance.github.io/business-ai-recipes/state-lens-v0.6.1-experimental.1.mjs
    Expected SHA256:
-   7947dfeded08d7ff05b75fea0f6ec6d35659ed0ab463aa17cc00c90b0c2cb669
+   f8db1ef429935e06603ec7b5023ba80d180de02ac99920f0772fd9c6510f8cef
    Review it and verify the bytes before importing it in the Node-side test.
    Save it beside the test without overwriting an existing file. Do not
    change npm settings, package metadata, app code or the existing test data.
    For a TypeScript project needing declarations, download the matching
-   state-lens-v0.6.0-experimental.1.d.mts beside that file (SHA256
+   state-lens-v0.6.1-experimental.1.d.mts beside that file (SHA256
    42a12b3982e675d1b0033153186eef1adfdde34cde05ce03c674b08e2376a281).
    Keep the caller compiler settings unchanged.
 
@@ -88,14 +90,14 @@ Playwright/`node:test`.
 
 ## Copy one versioned file
 
-1. [Download state-lens-v0.6.0-experimental.1.mjs](https://aichance.github.io/business-ai-recipes/state-lens-v0.6.0-experimental.1.mjs) and its [SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.6.0-experimental.1.mjs.sha256).
+1. [Download state-lens-v0.6.1-experimental.1.mjs](https://aichance.github.io/business-ai-recipes/state-lens-v0.6.1-experimental.1.mjs) and its [SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.6.1-experimental.1.mjs.sha256).
 2. Read the file, then place it next to an existing Playwright test. Keep an
    existing file instead of overwriting it. The file contains its MIT license
-   and the same implementation as the common 0.6.0-experimental.1 package.
+   and the same implementation as the common 0.6.1-experimental.1 package.
 3. Import it **in the Node-side test**, not in your app's browser bundle:
 
 ```js
-import { createStateLens } from './state-lens-v0.6.0-experimental.1.mjs';
+import { createStateLens } from './state-lens-v0.6.1-experimental.1.mjs';
 ```
 
 There is no additional npm installation, account, model or API key. Your
@@ -201,8 +203,8 @@ test assertion, package setting or library option needs to change.
 
 ## Common package alternative
 
-The [current common tgz](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.6.0-experimental.1.tgz)
-and [checksum](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.6.0-experimental.1.tgz.sha256)
+The [current common tgz](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.6.1-experimental.1.tgz)
+and [checksum](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.6.1-experimental.1.tgz.sha256)
 contain the current common library, manual-capture entry, tests, demo and examples. npm setups that permit
 URL dependencies can install it as a development dependency, changing their
 package metadata. npm12 may refuse remote URL dependencies; the one-file route
@@ -222,7 +224,7 @@ existing Playwright Page; it does not synchronize or restore tabs.
 Version0.2.0 accepts plain records/dense arrays with explicit `undefined` values.
 The JSON report uses annotated null placeholders and a separate `undefinedPaths`
 list so `undefined`, stored null and absent fields remain distinct. This was
-introduced in schema2; the current `report()` emits schema3 and `libraryVersion`.
+introduced in schema2; the current `report()` emits schema4 and `libraryVersion`.
 Handle the schema explicitly if parsing the report programmatically. [Exact representation, synthetic checks and limitations](state-lens-undefined.md).
 The64KiB limit counts UTF8 JSON bytes including path metadata. Map/Set, BigInt,
 cycles, sparse/extended arrays, invalid Date and depth>12 remain INCONCLUSIVE.

@@ -14,6 +14,10 @@ concurrency:
 
 jobs:
   playwright-state-lens:
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['20.19.0', '22']
     runs-on: ubuntu-24.04
     timeout-minutes: 8
     defaults:
@@ -25,8 +29,11 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: '22'
+          node-version: ${{ matrix.node }}
       - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Exercise the existing Node20 and Playwright1.62 peer combination
+        if: matrix.node == '20.19.0'
+        run: npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund @playwright/test@1.62.1 @types/node@20.19.37
       - run: npx playwright install --with-deps chromium
       - run: npm test
       - run: npm run test:types

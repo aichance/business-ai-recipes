@@ -3,7 +3,7 @@
 This checkout starts from a verified public-source commit. Preserve all existing products.
 
 - Scope: `tools/edit-undo/`, `tools/playwright-state-lens/`, their synthetic comparison fixtures, and focused documentation.
-- Runtime: Node22+, Git, existing Playwright. Prefer built-ins and pinned existing dependencies.
+- Runtime: State Lens requires Node20.19+; Edit Undo remains Node22+. Use Git and existing Playwright, built-ins and pinned existing dependencies. Other preserved products retain their own requirements.
 - Run each tool's `npm test` and synthetic comparison command before reporting behavior. User adoption is separate from operator testing.
 - Edit Undo begins as a preview-only prototype. It must not mutate the target project or Git index. Reject unsafe paths, ambiguous states and unsupported file types. Do not add arbitrary-project apply before recovery/drift/conflict tests and independent review.
 - State Lens observes explicitly selected application storage. Use synthetic local apps for tests. Record unavailable observations separately from absent data. Do not claim commit timing or root-cause proof.
