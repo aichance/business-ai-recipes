@@ -63,6 +63,32 @@ The author also reviewed the single-file source before running it and reported
 that the selected key and viewport screenshots remained in a local report.
 Do not send application data or the HTML to reproduce this use case.
 
+## Updated-version reuse: 0.5 on a larger document
+
+In a [follow-up on 2026-10-31 at 08:59 JST](https://qiita.com/cuculhart/items/f020080b2ef1331222d0#comment-96ff5eafacaf7ad7c461),
+the author reported checking the common **0.5.0-experimental.1** module's SHA256
+and running it on the same unmodified v2.0.0 in a fresh clone:
+Windows, Node 22.23.4 and Playwright 1.64.1.
+
+The author imported 300 CSV rows by two columns, about 600 pieces, making
+`sethera-doc` approximately **132,000 bytes**. The report describes:
+
+- The whole-document probe remaining `INCONCLUSIVE`, while three selected
+  pointers remained `OBSERVED` in the same HTML.
+- Formatting changing `n0.digits` from absent to 2 and `n0.dispRound` to
+  `"floor"`; the numeric value did not appear in the differences.
+- Zero selected-field differences after reload; display changing from
+  1234.567 to 1234.56.
+- Missing-path metadata distinguishing a placeholder `null` from a saved
+  null value, and the `mkdtemp` output recipe allowing another run.
+
+The author used an assertion to keep `nodes[0]` tied to the intended piece;
+the CSV import appended without reordering it. Operations that reorder an
+array need their own identity checks. The report recommends combining selected
+step differences with independent full-document assertions; it does not
+establish an executed whole-document comparison. This is the same developer's
+updated-version reuse, separate from the first 0.4.1 run.
+
 ## Try the same kind of question in your own app
 
 Choose a small synthetic workflow you already understand: one UI operation
