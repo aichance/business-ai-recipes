@@ -6,6 +6,35 @@ Precision Pad is an **authored synthetic fixture**, inspired by the distinction
 between display formatting and stored values. It is not a newly discovered bug
 in Sethera or another developer's app, and it is not independent adoption.
 
+## 25-second replay with common0.6.1
+
+[![Fresh common0.6.1 report: saved-field changes beside the same application screenshot.](state-lens-format-v0.6.1-poster.png)](https://aichance.github.io/business-ai-recipes/state-lens-format-v0.6.1.mp4)
+
+[Watch the 24.92-second comparison](https://aichance.github.io/business-ai-recipes/state-lens-format-v0.6.1.mp4)
+and [check its measurements and asset hashes](state-lens-format-v0.6.1-media.json).
+It walks through newly measured results and the local HTML with the unchanged
+common0.6.1 package. Both app screenshots match; the original-value assertion
+fails only in the authored regression, with native Playwright and with Lens.
+This is a recorded-results walk-through, not a live external-app capture.
+
+The new run uses four fresh contexts, 16 native saved-state observations and
+eight Lens report checkpoints. Its measurement browser is Node22.23.4 /
+Playwright1.64.0 / Chromium156.0.8078.4. The replay recorder uses Python
+Playwright1.63.0; that recording is not another library compatibility test.
+The original0.6.0 comparison assets and the [earlier0.1 video](state-lens-demo.mp4)
+remain unchanged. Neither recording counts as independent use.
+
+To repeat the video, run the comparison command below into a new directory,
+serve that output on one loopback port, then use the existing
+[Demo Forge recorder](../.agents/skills/demo-forge/SKILL.md) with
+[`format-replay.operation.json`](../experiments/state-lens/format-replay.operation.json),
+`--url` pointing to its `state-lens-format.html`, `--narrate` and
+`--tail-seconds 6`. Use a new media output directory. The operation checks the
+actual revealed values and the selected after-save difference before recording
+the final frame. Captions describe recorded observations; native assertions
+still decide correctness. The recorder needs Python3.11+, its installed
+Playwright/Chromium and FFmpeg. No account, model or API key is used.
+
 The initial value is `1234.567`. Change display precision from three decimal
 places to two, save, and reload. Both branches show **1,234.57** and **Saved**.
 The normal branch preserves `value: 1234.567`; the intentionally broken branch

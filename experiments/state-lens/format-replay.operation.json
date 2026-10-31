@@ -1,0 +1,79 @@
+{
+  "name": "state-lens-format-common-061",
+  "input": {
+    "kind": "recorded synthetic comparison",
+    "common_version": "0.6.1-experimental.1"
+  },
+  "steps": [
+    {
+      "type": "assert_text",
+      "selector": "h1",
+      "contains": "Same screen.",
+      "chapter": "Recorded synthetic comparison · State Lens 0.6.1"
+    },
+    {
+      "type": "scroll_into_view",
+      "selector": "main > .grid"
+    },
+    {
+      "type": "assert_text",
+      "selector": "main > .grid",
+      "contains": "UI checks: passed",
+      "chapter": "Same screen: 1,234.57 and Saved in both branches."
+    },
+    {
+      "type": "click",
+      "selector": "#reveal"
+    },
+    {
+      "type": "scroll_into_view",
+      "selector": "#stored"
+    },
+    {
+      "type": "assert_text",
+      "selector": "#stored",
+      "contains": "1234.567",
+      "chapter": "Saved value: 1234.567 vs 1234.57."
+    },
+    {
+      "type": "assert_text",
+      "selector": "#stored",
+      "contains": "Original-value assertion: failed after save and reload",
+      "chapter": "Standard Playwright catches this too. Keep your assertions."
+    },
+    {
+      "type": "click",
+      "selector": "a[href=\"state-lens-format-regression.html\"]"
+    },
+    {
+      "type": "wait_for_selector",
+      "selector": "#steps button:nth-child(2)",
+      "timeout_ms": 10000
+    },
+    {
+      "type": "click",
+      "selector": "#steps button:nth-child(2)"
+    },
+    {
+      "type": "assert_text",
+      "selector": "#label",
+      "contains": "Save format · after",
+      "chapter": "Common 0.6.1: selected differences beside the screenshot."
+    },
+    {
+      "type": "assert_text",
+      "selector": "#changes",
+      "contains": "1234.567"
+    },
+    {
+      "type": "assert_text",
+      "selector": "#changes",
+      "contains": "1234.57",
+      "chapter": "One local HTML. No account or API key. Use your own test."
+    }
+  ],
+  "success": {
+    "selector": "#changes",
+    "text": "\"after\": 1234.57"
+  }
+}
