@@ -1,4 +1,4 @@
-# Playwright State Lens 0.6.0-experimental.1
+# Playwright State Lens 0.6.1-experimental.1
 
 Put explicitly selected application storage beside your normal UI steps.
 The local HTML shows the viewport, selected localStorage/sessionStorage/IndexedDB values and
@@ -13,7 +13,7 @@ or [read the comparison and limits](../../docs/state-lens-results.md).
 
 ## Record your own app without writing a test
 
-With Node22+ and Playwright/Chromium already installed, use the same package's
+With Node20.19+ and Playwright/Chromium already installed, use the same package's
 `capture.mjs` entry. Open your own app, perform its normal actions, and name the
 checkpoints in your terminal. It records selected values and screenshots into a
 new local HTML; it does not click Save, mutate storage, or assert correctness.
@@ -21,13 +21,13 @@ new local HTML; it does not click Save, mutate storage, or assert correctness.
 
 ## Add it to your existing Playwright test
 
-From your app's project directory, with Node22+ and Playwright already installed:
+From your app's project directory, with Node20.19+ and Playwright already installed:
 
-Download the [versioned MIT file](https://aichance.github.io/business-ai-recipes/state-lens-v0.6.0-experimental.1.mjs) and its [SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.6.0-experimental.1.mjs.sha256), review it, and place it beside your existing test without overwriting an older file. No additional npm dependency, account, model or API key is needed.
+Download the [versioned MIT file](https://aichance.github.io/business-ai-recipes/state-lens-v0.6.1-experimental.1.mjs) and its [SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.6.1-experimental.1.mjs.sha256), review it, and place it beside your existing test without overwriting an older file. No additional npm dependency, account, model or API key is needed.
 In your existing test, after opening your app, choose a storage key you know:
 
 ```js
-import { createStateLens } from './state-lens-v0.6.0-experimental.1.mjs';
+import { createStateLens } from './state-lens-v0.6.1-experimental.1.mjs';
 
 const lens = createStateLens(page, {
   probes: [{ name: 'draft', source: 'localStorage', key: 'app-draft', json: true }],
@@ -115,7 +115,7 @@ and `libraryVersion`; JSON consumers must handle the schema explicitly. The expo
 The older0.1.0 files and recorded example reports remain available unchanged.
 
 For npm environments allowing remote URL dependencies, the optional
-[versioned tgz](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.5.0-experimental.1.tgz)
+[versioned tgz](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.6.1-experimental.1.tgz)
 contains the same library, tests and examples. It changes package metadata if
 installed. npm12 may reject remote dependencies; the one-file route needs no
 npm setting change. When using the package, import from `@aichance/playwright-state-lens`.
@@ -139,8 +139,8 @@ The demo prints a new output directory containing broken/normal reports and
 standard Playwright comparisons. Open `reload-loss-state-lens.html` there.
 The consumer example
 uses the ordinary Playwright test runner and attaches its local HTML report.
-Requires Node22+, an existing Playwright browser,
-and Chromium for the measured IndexedDB behavior. Operator checks use Playwright1.64.0/Chromium. An author [reports 0.2.0 use with Playwright1.63.0](https://bsky.app/profile/tomu963.bsky.social/post/3myzc4bivbw2c) on one own-app workflow; broader version/browser compatibility is unverified. The library does not import Playwright
+Requires Node20.19+, an existing Playwright browser,
+and Chromium for the measured IndexedDB behavior. Operator checks include Node20.19.0/Playwright1.62.1 and Node22.23.4/Playwright1.64.0 on macOS. See [exact runtime checks and limits](../../docs/state-lens-runtime.md). An author [reports 0.2.0 use with Playwright1.63.0](https://bsky.app/profile/tomu963.bsky.social/post/3myzc4bivbw2c) on one own-app workflow; broader version/browser compatibility is unverified. The library does not import Playwright
 or require an API key; the caller provides its existing `page`.
 
 ## Limits
@@ -196,4 +196,4 @@ app data, source, screenshots and traces are not required.
 
 ## TypeScript checks
 
-Version0.4.1 adds explicit input JSDoc and optional matching declarations. Strict projects with `allowJs: false` can place `state-lens-v0.6.0-experimental.1.d.mts` beside the downloaded `.mjs`; package imports resolve `lens.d.mts` through the types export. [Measured blocker, setup and limits](../../docs/state-lens-typescript.md). Run `npm run test:types` for both declaration modes and the JSDoc-only consumer. These are development checks; the runtime has no additional dependency.
+Version0.4.1 adds explicit input JSDoc and optional matching declarations. Strict projects with `allowJs: false` can place `state-lens-v0.6.1-experimental.1.d.mts` beside the downloaded `.mjs`; package imports resolve `lens.d.mts` through the types export. [Measured blocker, setup and limits](../../docs/state-lens-typescript.md). Run `npm run test:types` for both declaration modes and the JSDoc-only consumer. These are development checks; the runtime has no additional dependency.

@@ -1,10 +1,10 @@
 {
   "name": "@aichance/playwright-state-lens",
-  "version": "0.6.0-experimental.1",
+  "version": "0.6.1-experimental.1",
   "private": true,
   "type": "module",
   "engines": {
-    "node": ">=22"
+    "node": ">=20.19.0"
   },
   "exports": {
     ".": {
