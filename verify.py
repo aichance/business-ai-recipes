@@ -16,6 +16,13 @@ from zipfile import ZipFile
 from recipe import Refused, apply_local, approve, prepare, read_json, validate_plan
 
 EXPECTED_FILES = {
+    'docs/state-lens-format.html',
+    'docs/state-lens-format.png',
+    'docs/state-lens-format-normal.html',
+    'docs/state-lens-format-regression.html',
+    'docs/state-lens-format-measurements.json',
+    'docs/state-lens-format.md',
+    'experiments/state-lens/format-integrity-case.mjs',
     'docs/aichance-playwright-state-lens-0.6.0-experimental.1.tgz',
     'docs/aichance-playwright-state-lens-0.6.0-experimental.1.tgz.sha256',
     'docs/state-lens-manual.md',
