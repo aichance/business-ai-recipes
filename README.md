@@ -8,7 +8,7 @@ when a save/reload flow fails. Experimental, MIT, no account or API key.
 
 [![Actual synthetic fixture after reload: 1,234.57 and Saved. Both branches have the same screenshot, but only one preserves the original saved value.](docs/state-lens-format.png)](https://aichance.github.io/business-ai-recipes/state-lens-format.html)
 
-[**Reveal the saved-value difference**](https://aichance.github.io/business-ai-recipes/state-lens-format.html) · [**Copy one file into your Playwright test**](docs/state-lens-install.md) · [**Record your own app without a test**](docs/state-lens-manual.md) · [**26-second replay (original0.1 recording)**](https://aichance.github.io/business-ai-recipes/state-lens-demo.mp4)
+[**Reveal the saved-value difference**](https://aichance.github.io/business-ai-recipes/state-lens-format.html) · [**Download experimental v0.6**](https://github.com/aichance/business-ai-recipes/releases/tag/state-lens-v0.6.0-experimental.1) · [**Copy one file into your Playwright test**](docs/state-lens-install.md) · [**Record your own app without a test**](docs/state-lens-manual.md) · [**26-second replay (original0.1 recording)**](https://aichance.github.io/business-ai-recipes/state-lens-demo.mp4)
 
 **Same UI, different saved value:** in the new authored precision fixture,
 both branches show `1,234.57` and `Saved` after a format change and reload.
