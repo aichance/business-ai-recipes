@@ -1,14 +1,21 @@
 # aichance's developer tools
 
-## State Lens — which save step changed your draft?
+## State Lens — same screen. Different saved data.
 
 Put selected **localStorage / sessionStorage / IndexedDB values, field changes and screenshots**
 beside the actions in your existing Playwright test. Open one local HTML report
 when a save/reload flow fails. Experimental, MIT, no account or API key.
 
-[![Actual selected-state timeline from an authored broken save/reload fixture](docs/state-lens-preview.png)](https://aichance.github.io/business-ai-recipes/state-lens.html)
+[![Actual synthetic fixture after reload: 1,234.57 and Saved. Both branches have the same screenshot, but only one preserves the original saved value.](docs/state-lens-format.png)](https://aichance.github.io/business-ai-recipes/state-lens-format.html)
 
-[**Replay the recorded example**](https://aichance.github.io/business-ai-recipes/state-lens.html) · [**Copy one file into your Playwright test**](docs/state-lens-install.md) · [**Record your own app without a test**](docs/state-lens-manual.md) · [**26-second replay (original0.1 recording)**](https://aichance.github.io/business-ai-recipes/state-lens-demo.mp4)
+[**Reveal the saved-value difference**](https://aichance.github.io/business-ai-recipes/state-lens-format.html) · [**Copy one file into your Playwright test**](docs/state-lens-install.md) · [**Record your own app without a test**](docs/state-lens-manual.md) · [**26-second replay (original0.1 recording)**](https://aichance.github.io/business-ai-recipes/state-lens-demo.mp4)
+
+**Same UI, different saved value:** in the new authored precision fixture,
+both branches show `1,234.57` and `Saved` after a format change and reload.
+The normal branch keeps the original `1234.567`; the deliberately broken one
+saves `1234.57`. The same explicit value assertions catch the mismatch with
+standard Playwright and with State Lens. The helper puts the selected field
+changes beside the screenshots in one HTML. [Measured comparison, native baseline and reproduction](docs/state-lens-format.md).
 
 Download the [versioned library](https://aichance.github.io/business-ai-recipes/state-lens-v0.6.0-experimental.1.mjs) ([SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.6.0-experimental.1.mjs.sha256)) next to your existing test, then:
 
