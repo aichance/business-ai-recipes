@@ -18,6 +18,7 @@ VERSION = json.loads((SOURCE / 'package.json').read_text())['version']
 ARCHIVE = f'aichance-playwright-state-lens-{VERSION}.tgz'
 MODULE = f'state-lens-v{VERSION}.mjs'
 DECLARATIONS = f'state-lens-v{VERSION}.d.mts'
+PYTHON_MODULE = 'state_lens_v' + VERSION.replace('.', '_').replace('-', '_') + '.py'
 
 
 class ReplayReleaseTests(unittest.TestCase):
@@ -131,6 +132,46 @@ class ReplayReleaseTests(unittest.TestCase):
                                 capture_output=True, text=True)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertTrue((self.out / MODULE).exists())
+
+    def test_python_download_matches_the_common_generated_module(self):
+        result = self.run_replay()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        expected = (SOURCE / 'python/state_lens.py').read_bytes()
+        self.assertEqual((self.out / PYTHON_MODULE).read_bytes(), expected)
+        digest = hashlib.sha256(expected).hexdigest()
+        self.assertEqual((self.out / (PYTHON_MODULE + '.sha256')).read_text(),
+                         digest + '  ' + PYTHON_MODULE + '\n')
+        for name in ['state-lens.html', 'state-lens-good.html']:
+            page = (self.out / name).read_text()
+            self.assertIn('href="' + PYTHON_MODULE + '"', page)
+            self.assertIn('href="state-lens-python.md"', page)
+
+    def test_conflicting_python_download_is_not_overwritten(self):
+        original = b'Previously retained Python module'
+        (self.out / PYTHON_MODULE).write_bytes(original)
+        result = self.run_replay()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('Refusing to replace immutable asset', result.stderr)
+        self.assertEqual((self.out / PYTHON_MODULE).read_bytes(), original)
+        self.assertFalse((self.out / MODULE).exists())
+        self.assertFalse((self.out / 'state-lens.html').exists())
+
+    def test_python_package_mismatch_stops_before_output(self):
+        archive = self.out / ARCHIVE
+        with tarfile.open(archive) as source:
+            entries = [(entry, source.extractfile(entry).read())
+                       for entry in source.getmembers() if entry.isfile()]
+        with tarfile.open(archive, 'w:gz') as target:
+            for entry, payload in entries:
+                if entry.name == 'package/python/state_lens.py':
+                    payload += b'\n# An altered Python implementation.\n'
+                entry.size = len(payload)
+                target.addfile(entry, io.BytesIO(payload))
+        result = self.run_replay()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('Refusing package/source mismatch: python/state_lens.py', result.stderr)
+        self.assertFalse((self.out / PYTHON_MODULE).exists())
+        self.assertFalse((self.out / MODULE).exists())
 
     def test_package_version_alone_cannot_relabel_the_library(self):
         copied_root = self.root / 'source-copy'
