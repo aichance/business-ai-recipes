@@ -1,0 +1,233 @@
+{
+  "observedAt": "2026-10-31T01:42:57.751Z",
+  "kind": "AUTHORED_SYNTHETIC_OPERATOR_FIXTURE_NOT_ADOPTION",
+  "node": "v22.23.4",
+  "playwright": "1.64.0",
+  "chromium": "156.0.8078.4",
+  "libraryVersion": "0.6.0-experimental.1",
+  "librarySHA256": "78aee0955566befdad5d0617b2b1a7159620c73ad3f129b47fa897be7395fbcb",
+  "selectedKey": "precision-pad-document",
+  "freshContexts": 4,
+  "snapshotsPerContext": 4,
+  "nativeAndLensValuesEqual": true,
+  "identicalScreenshots": {
+    "save": true,
+    "reload": true
+  },
+  "consoleErrors": [],
+  "runs": [
+    {
+      "mode": "normal",
+      "observed": false,
+      "uiChecks": "PASS: initial value, saved status/display, reloaded status/display/precision",
+      "savedValueInvariants": [
+        {
+          "after": "save",
+          "expected": 1234.567,
+          "actual": 1234.567,
+          "passed": true
+        },
+        {
+          "after": "reload",
+          "expected": 1234.567,
+          "actual": 1234.567,
+          "passed": true
+        }
+      ],
+      "native": [
+        {
+          "label": "Save format · before",
+          "value": {
+            "value": 1234.567,
+            "digits": 3
+          }
+        },
+        {
+          "label": "Save format · after",
+          "value": {
+            "value": 1234.567,
+            "digits": 2
+          }
+        },
+        {
+          "label": "Reload · before",
+          "value": {
+            "value": 1234.567,
+            "digits": 2
+          }
+        },
+        {
+          "label": "Reload · after",
+          "value": {
+            "value": 1234.567,
+            "digits": 2
+          }
+        }
+      ],
+      "screenSHA256": {
+        "save": "7d87d61d6815c98e665b522304286fdbcb47b92a5d006dfe6fe85cac833f7c6c",
+        "reload": "ba079ee1d3472183017872e61a19a7fec819e72d948d362e8ac9ea5a8fd5224e"
+      }
+    },
+    {
+      "mode": "normal",
+      "observed": true,
+      "uiChecks": "PASS: initial value, saved status/display, reloaded status/display/precision",
+      "savedValueInvariants": [
+        {
+          "after": "save",
+          "expected": 1234.567,
+          "actual": 1234.567,
+          "passed": true
+        },
+        {
+          "after": "reload",
+          "expected": 1234.567,
+          "actual": 1234.567,
+          "passed": true
+        }
+      ],
+      "native": [
+        {
+          "label": "Save format · before",
+          "value": {
+            "value": 1234.567,
+            "digits": 3
+          }
+        },
+        {
+          "label": "Save format · after",
+          "value": {
+            "value": 1234.567,
+            "digits": 2
+          }
+        },
+        {
+          "label": "Reload · before",
+          "value": {
+            "value": 1234.567,
+            "digits": 2
+          }
+        },
+        {
+          "label": "Reload · after",
+          "value": {
+            "value": 1234.567,
+            "digits": 2
+          }
+        }
+      ],
+      "screenSHA256": {
+        "save": "7d87d61d6815c98e665b522304286fdbcb47b92a5d006dfe6fe85cac833f7c6c",
+        "reload": "ba079ee1d3472183017872e61a19a7fec819e72d948d362e8ac9ea5a8fd5224e"
+      }
+    },
+    {
+      "mode": "regression",
+      "observed": false,
+      "uiChecks": "PASS: initial value, saved status/display, reloaded status/display/precision",
+      "savedValueInvariants": [
+        {
+          "after": "save",
+          "expected": 1234.567,
+          "actual": 1234.57,
+          "passed": false
+        },
+        {
+          "after": "reload",
+          "expected": 1234.567,
+          "actual": 1234.57,
+          "passed": false
+        }
+      ],
+      "native": [
+        {
+          "label": "Save format · before",
+          "value": {
+            "value": 1234.567,
+            "digits": 3
+          }
+        },
+        {
+          "label": "Save format · after",
+          "value": {
+            "value": 1234.57,
+            "digits": 2
+          }
+        },
+        {
+          "label": "Reload · before",
+          "value": {
+            "value": 1234.57,
+            "digits": 2
+          }
+        },
+        {
+          "label": "Reload · after",
+          "value": {
+            "value": 1234.57,
+            "digits": 2
+          }
+        }
+      ],
+      "screenSHA256": {
+        "save": "7d87d61d6815c98e665b522304286fdbcb47b92a5d006dfe6fe85cac833f7c6c",
+        "reload": "ba079ee1d3472183017872e61a19a7fec819e72d948d362e8ac9ea5a8fd5224e"
+      }
+    },
+    {
+      "mode": "regression",
+      "observed": true,
+      "uiChecks": "PASS: initial value, saved status/display, reloaded status/display/precision",
+      "savedValueInvariants": [
+        {
+          "after": "save",
+          "expected": 1234.567,
+          "actual": 1234.57,
+          "passed": false
+        },
+        {
+          "after": "reload",
+          "expected": 1234.567,
+          "actual": 1234.57,
+          "passed": false
+        }
+      ],
+      "native": [
+        {
+          "label": "Save format · before",
+          "value": {
+            "value": 1234.567,
+            "digits": 3
+          }
+        },
+        {
+          "label": "Save format · after",
+          "value": {
+            "value": 1234.57,
+            "digits": 2
+          }
+        },
+        {
+          "label": "Reload · before",
+          "value": {
+            "value": 1234.57,
+            "digits": 2
+          }
+        },
+        {
+          "label": "Reload · after",
+          "value": {
+            "value": 1234.57,
+            "digits": 2
+          }
+        }
+      ],
+      "screenSHA256": {
+        "save": "7d87d61d6815c98e665b522304286fdbcb47b92a5d006dfe6fe85cac833f7c6c",
+        "reload": "ba079ee1d3472183017872e61a19a7fec819e72d948d362e8ac9ea5a8fd5224e"
+      }
+    }
+  ],
+  "independentUseCredit": 0
+}
