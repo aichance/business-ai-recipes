@@ -1,0 +1,8 @@
+<!doctype html><title>Synthetic saved draft</title>
+<h1>1,234.57</h1><button id="save">Save</button><p>Ready</p>
+<script>
+document.querySelector('#save').onclick = () => {
+  localStorage.setItem('draft', JSON.stringify({ amount: 1234.57, flag: true }));
+  document.querySelector('p').textContent = 'Saved';
+};
+</script>

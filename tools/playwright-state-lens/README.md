@@ -1,4 +1,4 @@
-# Playwright State Lens 0.6.1-experimental.1
+# Playwright State Lens 0.7.0-experimental.1 preview
 
 Put explicitly selected application storage beside your normal UI steps.
 The local HTML shows the viewport, selected localStorage/sessionStorage/IndexedDB values and
@@ -10,6 +10,13 @@ evidence; this experiment tests whether selecting and aligning it reduces work.
 
 [Replay the measured example](https://aichance.github.io/business-ai-recipes/state-lens.html)
 or [read the comparison and limits](../../docs/state-lens-results.md).
+
+## Existing synchronous Python Playwright tests
+
+The [Python preview](python/README.md) uses your existing Page and requires no
+Node at runtime. It shares the browser collector and HTML viewer with this module.
+The versioned Node and Python downloads are the same common source package.
+Keep your native waits and assertions.
 
 ## Record your own app without writing a test
 
@@ -23,11 +30,11 @@ new local HTML; it does not click Save, mutate storage, or assert correctness.
 
 From your app's project directory, with Node20.19+ and Playwright already installed:
 
-Download the [versioned MIT file](https://aichance.github.io/business-ai-recipes/state-lens-v0.6.1-experimental.1.mjs) and its [SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.6.1-experimental.1.mjs.sha256), review it, and place it beside your existing test without overwriting an older file. No additional npm dependency, account, model or API key is needed.
+Download the [versioned MIT file](https://aichance.github.io/business-ai-recipes/state-lens-v0.7.0-experimental.1.mjs) and its [SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.7.0-experimental.1.mjs.sha256), review it, and place it beside your existing test without overwriting an older file. No additional npm dependency, account, model or API key is needed.
 In your existing test, after opening your app, choose a storage key you know:
 
 ```js
-import { createStateLens } from './state-lens-v0.6.1-experimental.1.mjs';
+import { createStateLens } from './state-lens-v0.7.0-experimental.1.mjs';
 
 const lens = createStateLens(page, {
   probes: [{ name: 'draft', source: 'localStorage', key: 'app-draft', json: true }],
@@ -196,4 +203,4 @@ app data, source, screenshots and traces are not required.
 
 ## TypeScript checks
 
-Version0.4.1 adds explicit input JSDoc and optional matching declarations. Strict projects with `allowJs: false` can place `state-lens-v0.6.1-experimental.1.d.mts` beside the downloaded `.mjs`; package imports resolve `lens.d.mts` through the types export. [Measured blocker, setup and limits](../../docs/state-lens-typescript.md). Run `npm run test:types` for both declaration modes and the JSDoc-only consumer. These are development checks; the runtime has no additional dependency.
+Version0.4.1 adds explicit input JSDoc and optional matching declarations. Strict projects with `allowJs: false` can place `state-lens-v0.7.0-experimental.1.d.mts` beside the downloaded `.mjs`; package imports resolve `lens.d.mts` through the types export. [Measured blocker, setup and limits](../../docs/state-lens-typescript.md). Run `npm run test:types` for both declaration modes and the JSDoc-only consumer. These are development checks; the runtime has no additional dependency.

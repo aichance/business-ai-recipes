@@ -1,6 +1,6 @@
 {
   "name": "@aichance/playwright-state-lens",
-  "version": "0.6.1-experimental.1",
+  "version": "0.7.0-experimental.1",
   "private": true,
   "type": "module",
   "engines": {
@@ -17,7 +17,9 @@
     "test": "node --test --test-concurrency=1 tests/*.test.mjs",
     "test:consumer": "playwright test",
     "demo": "node demo.mjs",
-    "test:types": "tsc -p tests/types/tsconfig.json && tsc -p tests/types/tsconfig-allowjs.json && node tests/types/single-file.mjs"
+    "test:types": "tsc -p tests/types/tsconfig.json && tsc -p tests/types/tsconfig-allowjs.json && node tests/types/single-file.mjs",
+    "build:python": "node python/build.mjs",
+    "test:python": "node python/build.mjs --check && python3 -B -m unittest discover -s python -p test_*.py"
   },
   "peerDependencies": {
     "@playwright/test": ">=1.51 <2"
@@ -37,7 +39,15 @@
     "examples",
     "playwright.config.mjs",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "python/state_lens.py",
+    "python/runtime.py",
+    "python/build.mjs",
+    "python/test_sync.py",
+    "python/fixture.js",
+    "python/fixture.html",
+    "python/parity.mjs",
+    "python/README.md"
   ],
   "license": "MIT",
   "types": "./lens.d.mts",

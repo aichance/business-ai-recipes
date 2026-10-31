@@ -16,7 +16,7 @@ For a real use case and the limits that surfaced, see the
 
 ## TypeScript projects
 
-The current file includes explicit input JSDoc. If your project does not infer imported JavaScript, place the matching [state-lens-v0.6.1-experimental.1.d.mts](state-lens-v0.6.1-experimental.1.d.mts) ([SHA256](state-lens-v0.6.1-experimental.1.d.mts.sha256)) next to the `.mjs`, retaining both filenames. Package users get the type export automatically. Run your existing typecheck as well as the test. [The reproduced blocker and measured settings](state-lens-typescript.md).
+The current file includes explicit input JSDoc. If your project does not infer imported JavaScript, place the matching [state-lens-v0.7.0-experimental.1.d.mts](state-lens-v0.7.0-experimental.1.d.mts) ([SHA256](state-lens-v0.7.0-experimental.1.d.mts.sha256)) next to the `.mjs`, retaining both filenames. Package users get the type export automatically. Run your existing typecheck as well as the test. [The reproduced blocker and measured settings](state-lens-typescript.md).
 
 ## Try with your coding agent
 
@@ -38,15 +38,15 @@ Follow the project's instructions and preserve its current test runner.
    browser-persisted workflow are missing, report that blocker and stop;
    do not upgrade dependencies or substitute the library's demo.
 
-2. Use the common MIT 0.6.1-experimental.1 module:
-   https://aichance.github.io/business-ai-recipes/state-lens-v0.6.1-experimental.1.mjs
+2. Use the common MIT 0.7.0-experimental.1 module:
+   https://aichance.github.io/business-ai-recipes/state-lens-v0.7.0-experimental.1.mjs
    Expected SHA256:
-   f8db1ef429935e06603ec7b5023ba80d180de02ac99920f0772fd9c6510f8cef
+   7fa480e5d8286d3c7ae51c695bb0e9d16f24ef8f712438c37338451736e2437c
    Review it and verify the bytes before importing it in the Node-side test.
    Save it beside the test without overwriting an existing file. Do not
    change npm settings, package metadata, app code or the existing test data.
    For a TypeScript project needing declarations, download the matching
-   state-lens-v0.6.1-experimental.1.d.mts beside that file (SHA256
+   state-lens-v0.7.0-experimental.1.d.mts beside that file (SHA256
    42a12b3982e675d1b0033153186eef1adfdde34cde05ce03c674b08e2376a281).
    Keep the caller compiler settings unchanged.
 
@@ -90,14 +90,14 @@ Playwright/`node:test`.
 
 ## Copy one versioned file
 
-1. [Download state-lens-v0.6.1-experimental.1.mjs](https://aichance.github.io/business-ai-recipes/state-lens-v0.6.1-experimental.1.mjs) and its [SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.6.1-experimental.1.mjs.sha256).
+1. [Download state-lens-v0.7.0-experimental.1.mjs](https://aichance.github.io/business-ai-recipes/state-lens-v0.7.0-experimental.1.mjs) and its [SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.7.0-experimental.1.mjs.sha256).
 2. Read the file, then place it next to an existing Playwright test. Keep an
    existing file instead of overwriting it. The file contains its MIT license
-   and the same implementation as the common 0.6.1-experimental.1 package.
+   and the same implementation as the common 0.7.0-experimental.1 package.
 3. Import it **in the Node-side test**, not in your app's browser bundle:
 
 ```js
-import { createStateLens } from './state-lens-v0.6.1-experimental.1.mjs';
+import { createStateLens } from './state-lens-v0.7.0-experimental.1.mjs';
 ```
 
 There is no additional npm installation, account, model or API key. Your
@@ -203,8 +203,8 @@ test assertion, package setting or library option needs to change.
 
 ## Common package alternative
 
-The [current common tgz](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.6.1-experimental.1.tgz)
-and [checksum](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.6.1-experimental.1.tgz.sha256)
+The [current common tgz](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.7.0-experimental.1.tgz)
+and [checksum](https://aichance.github.io/business-ai-recipes/aichance-playwright-state-lens-0.7.0-experimental.1.tgz.sha256)
 contain the current common library, manual-capture entry, tests, demo and examples. npm setups that permit
 URL dependencies can install it as a development dependency, changing their
 package metadata. npm12 may refuse remote URL dependencies; the one-file route

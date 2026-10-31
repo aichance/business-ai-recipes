@@ -11,7 +11,9 @@ If State Lens is useful in your workflow, [star this repo](https://github.com/ai
 
 [![Actual common0.6.1 synthetic report: the app shows 1,234.57 and Saved while selected saved-value changes show 1234.567 to 1234.57 beside the screenshot.](docs/state-lens-format-v0.6.1-poster.png)](https://aichance.github.io/business-ai-recipes/state-lens-format.html)
 
-[**Reveal the saved-value difference**](https://aichance.github.io/business-ai-recipes/state-lens-format.html) · [**25-second comparison replay (0.6.1)**](https://aichance.github.io/business-ai-recipes/state-lens-format-v0.6.1.mp4) · [**Download experimental v0.6.1**](https://github.com/aichance/business-ai-recipes/releases/tag/state-lens-v0.6.1-experimental.1) · [**Copy one file into your Playwright test**](docs/state-lens-install.md) · [**Record your own app without a test**](docs/state-lens-manual.md)
+[**Reveal the saved-value difference**](https://aichance.github.io/business-ai-recipes/state-lens-format.html) · [**25-second comparison replay (0.6.1)**](https://aichance.github.io/business-ai-recipes/state-lens-format-v0.6.1.mp4) · [**Previous Node release0.6.1**](https://github.com/aichance/business-ai-recipes/releases/tag/state-lens-v0.6.1-experimental.1) · [**Copy one file into your Playwright test**](docs/state-lens-install.md) · [**Record your own app without a test**](docs/state-lens-manual.md)
+
+**Python Playwright:** [copy one versioned file into your existing synchronous HTTP(S) Page test](docs/state-lens-python.md). No extra Node.js installation or new test runner; keep your waits and assertions. [Source and preview checks](tools/playwright-state-lens/python/README.md).
 
 **Same UI, different saved value:** in the new authored precision fixture,
 both branches show `1,234.57` and `Saved` after a format change and reload.
@@ -20,13 +22,13 @@ saves `1234.57`. The same explicit value assertions catch the mismatch with
 standard Playwright and with State Lens. The helper puts the selected field
 changes beside the screenshots in one HTML. [Measured comparison, native baseline and reproduction](docs/state-lens-format.md).
 
-Download the [versioned library](https://aichance.github.io/business-ai-recipes/state-lens-v0.6.1-experimental.1.mjs) ([SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.6.1-experimental.1.mjs.sha256)) next to your existing test, then:
+Download the [versioned library](https://aichance.github.io/business-ai-recipes/state-lens-v0.7.0-experimental.1.mjs) ([SHA256](https://aichance.github.io/business-ai-recipes/state-lens-v0.7.0-experimental.1.mjs.sha256)) next to your existing test, then:
 
 ```js
-import { createStateLens } from './state-lens-v0.6.1-experimental.1.mjs';
+import { createStateLens } from './state-lens-v0.7.0-experimental.1.mjs';
 ```
 
-**TypeScript:** 0.4.1 fixes the inferred `probes` option. Projects that need declarations can also copy the matching [`.d.mts` file](https://aichance.github.io/business-ai-recipes/state-lens-v0.6.1-experimental.1.d.mts). [Before/after typecheck and setup](docs/state-lens-typescript.md).
+**TypeScript:** 0.4.1 fixes the inferred `probes` option. Projects that need declarations can also copy the matching [`.d.mts` file](https://aichance.github.io/business-ai-recipes/state-lens-v0.7.0-experimental.1.d.mts). [Before/after typecheck and setup](docs/state-lens-typescript.md).
 
 **Large saved records:** 0.5 adds an optional JSON pointer so you can observe
 one known field without exporting the entire record. In an authored162,130-byte
