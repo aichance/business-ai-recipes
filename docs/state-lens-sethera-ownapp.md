@@ -102,9 +102,11 @@ The Windows outcome above remains the author's report for this environment
 and workflow. It is not an operator-run Windows verification or a broad
 browser/platform support guarantee.
 
-## Later optional field-selection experiment
+## Field-selection evidence and limits
 
-The separate0.5 release adds explicit JSON-pointer observations while retaining
-the64KiB selected-output limit. [Configuration and synthetic operator evidence](state-lens-selected-fields.md).
-The report above is still the author's0.4.1 run. No0.5 author execution,
-full-document coverage or improved diagnosis time is established by that report.
+The 0.5 release adds explicit JSON-pointer observations while retaining the 64KiB
+selected-output limit. [Configuration and synthetic operator evidence](state-lens-selected-fields.md)
+are separate from the author's updated-version reuse described above.
+The original 0.4.1 report covers the small-document run; the later 0.5 follow-up
+covers three selected pointers in the larger document. Neither report establishes
+whole-document comparison coverage or a measured improvement in diagnosis time.
